@@ -9,16 +9,24 @@ state("KINGDOM HEARTS FINAL MIX")
 	bool saveload : "KINGDOM HEARTS FINAL MIX.exe", 0x2E1CBB8;
 	//bool saveloadInv : "KINGDOM HEARTS FINAL MIX.exe", 0x2E97740;
 	bool summonload : "KINGDOM HEARTS FINAL MIX.exe", 0x2D50988;
+	bool partyload : "KINGDOM HEARTS FINAL MIX.exe", 0x2E1BAFC;
 	byte titlescreen : "KINGDOM HEARTS FINAL MIX.exe", 0x7FE990;
 	byte hp : "KINGDOM HEARTS FINAL MIX.exe", 0x2D592CC;
 	
 	byte fightend : "KINGDOM HEARTS FINAL MIX.exe", 0x2D500B8;
+	uint room : "KINGDOM HEARTS FINAL MIX.exe", 0x2534638;
 }
 
 startup
 {
 	vars.booting = false;
 	vars.summontimer = 0;
+	vars.opposite = 0;
+	vars.clayton = 0;
+	
+	settings.Add("opposite", true, "Remove pre Opposite Armor split");
+	settings.Add("clayton", true, "Remove pre Clayton split");
+	settings.Add("finalrest", true, "Split on final rest enter");
 }
 
 start
@@ -28,7 +36,23 @@ start
 
 split
 {
-	return current.fightend == 2 && old.fightend == 0;
+	if(current.fightend == 2 && old.fightend == 0){
+		if(settings["opposite"] && current.room == 1309344160 && vars.opposite == 0){
+			vars.opposite = 1;
+		}
+		else if(settings["clayton"] && current.room == 1308108960 && vars.clayton == 0){
+			vars.clayton = 1;
+		}
+		else{
+			vars.opposite = 0;
+			vars.clayton = 0;
+			return true;
+		}
+	}
+	if(settings["finalrest"] && current.room == 1308482848 && old.room == 0){
+		return true;
+	}
+	return false;
 }
 
 exit
@@ -57,7 +81,8 @@ isLoading
 	|| !current.blackInv
 	|| (current.white == 128 && !current.cutscene)
 	|| vars.summontimer > 30) && !current.paused)
-	|| current.saveload 
+	|| current.saveload
+	|| current.partyload
 	|| (current.load2 && current.hp == 0) 
 	|| vars.booting;
 }
