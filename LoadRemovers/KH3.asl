@@ -7,6 +7,7 @@ state("KINGDOM HEARTS III")
 	uint kbload : "KINGDOM HEARTS III.exe", 0x09D2E310, 0x120, 0x18, 0x70, 0x90, 0xB8, 0x48;
 	uint menuScreen : "KINGDOM HEARTS III.exe", 0x09D2E310, 0x2B0, 0x6B8;
 	byte linkAttraction : "KINGDOM HEARTS III.exe", 0x0A70B4A0, 0x48, 0x3E8, 0x188, 0x210;
+	bool linkAttractionLoaded : "KINGDOM HEARTS III.exe", 0x0A70D140, 0x50, 0x270, 0x4C;
 	bool paused : "KINGDOM HEARTS III.exe", 0x0916A740, 0x110, 0x64;
 	bool menuing2 : "KINGDOM HEARTS III.exe", 0x09D2E310, 0x2B0, 0x6B4;
 	bool fightend : "KINGDOM HEARTS III.exe", 0x09D62910, 0xA18, 0x700, 0x6D0, 0x178, 0xB0;
@@ -70,7 +71,7 @@ isLoading
 	vars.summonlag = current.linkAttraction == 6 ? vars.summonlag + (current.paused ? 0 : 1) : 0;
 	
 	return current.load
-		|| (vars.summonlag > 40 && !current.paused)
+		|| (vars.summonlag > 40 && !current.paused && !current.linkAttractionLoaded)
 		|| current.transition > 0
 		|| current.saveload
 		|| vars.menulag > 7
