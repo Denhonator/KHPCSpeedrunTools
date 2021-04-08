@@ -1,8 +1,7 @@
 local lasttitle = 0
 
 function _OnInit()
-	print("Sora HP:")
-	print(ReadInt(0x2D592CC-0x3A0606))
+
 end
 
 function _OnFrame()
@@ -14,7 +13,7 @@ function _OnFrame()
 	
 	local titletest = ReadInt(0x7A8EE8-0x3A0606)
 	if titletest == 0 and lasttitle ~= 0 then 
-		print("game restarted, type 'reload' once game is running")
+		print("Remember to type 'reload' after restarting or going to title screen")
 	end
 	lasttitle = titletest
 end

@@ -4,10 +4,12 @@ How to use:
 
 Download files from the repository (ex. click the green Code button and download the repository as zip)
 
-## 1FMSaveMenuAnywhere and 2FMSoftReset 
+## 1FM and 2FM mods
 Get LuaBackend here https://github.com/Topaz-Reality/LuaBackend/releases/ and place the LuaBackend.exe into those folders. Then, launch it while the game is running. Read the corresponding readme for details.
 
-2FMSoftReset has a separate script for JP. It should work fine to keep them both there to cover both options, but can also just pick the one you use.
+Pick and choose scripts to enable. Any .lua files under scripts folder will run.
+
+2FM mods have separate scripts for JP. Only have the JP script in scripts folder if you use that version.
 
 Alternatively, you can use the internal version of LuaBackend. That requires patching the game .exe, but allows it to automatically work in the background without an external program. See LuaBackend documentation for more.
 
