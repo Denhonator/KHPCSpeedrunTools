@@ -22,6 +22,10 @@ function _OnFrame()
 		selection = 15
 		WriteInt(0x503CEC-0x3A0606, selection)
 	end
+	if selection == 21 then
+		selection = 8
+		WriteInt(0x503CEC-0x3A0606, selection)
+	end
 	local curDest = ReadInt(0x5041F0-0x3A0606)
 	if curDest < 40 then
 		selection = selection > 20 and 0 or selection
