@@ -1,4 +1,5 @@
 local summonSpeedup = true
+local speedMult = 3.0
 
 function _OnInit()
 
@@ -10,7 +11,7 @@ function _OnFrame()
 	local summoning = ReadInt(0x2D5D62C-0x3A0606)
 	
 	if cutscene > 0 and skippable ~= 1025 and (summoning == 0 or summonSpeedup) then
-		WriteFloat(0x233C264-0x3A0606, 4.0)
+		WriteFloat(0x233C264-0x3A0606, speedMult)
 	else
 		WriteFloat(0x233C264-0x3A0606, 1.0)
 	end

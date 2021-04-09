@@ -20,3 +20,8 @@ CutsceneSkip:
 - Allows skipping unskippable cutscenes (Wonderland, HB2)
 - Allows skipping cutscenes earlier (Riku waking up at HB)
 - Can not skip text boxes or "mini cutscenes" such as drinking enlarge/shrink potions in Wonderland
+
+FasterDialogAnims:
+- Speeds up text boxes and "mini cutscenes" as well as room transitions
+- Also speeds up summon animations. If you don't want that, replace "summonSpeedup = true" with "summonSpeedup = false"
+- Default speed multiplier is 3.0, but you can change it to anything you like
