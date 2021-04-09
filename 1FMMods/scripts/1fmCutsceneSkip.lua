@@ -5,7 +5,7 @@ function _OnInit()
 end
 
 function _OnFrame()
-	nowInput = ReadInt(0x22C5B30-0x3A0606)
+	nowInput = ReadInt(0x233D034-0x3A0606)
 	if ReadInt(0x233AE74-0x3A0606)==1 then
 		WriteInt(0x23944E4-0x3A0606, 1025) --make skippable, the big one
 		if nowInput == 8 and lastInput == 0 then
