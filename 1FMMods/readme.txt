@@ -1,5 +1,6 @@
 How to use:
-- Extract and run LuaBackend.exe while 1FM is running
+- Get LuaBackend https://github.com/Topaz-Reality/LuaBackend/releases/
+- Place LuaBackend.exe into this folder and run it while 1FM is running
 - Command line program should open, stating that it initialized script successfully.
 
 SaveAnywhere:
