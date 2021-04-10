@@ -4,13 +4,20 @@ local neverlandOpen = 30
 local djOpen = 30
 
 function _OnInit()
-
+	--if ReadByte(0x2DE78C7-0x3A0606) > 2 then
+	--	neverlandOpen = 0
+	--end
+	--
+	--if ReadByte(0x2DE78C3-0x3A0606) > 2 then
+	--	djOpen = 0
+	--end
 end
 
 function _OnFrame()
 	local selection = ReadInt(0x503CEC-0x3A0606)
 	local realSelection = selection
 	local realWorld = ReadByte(0x503C04-0x3A0606)
+	local soraWorld = ReadByte(0x233CADC-0x3A0606)
 	local room = ReadByte(0x25346D0-0x3A0606)
 	
 	local monstroOpen = ReadByte(0x2DE78CA-0x3A0606) > 1
@@ -35,6 +42,10 @@ function _OnFrame()
 		prevWarp = realWorld==5 and 14 or 0
 		WriteByte(warpAdd-0x3A0606, realWorld==5 and 0 or 6) --room mod
 		print(prevWarp)
+	end
+	
+	if room > 0 and soraWorld ~= selection then
+		WriteInt(0x503CEC-0x3A0606, soraWorld)
 	end
 	
 	-- Replace HT and Atlantica with Monstro at first

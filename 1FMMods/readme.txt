@@ -15,14 +15,20 @@ InstantGummi:
 - Warp drive is disabled (it'd be slower)
 - Attempting to travel to Halloween Town or Atlantica will take you to Monstro if it has not yet been visited
 - To go to Hollow Bastion 2, select the warp point that takes you there
+- There is a possibility that going to Deep Jungle or Neverland for the first time will not initiate the opening cutscenes. In this case, report the issue. You can progress the game by going to treehouse/cabin
 
-CutsceneSkip:
+Unskippable:
 - Allows skipping unskippable cutscenes (Wonderland, HB2)
-- Allows skipping cutscenes earlier (Riku waking up at HB)
- - Change 'earlySkips = false' to 'earlySkips = true' on line 1 in the lua file
 - Can not skip text boxes or "mini cutscenes" such as drinking enlarge/shrink potions in Wonderland
 
-FasterDialogAnims:
-- Speeds up text boxes and "mini cutscenes" as well as room transitions
+EarlySkip:
+- Allows skipping cutscenes earlier
+- May cause glitches
+
+FasterDialog:
+- Speeds up text boxes
+
+FasterAnims:
+- Speeds "mini cutscenes" as well as room transitions
 - Also speeds up summon animations. If you don't want that, replace "summonSpeedup = true" with "summonSpeedup = false"
 - Default speed multiplier is 2.0, but you can change it to anything you like
