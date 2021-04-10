@@ -1,7 +1,7 @@
 local prevWarp = 0
 local warpAdd = 0
-local neverlandOpen = 10
-local djOpen = 10
+local neverlandOpen = 30
+local djOpen = 30
 
 function _OnInit()
 
@@ -19,10 +19,10 @@ function _OnFrame()
 	djOpen = (deepJungleState and djOpen>0) and djOpen-1 or djOpen
 	neverlandOpen = (neverlandState and neverlandOpen>0) and neverlandOpen-1 or neverlandOpen
 	if djOpen==0 and not deepJungleState then
-		djOpen = 10
+		djOpen = 30
 	end
 	if neverlandOpen==0 and not neverlandState then
-		neverlandOpen = 10
+		neverlandOpen = 30
 	end
 	
 	-- Deep Jungle and Neverland first visit
