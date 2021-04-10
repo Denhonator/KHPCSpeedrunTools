@@ -1,7 +1,8 @@
 local prevWarp = 0
 local warpAdd = 0
-local neverlandOpen = 30
-local djOpen = 30
+local buf = 60
+local neverlandOpen = buf
+local djOpen = buf
 
 function _OnInit()
 	--if ReadByte(0x2DE78C7-0x3A0606) > 2 then
@@ -26,10 +27,10 @@ function _OnFrame()
 	djOpen = (deepJungleState and djOpen>0) and djOpen-1 or djOpen
 	neverlandOpen = (neverlandState and neverlandOpen>0) and neverlandOpen-1 or neverlandOpen
 	if djOpen==0 and not deepJungleState then
-		djOpen = 30
+		djOpen = buf
 	end
 	if neverlandOpen==0 and not neverlandState then
-		neverlandOpen = 30
+		neverlandOpen = buf
 	end
 	
 	-- Deep Jungle and Neverland first visit
