@@ -12,6 +12,7 @@ state("KINGDOM HEARTS FINAL MIX")
 	bool partyload : "KINGDOM HEARTS FINAL MIX.exe", 0x2E1BAFC;
 	byte titlescreen : "KINGDOM HEARTS FINAL MIX.exe", 0x7FE990;
 	byte hp : "KINGDOM HEARTS FINAL MIX.exe", 0x2D592CC;
+	byte newgame : "KINGDOM HEARTS FINAL MIX.exe", 0x2E98824;
 	
 	byte fightend : "KINGDOM HEARTS FINAL MIX.exe", 0x2D500B8;
 	ushort room : "KINGDOM HEARTS FINAL MIX.exe", 0x2534638;
@@ -33,7 +34,7 @@ startup
 
 start
 {
-	return (current.hp > 0 && old.hp == 0) || (current.titlescreen != 1 && old.titlescreen == 1);
+	return current.newgame == 7 && old.newgame == 6;
 }
 
 split
