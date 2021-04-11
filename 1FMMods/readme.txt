@@ -27,7 +27,9 @@ EarlySkip:
 - May cause glitches
 
 FasterDialog:
-- Speeds up text boxes
+- Makes text boxes appear and disappear almost instantly
+- Text speed unaffected unless you change textSpeedup to true (line 2)
+ - This feature is a little wacky so it's disabled by default
 
 FasterAnims:
 - Speeds "mini cutscenes" as well as room transitions
