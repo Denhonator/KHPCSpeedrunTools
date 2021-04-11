@@ -36,7 +36,7 @@ FasterAnims:
 - Also speeds up summon animations. If you don't want that, replace "summonSpeedup = true" with "summonSpeedup = false"
 - Default speed multiplier is 2.0, but you can change it to anything you like
 
-AutoAttack:
+Autoattack:
 - Holding down attack allows Sora to perform physical attack combos automatically
 - This will guarantee very quick combos
 - Made for accessibility reasons
