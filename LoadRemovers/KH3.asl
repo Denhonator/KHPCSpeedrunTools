@@ -68,10 +68,10 @@ isLoading
 				&& current.menuScreen==306
 				&& vars.lastMenuScreen==307) ? vars.menulag+1 : 0;
 				
-	vars.summonlag = current.linkAttraction == 1 ? vars.summonlag + (current.paused ? 0 : 1) : 0;
-	if(old.linkAttractionLoaded && !current.linkAttractionLoaded){
-		vars.summonlag = -30;
-	}
+	//vars.summonlag = current.linkAttraction == 1 ? vars.summonlag + (current.paused ? 0 : 1) : 0;
+	//if(old.linkAttractionLoaded && !current.linkAttractionLoaded){
+	//	vars.summonlag = -30;
+	//}
 	
 	return current.load
 		|| (vars.summonlag > 40 && !current.paused && !current.linkAttractionLoaded)

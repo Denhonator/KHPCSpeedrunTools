@@ -7,7 +7,7 @@ end
 function _OnFrame()
 	local attackInput = (ReadByte(0x233D035-0x3A0606)//2//2//2//2//2//2)%2 == 1
 	local menu = ReadInt(0x232A600-0x3A0606) == 1
-	local dialog = ReadInt(0x2D354D4-0x3A0606) > 0
+	local dialog = ReadInt(0x2998188-0x3A0606) == 0
 	if menu or dialog then
 		cooldown = 20
 	elseif cooldown > 0 then
