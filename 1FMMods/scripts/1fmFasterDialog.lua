@@ -1,5 +1,6 @@
 local lastProg = 0
 local textSpeedup = false
+local turbo = false
 
 function _OnInit()
 
@@ -12,7 +13,8 @@ function _OnFrame()
 
 	if textProg > lastProg and lastProg > 0 and textSpeedup then --1 frame turbo
 		WriteFloat(0x233C25C-0x3A0606, 100.0)
-	elseif ReadFloat(0x233C25C-0x3A0606) > 1.0 then
+		turbo = true
+	elseif turbo then
 		WriteFloat(0x233c25c-0x3A0606, 1.0)
 	end
 

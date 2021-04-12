@@ -1,5 +1,5 @@
 local summonSpeedup = true
-local speedMult = 1.0
+local speedMult = 2.0
 local lastProg = 0
 
 function _OnInit()
