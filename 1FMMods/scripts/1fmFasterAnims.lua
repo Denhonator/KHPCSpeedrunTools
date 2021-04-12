@@ -11,7 +11,7 @@ function _OnFrame()
 	local skippable = ReadInt(0x23944E4-0x3A0606)
 	local summoning = ReadInt(0x2D5D62C-0x3A0606)
 
-	if cutscene > 0 and skippable ~= 1025 and (summoning == 0 or summonSpeedup) then
+	if cutscene > 0 and cutscene ~= 8 and skippable ~= 1025 and (summoning == 0 or summonSpeedup) then
 		WriteFloat(0x233C24C-0x3A0606, speedMult)
 	else
 		WriteFloat(0x233C24C-0x3A0606, 1.0)
