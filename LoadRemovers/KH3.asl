@@ -72,6 +72,7 @@ isLoading
 	//if(old.linkAttractionLoaded && !current.linkAttractionLoaded){
 	//	vars.summonlag = -30;
 	//}
+	vars.summonlag = 0; //Disabled for now
 	
 	return current.load
 		|| (vars.summonlag > 40 && !current.paused && !current.linkAttractionLoaded)
