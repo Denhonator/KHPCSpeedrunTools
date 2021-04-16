@@ -9,8 +9,6 @@ Get LuaBackend here https://github.com/Topaz-Reality/LuaBackend/releases/ and pl
 
 Pick and choose scripts to enable. Any .lua files under scripts folder will run.
 
-2FM mods have separate scripts for JP. Only have the JP script in scripts folder if you use that version.
-
 Alternatively, you can use the internal version of LuaBackend. That requires patching the game .exe, but allows it to automatically work in the background without an external program. See LuaBackend documentation for more.
 
 Note that using mods that affect a speedrun are not allowed unless specifically stated so. However, mods like SaveAnywhere or SoftReset can be utilized to reset runs faster. Unless activated, those mods do not affect the game.

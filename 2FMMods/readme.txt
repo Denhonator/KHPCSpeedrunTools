@@ -1,9 +1,13 @@
 How to use:
 - Get LuaBackend https://github.com/Topaz-Reality/LuaBackend/releases/
-- Place LuaBackend.exe into this folder and run it while 1FM is running
+- Place LuaBackend.exe into this folder and run it while 2FM is running
 - Command line program should open, stating that it initialized script successfully.
-- In-game, press L1+L2+R1+R2+Start (or equivalent on your input device)
+- The scripts should adjust based on if JP or GLOBAL version is detected. I am not sure if languages other than English or Japanese will work, however.
 
-Remarks:
+SoftReset:
+- In-game, press L1+L2+R1+R2+Start (or equivalent on your input device)
 - Also resets RNG
-- Only use JP version of the script with JP version of the game
+- Sound effects may get muffled over time. This is a known bug in the game unrelated to this script. Hard reset when that happens.
+
+AutoAttack:
+- Allows physically attacking continuously by holding attack button.

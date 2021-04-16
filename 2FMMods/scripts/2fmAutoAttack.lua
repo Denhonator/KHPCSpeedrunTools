@@ -10,9 +10,12 @@ function _OnInit()
 end
 
 function _OnFrame()
-	local input = ReadInt(0x29F89B0-offset)
-	if (input == 247042) then 
-		WriteByte(0xAB841A-offset, 0x1)
-		WriteInt(0x751310-offset, 0x00000001)
+	local input = (ReadByte(0x71148B-offset) // 0x28) % 2 == 1
+	local command = ReadByte(0x2A0DD7C-offset) == 0
+	local dialog = ReadByte(0x2A139D0-offset) == 0
+	if (input and command and dialog) then 
+		WriteByte(0x2A5A056-offset, 0x1)
+	else
+		WriteByte(0x2A5A056-offset, 0)
 	end
 end
