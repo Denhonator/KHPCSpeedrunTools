@@ -21,6 +21,7 @@ state("KINGDOM HEARTS II FINAL MIX", "JP")
 init
 {
 	timer.IsGameTimePaused = false;
+	vars.splitTimer = 0;
 
 	if(modules.First().ModuleMemorySize == 46301184){
 		version = "JP";
@@ -44,7 +45,15 @@ start
 
 split
 {
-	return current.fightend && !old.fightend && current.soraHP > 0;
+	if(vars.splitTimer <= 0){
+		if(current.fightend && !old.fightend && current.soraHP > 0){
+			vars.splitTimer = 300;
+			return true;
+		}
+	}
+	else if(!current.fightend){
+		vars.splitTimer = vars.splitTimer-1;
+	}
 }
 
 exit
