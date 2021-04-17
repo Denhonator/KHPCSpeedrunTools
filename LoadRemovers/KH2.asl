@@ -54,6 +54,7 @@ split
 	else if(!current.fightend){
 		vars.splitTimer = vars.splitTimer-1;
 	}
+	return false;
 }
 
 exit
