@@ -123,8 +123,8 @@ function ItemCompatibility(a, b)
 	if string.find(a, "Accessory") then
 		return string.find(b, "Accessory")
 	end
-	if string.find(a, "Report") or string.find(a, "Unique") or string.find(a, "Key") or string.find(a, "Summon") then
-		return string.find(b, "Report") or string.find(b, "Unique") or string.find(b, "Key") or string.find(b, "Summon")
+	if string.find(a, "Report") or string.find(a, "Unique") or string.find(a, "Key") then
+		return string.find(b, "Report") or string.find(b, "Unique") or string.find(b, "Key")
 	end
 	return true
 end
@@ -152,7 +152,7 @@ function Randomize()
 
 	for i=1,0xFF do
 		local itemtype = ItemType(i)
-		if itemtype ~= "" then
+		if itemtype ~= "" and itemtype ~= "Use" and itemtype ~= "Stock" and itemtype ~= "Summon" then
 			local r = math.random(0xFF)
 			while not ItemCompatibility(itemtype, ItemType(r)) do
 				r = math.random(0xFF)
