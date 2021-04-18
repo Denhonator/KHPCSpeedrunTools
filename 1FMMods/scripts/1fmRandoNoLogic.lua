@@ -142,6 +142,13 @@ function Randomize()
 		print("Wrote new seed")
 	end
 	seedfile:close()
+	
+	for i=1,0xFF do
+		if items[i][9]==0 and items[i][10]==0 then
+			items[i][9] = math.random(5)*40
+			items[i][10] = math.random(4)+3
+		end
+	end
 
 	for i=1,0xFF do
 		local itemtype = ItemType(i)
@@ -174,17 +181,19 @@ function Randomize()
 	print("Randomized reward pool")
 	
 	for i=1, 0x1DD do
+		if ((chests[i]-2) % 0x10) == 0 then
+			local change = {-2, 4, 12}
+			chests[i] = chests[i] + change[math.random(3)]
+		end
+	end
+	
+	for i=1, 0x1DD do
 		local r = math.random(0x1DD)
 		if chests[i] > 0x10 or (i>1 and i<0x1DD and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
 			while not (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10)) do
 				r = math.random(0x1DD)
 			end
-			
-			if ((chests[i]-2) % 0x10) == 0 then
-				local change = {-2, 4, 12}
-				chests[i] = chests[i] + change[math.random(3)]
-			end
-			
+
 			local orig = chests[i]
 			local other = chests[r]
 			chests[i] = other
