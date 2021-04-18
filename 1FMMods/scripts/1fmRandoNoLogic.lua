@@ -138,17 +138,14 @@ function Randomize()
 		local itemtype = ItemType(i)
 		local r = math.random(0xFF)
 		while not ItemCompatibility(itemtype, ItemType(r)) do
-			local r = math.random(0xFF)
+			r = math.random(0xFF)
 		end
 		local orig = items[i]
 		local other = items[r]
-		WriteArray(itemTable+(i-1)*20, other)
-		WriteArray(itemTable+(r-1)*20, orig)
 		itemids[i] = r
 		itemids[r] = i
 		items[i] = other
 		items[r] = orig
-		print("Randomized item " .. tostring(i))
 	end
 	
 	print("Randomized item pool")
@@ -157,8 +154,6 @@ function Randomize()
 		local r = math.random(0xA8)
 		local orig = rewards[i]
 		local other = rewards[r]
-		WriteShort(rewardTable+(i-1)*2, other)
-		WriteShort(rewardTable+(r-1)*2, orig)
 		rewards[i] = other
 		rewards[r] = orig
 	end
@@ -173,8 +168,6 @@ function Randomize()
 			end
 			local orig = chests[i]
 			local other = chests[r]
-			WriteShort(chestTable+(i-1)*2, other)
-			WriteShort(chestTable+(r-1)*2, orig)
 			chests[i] = other
 			chests[r] = orig
 		end
@@ -186,8 +179,6 @@ function Randomize()
 		local r = math.random(0xA8)
 		local orig = soraLevels[i]
 		local other = soraLevels[r]
-		WriteByte(soraStatTable+(i-1), other)
-		WriteByte(soraStatTable+(r-1), orig)
 		soraLevels[i] = other
 		soraLevels[r] = orig
 		
@@ -198,8 +189,6 @@ function Randomize()
 				r = math.random(0xA8)
 			end
 			other = soraAbilities[r]
-			WriteByte(soraAbilityTable+(i-1), other)
-			WriteByte(soraAbilityTable+(r-1), orig)
 			soraAbilities[i] = other
 			soraAbilities[r] = orig
 		end
@@ -207,8 +196,6 @@ function Randomize()
 		r = math.random(0xA8)
 		orig = goofyLevels[i]
 		other = goofyLevels[r]
-		WriteByte(goofyStatTable+(i-1), other)
-		WriteByte(goofyStatTable+(r-1), orig)
 		goofyLevels[i] = other
 		goofyLevels[r] = orig
 		
@@ -219,8 +206,6 @@ function Randomize()
 				r = math.random(0xA8)
 			end
 			other = goofyAbilities[r]
-			WriteByte(goofyAbilityTable+(i-1), other)
-			WriteByte(goofyAbilityTable+(r-1), orig)
 			goofyAbilities[i] = other
 			goofyAbilities[r] = orig
 		end
@@ -228,8 +213,6 @@ function Randomize()
 		r = math.random(0xA8)
 		orig = donaldLevels[i]
 		other = donaldLevels[r]
-		WriteByte(donaldStatTable+(i-1), other)
-		WriteByte(donaldStatTable+(r-1), orig)
 		donaldLevels[i] = other
 		donaldLevels[r] = orig
 		
@@ -240,8 +223,6 @@ function Randomize()
 				r = math.random(0xA8)
 			end
 			other = donaldAbilities[r]
-			WriteByte(donaldAbilityTable+(i-1), other)
-			WriteByte(donaldAbilityTable+(r-1), orig)
 			donaldAbilities[i] = other
 			donaldAbilities[r] = orig
 		end
