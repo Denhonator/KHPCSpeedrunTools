@@ -181,51 +181,51 @@ function Randomize()
 	print("Randomized chests")
 	
 	for i=1, 99 do
-		local r = math.random(0xA8)
+		local r = math.random(99)
 		local orig = soraLevels[i]
 		local other = soraLevels[r]
 		soraLevels[i] = other
 		soraLevels[r] = orig
 		
-		r = math.random(0xA8)
+		r = math.random(99)
 		orig = soraAbilities[i]
 		if orig > 0 then
 			while soraAbilities[r] == 0 do
-				r = math.random(0xA8)
+				r = math.random(99)
 			end
 			other = soraAbilities[r]
 			soraAbilities[i] = other
 			soraAbilities[r] = orig
 		end
 		
-		r = math.random(0xA8)
+		r = math.random(99)
 		orig = goofyLevels[i]
 		other = goofyLevels[r]
 		goofyLevels[i] = other
 		goofyLevels[r] = orig
 		
-		r = math.random(0xA8)
+		r = math.random(99)
 		orig = goofyAbilities[i]
 		if orig > 0 then
 			while goofyAbilities[r] == 0 do
-				r = math.random(0xA8)
+				r = math.random(99)
 			end
 			other = goofyAbilities[r]
 			goofyAbilities[i] = other
 			goofyAbilities[r] = orig
 		end
 		
-		r = math.random(0xA8)
+		r = math.random(99)
 		orig = donaldLevels[i]
 		other = donaldLevels[r]
 		donaldLevels[i] = other
 		donaldLevels[r] = orig
 		
-		r = math.random(0xA8)
+		r = math.random(99)
 		orig = donaldAbilities[i]
 		if orig > 0 then
 			while donaldAbilities[r] == 0 do
-				r = math.random(0xA8)
+				r = math.random(99)
 			end
 			other = donaldAbilities[r]
 			donaldAbilities[i] = other
