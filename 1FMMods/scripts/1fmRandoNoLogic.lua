@@ -180,7 +180,7 @@ function Randomize()
 				r = math.random(0x1DD)
 			end
 			
-			if (chests[i]-2 % 0x10) == 0 then
+			if ((chests[i]-2) % 0x10) == 0 then
 				local change = {-2, 4, 12}
 				chests[i] = chests[i] + change[math.random(3)]
 			end
