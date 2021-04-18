@@ -80,10 +80,10 @@ function ItemType(id)
 	if (i >= 0x51 and i <= 0x66) then
 		attributes = attributes .. "SoraWeapon"
 	end
-	if (i >= 0x67 and i <= 0x76) then
+	if (i >= 0x67 and i <= 0x75) then
 		attributes = attributes .. "DonaldWeapon"
 	end
-	if (i >= 0x77 and i <= 0x86) then
+	if (i >= 0x77 and i <= 0x85) then
 		attributes = attributes .. "GoofyWeapon"
 	end
 	if (i >= 0x95 and i <= 0x97) and (i >= 0xA8 and i <= 0xB1) then
@@ -136,16 +136,21 @@ function Randomize()
 
 	for i=1,0xFF do
 		local itemtype = ItemType(i)
-		local r = math.random(0xFF)
-		while not ItemCompatibility(itemtype, ItemType(r)) do
-			r = math.random(0xFF)
+		if itemtype ~= "" then
+			local r = math.random(0xFF)
+			while not ItemCompatibility(itemtype, ItemType(r)) do
+				r = math.random(0xFF)
+			end
+			local orig = items[i]
+			local other = items[r]
+			local origid = itemids[i]
+			local otherid = itemids[r]
+			itemids[i] = otherid
+			itemids[r] = origid
+			items[i] = other
+			items[r] = orig
+			--print(string.format("%x : %x", itemids[i], itemids[r]))
 		end
-		local orig = items[i]
-		local other = items[r]
-		itemids[i] = r
-		itemids[r] = i
-		items[i] = other
-		items[r] = orig
 	end
 	
 	print("Randomized item pool")
@@ -251,6 +256,9 @@ function ApplyRandomization()
 	end
 	randomized = true
 	print("Applied randomization")
+	for i=1, 0xFF do
+		print(string.format("item %x became %x", i, itemids[i]))
+	end
 end
 
 function InstantGummi()
