@@ -44,5 +44,5 @@ Autoattack:
 RandoNoLogic:
 - Randomizes items, level ups, rewards and chests
 - If seed.txt exists, it will try to use it. Must be a number. Otherwise, the file will be created with a random seed.
-- Combine with SaveAnywhere to get to world map right away. Everything will be open.
+- Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 - Has no real objective or logic yet
