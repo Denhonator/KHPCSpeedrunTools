@@ -40,3 +40,8 @@ Autoattack:
 - Holding down attack allows Sora to perform physical attack combos automatically
 - This will guarantee very quick combos
 - Made for accessibility reasons
+
+RandoNoLogic:
+- Randomizes items, level ups, rewards and chests
+- Combine with SaveAnywhere to get to world map right away. Everything will be open.
+- Has no real objective or logic yet
