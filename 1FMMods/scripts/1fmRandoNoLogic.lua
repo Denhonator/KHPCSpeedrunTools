@@ -5,7 +5,7 @@ local soraStatTable = btltbl+0x3AC0
 local donaldStatTable = soraStatTable+0x3F8
 local goofyStatTable = donaldStatTable+0x198
 local soraAbilityTable = btltbl+0x3BF8
-local donaldAbilityTable = soraAbilityTable+0x3F8
+local donaldAbilityTable = soraAbilityTable+0x328
 local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
@@ -43,6 +43,7 @@ local goofyLevels = {}
 local goofyAbilities = {}
 local chests = {}
 local randomized = false
+local initDone = false
 
 function _OnInit()
 	for i=1,0xFF do
@@ -63,15 +64,19 @@ function _OnInit()
 	for i=1, 0x1DD do
 		chests[i] = ReadShort(chestTable+(i-1)*2)
 	end
+	initDone = true
 end
 
 function ItemType(id)
 	local i = itemids[id]
 	local attributes = ""
-	if (i >= 1 and i <= 8 and i~=5) or (i >= 0x8E and i <= 0x90) or (i >= 0x98 and i <= 0x9A) then
+	if (i >= 1 and i <= 8 and i~=5) then
 		attributes = attributes .. "Use"
 	end
-	if (i >= 9 and i <= 0x10) or (i >= 0x9B and i <= 0x9D) or i >= 0xE9 then
+	if (i >= 0x98 and i <= 0x9A) or (i >= 0x8E and i <= 0x90) then
+		attributes = attributes .. "Stock"
+	end
+	if (i >= 9 and i <= 0x10) or (i >= 0x9B and i <= 0x9D) or i >= 0xE9 or i == 0xD3  then
 		attributes = attributes .. "Synth"
 	end
 	if (i >= 0x11 and i <= 0x47) or (i >= 0x9E and i <= 0xA4) then
@@ -92,14 +97,11 @@ function ItemType(id)
 	if (i >= 0xA5 and i <= 0xA7) then
 		attributes = attributes .. "Unique"
 	end
-	if (i >= 0xB2 and i <= 0xCD) or (i >= 0xD3 and i <= 0xE7) or i==0xD2 then
+	if (i >= 0xB2 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i==0xD2 then
 		attributes = attributes .. "Key"
 	end
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
-	end
-	if (i == 0xC0 or i == 0xC4 or i == 0xC5 or i == 0xC6 or i == 0xD3) then
-		attributes = attributes .. "Multi"
 	end
 	return attributes
 end
@@ -108,8 +110,8 @@ function ItemCompatibility(a, b)
 	if string.find(a, "Weapon") then
 		return a==b
 	end
-	if string.find(a, "Multi") then
-		return string.find(b, "Use") or string.find(b, "Synth")
+	if string.find(a, "Stock") then
+		return string.find(b, "Stock")
 	end
 	if string.find(a, "Use") or string.find(a, "Synth") or string.find(a, "Accessory") then
 		return string.find(b, "Use") or string.find(b, "Synth") or string.find(b, "Accessory")
@@ -238,7 +240,8 @@ end
 
 function ApplyRandomization()
 	for i=1,0xFF do
-		WriteArray(itemTable+(i-1)*20, items[i])
+		local temp = items[i]
+		WriteArray(itemTable+(i-1)*20, temp)
 	end
 	for i=1, 0xA8 do
 		WriteShort(rewardTable+(i-1)*2, rewards[i])
@@ -267,7 +270,7 @@ function InstantGummi()
 end
 
 function _OnFrame()
-	if not randomized then
+	if not randomized and initDone then
 		Randomize()
 	end
 
@@ -312,13 +315,13 @@ function _OnFrame()
 		WriteByte(enableRC, 0x0)
 	end
 	
-	if ReadByte(0x232A604) then
-		WriteByte(0x2E1CC28, 3) --Unlock gummi
-		WriteByte(0x2E1CB9C, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E8F450, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E8F452, 5) --Set 5 buttons to save menu
+	if ReadByte(0x232A604-offset) then
+		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
+		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E8F450-offset, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E8F452-offset, 5) --Set 5 buttons to save menu
 		for i=0,4 do
-			WriteByte(0x2E1CBA0+i*4, i) --Set button types
+			WriteByte(0x2E1CBA0+i*4-offset, i) --Set button types
 		end
 	end
 end
