@@ -1,3 +1,5 @@
+local itemrando = false
+
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
 local itemTable = btltbl+0x1A58
@@ -136,27 +138,28 @@ function Randomize()
 	end
 	seedfile:close()
 
-	for i=1,0xFF do
-		local itemtype = ItemType(i)
-		if itemtype ~= "" then
-			local r = math.random(0xFF)
-			while not ItemCompatibility(itemtype, ItemType(r)) do
-				r = math.random(0xFF)
+	if itemrando then
+		for i=1,0xFF do
+			local itemtype = ItemType(i)
+			if itemtype ~= "" then
+				local r = math.random(0xFF)
+				while not ItemCompatibility(itemtype, ItemType(r)) do
+					r = math.random(0xFF)
+				end
+				local orig = items[i]
+				local other = items[r]
+				local origid = itemids[i]
+				local otherid = itemids[r]
+				itemids[i] = otherid
+				itemids[r] = origid
+				items[i] = other
+				items[r] = orig
+				--print(string.format("%x : %x", itemids[i], itemids[r]))
 			end
-			local orig = items[i]
-			local other = items[r]
-			local origid = itemids[i]
-			local otherid = itemids[r]
-			itemids[i] = otherid
-			itemids[r] = origid
-			items[i] = other
-			items[r] = orig
-			--print(string.format("%x : %x", itemids[i], itemids[r]))
 		end
+		print("Randomized item pool")
 	end
-	
-	print("Randomized item pool")
-	
+
 	for i=1, 0xA8 do
 		local r = math.random(0xA8)
 		local orig = rewards[i]
@@ -169,8 +172,8 @@ function Randomize()
 	
 	for i=1, 0x1DD do
 		local r = math.random(0x1DD)
-		if chests[i] > 0x10 or (i>1 and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
-			while not (chests[r] > 0x10 or (r>1 and chests[r-1] > 0x10 and chests[r+1] > 0x10)) do
+		if chests[i] > 0x10 or (i>1 and i<0x1DD and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
+			while not (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10)) do
 				r = math.random(0x1DD)
 			end
 			local orig = chests[i]
@@ -259,8 +262,10 @@ function ApplyRandomization()
 	end
 	randomized = true
 	print("Applied randomization")
-	for i=1, 0xFF do
-		print(string.format("item %x became %x", i, itemids[i]))
+	if itemrando then
+		for i=1, 0xFF do
+			print(string.format("item %x became %x", i, itemids[i]))
+		end
 	end
 end
 
@@ -298,7 +303,7 @@ function _OnFrame()
 		WriteByte(lockMenu, 0) -- Unlock menu
 	end
 	
-	if ReadByte(gummiFlagBase) ~= 3 then
+	if ReadByte(gummiFlagBase+14) ~= 3 then
 		for i=0,14 do
 			WriteByte(gummiFlagBase+i, 3)
 		end
@@ -315,7 +320,7 @@ function _OnFrame()
 		WriteByte(enableRC, 0x0)
 	end
 	
-	if ReadByte(0x232A604-offset) then
+	if ReadByte(0x232A604-offset) and ReadByte(0x2E1CB9C-offset) < 5 then
 		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
 		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu
 		WriteByte(0x2E8F450-offset, 5) --Set 5 buttons to save menu
