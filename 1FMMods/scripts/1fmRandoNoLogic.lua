@@ -33,12 +33,15 @@ local soraHUD = 0x280EB1C - offset
 local gotoWorldMap = 0x2E1CC24 - offset
 local openMenu = 0x2350CD4 - offset
 local closeMenu = 0x2E90820 - offset
-local menuCheck = 0x2E1BBBC - offset
+local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
+local soraHP = 0x2D592CC - offset
 
 local wasMenu = false
 local inventoryUpdater = {}
+
+local eventItems = {0x75, 0x85, 0x66, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5C, 0x5F}
 
 local items = {}
 local itemsorig = {}
@@ -54,28 +57,45 @@ local chests = {}
 local randomized = false
 local initDone = false
 
+function RArray(off, c)
+	local l = {}
+	for i=1, c do
+		l[i] = ReadByte(off+(i-1))
+	end
+	return l
+end
+
+function WArray(off, l, c)
+	for i=1, c do
+		WriteByte(off+(i-1), l[i])
+	end
+end
+
 function _OnInit()
 	local foundData = false
-	local f = io.open("itemdata", "r")
+	local itemdatafromfile = {}
+	local f = io.open("itemdata", "rb")
 	if f then
 		print("Item data found")
 		foundData = true
+		itemdatafromfile = f:read("*a")
 	else
-		f = io.open("itemdata", "w")
+		f = io.open("itemdata", "wb")
 		print("Initializing item data. Item data must be unmodified now. Otherwise delete itemdata and try again.")
 	end
 	for i=1,0xFF do
-		items[i] = ReadArray(itemTable+((i-1)*20), 20)
+		items[i] = RArray(itemTable+((i-1)*20), 20)
 		if foundData then
+			--print(i)
 			local singleItem = {}
 			for j=1, 20 do
-				singleItem[j] = tonumber(f:read(3))
+				singleItem[j] = string.byte(itemdatafromfile, ((i-1)*20) + j)
 			end
 			itemsorig[i] = singleItem
 		else
-			itemsorig[i] = ReadArray(itemTable+((i-1)*20), 20)
+			itemsorig[i] = RArray(itemTable+((i-1)*20), 20)
 			for j=1, 20 do
-				f:write(string.format("%03d", items[i][j]))
+				f:write(string.char(items[i][j]))
 			end
 		end
 		itemids[i] = i
@@ -130,10 +150,10 @@ function ItemType(id)
 	if (i >= 0x77 and i <= 0x85) then
 		attributes = attributes .. "GoofyWeapon"
 	end
-	if (i >= 0x95 and i <= 0x97) and (i >= 0x9E and i <= 0xB1) then
+	if (i >= 0x95 and i <= 0x97) and (i >= 0x9E and i <= 0xA7) then
 		attributes = attributes .. "Unique"
 	end
-	if (i >= 0xB2 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i == 0xD2 then
+	if (i >= 0xA8 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i == 0xD2 then
 		attributes = attributes .. "Key"
 	end
 	if (i >= 0xCE and i <= 0xD1) then
@@ -164,8 +184,15 @@ function ItemCompatibility(i, r)
 		return string.find(b, "Unique")
 	end
 	if a == "Key" then
-		return (r >= 0x56 and r <= 0x85 and r~=0x76 and r~=0x77 and r~= 0x67) or
-						b == "Key"
+		if b == "Key" then
+			return true
+		end
+		for _, v in ipairs(eventItems) do
+			if v == value then
+				return true
+			end
+		end
+		return false
 	end
 	return true
 end
@@ -187,7 +214,7 @@ function Randomize()
 	for i=1,0xFF do
 		if items[i][9]==0 and items[i][10]==0 then
 			items[i][9] = math.random(5)*40
-			items[i][10] = math.random(4)+3
+			items[i][10] = math.random(5)+3
 		end
 	end
 
@@ -333,15 +360,15 @@ end
 
 -- Swap key items in inventory slots
 function UpdateInventory()
-	local nowMenu = ReadByte(closeMenu) > 0
+	local nowMenu = ReadByte(menuCheck) > 0
 	if nowMenu or wasMenu then
 		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
 			for i=0xB2,0xFF do
 				if string.find(ItemType(i), "Key") then
 					if nowMenu then
-						WriteArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]])
+						WArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]], 20)
 					else
-						WriteArray(itemTable+((itemids[i]-1)*20), items[i])
+						WArray(itemTable+((itemids[i]-1)*20), items[itemids[i]], 20)
 					end
 				end
 			end
