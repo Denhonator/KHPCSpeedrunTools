@@ -180,14 +180,14 @@ function ItemCompatibility(i, r)
 	if string.find(a, "Accessory") then
 		return string.find(b, "Accessory")
 	end
-	if string.find(a, "Unique")then
+	if string.find(a, "Unique") then
 		return string.find(b, "Unique")
 	end
 	if a == "Key" then
 		if b == "Key" then
 			return true
 		end
-		if (r >= 0x56 and r <= 0x85 and r ~= 0x76 and r~= 0x77 and r~= 0x67 and r~= 0x73 and r~= 0x82)  then
+		if (r >= 0x56 and r <= 0x60) or (r >= 0x68 and r <= 0x70) or (r >= 0x78 and r <= 0x7D) then
 			return true
 		end
 		return false
