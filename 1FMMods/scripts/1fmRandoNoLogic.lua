@@ -361,36 +361,19 @@ end
 
 -- Swap key items in inventory slots
 function UpdateInventory()
-	local nowMenu = ReadByte(menuCheck) > 0
-	if nowMenu or wasMenu then
-		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
-			for i=0xB2,0xFF do
-				if string.find(ItemType(i), "Key") then
-					if nowMenu or string.find(ItemType(itemids[i], "Weapon")) then
-						WArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]], 20)
-					else
-						WArray(itemTable+((itemids[i]-1)*20), items[itemids[i]], 20)
-					end
-				end
-			end
-			print("Swapped names for inventory viewing")
-		end
-	else
-		for i=0xA8,0xFF do
-			local itemCount = ReadByte(inventory+(i-1))
-			local dif = itemCount - inventoryUpdater[i]
-			
-			if dif ~= 0 and string.find(ItemType(i), "Key") then
-				local curid = itemids[i]
-				local otherCount = ReadByte(inventory+(curid-1))
-				WriteByte(inventory+(i-1), itemCount-dif)
-				WriteByte(inventory+(curid-1), otherCount+dif)
-				inventoryUpdater[i] = itemCount-dif
-				inventoryUpdater[curid] = otherCount+dif
-			end
+	for i=0xA8,0xFF do
+		local itemCount = ReadByte(inventory+(i-1))
+		local dif = itemCount - inventoryUpdater[i]
+		
+		if dif ~= 0 and string.find(ItemType(i), "Key") then
+			local curid = itemids[i]
+			local otherCount = ReadByte(inventory+(curid-1))
+			WriteByte(inventory+(i-1), itemCount-dif)
+			WriteByte(inventory+(curid-1), otherCount+dif)
+			inventoryUpdater[i] = itemCount-dif
+			inventoryUpdater[curid] = otherCount+dif
 		end
 	end
-	wasMenu = nowMenu
 end
 
 function InstantGummi()
