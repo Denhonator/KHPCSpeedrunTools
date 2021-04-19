@@ -190,7 +190,7 @@ function ItemCompatibility(i, r)
 			return true
 		end
 		for _, v in ipairs(eventItems) do
-			if v == value then
+			if v == r then
 				return true
 			end
 		end
