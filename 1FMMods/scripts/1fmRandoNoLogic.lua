@@ -134,8 +134,7 @@ function ItemType(id)
 	if (i >= 0x98 and i <= 0x9A) or (i >= 0x8E and i <= 0x90) then
 		attributes = attributes .. "Stock"
 	end
-	if (i >= 9 and i <= 0x10) or (i >= 0x9B and i <= 0x9D) or i >= 0xE9 or i == 0xD3 or
-								(i == 0xC0 or (i >= 0xC4 and i <= 0xC6) or i == 0xD3) then -- Farmable key items
+	if (i >= 9 and i <= 0x10) or (i >= 0x9B and i <= 0x9D) or i >= 0xE9 then
 		attributes = attributes .. "Synth"
 	end
 	if (i >= 0x11 and i <= 0x47) then
@@ -156,6 +155,9 @@ function ItemType(id)
 	if (i >= 0xA8 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i == 0xD2 then
 		attributes = attributes .. "Key"
 	end
+	if (i == 0xC0 or (i >= 0xC4 and i <= 0xC6) or i == 0xD3) then
+		attributes = attributes .. "Farm"
+	end
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
@@ -174,8 +176,8 @@ function ItemCompatibility(i, r)
 	if string.find(a, "Use") then
 		return string.find(b, "Use")
 	end
-	if string.find(a, "Synth") or string.find(b, "Synth") then
-		return string.find(b, "Synth") and string.find(a, "Synth")
+	if string.find(a, "Synth")then
+		return string.find(b, "Synth")
 	end
 	if string.find(a, "Accessory") then
 		return string.find(b, "Accessory")
@@ -193,6 +195,9 @@ function ItemCompatibility(i, r)
 			end
 		end
 		return false
+	end
+	if string.find(a, "Farm") then
+		return b == "Synth"
 	end
 	return true
 end
