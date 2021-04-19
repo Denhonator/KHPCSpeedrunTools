@@ -366,7 +366,7 @@ function UpdateInventory()
 		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
 			for i=0xB2,0xFF do
 				if string.find(ItemType(i), "Key") then
-					if nowMenu then
+					if nowMenu or string.find(ItemType(itemids[i], "Weapon")) then
 						WArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]], 20)
 					else
 						WArray(itemTable+((itemids[i]-1)*20), items[itemids[i]], 20)
