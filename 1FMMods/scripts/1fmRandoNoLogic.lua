@@ -1,3 +1,5 @@
+local keyitemsMatter = true
+
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
 local itemTable = btltbl+0x1A58
@@ -9,6 +11,8 @@ local donaldAbilityTable = soraAbilityTable+0x328
 local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
+
+local inventory = 0x2DE5E6A - offset
 
 --local TTWarp = 0x5229B0+0x9B570C+6
 local worldWarps = 0x50B940 - offset
@@ -33,7 +37,11 @@ local menuCheck = 0x2E1BBBC - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 
+local wasMenu = false
+local inventoryUpdater = {}
+
 local items = {}
+local itemsorig = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
@@ -47,12 +55,37 @@ local randomized = false
 local initDone = false
 
 function _OnInit()
+	local foundData = false
+	local f = io.open("itemdata", "r")
+	if f then
+		print("Item data found")
+		foundData = true
+	else
+		f = io.open("itemdata", "w")
+		print("Initializing item data. Item data must be unmodified now. Otherwise delete itemdata and try again.")
+	end
 	for i=1,0xFF do
-		items[i] = ReadArray(itemTable+(i-1)*20, 20)
+		items[i] = ReadArray(itemTable+((i-1)*20), 20)
+		if foundData then
+			local singleItem = {}
+			for j=1, 20 do
+				singleItem[j] = tonumber(f:read(3))
+			end
+			itemsorig[i] = singleItem
+		else
+			itemsorig[i] = ReadArray(itemTable+((i-1)*20), 20)
+			for j=1, 20 do
+				f:write(string.format("%03d", items[i][j]))
+			end
+		end
 		itemids[i] = i
 	end
+	if f then
+		f:close()
+		print("Item data success")
+	end
 	for i=1, 0xA8 do
-		rewards[i] = ReadShort(rewardTable+(i-1)*2)
+		rewards[i] = ReadShort(rewardTable+((i-1)*2))
 	end
 	for i=1, 99 do
 		soraLevels[i] = ReadByte(soraStatTable+(i-1))
@@ -63,13 +96,17 @@ function _OnInit()
 		donaldAbilities[i] = ReadByte(donaldAbilityTable+(i-1))
 	end
 	for i=1, 0x1DD do
-		chests[i] = ReadShort(chestTable+(i-1)*2)
+		chests[i] = ReadShort(chestTable+((i-1)*2))
 	end
+	for i=1, 0xFF do
+		inventoryUpdater[i] = ReadByte(inventory+(i-1))
+	end
+	wasMenu = ReadByte(menuCheck) > 0
 	initDone = true
 end
 
 function ItemType(id)
-	local i = itemids[id]
+	local i = id
 	local attributes = ""
 	if (i >= 1 and i <= 8 and i~=5) then
 		attributes = attributes .. "Use"
@@ -77,7 +114,8 @@ function ItemType(id)
 	if (i >= 0x98 and i <= 0x9A) or (i >= 0x8E and i <= 0x90) then
 		attributes = attributes .. "Stock"
 	end
-	if (i >= 9 and i <= 0x10) or (i >= 0x9B and i <= 0x9D) or i >= 0xE9 or i == 0xD3  then
+	if (i >= 9 and i <= 0x10) or (i >= 0x9B and i <= 0x9D) or i >= 0xE9 or i == 0xD3 or
+								(i == 0xC0 or (i >= 0xC4 and i <= 0xC6) or i == 0xD3) then -- Farmable key items
 		attributes = attributes .. "Synth"
 	end
 	if (i >= 0x11 and i <= 0x47) then
@@ -92,13 +130,10 @@ function ItemType(id)
 	if (i >= 0x77 and i <= 0x85) then
 		attributes = attributes .. "GoofyWeapon"
 	end
-	if (i >= 0x95 and i <= 0x97) and (i >= 0xA8 and i <= 0xB1) then
-		attributes = attributes .. "Report"
-	end
-	if (i >= 0x9E and i <= 0xA7) then
+	if (i >= 0x95 and i <= 0x97) and (i >= 0x9E and i <= 0xB1) then
 		attributes = attributes .. "Unique"
 	end
-	if (i >= 0xB2 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i==0xD2 then
+	if (i >= 0xB2 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i == 0xD2 then
 		attributes = attributes .. "Key"
 	end
 	if (i >= 0xCE and i <= 0xD1) then
@@ -107,7 +142,9 @@ function ItemType(id)
 	return attributes
 end
 
-function ItemCompatibility(a, b)
+function ItemCompatibility(i, r)
+	a = ItemType(i)
+	b = ItemType(r)
 	if string.find(a, "Weapon") then
 		return a==b
 	end
@@ -117,14 +154,18 @@ function ItemCompatibility(a, b)
 	if string.find(a, "Use") then
 		return string.find(b, "Use")
 	end
-	if string.find(a, "Synth") then
-		return string.find(b, "Synth")
+	if string.find(a, "Synth") or string.find(b, "Synth") then
+		return string.find(b, "Synth") and string.find(a, "Synth")
 	end
 	if string.find(a, "Accessory") then
 		return string.find(b, "Accessory")
 	end
-	if string.find(a, "Report") or string.find(a, "Unique") or string.find(a, "Key") then
-		return string.find(b, "Report") or string.find(b, "Unique") or string.find(b, "Key")
+	if string.find(a, "Unique")then
+		return string.find(b, "Unique")
+	end
+	if a == "Key" then
+		return (r >= 0x56 and r <= 0x85 and r~=0x76 and r~=0x77 and r~= 0x67) or
+						b == "Key"
 	end
 	return true
 end
@@ -154,8 +195,11 @@ function Randomize()
 		local itemtype = ItemType(i)
 		if itemtype ~= "" and itemtype ~= "Use" and itemtype ~= "Stock" and itemtype ~= "Summon" then
 			local r = math.random(0xFF)
-			while not ItemCompatibility(itemtype, ItemType(r)) do
+			while not ItemCompatibility(i, r) do
 				r = math.random(0xFF)
+			end
+			if string.find(itemtype, "Key") then
+				print(itemtype .. " " .. ItemType(r))
 			end
 			local orig = items[i]
 			local other = items[r]
@@ -193,9 +237,9 @@ function Randomize()
 			local valid = true
 			while not (valid and (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10))) do
 				r = math.random(0x1DD)
-				valid = not (i >= 0x1C0 and ((chests[r]-4) % 0x10) == 0)
+				valid = not ((i >= 0x1C0 or i == 0) and ((chests[r]-4) % 0x10) == 0)
 				if not valid then
-					print(i)
+					print("Prevented EotW dalmatians")
 				end
 			end
 
@@ -265,19 +309,15 @@ function Randomize()
 end
 
 function ApplyRandomization()
-	if ReadByte(itemTable) == 0x1F and ReadByte(itemTable+0x50) == 0x23 then
-		for i=1,0xFF do
-			WriteArray(itemTable+(i-1)*20, items[i])
-			print(string.format("item %x became %x", i, itemids[i]))
-		end
-	else
-		print("Items seem randomized already, skipping. Restart game to redo it")
+	for i=1,0xFF do
+		WriteArray(itemTable+((i-1)*20), itemsorig[itemids[i]])
+		print(string.format("item %x became %x", i, itemids[i]))
 	end
 	for i=1, 0xA8 do
-		WriteShort(rewardTable+(i-1)*2, rewards[i])
+		WriteShort(rewardTable+((i-1)*2), rewards[i])
 	end
 	for i=1, 0x1DD do
-		WriteShort(chestTable+(i-1)*2, chests[i])
+		WriteShort(chestTable+((i-1)*2), chests[i])
 	end
 	for i=1, 99 do
 		WriteByte(soraStatTable+(i-1), soraLevels[i])
@@ -291,6 +331,41 @@ function ApplyRandomization()
 	print("Applied randomization")
 end
 
+-- Swap key items in inventory slots
+function UpdateInventory()
+	local nowMenu = ReadByte(closeMenu) > 0
+	if nowMenu or wasMenu then
+		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
+			for i=0xB2,0xFF do
+				if string.find(ItemType(i), "Key") then
+					if nowMenu then
+						WriteArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]])
+					else
+						WriteArray(itemTable+((itemids[i]-1)*20), items[i])
+					end
+				end
+			end
+			print("Swapped names for inventory viewing")
+		end
+	else
+		for i=0xA8,0xFF do
+			local itemCount = ReadByte(inventory+(i-1))
+			local dif = itemCount - inventoryUpdater[i]
+			
+			if dif ~= 0 and string.find(ItemType(i), "Key") then
+				local curid = itemids[i]
+				local otherCount = ReadByte(inventory+(curid-1))
+				WriteByte(inventory+(i-1), itemCount-dif)
+				WriteByte(inventory+(curid-1), otherCount+dif)
+				inventoryUpdater[i] = itemCount-dif
+				inventoryUpdater[curid] = otherCount+dif
+				print(string.format("Swapped %x and %x", i, curid))
+			end
+		end
+	end
+	wasMenu = nowMenu
+end
+
 function InstantGummi()
 	WriteByte(gotoWorldMap, 1)
 	WriteLong(closeMenu, 0)
@@ -299,6 +374,19 @@ end
 function _OnFrame()
 	if not randomized and initDone then
 		Randomize()
+	end
+	
+	-- Add party members to prevent crash
+	if ReadFloat(soraHUD) > 0 and ReadByte(party1)==0xFF or party2==0 then
+		for i=0,1 do
+			WriteByte(party1+i, i+1)
+			WriteByte(party2+i, i+1)
+		end
+		print("Added party members")
+	end
+	
+	if keyitemsMatter then
+		UpdateInventory()
 	end
 
 	if ReadByte(unlockedWarps-7) < 8 then
@@ -333,11 +421,6 @@ function _OnFrame()
 		end
 		WriteInt(worldMapLines, 0xFFFFFFFF)
 		WriteByte(worldMapLines+4, 0xFF)
-		
-		for i=0,1 do
-			WriteByte(party1+i, i+1)
-			WriteByte(party2+i, i+1)
-		end
 	end
 	
 	if ReadByte(enableRC) ~= 0x0 then
