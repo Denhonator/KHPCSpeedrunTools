@@ -182,16 +182,21 @@ function Randomize()
 	
 	for i=1, 0x1DD do
 		if ((chests[i]-2) % 0x10) == 0 then
-			local change = {-2, 4, 12}
-			chests[i] = chests[i] + change[math.random(3)]
+			local change = {-2, 4, 4, 12}
+			chests[i] = chests[i] + change[math.random(4)]
 		end
 	end
 	
 	for i=1, 0x1DD do
 		local r = math.random(0x1DD)
 		if chests[i] > 0x10 or (i>1 and i<0x1DD and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
-			while not (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10)) do
+			local valid = true
+			while not (valid and (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10))) do
 				r = math.random(0x1DD)
+				valid = not (i >= 0x1C0 and ((chests[r]-4) % 0x10) == 0)
+				if not valid then
+					print(i)
+				end
 			end
 
 			local orig = chests[i]
