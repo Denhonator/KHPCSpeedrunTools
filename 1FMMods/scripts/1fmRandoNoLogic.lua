@@ -187,7 +187,7 @@ function ItemCompatibility(i, r)
 		if b == "Key" then
 			return true
 		end
-		if (r >= 0x56 and r <= 0x85 and r ~= 0x76 and r~= 0x77 and r~= 0x67)  then
+		if (r >= 0x56 and r <= 0x85 and r ~= 0x76 and r~= 0x77 and r~= 0x67 and r~= 0x73 and r~= 0x82)  then
 			return true
 		end
 		return false
@@ -404,7 +404,7 @@ function _OnFrame()
 	end
 	
 	-- Add party members to prevent crash
-	if ReadFloat(soraHUD) > 0 and ReadByte(party1)==0xFF or party2==0 then
+	if ReadFloat(soraHUD) > 0 and ReadByte(party1)==0xFF or ReadByte(party2)==0 then
 		for i=0,1 do
 			WriteByte(party1+i, i+1)
 			WriteByte(party2+i, i+1)
