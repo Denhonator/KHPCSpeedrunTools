@@ -440,8 +440,10 @@ function _OnFrame()
 		WriteInt(worldMapLines, 0xFFFFFFFF)
 		WriteByte(worldMapLines+4, 0xFF)
 		
-		WriteByte(party1+i, i+1)
-		WriteByte(party2+i, i+1)
+		for i=0,1 do
+			WriteByte(party1+i, i+1)
+			WriteByte(party2+i, i+1)
+		end
 	end
 	
 	if ReadByte(enableRC) ~= 0x0 then
