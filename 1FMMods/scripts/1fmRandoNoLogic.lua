@@ -41,8 +41,6 @@ local soraHP = 0x2D592CC - offset
 local wasMenu = false
 local inventoryUpdater = {}
 
-local eventItems = {0x75, 0x85, 0x66, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5C, 0x5F}
-
 local items = {}
 local itemsorig = {}
 local itemids = {}
@@ -189,10 +187,8 @@ function ItemCompatibility(i, r)
 		if b == "Key" then
 			return true
 		end
-		for _, v in ipairs(eventItems) do
-			if v == r then
-				return true
-			end
+		if (r >= 0x56 and r <= 0x85 and r ~= 0x76 and r~= 0x77 and r~= 0x67)  then
+			return true
 		end
 		return false
 	end
@@ -391,7 +387,6 @@ function UpdateInventory()
 				WriteByte(inventory+(curid-1), otherCount+dif)
 				inventoryUpdater[i] = itemCount-dif
 				inventoryUpdater[curid] = otherCount+dif
-				print(string.format("Swapped %x and %x", i, curid))
 			end
 		end
 	end
