@@ -1,4 +1,4 @@
-local keyitemsMatter = true
+local keyitemsMatter = false
 
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
