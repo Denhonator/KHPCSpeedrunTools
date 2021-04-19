@@ -403,15 +403,6 @@ function _OnFrame()
 		Randomize()
 	end
 	
-	-- Add party members to prevent crash
-	if ReadFloat(soraHUD) > 0 and ReadByte(party1)==0xFF or ReadByte(party2)==0 then
-		for i=0,1 do
-			WriteByte(party1+i, i+1)
-			WriteByte(party2+i, i+1)
-		end
-		print("Added party members")
-	end
-	
 	if keyitemsMatter then
 		UpdateInventory()
 	end
@@ -448,6 +439,9 @@ function _OnFrame()
 		end
 		WriteInt(worldMapLines, 0xFFFFFFFF)
 		WriteByte(worldMapLines+4, 0xFF)
+		
+		WriteByte(party1+i, i+1)
+		WriteByte(party2+i, i+1)
 	end
 	
 	if ReadByte(enableRC) ~= 0x0 then
