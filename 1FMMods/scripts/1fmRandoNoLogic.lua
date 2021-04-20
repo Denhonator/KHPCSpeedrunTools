@@ -219,7 +219,7 @@ function Randomize()
 
 	for i=1,0xFF do
 		local itemtype = ItemType(i)
-		if itemtype ~= "" and not string.find(itemtype, "Weapon") and not string.find(itemtype, "Accessory") then
+		if itemtype ~= "" then
 			local r = math.random(0xFF)
 			while not ItemCompatibility(i, r) do
 				r = math.random(0xFF)
@@ -401,14 +401,16 @@ end
 -- Swap key items in inventory slots
 function UpdateInventory()
 	for i=0x1,0xFF do
-		local itemCount = ReadByte(inventory+(i-1))
-		local dif = itemCount - inventoryUpdater[i]
-		if dif ~= 0 then
-			local curid = itemids[i]
-			local otherCount = ReadByte(inventory+(curid-1))
-			WriteByte(inventory+(i-1), itemCount-dif)
-			WriteByte(inventory+(curid-1), otherCount+dif)
-			inventoryUpdater[curid] = otherCount+dif
+		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") then
+			local itemCount = ReadByte(inventory+(i-1))
+			local dif = itemCount - inventoryUpdater[i]
+			if dif ~= 0 then
+				local curid = itemids[i]
+				local otherCount = ReadByte(inventory+(curid-1))
+				WriteByte(inventory+(i-1), itemCount-dif)
+				WriteByte(inventory+(curid-1), otherCount+dif)
+				inventoryUpdater[curid] = otherCount+dif
+			end
 		end
 	end
 end
