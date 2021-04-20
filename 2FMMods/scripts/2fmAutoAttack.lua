@@ -10,7 +10,7 @@ function _OnInit()
 end
 
 function _OnFrame()
-	local input = (ReadByte(0x71148B-offset) // 0x28) % 2 == 1
+	local input = ReadByte(0x71148B-offset) == 64
 	local command = ReadByte(0x2A0DD7C-offset) == 0
 	local dialog = ReadByte(0x2A139D0-offset) == 0
 	if (input and command and dialog) then 
