@@ -54,7 +54,7 @@ local inventoryUpdater = {}
 local magicUpdater = {}
 local magicUpdateCooldown = 0
 local roomToMagic = {}
-local lastBlack = 128
+local HUDWas = 0
 
 local itemNames = {}
 local itemids = {}
@@ -478,13 +478,13 @@ function _OnFrame()
 	end
 	
 	UpdateInventory()
-	local blackNow = ReadByte(blackfade)
-	if (blackNow == 0 or blackNow == 128) and lastBlack ~= blackNow then
+	local HUDNow = ReadFloat(soraHUD)
+	if (HUDNow == 0 or HUDNow == 1) and HUDWas ~= HUDNow then
 		ReplaceMagic()
 		ReplaceTrinity()
 	end
 	--ReplaceTexts()
-	lastBlack = blackNow
+	HUDWas = HUDNow
 
 	if ReadByte(unlockedWarps-7) < 8 then
 		WriteByte(unlockedWarps-7, 9)
