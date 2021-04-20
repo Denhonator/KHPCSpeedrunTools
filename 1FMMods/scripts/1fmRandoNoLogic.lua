@@ -406,11 +406,15 @@ function UpdateInventory()
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
-				local curid = itemids[i]
-				local otherCount = ReadByte(inventory+(curid-1))
-				WriteByte(inventory+(i-1), itemCount-dif)
-				WriteByte(inventory+(curid-1), otherCount+dif)
-				inventoryUpdater[curid] = otherCount+dif
+				if dif > 0 then
+					local curid = itemids[i]
+					local otherCount = ReadByte(inventory+(curid-1))
+					WriteByte(inventory+(i-1), itemCount-dif)
+					WriteByte(inventory+(curid-1), otherCount+dif)
+					inventoryUpdater[curid] = otherCount+dif
+				else
+					inventoryUpdater[i] = itemCount
+				end
 			end
 		end
 	end
@@ -514,14 +518,6 @@ function _OnFrame()
 	end
 	
 	if ReadByte(gummiFlagBase+14) ~= 3 then
-		for i=0,14 do
-			if i~=9 then
-				WriteByte(gummiFlagBase+i, 3)
-			end
-		end
-		WriteInt(worldMapLines, 0xFFFFFFFF)
-		WriteByte(worldMapLines+4, 0xFF)
-		
 		for i=0,1 do
 			WriteByte(party1+i, i+1)
 			WriteByte(party2+i, i+1)
@@ -533,6 +529,14 @@ function _OnFrame()
 	end
 	
 	if ReadByte(0x232A604-offset) and ReadByte(0x2E1CB9C-offset) < 5 and ReadShort(menuState)==62576 then
+		for i=0,14 do
+			if i~=9 then
+				WriteByte(gummiFlagBase+i, 3)
+			end
+		end
+		WriteInt(worldMapLines, 0xFFFFFFFF)
+		WriteByte(worldMapLines+4, 0xFF)
+		
 		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
 		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu
 		WriteByte(0x2E8F450-offset, 5) --Set 5 buttons to save menu
