@@ -219,7 +219,7 @@ function Randomize()
 
 	for i=1,0xFF do
 		local itemtype = ItemType(i)
-		if itemtype ~= "" then
+		if itemtype ~= "" and not string.find(itemtype, "Weapon") and not string.find(itemtype, "Accessory") then
 			local r = math.random(0xFF)
 			while not ItemCompatibility(i, r) do
 				r = math.random(0xFF)
