@@ -12,11 +12,6 @@ local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
 
-local magicPointers = {}
-local magicOffsets = {}
-local magicSpots = {}
-local newMagic = {}
-
 local inventory = 0x2DE5E6A - offset
 
 --local TTWarp = 0x5229B0+0x9B570C+6
@@ -34,6 +29,11 @@ local lockMenu = 0x232A60C - offset
 local party1 = 0x2DE5E5F - offset
 local party2 = 0x2E1CBE5 - offset
 local soraHUD = 0x280EB1C - offset
+local magicUnlock = 0x2DE5A44 - offset
+local magicLevels = magicUnlock + 0x41E
+local soraHP = 0x2D592CC - offset
+local world = 0x233CADC - offset
+local room = world + 0x68
 
 local gotoWorldMap = 0x2E1CC24 - offset
 local openMenu = 0x2350CD4 - offset
@@ -41,13 +41,11 @@ local closeMenu = 0x2E90820 - offset
 local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
-local soraHP = 0x2D592CC - offset
 
-local wasMenu = false
 local inventoryUpdater = {}
+local magicUpdater = {}
+local roomToMagic = {}
 
-local items = {}
-local itemsorig = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
@@ -75,56 +73,8 @@ function WArray(off, l, c)
 end
 
 function _OnInit()
-	magicSpots["TTFire"] = 0
-	magicPointers["TTFire"] = 0x23944B8 - offset
-	magicOffsets["TTFire"] = 0x132BC + 0x15A
-	magicSpots["WLBlizzard"] = 1
-	magicPointers["WLBlizzard"] = 0x023A22A0 - offset
-	magicOffsets["WLBlizzard"] = 0xA74
-	magicSpots["OCThunder"] = 2
-	magicPointers["OCThunder"] = 0x23944B8 - offset
-	magicOffsets["OCThunder"] = 0x5785
-	magicSpots["DJCure"] = 3
-	magicPointers["DJCure"] = 0x23944B8 - offset
-	magicOffsets["DJCure"] = 0x7FB1
-	magicSpots["HTGravity"] = 4
-	magicPointers["HTGravity"] = 0x23944B8 - offset
-	magicOffsets["HTGravity"] = 0x5CC5
-	magicSpots["MOStop"] = 5
-	magicPointers["MOStop"] = 0x23944B8 - offset
-	magicOffsets["MOStop"] = 0x6DD1
-	
-	local foundData = false
-	local itemdatafromfile = {}
-	local f = io.open("itemdata", "rb")
-	if f then
-		print("Item data found")
-		foundData = true
-		itemdatafromfile = f:read("*a")
-	else
-		f = io.open("itemdata", "wb")
-		print("Initializing item data. Item data must be unmodified now. Otherwise delete itemdata and try again.")
-	end
 	for i=1,0xFF do
-		items[i] = RArray(itemTable+((i-1)*20), 20)
-		if foundData then
-			--print(i)
-			local singleItem = {}
-			for j=1, 20 do
-				singleItem[j] = string.byte(itemdatafromfile, ((i-1)*20) + j)
-			end
-			itemsorig[i] = singleItem
-		else
-			itemsorig[i] = RArray(itemTable+((i-1)*20), 20)
-			for j=1, 20 do
-				f:write(string.char(items[i][j]))
-			end
-		end
 		itemids[i] = i
-	end
-	if f then
-		f:close()
-		print("Item data success")
 	end
 	for i=1, 0xA8 do
 		rewards[i] = ReadShort(rewardTable+((i-1)*2))
@@ -143,8 +93,13 @@ function _OnInit()
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
 	end
-	wasMenu = ReadByte(menuCheck) > 0
+	local unlock = ReadByte(magicUnlock)
+	for i=1,7 do
+		local level = (unlock // (2^(i-1))) % 2
+		magicUpdater[i] = level * ReadByte(magicLevels+(i-1))
+	end
 	initDone = true
+	print("Init done")
 end
 
 function ItemType(id)
@@ -230,12 +185,12 @@ function Randomize()
 	end
 	seedfile:close()
 	
-	for i=1,0xFF do
-		if items[i][9]==0 and items[i][10]==0 then
-			items[i][9] = math.random(5)*40
-			items[i][10] = math.random(5)+3
-		end
-	end
+	-- for i=1,0xFF do
+		-- if items[i][9]==0 and items[i][10]==0 then
+			-- items[i][9] = math.random(5)*40
+			-- items[i][10] = math.random(5)+3
+		-- end
+	-- end
 
 	for i=1,0xFF do
 		local itemtype = ItemType(i)
@@ -247,14 +202,10 @@ function Randomize()
 			if string.find(itemtype, "Key") then
 				print(itemtype .. " " .. ItemType(r))
 			end
-			local orig = items[i]
-			local other = items[r]
 			local origid = itemids[i]
 			local otherid = itemids[r]
 			itemids[i] = otherid
 			itemids[r] = origid
-			items[i] = other
-			items[r] = orig
 			--print(string.format("%x : %x", itemids[i], itemids[r]))
 		end
 	end
@@ -352,10 +303,12 @@ function Randomize()
 	end
 	print("Randomized level ups")
 	
-	local magicPool = {0,1,2,3,4,5}
-	for place, magic in pairs(magicSpots) do
-		newMagic[place] = table.remove(magicPool, math.random(#magicPool))
-		print(string.format("%s has %x", place, newMagic[place]))
+	local magicPool = {1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7}
+	local roomPool = {0x0300, 0x0811, 0x0F0B, 0x0401, 0x0810, 0x0B05, 
+					0x0B01, 0x090F, 0x0B02, 0x050B, 0x0D08, 0x0F05, 
+					0x0B01, 0x0A06, 0x0B06, 0x0C02, 0x0D09, 0x060A, 0x0301, 0x0D01, 0x030D}
+	for i=1,21 do
+		roomToMagic[roomPool[i]] = table.remove(magicPool, math.random(#magicPool))
 	end
 	
 	print("Randomized magic")
@@ -364,10 +317,6 @@ function Randomize()
 end
 
 function ApplyRandomization()
-	for i=1,0xFF do
-		WriteArray(itemTable+((i-1)*20), itemsorig[itemids[i]])
-		print(string.format("item %x became %x", i, itemids[i]))
-	end
 	for i=1, 0xA8 do
 		WriteShort(rewardTable+((i-1)*2), rewards[i])
 	end
@@ -388,54 +337,48 @@ end
 
 -- Swap key items in inventory slots
 function UpdateInventory()
-	local nowMenu = ReadByte(menuCheck) > 0
-	if nowMenu or wasMenu then
-		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
-			for i=0x8,0xFF do
-				if string.find(ItemType(i), "Key") or string.find(ItemType(i), "Synth") or
-														string.find(ItemType(i), "Unique") then
-					if nowMenu then
-						WArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]], 20)
-					else
-						WArray(itemTable+((itemids[i]-1)*20), items[itemids[i]], 20)
-					end
-				end
-			end
-			print("Swapped names for inventory viewing")
-		end
-	else
-		for i=0x8,0xFF do
-			if (string.find(ItemType(i), "Key") or string.find(ItemType(i), "Synth") or
-														string.find(ItemType(i), "Unique")) then
-				local itemCount = ReadByte(inventory+(i-1))
-				local dif = itemCount - inventoryUpdater[i]
-				if dif ~= 0 then
-					local curid = itemids[i]
-					local otherCount = ReadByte(inventory+(curid-1))
-					WriteByte(inventory+(i-1), itemCount-dif)
-					WriteByte(inventory+(curid-1), otherCount+dif)
-					inventoryUpdater[i] = itemCount-dif
-					inventoryUpdater[curid] = otherCount+dif
-				end
-			end
+	for i=0x1,0xFF do
+		local itemCount = ReadByte(inventory+(i-1))
+		local dif = itemCount - inventoryUpdater[i]
+		if dif ~= 0 then
+			local curid = itemids[i]
+			local otherCount = ReadByte(inventory+(curid-1))
+			WriteByte(inventory+(i-1), itemCount-dif)
+			WriteByte(inventory+(curid-1), otherCount+dif)
+			inventoryUpdater[curid] = otherCount+dif
 		end
 	end
-	wasMenu = nowMenu
 end
 
 function ReplaceMagic()
-	for place, value in pairs(magicPointers) do
-		local a = ReadLong(value) + magicOffsets[place]
-		local orig = magicSpots[place]
-		local m = newMagic[place]
-
-		if a > 0x1000000000 and orig~=m and ReadByteA(a) == orig and ReadByteA(a+0x1C) == orig and ReadByteA(a+0x30) == orig then
-			WriteByteA(a, m)
-			WriteByteA(a+0x1C, m)
-			WriteByteA(a+0x30, m)
-			WriteByteA(a+0x4C, m)
-			WriteByteA(a+0x58, m)
-			print(string.format("\rFound %s, put %x", place, m))
+	local unlock = ReadByte(magicUnlock)
+	for i=1,7 do
+		local level = (unlock // (2^(i-1))) % 2
+		level = level * ReadByte(magicLevels+(i-1))
+		if level > magicUpdater[i] then
+			local room = (ReadByte(world) * 0x100) + ReadByte(room)
+			local magicInRoom = roomToMagic[room]
+			if magicInRoom then
+				local u = (unlock // (2^(magicInRoom-1))) % 2
+				local l = ReadByte(magicLevels+(magicInRoom-1))
+				-- Redirect upgrade
+				if u == 0 then
+					unlock = unlock + (2^(magicInRoom-1))
+					WriteByte(magicUnlock, unlock)
+					magicUpdater[magicInRoom] = 1
+					print(unlock)
+				elseif l < 3 then
+					WriteByte(magicLevels+(magicInRoom-1), l+1)
+					magicUpdater[magicInRoom] = l+1
+				end
+				-- Revert upgrade
+				if level > 1 then
+					WriteByte(magicLevels+(i-1), level-1)
+				elseif level == 1 then
+					WriteByte(magicUnlock, unlock - (2^(i-1)))
+				end
+				print(string.format("Upgraded %x instead of %x", magicInRoom, i))
+			end
 		end
 	end
 end
@@ -450,11 +393,9 @@ function _OnFrame()
 		Randomize()
 	end
 	
-	if keyitemsMatter then
-		UpdateInventory()
-	end
+	UpdateInventory()
 	
-	--ReplaceMagic()
+	ReplaceMagic()
 
 	if ReadByte(unlockedWarps-7) < 8 then
 		WriteByte(unlockedWarps-7, 9)
