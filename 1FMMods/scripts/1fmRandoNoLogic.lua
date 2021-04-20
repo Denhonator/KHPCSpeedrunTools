@@ -1,4 +1,4 @@
-local keyitemsMatter = false
+local keyitemsMatter = true
 
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
@@ -184,13 +184,7 @@ function ItemCompatibility(i, r)
 		return string.find(b, "Unique")
 	end
 	if a == "Key" then
-		if b == "Key" then
-			return true
-		end
-		if (r >= 0x56 and r <= 0x60) or (r >= 0x68 and r <= 0x70) or (r >= 0x78 and r <= 0x7D) then
-			return true
-		end
-		return false
+		return string.find(b, "Key") or string.find(b, "Synth") or string.find(b, "Unique")
 	end
 	if string.find(a, "Farm") then
 		return b == "Synth"
@@ -361,19 +355,38 @@ end
 
 -- Swap key items in inventory slots
 function UpdateInventory()
-	for i=0xA8,0xFF do
-		local itemCount = ReadByte(inventory+(i-1))
-		local dif = itemCount - inventoryUpdater[i]
-		
-		if dif ~= 0 and string.find(ItemType(i), "Key") then
-			local curid = itemids[i]
-			local otherCount = ReadByte(inventory+(curid-1))
-			WriteByte(inventory+(i-1), itemCount-dif)
-			WriteByte(inventory+(curid-1), otherCount+dif)
-			inventoryUpdater[i] = itemCount-dif
-			inventoryUpdater[curid] = otherCount+dif
+	local nowMenu = ReadByte(menuCheck) > 0
+	if nowMenu or wasMenu then
+		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
+			for i=0x8,0xFF do
+				if string.find(ItemType(i), "Key") or string.find(ItemType(i), "Synth") or
+														string.find(ItemType(i), "Unique") then
+					if nowMenu then
+						WArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]], 20)
+					else
+						WArray(itemTable+((itemids[i]-1)*20), items[itemids[i]], 20)
+					end
+				end
+			end
+			print("Swapped names for inventory viewing")
+		end
+	else
+		for i=0xA8,0xFF do
+			local itemCount = ReadByte(inventory+(i-1))
+			local dif = itemCount - inventoryUpdater[i]
+			
+			if dif ~= 0 and string.find(ItemType(i), "Key") then
+				local curid = itemids[i]
+				local otherCount = ReadByte(inventory+(curid-1))
+				WriteByte(inventory+(i-1), itemCount-dif)
+				WriteByte(inventory+(curid-1), otherCount+dif)
+				inventoryUpdater[i] = itemCount-dif
+				inventoryUpdater[curid] = otherCount+dif
+				print("swap")
+			end
 		end
 	end
+	wasMenu = nowMenu
 end
 
 function InstantGummi()
