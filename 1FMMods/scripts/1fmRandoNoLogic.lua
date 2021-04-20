@@ -253,7 +253,7 @@ function Randomize()
 	for i=1, 0x1DD do
 		local r = math.random(0x1DD)
 		if chests[i] > 0x10 or (i>1 and i<0x1DD and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
-			local valid = true
+			local valid = false
 			while not (valid and (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10))) do
 				r = math.random(0x1DD)
 				valid = not ((i >= 0x1C0 or i == 0) and ((chests[r]-4) % 0x10) == 0)
