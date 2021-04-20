@@ -431,7 +431,7 @@ function ReplaceMagic()
 			local magicInRoom = roomToMagic[room]
 			if magicInRoom then
 				local u = (unlock // (2^(magicInRoom-1))) % 2
-				local l = ReadByte(magicLevels+(magicInRoom-1))
+				local l = magicUpdater[magicInRoom]
 				-- Redirect upgrade
 				if u == 0 then
 					magicUpdater[magicInRoom] = 1
