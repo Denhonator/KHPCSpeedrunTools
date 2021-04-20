@@ -31,6 +31,7 @@ local party2 = 0x2E1CBE5 - offset
 local soraHUD = 0x280EB1C - offset
 local magicUnlock = 0x2DE5A44 - offset
 local magicLevels = magicUnlock + 0x41E
+local trinityUnlock = magicUnlock + 0x1BA7
 local soraHP = 0x2D592CC - offset
 local world = 0x233CADC - offset
 local room = world + 0x68
@@ -42,6 +43,8 @@ local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 
+local trinityUpdater = {}
+local trinityTable = {}
 local inventoryUpdater = {}
 local magicUpdater = {}
 local roomToMagic = {}
@@ -97,6 +100,11 @@ function _OnInit()
 	for i=1,7 do
 		local level = (unlock // (2^(i-1))) % 2
 		magicUpdater[i] = level * ReadByte(magicLevels+(i-1))
+	end
+	unlock = ReadByte(trinityUnlock)
+	for i=1,5 do
+		local level = (unlock // (2^(i-1))) % 2
+		trinityUpdater[i] = level
 	end
 	initDone = true
 	print("Init done")
@@ -311,6 +319,11 @@ function Randomize()
 		roomToMagic[roomPool[i]] = table.remove(magicPool, math.random(#magicPool))
 	end
 	
+	local trinityPool = {1,2,3,4,5}
+	for i=1,5 do
+		trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
+	end
+	
 	print("Randomized magic")
 	
 	ApplyRandomization()
@@ -366,7 +379,6 @@ function ReplaceMagic()
 					unlock = unlock + (2^(magicInRoom-1))
 					WriteByte(magicUnlock, unlock)
 					magicUpdater[magicInRoom] = 1
-					print(unlock)
 				elseif l < 3 then
 					WriteByte(magicLevels+(magicInRoom-1), l+1)
 					magicUpdater[magicInRoom] = l+1
@@ -383,6 +395,19 @@ function ReplaceMagic()
 	end
 end
 
+function ReplaceTrinity()
+	local unlock = ReadByte(trinityUnlock)
+	for i=1,5 do
+		local level = (unlock // (2^(i-1))) % 2
+		if level > trinityUpdater[i] then
+			local t = trinityTable[i]
+			level = level - (2^(i-1)) + (2^(t-1))
+			WriteByte(trinityUnlock, level)
+			break
+		end
+	end
+end
+
 function InstantGummi()
 	WriteByte(gotoWorldMap, 1)
 	WriteLong(closeMenu, 0)
@@ -394,8 +419,8 @@ function _OnFrame()
 	end
 	
 	UpdateInventory()
-	
 	ReplaceMagic()
+	ReplaceTrinity()
 
 	if ReadByte(unlockedWarps-7) < 8 then
 		WriteByte(unlockedWarps-7, 9)
