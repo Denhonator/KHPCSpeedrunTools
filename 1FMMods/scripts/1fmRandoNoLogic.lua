@@ -401,7 +401,8 @@ end
 -- Swap key items in inventory slots
 function UpdateInventory()
 	for i=0x1,0xFF do
-		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") then
+		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and
+																i ~= itemids[i] then
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
