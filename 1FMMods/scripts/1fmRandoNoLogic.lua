@@ -382,7 +382,6 @@ function UpdateInventory()
 				WriteByte(inventory+(curid-1), otherCount+dif)
 				inventoryUpdater[i] = itemCount-dif
 				inventoryUpdater[curid] = otherCount+dif
-				print("swap")
 			end
 		end
 	end
