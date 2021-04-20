@@ -1,0 +1,255 @@
+Potion
+Hi-Potion
+Ether
+Elixir
+BO5
+Mega-Potion
+Mega-Ether
+Megalixir
+Fury Stone
+Power Stone
+Energy Stone
+Blazing Stone
+Frost Stone
+Lightning Stone
+Dazzling Stone
+Stormy Stone
+Protect Chain
+Protera Chain
+Protega Chain
+Fire Ring
+Fira Ring
+Firaga Ring
+Blizzard Ring
+Blizzara Ring
+Blizzaga Ring
+Thunder Ring
+Thundara Ring
+Thundaga Ring
+Ability Stud
+Guard Earring
+Master Earring
+Chaos Ring
+Dark Ring
+Element Ring
+Three Stars
+Power Chain
+Golem Chain
+Titan Chain
+Energy Bangle
+Angel Bangle
+Gaia Bangle
+Magic Armlet
+Rune Armlet
+Atlas Armlet
+Heartguard
+Ribbon
+Crystal Crown
+Brave Warrior
+Ifrit's Horn
+Inferno Band
+White Fang
+Ray of Light
+Holy Circlet
+Raven's Claw
+Omega Arts
+EXP Earring
+A41
+EXP Ring
+EXP Bracelet
+EXP Necklace
+Firagun Band
+Blizzagun Band
+Thundagun Band
+Ifrit Belt
+Shiva Belt
+Ramuh Belt
+Moogle Badge
+Cosmic Arts
+Royal Crown
+Prime Cap
+Obsidian Ring
+A56
+A57
+A58
+A59
+A60
+A61
+A62
+A63
+A64
+Kingdom Key
+Dream Sword
+Dream Shield (Sora)
+Dream Rod (Sora)
+Wooden Sword
+Jungle King
+Three Wishes
+Fairy Harp
+Pumpkinhead
+Crabclaw
+Divine Rose
+Spellbinder
+Olympia
+Lionheart
+Metal Chocobo
+Oathkeeper
+Oblivion
+Lady Luck
+Wishing Star
+Ultima Weapon
+Diamond Dust
+One-Winged Angel
+Mage's Staff
+Morning Star
+Shooting Star
+Magus Staff
+Wisdom Staff
+Warhammer
+Silver Mallet
+Grand Mallet
+Lord Fortune
+Violetta
+Dream Rod (Donald)
+Save the Queen
+Wizard's Relic
+Meteor Strike
+Fantasista
+???? (Donald Weapon)
+Knight's Shield
+Mythril Shield
+Onyx Shield
+Stout Shield
+Golem Shield
+Adamant Shield
+Smasher
+Gigas Fist
+Genji Shield
+Herc's Shield
+Dream Shield (Goofy)
+Save the King
+Defender
+Mighty Shield
+Seven Elements
+???? (Goofy Weapon)
+Spear
+No Weapon (Pooh)
+Scimitar
+No Weapon (Ariel)
+No Weapon (Jack)
+Dagger
+Claws
+Tent
+Camping Set
+Cottage
+C04
+C05
+C06
+C07
+Ansem's Report 11
+Ansem's Report 12
+Ansem's Report 13
+Power Up
+Defense Up
+AP Up
+Serenity Power
+Dark Matter
+Mythril Stone
+Fire Arts
+Blizzard Arts
+Thunder Arts
+Cure Arts
+Gravity Arts
+Stop Arts
+Aero Arts
+Shiitank Rank
+Matsutake Rank
+Mystery Mold
+Ansem's Report 1
+Ansem's Report 2
+Ansem's Report 3
+Ansem's Report 4
+Ansem's Report 5
+Ansem's Report 6
+Ansem's Report 7
+Ansem's Report 8
+Ansem's Report 9
+Ansem's Report 10
+Khama Vol. 8
+Salegg Vol. 6
+Azal Vol. 3
+Mava Vol. 3
+Mava Vol. 6
+Theon Vol. 6
+Nahara Vol. 5
+Hafet Vol. 4
+Empty Bottle
+Old Book
+Emblem Piece
+Emblem Piece 2
+Emblem Piece 3
+Emblem Piece 4
+Log
+Cloth
+Rope
+Seagull Egg
+Fish
+Mushroom
+Coconut
+Drinking Water
+Navi-G Piece 1
+Navi-G Piece 2
+Navi-Gummi 1
+Navi-G Piece 3
+Navi-G Piece 4
+Navi-Gummi 2
+Watergleam
+Naturespark
+Fireglow
+Earthshine
+Crystal Trident
+Postcard
+Torn Page 1
+Torn Page 2
+Torn Page 3
+Torn Page 4
+Torn Page 5
+Slide 1
+Slide 2
+Slide 3
+Slide 4
+Slide 5
+Slide 6
+Footprints
+Claw Marks
+Stench
+Antenna
+Forget-Me-Not
+Jack-In-The-Box
+Entry Pass
+Hero License
+Pretty Stone
+N41
+Lucid Shard
+Lucid Gem
+Lucid Crystal
+Spirit Shard
+Spirit Gem
+Power Shard
+Power Gem
+Power Crystal
+Blaze Shard
+Blaze Gem
+Frost Shard
+Frost Gem
+Thunder Shard
+Thunder Gem
+Shiny Crystal
+Bright Shard
+Bright Gem
+Bright Crystal
+Mystery Goo
+Gale
+Mythril Shard
+Mythril
+Orichalcum

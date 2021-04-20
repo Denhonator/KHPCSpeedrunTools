@@ -24,6 +24,7 @@ local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local monstroCutsceneFlag = 0x2DE65D0-0x200+0xB09 - offset
 
+local blackfade = 0x4D93B8 - offset
 local enableRC = 0x2DE6244 - offset
 local lockMenu = 0x232A60C - offset
 local party1 = 0x2DE5E5F - offset
@@ -43,12 +44,19 @@ local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 
+local chestText = 0x29BDAF4 - offset
+local infoboxText = 0x29E2EF4 - offset
+local rewardText = 0x29BE9F4 - offset
+
 local trinityUpdater = {}
 local trinityTable = {}
 local inventoryUpdater = {}
 local magicUpdater = {}
+local magicUpdateCooldown = 0
 local roomToMagic = {}
+local lastBlack = 128
 
+local itemNames = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
@@ -76,6 +84,15 @@ function WArray(off, l, c)
 end
 
 function _OnInit()
+	local f = io.open("items.txt")
+	if not f then
+		print("items.txt missing!")
+	else
+		for i=1,0xFF do
+			itemNames[i] = f:read("*l")
+		end
+		f:close()
+	end
 	for i=1,0xFF do
 		itemids[i] = i
 	end
@@ -202,13 +219,10 @@ function Randomize()
 
 	for i=1,0xFF do
 		local itemtype = ItemType(i)
-		if itemtype ~= "" and itemtype ~= "Use" and itemtype ~= "Stock" and itemtype ~= "Summon" then
+		if itemtype ~= "" then
 			local r = math.random(0xFF)
 			while not ItemCompatibility(i, r) do
 				r = math.random(0xFF)
-			end
-			if string.find(itemtype, "Key") then
-				print(itemtype .. " " .. ItemType(r))
 			end
 			local origid = itemids[i]
 			local otherid = itemids[r]
@@ -314,7 +328,7 @@ function Randomize()
 	local magicPool = {1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7}
 	local roomPool = {0x0300, 0x0811, 0x0F0B, 0x0401, 0x0810, 0x0B05, 
 					0x0B01, 0x090F, 0x0B02, 0x050B, 0x0D08, 0x0F05, 
-					0x0B01, 0x0A06, 0x0B06, 0x0C02, 0x0D09, 0x060A, 0x0301, 0x0D01, 0x030D}
+					0x0B01, 0x0A06, 0x0B06, 0x0C02, 0x0D09, 0x060A, 0x0301, 0x0D02, 0x030D}
 	for i=1,21 do
 		roomToMagic[roomPool[i]] = table.remove(magicPool, math.random(#magicPool))
 	end
@@ -348,6 +362,42 @@ function ApplyRandomization()
 	print("Applied randomization")
 end
 
+function MemToString(off, c)
+	local s = ""
+	for i=0,c-1 do
+		local letter = ReadShort(off+(i*20))
+		if letter >= 11 and letter <= 36 then
+			s = s .. string.char(letter+54)
+		elseif letter >= 37 and letter <= 62 then
+			s = s .. string.char(letter+60)
+		elseif letter ~= 0x270F then
+			s = s .. string.format(" %x ", letter)
+		end
+	end
+	return s
+end
+
+function StringToMem(off, text)
+	for i=1, #text do
+		local c = string.byte(text, i,i)
+		if c >= 65 and c <= 90 then
+			c = c-54
+		elseif c >= 97 and c <= 122 then
+			c = c-60
+		else
+			c = 0x270F
+		end
+		WriteShort(off+((i-1)*20), c)
+	end
+end
+
+function ReplaceTexts()
+	local curText = MemToString(rewardText, 20)
+	if string.find(curText, "Obtained") then
+		print(curText)
+	end
+end
+
 -- Swap key items in inventory slots
 function UpdateInventory()
 	for i=0x1,0xFF do
@@ -368,6 +418,7 @@ function ReplaceMagic()
 	for i=1,7 do
 		local level = (unlock // (2^(i-1))) % 2
 		level = level * ReadByte(magicLevels+(i-1))
+		--print(string.format("%x is level %x / %x", i, level, magicUpdater[i]))
 		if level > magicUpdater[i] then
 			local room = (ReadByte(world) * 0x100) + ReadByte(room)
 			local magicInRoom = roomToMagic[room]
@@ -376,23 +427,23 @@ function ReplaceMagic()
 				local l = ReadByte(magicLevels+(magicInRoom-1))
 				-- Redirect upgrade
 				if u == 0 then
-					unlock = unlock + (2^(magicInRoom-1))
-					WriteByte(magicUnlock, unlock)
 					magicUpdater[magicInRoom] = 1
 				elseif l < 3 then
-					WriteByte(magicLevels+(magicInRoom-1), l+1)
 					magicUpdater[magicInRoom] = l+1
-				end
-				-- Revert upgrade
-				if level > 1 then
-					WriteByte(magicLevels+(i-1), level-1)
-				elseif level == 1 then
-					WriteByte(magicUnlock, unlock - (2^(i-1)))
 				end
 				print(string.format("Upgraded %x instead of %x", magicInRoom, i))
 			end
 		end
 	end
+	unlock = 0
+	for i=1,7 do
+		WriteByte(magicLevels+(i-1), math.max(magicUpdater[i], 1))
+		if magicUpdater[i] > 0 then
+			unlock = unlock + (2^(i-1))
+		end
+	end
+	WriteByte(magicUnlock, unlock)
+	print("Magic replacement check")
 end
 
 function ReplaceTrinity()
@@ -401,11 +452,19 @@ function ReplaceTrinity()
 		local level = (unlock // (2^(i-1))) % 2
 		if level > trinityUpdater[i] then
 			local t = trinityTable[i]
-			level = level - (2^(i-1)) + (2^(t-1))
-			WriteByte(trinityUnlock, level)
+			trinityUpdater[t] = 1
+			print(string.format("Gave trinity %x instead of %x", t, i))
 			break
 		end
 	end
+	unlock = 0
+	for i=1,5 do
+		if trinityUpdater[i] > 0 then
+			unlock = unlock + (2^(i-1))
+		end
+	end
+	WriteByte(trinityUnlock, unlock)
+	print("Trinity replacement check")
 end
 
 function InstantGummi()
@@ -419,8 +478,13 @@ function _OnFrame()
 	end
 	
 	UpdateInventory()
-	ReplaceMagic()
-	ReplaceTrinity()
+	local blackNow = ReadByte(blackfade)
+	if (blackNow == 0 or blackNow == 128) and lastBlack ~= blackNow then
+		ReplaceMagic()
+		ReplaceTrinity()
+	end
+	--ReplaceTexts()
+	lastBlack = blackNow
 
 	if ReadByte(unlockedWarps-7) < 8 then
 		WriteByte(unlockedWarps-7, 9)
