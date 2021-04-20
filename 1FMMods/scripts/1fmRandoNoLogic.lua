@@ -12,6 +12,11 @@ local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
 
+local magicPointers = {}
+local magicOffsets = {}
+local magicSpots = {}
+local newMagic = {}
+
 local inventory = 0x2DE5E6A - offset
 
 --local TTWarp = 0x5229B0+0x9B570C+6
@@ -70,6 +75,25 @@ function WArray(off, l, c)
 end
 
 function _OnInit()
+	magicSpots["TTFire"] = 0
+	magicPointers["TTFire"] = 0x23944B8 - offset
+	magicOffsets["TTFire"] = 0x132BC + 0x15A
+	magicSpots["WLBlizzard"] = 1
+	magicPointers["WLBlizzard"] = 0x023A22A0 - offset
+	magicOffsets["WLBlizzard"] = 0xA74
+	magicSpots["OCThunder"] = 2
+	magicPointers["OCThunder"] = 0x23944B8 - offset
+	magicOffsets["OCThunder"] = 0x5785
+	magicSpots["DJCure"] = 3
+	magicPointers["DJCure"] = 0x23944B8 - offset
+	magicOffsets["DJCure"] = 0x7FB1
+	magicSpots["HTGravity"] = 4
+	magicPointers["HTGravity"] = 0x23944B8 - offset
+	magicOffsets["HTGravity"] = 0x5CC5
+	magicSpots["MOStop"] = 5
+	magicPointers["MOStop"] = 0x23944B8 - offset
+	magicOffsets["MOStop"] = 0x6DD1
+	
 	local foundData = false
 	local itemdatafromfile = {}
 	local f = io.open("itemdata", "rb")
@@ -327,6 +351,15 @@ function Randomize()
 		end
 	end
 	print("Randomized level ups")
+	
+	local magicPool = {0,1,2,3,4,5}
+	for place, magic in pairs(magicSpots) do
+		newMagic[place] = table.remove(magicPool, math.random(#magicPool))
+		print(string.format("%s has %x", place, newMagic[place]))
+	end
+	
+	print("Randomized magic")
+	
 	ApplyRandomization()
 end
 
@@ -390,6 +423,23 @@ function UpdateInventory()
 	wasMenu = nowMenu
 end
 
+function ReplaceMagic()
+	for place, value in pairs(magicPointers) do
+		local a = ReadLong(value) + magicOffsets[place]
+		local orig = magicSpots[place]
+		local m = newMagic[place]
+
+		if a > 0x1000000000 and orig~=m and ReadByteA(a) == orig and ReadByteA(a+0x1C) == orig and ReadByteA(a+0x30) == orig then
+			WriteByteA(a, m)
+			WriteByteA(a+0x1C, m)
+			WriteByteA(a+0x30, m)
+			WriteByteA(a+0x4C, m)
+			WriteByteA(a+0x58, m)
+			print(string.format("\rFound %s, put %x", place, m))
+		end
+	end
+end
+
 function InstantGummi()
 	WriteByte(gotoWorldMap, 1)
 	WriteLong(closeMenu, 0)
@@ -403,6 +453,8 @@ function _OnFrame()
 	if keyitemsMatter then
 		UpdateInventory()
 	end
+	
+	--ReplaceMagic()
 
 	if ReadByte(unlockedWarps-7) < 8 then
 		WriteByte(unlockedWarps-7, 9)
