@@ -360,8 +360,7 @@ function UpdateInventory()
 		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
 			for i=0x8,0xFF do
 				if string.find(ItemType(i), "Key") or string.find(ItemType(i), "Synth") or
-														string.find(ItemType(i), "Unique") or
-														string.find(ItemType(i), "Farm") then
+														string.find(ItemType(i), "Unique") then
 					if nowMenu then
 						WArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]], 20)
 					else
@@ -372,17 +371,19 @@ function UpdateInventory()
 			print("Swapped names for inventory viewing")
 		end
 	else
-		for i=0xA8,0xFF do
-			local itemCount = ReadByte(inventory+(i-1))
-			local dif = itemCount - inventoryUpdater[i]
-			
-			if dif ~= 0 and string.find(ItemType(i), "Key") then
-				local curid = itemids[i]
-				local otherCount = ReadByte(inventory+(curid-1))
-				WriteByte(inventory+(i-1), itemCount-dif)
-				WriteByte(inventory+(curid-1), otherCount+dif)
-				inventoryUpdater[i] = itemCount-dif
-				inventoryUpdater[curid] = otherCount+dif
+		for i=0x8,0xFF do
+			if (string.find(ItemType(i), "Key") or string.find(ItemType(i), "Synth") or
+														string.find(ItemType(i), "Unique")) then
+				local itemCount = ReadByte(inventory+(i-1))
+				local dif = itemCount - inventoryUpdater[i]
+				if dif ~= 0 then
+					local curid = itemids[i]
+					local otherCount = ReadByte(inventory+(curid-1))
+					WriteByte(inventory+(i-1), itemCount-dif)
+					WriteByte(inventory+(curid-1), otherCount+dif)
+					inventoryUpdater[i] = itemCount-dif
+					inventoryUpdater[curid] = otherCount+dif
+				end
 			end
 		end
 	end
