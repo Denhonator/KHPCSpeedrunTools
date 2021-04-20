@@ -420,24 +420,25 @@ function UpdateInventory()
 	end
 end
 
-function ReplaceMagic()
+function ReplaceMagic(HUDNow)
+	print(HUDNow)
+	if HUDNow == 0 then
+		WriteByte(magicUnlock, 0)
+		return
+	end
 	local unlock = ReadByte(magicUnlock)
 	for i=1,7 do
 		local level = (unlock // (2^(i-1))) % 2
 		level = level * ReadByte(magicLevels+(i-1))
 		--print(string.format("%x is level %x / %x", i, level, magicUpdater[i]))
-		if level > magicUpdater[i] then
+		if level > 0 then
 			local room = (ReadByte(world) * 0x100) + ReadByte(room)
 			local magicInRoom = roomToMagic[room]
 			if magicInRoom then
 				local u = (unlock // (2^(magicInRoom-1))) % 2
 				local l = magicUpdater[magicInRoom]
 				-- Redirect upgrade
-				if u == 0 then
-					magicUpdater[magicInRoom] = 1
-				elseif l < 3 then
-					magicUpdater[magicInRoom] = l+1
-				end
+				magicUpdater[magicInRoom] = magicUpdater[magicInRoom]+1
 				print(string.format("Upgraded %x instead of %x", magicInRoom, i))
 			end
 		end
@@ -453,15 +454,18 @@ function ReplaceMagic()
 	print("Magic replacement check")
 end
 
-function ReplaceTrinity()
+function ReplaceTrinity(HUDNow)
+	if HUDNow == 0 then
+		WriteByte(trinityUnlock, 0)
+		return
+	end
 	local unlock = ReadByte(trinityUnlock)
 	for i=1,5 do
 		local level = (unlock // (2^(i-1))) % 2
-		if level > trinityUpdater[i] then
+		if level > 0 then
 			local t = trinityTable[i]
 			trinityUpdater[t] = 1
 			print(string.format("Gave trinity %x instead of %x", t, i))
-			break
 		end
 	end
 	unlock = 0
@@ -487,8 +491,8 @@ function _OnFrame()
 	UpdateInventory()
 	local HUDNow = ReadFloat(soraHUD)
 	if (HUDNow == 0 or HUDNow == 1) and HUDWas ~= HUDNow then
-		ReplaceMagic()
-		ReplaceTrinity()
+		ReplaceMagic(HUDNow)
+		ReplaceTrinity(HUDNow)
 	end
 	--ReplaceTexts()
 	HUDWas = HUDNow
