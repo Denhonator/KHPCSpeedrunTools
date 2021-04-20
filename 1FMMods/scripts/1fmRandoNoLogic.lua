@@ -360,7 +360,8 @@ function UpdateInventory()
 		if nowMenu ~= wasMenu and ReadFloat(soraHUD) > 0 then
 			for i=0x8,0xFF do
 				if string.find(ItemType(i), "Key") or string.find(ItemType(i), "Synth") or
-														string.find(ItemType(i), "Unique") then
+														string.find(ItemType(i), "Unique") or
+														string.find(ItemType(i), "Farm") then
 					if nowMenu then
 						WArray(itemTable+((itemids[i]-1)*20), itemsorig[itemids[i]], 20)
 					else
