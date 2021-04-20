@@ -406,7 +406,7 @@ function UpdateInventory()
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
-				if dif > 0 then
+				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
 					local otherCount = ReadByte(inventory+(curid-1))
 					WriteByte(inventory+(i-1), itemCount-dif)
