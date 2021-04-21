@@ -7,6 +7,8 @@ local soraStatTable = btltbl+0x3AC0
 local donaldStatTable = soraStatTable+0x3F8
 local goofyStatTable = donaldStatTable+0x198
 local soraAbilityTable = btltbl+0x3BF8
+local soraAbilityTable2 = soraAbilityTable-0xD0
+local soraAbilityTable3 = soraAbilityTable-0x68
 local donaldAbilityTable = soraAbilityTable+0x328
 local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
@@ -24,6 +26,7 @@ local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local monstroCutsceneFlag = 0x2DE65D0-0x200+0xB09 - offset
 
+local preventMenu = 0x232A60C - offset
 local blackfade = 0x4D93B8 - offset
 local enableRC = 0x2DE6244 - offset
 local lockMenu = 0x232A60C - offset
@@ -55,12 +58,15 @@ local magicUpdater = {}
 local magicUpdateCooldown = 0
 local roomToMagic = {}
 local HUDWas = 0
+local introJump = true
 
 local itemNames = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
 local soraAbilities = {}
+local soraAbilities2 = {}
+local soraAbilities3 = {}
 local donaldLevels = {}
 local donaldAbilities = {}
 local goofyLevels = {}
@@ -102,6 +108,8 @@ function _OnInit()
 	for i=1, 99 do
 		soraLevels[i] = ReadByte(soraStatTable+(i-1))
 		soraAbilities[i] = ReadByte(soraAbilityTable+(i-1))
+		soraAbilities2[i] = ReadByte(soraAbilityTable2+(i-1))
+		soraAbilities3[i] = ReadByte(soraAbilityTable3+(i-1))
 		goofyLevels[i] = ReadByte(goofyStatTable+(i-1))
 		goofyAbilities[i] = ReadByte(goofyAbilityTable+(i-1))
 		donaldLevels[i] = ReadByte(donaldStatTable+(i-1))
@@ -290,6 +298,28 @@ function Randomize()
 		end
 		
 		r = math.random(99)
+		orig = soraAbilities2[i]
+		if orig > 0 then
+			while soraAbilities2[r] == 0 do
+				r = math.random(99)
+			end
+			other = soraAbilities2[r]
+			soraAbilities2[i] = other
+			soraAbilities2[r] = orig
+		end
+		
+		r = math.random(99)
+		orig = soraAbilities3[i]
+		if orig > 0 then
+			while soraAbilities3[r] == 0 do
+				r = math.random(99)
+			end
+			other = soraAbilities3[r]
+			soraAbilities3[i] = other
+			soraAbilities3[r] = orig
+		end
+		
+		r = math.random(99)
 		orig = goofyLevels[i]
 		other = goofyLevels[r]
 		goofyLevels[i] = other
@@ -353,6 +383,8 @@ function ApplyRandomization()
 	for i=1, 99 do
 		WriteByte(soraStatTable+(i-1), soraLevels[i])
 		WriteByte(soraAbilityTable+(i-1), soraAbilities[i])
+		WriteByte(soraAbilityTable2+(i-1), soraAbilities2[i])
+		WriteByte(soraAbilityTable3+(i-1), soraAbilities3[i])
 		WriteByte(goofyStatTable+(i-1), goofyLevels[i])
 		WriteByte(goofyAbilityTable+(i-1), goofyAbilities[i])
 		WriteByte(donaldStatTable+(i-1), donaldLevels[i])
