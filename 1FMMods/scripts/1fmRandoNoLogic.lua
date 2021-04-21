@@ -22,9 +22,16 @@ local worldFlagBase = 0x2DE79D0+0x6C - offset
 local gummiFlagBase = 0x2DE78C0 - offset
 local worldMapLines = 0x2DE78E2 - offset
 local gummiselect = 0x503CEC - offset
+local inGummi = 0x50421D - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local monstroCutsceneFlag = 0x2DE65D0-0x200+0xB09 - offset
+local soraStory = 0x2DE7367 - offset
+local OCFlag = 0x2DE75EA - offset
+local DJFlag = 0x2DE5EBF - offset
+local AGFlag = 0x2DE5EC0 - offset
+local OCTrinityFlag = 0x2DE68FC - offset
+local Riku1Flag = 0x2DE79D0+0x6C+0xB6 - offset
 
 local preventMenu = 0x232A60C - offset
 local blackfade = 0x4D93B8 - offset
@@ -35,6 +42,7 @@ local party2 = 0x2E1CBE5 - offset
 local soraHUD = 0x280EB1C - offset
 local magicUnlock = 0x2DE5A44 - offset
 local magicLevels = magicUnlock + 0x41E
+local magicFlags = 0x2DE75EE - offset
 local trinityUnlock = magicUnlock + 0x1BA7
 local soraHP = 0x2D592CC - offset
 local world = 0x233CADC - offset
@@ -51,12 +59,12 @@ local chestText = 0x29BDAF4 - offset
 local infoboxText = 0x29E2EF4 - offset
 local rewardText = 0x29BE9F4 - offset
 
-local trinityUpdater = {}
 local trinityTable = {}
+local magicShuffled = {}
+local perMagicShuffle = {}
+local magicChecks = {soraStory, OCFlag}
+local magicCheckValues = {0x80, 1}
 local inventoryUpdater = {}
-local magicUpdater = {}
-local magicUpdateCooldown = 0
-local roomToMagic = {}
 local HUDWas = 0
 local introJump = true
 
@@ -120,16 +128,6 @@ function _OnInit()
 	end
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
-	end
-	local unlock = ReadByte(magicUnlock)
-	for i=1,7 do
-		local level = (unlock // (2^(i-1))) % 2
-		magicUpdater[i] = level * ReadByte(magicLevels+(i-1))
-	end
-	unlock = ReadByte(trinityUnlock)
-	for i=1,5 do
-		local level = (unlock // (2^(i-1))) % 2
-		trinityUpdater[i] = level
 	end
 	initDone = true
 	print("Init done")
@@ -356,11 +354,12 @@ function Randomize()
 	print("Randomized level ups")
 	
 	local magicPool = {1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7}
-	local roomPool = {0x0300, 0x0811, 0x0F0B, 0x0401, 0x0810, 0x0B05, 
-					0x0B01, 0x090F, 0x0B02, 0x050B, 0x0D08, 0x0F05, 
-					0x0B01, 0x0A06, 0x0B06, 0x0C02, 0x0D09, 0x060A, 0x0301, 0x0D02, 0x030D}
-	for i=1,21 do
-		roomToMagic[roomPool[i]] = table.remove(magicPool, math.random(#magicPool))
+	local magicPool2 = {1,2,3,4,5,6,7}
+	for i=1, 21 do
+		magicShuffled[i] = table.remove(magicPool, math.random(#magicPool))
+		if i <= 7 then
+			perMagicShuffle[i] = table.remove(magicPool2, math.random(#magicPool2))
+		end
 	end
 	
 	local trinityPool = {1,2,3,4,5}
@@ -453,61 +452,43 @@ function UpdateInventory()
 end
 
 function ReplaceMagic(HUDNow)
-	print(HUDNow)
-	if HUDNow == 0 then
-		WriteByte(magicUnlock, 0)
-		return
-	end
-	local unlock = ReadByte(magicUnlock)
-	for i=1,7 do
-		local level = (unlock // (2^(i-1))) % 2
-		level = level * ReadByte(magicLevels+(i-1))
-		--print(string.format("%x is level %x / %x", i, level, magicUpdater[i]))
-		if level > 0 then
-			local room = (ReadByte(world) * 0x100) + ReadByte(room)
-			local magicInRoom = roomToMagic[room]
-			if magicInRoom then
-				local u = (unlock // (2^(magicInRoom-1))) % 2
-				local l = magicUpdater[magicInRoom]
-				-- Redirect upgrade
-				magicUpdater[magicInRoom] = magicUpdater[magicInRoom]+1
-				print(string.format("Upgraded %x instead of %x", magicInRoom, i))
-			end
-		end
-	end
+	-- magicUpdater = {0,0,0,0,0,0,0}
+	-- for i=1, #magicChecks do
+		-- if ReadByte(magicChecks[i]) >= magicCheckValues[i] then
+			-- magicUpdater[magicShuffled[i]] = magicUpdater[magicShuffled[i]]+1
+			-- print(string.format("Magic check %x detected", i))
+		-- end
+	-- end
 	unlock = 0
 	for i=1,7 do
-		WriteByte(magicLevels+(i-1), math.max(magicUpdater[i], 1))
-		if magicUpdater[i] > 0 then
-			unlock = unlock + (2^(i-1))
+		local r = perMagicShuffle[i]
+		local l = ReadByte(magicFlags+(i-1))
+		WriteByte(magicLevels+(r-1), math.max(l, 1))
+		if l > 0 then
+			unlock = unlock + (2^(r-1))
 		end
 	end
 	WriteByte(magicUnlock, unlock)
-	print("Magic replacement check")
 end
 
 function ReplaceTrinity(HUDNow)
-	if HUDNow == 0 then
-		WriteByte(trinityUnlock, 0)
-		return
+	local unlock = 0
+	if ReadByte(magicFlags) > 0 then
+		unlock = unlock + (2^(trinityTable[1]-1))
 	end
-	local unlock = ReadByte(trinityUnlock)
-	for i=1,5 do
-		local level = (unlock // (2^(i-1))) % 2
-		if level > 0 then
-			local t = trinityTable[i]
-			trinityUpdater[t] = 1
-			print(string.format("Gave trinity %x instead of %x", t, i))
-		end
+	if ReadByte(DJFlag) > 0 then
+		unlock = unlock + (2^(trinityTable[2]-1))
 	end
-	unlock = 0
-	for i=1,5 do
-		if trinityUpdater[i] > 0 then
-			unlock = unlock + (2^(i-1))
-		end
+	if ReadByte(AGFlag) > 0 then
+		unlock = unlock + (2^(trinityTable[3]-1))
+	end
+	if ReadByte(OCTrinityFlag) > 0 then
+		unlock = unlock + (2^(trinityTable[4]-1))
+	end
+	if ReadByte(Riku1Flag) > 0 then
+		unlock = unlock + (2^(trinityTable[5]-1))
 	end
 	WriteByte(trinityUnlock, unlock)
-	print("Trinity replacement check")
 end
 
 function InstantGummi()
@@ -522,9 +503,9 @@ function _OnFrame()
 	
 	UpdateInventory()
 	local HUDNow = ReadFloat(soraHUD)
-	if (HUDNow == 0 or HUDNow == 1) and HUDWas ~= HUDNow then
-		ReplaceMagic(HUDNow)
+	if HUDNow < 1 then
 		ReplaceTrinity(HUDNow)
+		ReplaceMagic(HUDNow)
 	end
 	--ReplaceTexts()
 	HUDWas = HUDNow
@@ -553,7 +534,7 @@ function _OnFrame()
 		WriteByte(lockMenu, 0) -- Unlock menu
 	end
 	
-	if ReadByte(gummiFlagBase+14) ~= 3 then
+	if ReadByte(gummiFlagBase+14) ~= 3 and ReadByte(inGummi) > 0 then
 		for i=0,1 do
 			WriteByte(party1+i, i+1)
 			WriteByte(party2+i, i+1)
