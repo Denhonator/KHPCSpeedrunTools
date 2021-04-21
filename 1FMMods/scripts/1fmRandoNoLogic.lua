@@ -534,7 +534,7 @@ function _OnFrame()
 		WriteByte(lockMenu, 0) -- Unlock menu
 	end
 	
-	if ReadByte(gummiFlagBase+14) ~= 3 and ReadByte(inGummi) > 0 then
+	if ReadByte(gummiFlagBase+14) ~= 3 then
 		for i=0,1 do
 			WriteByte(party1+i, i+1)
 			WriteByte(party2+i, i+1)
