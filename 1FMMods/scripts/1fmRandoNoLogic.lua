@@ -461,7 +461,7 @@ end
 function ReplaceTexts()
 	infoBoxWas = ReadByte(infoBoxNotVisible)
 	
-	if textFind ~= "" and ReadFloat(soraHUD) < 1 then
+	if textFind ~= "" and (ReadFloat(soraHUD) < 1 or infoBoxWas==0) then
 		local re = {}
 		for i=1,#textFind do
 			re[i] = CharToMem(string.byte(textFind, i, i))
