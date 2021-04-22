@@ -557,9 +557,10 @@ function _OnFrame()
 	HUDWas = HUDNow
 
 	if ReadByte(unlockedWarps-7) < 8 then
-		WriteByte(unlockedWarps-7, ReadByte(unlockedWarps-7)+8)
+		WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7),1)+8)
 		WriteByte(warpCount+4*3, 4)
 	end
+
 	if ReadByte(gummiselect)==3 then
 		--WriteByte(TTWarp, 1) -- Change it to DI world ID
 		WriteShort(worldWarps+0x18, 1) -- Add DI warp
@@ -567,7 +568,7 @@ function _OnFrame()
 	else
 		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
 	end
-	
+
 	if ReadByte(monstroCutsceneFlag) < 0x14 then
 		WriteByte(monstroCutsceneFlag, 0x14)
 	end
