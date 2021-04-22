@@ -26,6 +26,8 @@ local inGummi = 0x50421D - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local monstroCutsceneFlag = 0x2DE65D0-0x200+0xB09 - offset
+local hbCutsceneFlag = 0x2DE65D0-0x200+0xB0E
+
 local soraStory = 0x2DE7367 - offset
 local OCFlag = 0x2DE75EA - offset
 local DJFlag = 0x2DE7373 - offset
@@ -570,6 +572,9 @@ function _OnFrame()
 	end
 
 	if ReadByte(monstroCutsceneFlag) < 0x14 then
+		WriteByte(monstroCutsceneFlag, 0x14)
+	end
+	if ReadByte(hbCutsceneFlag) < 0x14 then
 		WriteByte(monstroCutsceneFlag, 0x14)
 	end
 	
