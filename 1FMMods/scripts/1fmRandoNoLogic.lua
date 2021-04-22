@@ -57,8 +57,7 @@ local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 
 local textsBase = 0x2EE03B0 - offset
-local textsOff = 0x232A5EC - offset
-local textsOff2 = 0xDCE244 - offset
+local textPointerBase = 0x2B98900 - offset
 local textPos = 0
 local textFind = ""
 local textReplace = ""
@@ -410,28 +409,30 @@ end
 function MemStringSearch(off, c, re)
 	local textMatch = 1
 	off = off+4
-	local pos = 0
+	local ppos = 0
+	local inc = 0x8
 
-	while pos < c do
-		local letter = ReadIntA(off+pos)
-		local inc = 4
-
-		if letter == re[textMatch] then
-			textMatch = textMatch + 1
-			if textMatch >= 4 then
-				print(string.format("match at %x", off+pos-((textMatch-2)*20)))
-				StringToMem((off+pos-((textMatch-2)*20)), textReplace)
-				textMatch = 1
+	while ppos < c do
+		local pointer = textPointerBase + ppos
+		local address = ReadLong(pointer)
+		
+		if address > 0xFFFFFFF then
+			for i=1,#re do
+				local letter = ReadIntA(address+(i*20))
+				if letter == re[textMatch] then
+					textMatch = textMatch + 1
+					if textMatch >= 4 then
+						print(string.format("match at %x", address+20))
+						StringToMem(address+20, textReplace)
+						textMatch = 1
+					end
+				else
+					textMatch = 1
+				end
 			end
-		else
-			textMatch = 1
 		end
 		
-		if textMatch > 1 then
-			inc = 20
-		end
-		
-		pos = pos+inc
+		ppos = ppos+inc
 	end
 end
 
@@ -451,7 +452,7 @@ end
 
 function ReplaceTexts()
 	textFind = "Obtained"
-	textReplace = "LOLOL"
+	textReplace = "Acquired"
 
 	infoBoxWas = ReadByte(infoBoxNotVisible)
 	
@@ -462,7 +463,7 @@ function ReplaceTexts()
 		end
 
 		local rewardText = ReadLong(textsBase+8) + 0xC00000
-		MemStringSearch(rewardText, 0xAFF00, re)
+		MemStringSearch(rewardText, 0xFFFF, re)
 	end
 end
 
