@@ -558,7 +558,7 @@ function _OnFrame()
 	HUDWas = HUDNow
 
 	if ReadByte(unlockedWarps-7) < 8 then
-		WriteByte(unlockedWarps-7, 9)
+		WriteByte(unlockedWarps-7, ReadByte(unlockedWarps-7)+8)
 		WriteByte(warpCount+4*3, 4)
 	end
 	if ReadByte(gummiselect)==3 then
