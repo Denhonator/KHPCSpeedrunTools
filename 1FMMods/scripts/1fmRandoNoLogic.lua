@@ -406,25 +406,30 @@ function CharToMem(c)
 	return c
 end
 
-function MemStringSearch(off, c, re)
+function MemStringSearch(c, re)
 	local textMatch = 1
-	off = off+4
 	local ppos = 0
 	local inc = 0x8
+	local success = false
 
 	while ppos < c do
 		local pointer = textPointerBase + ppos
 		local address = ReadLong(pointer)
 		
 		if address > 0xFFFFFFF then
-			for i=1,#re do
-				local letter = ReadIntA(address+(i*20))
+			for i=1,50 do
+				local letter = ReadShortA(address+(i*20))
+				if letter > 0x27F0 or letter == 0 then
+					break
+				end
 				if letter == re[textMatch] then
 					textMatch = textMatch + 1
 					if textMatch >= 4 then
-						print(string.format("match at %x", address+20))
-						StringToMem(address+20, textReplace)
+						local start = address+((i-textMatch+2)*20)
+						print(string.format("match at %x", ppos))
+						StringToMem(start, textReplace)
 						textMatch = 1
+						success = true
 					end
 				else
 					textMatch = 1
@@ -433,7 +438,10 @@ function MemStringSearch(off, c, re)
 		end
 		
 		ppos = ppos+inc
+		--inc = inc==8 and 0x20 or 8
 	end
+	print("Looking for " .. textFind)
+	return success
 end
 
 function StringToMem(off, text)
@@ -451,9 +459,6 @@ function StringToMem(off, text)
 end
 
 function ReplaceTexts()
-	textFind = "Obtained"
-	textReplace = "Acquired"
-
 	infoBoxWas = ReadByte(infoBoxNotVisible)
 	
 	if textFind ~= "" and ReadFloat(soraHUD) < 1 then
@@ -463,7 +468,9 @@ function ReplaceTexts()
 		end
 
 		local rewardText = ReadLong(textsBase+8) + 0xC00000
-		MemStringSearch(rewardText, 0xFFFF, re)
+		if MemStringSearch(0xFFFF, re) then
+			textFind = ""
+		end
 	end
 end
 
@@ -477,6 +484,8 @@ function UpdateInventory()
 			if dif ~= 0 then
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
+					textFind = itemNames[i]
+					textReplace = itemNames[curid]
 					local otherCount = ReadByte(inventory+(curid-1))
 					WriteByte(inventory+(i-1), itemCount-dif)
 					WriteByte(inventory+(curid-1), otherCount+dif)
