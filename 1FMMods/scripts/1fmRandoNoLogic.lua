@@ -551,8 +551,8 @@ function _OnFrame()
 	
 	UpdateInventory()
 	local HUDNow = ReadFloat(soraHUD)
+	ReplaceTrinity(HUDNow)
 	if HUDNow < 1 then
-		ReplaceTrinity(HUDNow)
 		ReplaceMagic(HUDNow)
 	end
 	ReplaceTexts()
