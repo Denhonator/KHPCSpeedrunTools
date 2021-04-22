@@ -28,8 +28,8 @@ local warpCount = 0x50BA30 - offset
 local monstroCutsceneFlag = 0x2DE65D0-0x200+0xB09 - offset
 local soraStory = 0x2DE7367 - offset
 local OCFlag = 0x2DE75EA - offset
-local DJFlag = 0x2DE5EBF - offset
-local AGFlag = 0x2DE5EC0 - offset
+local DJFlag = 0x2DE7373 - offset
+local AGFlag = 0x2DE7377 - offset
 local OCTrinityFlag = 0x2DE68FC - offset
 local Riku1Flag = 0x2DE79D0+0x6C+0xB6 - offset
 
@@ -523,10 +523,10 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(magicFlags) > 0 then
 		unlock = unlock + (2^(trinityTable[1]-1))
 	end
-	if ReadByte(DJFlag) > 0 then
+	if ReadByte(DJFlag) == 0x20 then
 		unlock = unlock + (2^(trinityTable[2]-1))
 	end
-	if ReadByte(AGFlag) > 0 then
+	if ReadByte(AGFlag) == 0x20 then
 		unlock = unlock + (2^(trinityTable[3]-1))
 	end
 	if ReadByte(OCTrinityFlag) > 0 then
