@@ -33,6 +33,7 @@ local AGFlag = 0x2DE5EC0 - offset
 local OCTrinityFlag = 0x2DE68FC - offset
 local Riku1Flag = 0x2DE79D0+0x6C+0xB6 - offset
 
+local infoBoxNotVisible = 0x23D0890 - offset
 local preventMenu = 0x232A60C - offset
 local blackfade = 0x4D93B8 - offset
 local enableRC = 0x2DE6244 - offset
@@ -55,9 +56,13 @@ local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 
-local chestText = 0x29BDAF4 - offset
-local infoboxText = 0x29E2EF4 - offset
-local rewardText = 0x29BE9F4 - offset
+local textsBase = 0x2EE03B0 - offset
+local textsOff = 0x232A5EC - offset
+local textsOff2 = 0xDCE244 - offset
+local textPos = 0
+local textFind = ""
+local textReplace = ""
+local infoBoxWas = 1
 
 local trinityTable = {}
 local magicShuffled = {}
@@ -393,19 +398,49 @@ function ApplyRandomization()
 	print("Applied randomization")
 end
 
-function MemToString(off, c)
-	local s = ""
-	for i=0,c-1 do
-		local letter = ReadShort(off+(i*20))
-		if letter >= 11 and letter <= 36 then
-			s = s .. string.char(letter+54)
-		elseif letter >= 37 and letter <= 62 then
-			s = s .. string.char(letter+60)
-		elseif letter ~= 0x270F then
-			s = s .. string.format(" %x ", letter)
-		end
+function CharToMem(c)
+	if c >= 65 and c <= 90 then
+		c = c-54
+	elseif c >= 97 and c <= 122 then
+		c = c-60
 	end
-	return s
+	return c
+end
+
+function MemStringSearch(off, c, re)
+	local textMatch = 1
+	local matches = 0
+	off = off
+	founds = {}
+	local pos = 0
+
+	while pos < c do
+		local letter = ReadIntA(off+pos)
+		local inc = 1
+
+		for j=1, #re do
+			if letter == re[j] then
+				inc = 20
+			end
+		end
+
+		if letter == re[textMatch] then
+			textMatch = textMatch + 1
+			if textMatch >= 4 then
+				print(string.format("match at %x", off+pos-((textMatch-2)*20)))
+				founds[matches+1] = (off+pos-((textMatch-2)*20))
+				textMatch = 1
+				matches = matches + 1
+			end
+		else
+			textMatch = 1
+		end
+		pos = pos+inc
+	end
+	if #founds > 0 then
+		print(#founds)
+	end
+	return founds
 end
 
 function StringToMem(off, text)
@@ -418,14 +453,33 @@ function StringToMem(off, text)
 		else
 			c = 0x270F
 		end
-		WriteShort(off+((i-1)*20), c)
+		WriteShortA(off+((i-1)*20), c)
+		print(string.format("%x", off+((i-1)*20)))
 	end
 end
 
 function ReplaceTexts()
-	local curText = MemToString(rewardText, 20)
-	if string.find(curText, "Obtained") then
-		print(curText)
+	if ReadByte(infoBoxNotVisible) == 0 and infoBoxWas > 0 then
+		textFind = "Empty"
+		textReplace = "lolol"
+		print("Replacing now")
+	end
+	
+	infoBoxWas = ReadByte(infoBoxNotVisible)
+	
+	if textFind ~= "" and infoBoxWas == 0 then
+		local re = {}
+		for i=1,#textFind do
+			re[i] = CharToMem(string.byte(textFind, i, i))
+		end
+
+		local rewardText = ReadLong(textsBase+8) + 0x70A000
+		local founds = MemStringSearch(rewardText, 0xFFF00, re)
+		
+		for i=1,#founds do
+			StringToMem(founds[i], textReplace)
+			print("Replaced")
+		end
 	end
 end
 
@@ -507,7 +561,7 @@ function _OnFrame()
 		ReplaceTrinity(HUDNow)
 		ReplaceMagic(HUDNow)
 	end
-	--ReplaceTexts()
+	ReplaceTexts()
 	HUDWas = HUDNow
 
 	if ReadByte(unlockedWarps-7) < 8 then
