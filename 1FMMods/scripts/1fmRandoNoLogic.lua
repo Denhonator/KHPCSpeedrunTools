@@ -50,6 +50,8 @@ local trinityUnlock = magicUnlock + 0x1BA7
 local soraHP = 0x2D592CC - offset
 local world = 0x233CADC - offset
 local room = world + 0x68
+local sharedAbilities = 0x2DE5F69 - offset
+local soraJumpHeight = 0x2D592A0 - offset
 
 local gotoWorldMap = 0x2E1CC24 - offset
 local openMenu = 0x2350CD4 - offset
@@ -539,6 +541,19 @@ function ReplaceTrinity(HUDNow)
 	WriteByte(trinityUnlock, unlock)
 end
 
+function StackAbilities()
+	local jumpHeight = ReadFloat(soraJumpHeight)
+	if jumpHeight == 290 then
+		jumpHeight = jumpHeight-100
+		for i=0,7 do
+			if ReadByte(sharedAbilities+i) == 1 then
+				jumpHeight = jumpHeight + 100
+			end
+		end
+	end
+	WriteFloat(soraJumpHeight, jumpHeight)
+end
+
 function InstantGummi()
 	WriteByte(gotoWorldMap, 1)
 	WriteLong(closeMenu, 0)
@@ -557,6 +572,8 @@ function _OnFrame()
 	end
 	ReplaceTexts()
 	HUDWas = HUDNow
+	
+	StackAbilities()
 
 	if ReadByte(unlockedWarps-7) < 8 then
 		WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7),1)+8)
