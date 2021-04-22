@@ -409,38 +409,30 @@ end
 
 function MemStringSearch(off, c, re)
 	local textMatch = 1
-	local matches = 0
-	off = off
-	founds = {}
+	off = off+4
 	local pos = 0
 
 	while pos < c do
 		local letter = ReadIntA(off+pos)
-		local inc = 1
-
-		for j=1, #re do
-			if letter == re[j] then
-				inc = 20
-			end
-		end
+		local inc = 4
 
 		if letter == re[textMatch] then
 			textMatch = textMatch + 1
 			if textMatch >= 4 then
 				print(string.format("match at %x", off+pos-((textMatch-2)*20)))
-				founds[matches+1] = (off+pos-((textMatch-2)*20))
+				StringToMem((off+pos-((textMatch-2)*20)), textReplace)
 				textMatch = 1
-				matches = matches + 1
 			end
 		else
 			textMatch = 1
 		end
+		
+		if textMatch > 1 then
+			inc = 20
+		end
+		
 		pos = pos+inc
 	end
-	if #founds > 0 then
-		print(#founds)
-	end
-	return founds
 end
 
 function StringToMem(off, text)
@@ -454,32 +446,23 @@ function StringToMem(off, text)
 			c = 0x270F
 		end
 		WriteShortA(off+((i-1)*20), c)
-		print(string.format("%x", off+((i-1)*20)))
 	end
 end
 
 function ReplaceTexts()
-	if ReadByte(infoBoxNotVisible) == 0 and infoBoxWas > 0 then
-		textFind = "Empty"
-		textReplace = "lolol"
-		print("Replacing now")
-	end
-	
+	textFind = "Obtained"
+	textReplace = "LOLOL"
+
 	infoBoxWas = ReadByte(infoBoxNotVisible)
 	
-	if textFind ~= "" and infoBoxWas == 0 then
+	if textFind ~= "" and ReadFloat(soraHUD) < 1 then
 		local re = {}
 		for i=1,#textFind do
 			re[i] = CharToMem(string.byte(textFind, i, i))
 		end
 
-		local rewardText = ReadLong(textsBase+8) + 0x70A000
-		local founds = MemStringSearch(rewardText, 0xFFF00, re)
-		
-		for i=1,#founds do
-			StringToMem(founds[i], textReplace)
-			print("Replaced")
-		end
+		local rewardText = ReadLong(textsBase+8) + 0xC00000
+		MemStringSearch(rewardText, 0xAFF00, re)
 	end
 end
 
