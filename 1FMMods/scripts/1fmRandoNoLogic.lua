@@ -427,7 +427,7 @@ function MemStringSearch(c, re)
 					if textMatch >= 4 then
 						local start = address+((i-textMatch+2)*20)
 						print(string.format("match at %x", ppos))
-						StringToMem(start, textReplace)
+						StringToMem(start, textReplace, math.max(#textFind, #textReplace))
 						textMatch = 1
 						success = true
 					end
@@ -444,24 +444,23 @@ function MemStringSearch(c, re)
 	return success
 end
 
-function StringToMem(off, text)
-	for i=1, #text do
+function StringToMem(off, text, l)
+	for i=1, l do
 		local c = string.byte(text, i,i)
-		if c >= 65 and c <= 90 then
-			c = c-54
-		elseif c >= 97 and c <= 122 then
-			c = c-60
-		else
-			c = 0x270F
+		local d = 0x270F 
+		if c and c >= 65 and c <= 90 then
+			d = c-54
+		elseif c and c >= 97 and c <= 122 then
+			d = c-60
 		end
-		WriteShortA(off+((i-1)*20), c)
+		WriteShortA(off+((i-1)*20), d)
 	end
 end
 
 function ReplaceTexts()
 	infoBoxWas = ReadByte(infoBoxNotVisible)
 	
-	if textFind ~= "" and (ReadFloat(soraHUD) < 1 or infoBoxWas==0) then
+	if textFind ~= "" and (infoBoxWas==0) then
 		local re = {}
 		for i=1,#textFind do
 			re[i] = CharToMem(string.byte(textFind, i, i))
