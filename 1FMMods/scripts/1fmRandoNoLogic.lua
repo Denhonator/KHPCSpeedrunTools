@@ -164,7 +164,7 @@ function ItemType(id)
 	if (i >= 0x95 and i <= 0x97) and (i >= 0x9E and i <= 0xA7) then
 		attributes = attributes .. "Unique"
 	end
-	if (i >= 0xA8 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i == 0xD2 then
+	if (i >= 0xA8 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7 and i ~= 0xE0) or i == 0xD2 then
 		attributes = attributes .. "Key"
 	end
 	if (i == 0xC0 or (i >= 0xC4 and i <= 0xC6) or i == 0xD3) then
