@@ -60,9 +60,12 @@ local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 
+local itemDropID = 0x2849FC8 - offset
 local textsBase = 0x2EE03B0 - offset
 local textPointerBase = 0x2B98900 - offset
 local textPos = 0
+local idFind = 0
+local idReplace = 0
 local textFind = ""
 local nextTextFind = ""
 local textReplace = ""
@@ -502,6 +505,13 @@ end
 function ReplaceTexts()
 	infoBoxWas = ReadByte(infoBoxNotVisible)
 	
+	if idFind > 0 and ReadByte(itemDropID) == idFind then
+		WriteByte(itemDropID, idReplace)
+		idFind = 0
+		textFind = ""
+		print("Replaced item drop")
+	end
+	
 	if textFind ~= "" and (infoBoxWas==0) then
 		local re = {}
 		for i=1,#textFind do
@@ -538,12 +548,17 @@ function UpdateInventory(HUDNow)
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
 					math.randomseed(ReadByte(room)*ReadByte(world))
-					if (string.find(ItemType(i), "Synth") or i == 0xD3) and math.random(10) > 2 then
+					if (string.find(ItemType(i), "Synth") or i == 0xD3) and math.random(10) > 6 then
 						curid = randomGets[math.random(#randomGets)]
 					end
+					
+					idFind = i
+					idReplace = curid
+					print(string.format("Replacing %x with %x", i, curid))
 					textFind = itemNames[i]
 					textReplace = itemNames[curid]
 					print(string.format("Replacing %s with %s", textFind, textReplace))
+
 					local otherCount = ReadByte(inventory+(curid-1))
 					if (i==0xE0) then
 						bufferRemove = i
@@ -573,6 +588,7 @@ function ReplaceMagic(HUDNow)
 		end
 		if l > magicUpdater[i] then
 			magicUpdater[i] = l
+			print("Replacing magic text")
 			textFind = magicTexts[i]
 			textReplace = magicTexts[r]
 			nextTextFind = magicTexts2[i]
@@ -612,6 +628,7 @@ function ReplaceTrinity(HUDNow)
 	if HUDNow < 1 and dif > 0 and textFind=="" then
 		for i=2,5 do
 			if dif == 2^(i-1) then
+				print("Replacing trinity text")
 				textFind = trinityTexts[i]
 				textReplace = trinityTexts[trinityTable[i]]
 				break
@@ -652,6 +669,7 @@ function _OnFrame()
 		nextTextFind = ""
 		if HUDWas < 1 then
 			textFind = ""
+			print("Text find reset")
 		end
 	end
 	ReplaceTexts()
