@@ -574,15 +574,10 @@ function _OnFrame()
 	
 	StackAbilities()
 
-	if ReadByte(unlockedWarps-7) < 8 then
-		WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7),1)+8)
-		WriteByte(warpCount+4*3, 4)
-	end
-
 	if ReadByte(gummiselect)==3 then
-		--WriteByte(TTWarp, 1) -- Change it to DI world ID
 		WriteShort(worldWarps+0x18, 1) -- Add DI warp
-		--WriteByte(worldFlagBase+7, 0) -- Fix up story flags
+		WriteByte(unlockedWarps-7, 15)
+		WriteByte(warpCount+4*3, 4)
 	else
 		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
 	end
