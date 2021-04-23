@@ -570,11 +570,6 @@ function ReplaceMagic(HUDNow)
 		WriteByte(magicLevels+(r-1), math.max(l, 1))
 		if l > 0 then
 			unlock = unlock + (2^(r-1))
-			-- for j=0,2 do
-				-- if ReadByte(shortcuts+j) == i-1 then
-					-- WriteByte(shortcuts+j, r-1)
-				-- end
-			-- end
 		end
 		if l > magicUpdater[i] then
 			magicUpdater[i] = l
@@ -584,6 +579,11 @@ function ReplaceMagic(HUDNow)
 			nextTextReplace = magicTexts2[r]
 			if l > 1 then
 				nextTextReplace = magicTexts2[r] .. " has been upgraded             "
+			end
+			for j=0,2 do
+				if ReadByte(shortcuts+j) == i-1 then
+					WriteByte(shortcuts+j, r-1)
+				end
 			end
 		end
 	end
