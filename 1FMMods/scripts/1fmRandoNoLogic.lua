@@ -635,6 +635,9 @@ function _OnFrame()
 		ReplaceMagic(HUDNow)	
 	else
 		nextTextFind = ""
+		if HUDWas < 1 then
+			textFind = ""
+		end
 	end
 	ReplaceTexts()
 	HUDWas = HUDNow
