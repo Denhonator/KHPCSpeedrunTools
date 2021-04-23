@@ -45,6 +45,7 @@ local soraHUD = 0x280EB1C - offset
 local magicUnlock = 0x2DE5A44 - offset
 local magicLevels = magicUnlock + 0x41E
 local magicFlags = 0x2DE75EE - offset
+local shortcuts = 0x2DE6214 - offset
 local trinityUnlock = magicUnlock + 0x1BA7
 local soraHP = 0x2D592CC - offset
 local world = 0x233CADC - offset
@@ -560,6 +561,11 @@ function ReplaceMagic(HUDNow)
 		WriteByte(magicLevels+(r-1), math.max(l, 1))
 		if l > 0 then
 			unlock = unlock + (2^(r-1))
+			for j=0,2 do
+				if ReadByte(shortcuts+j) == i-1 then
+					WriteByte(shortcuts+j, r-1)
+				end
+			end
 		end
 		if l > magicUpdater[i] then
 			magicUpdater[i] = l
