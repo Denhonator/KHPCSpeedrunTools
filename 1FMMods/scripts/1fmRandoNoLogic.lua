@@ -75,6 +75,8 @@ local magicShuffled = {}
 local perMagicShuffle = {}
 local magicUpdater = {}
 local inventoryUpdater = {}
+local bufferRemove = 0
+local bufferRemoveTimer = 10
 local HUDWas = 0
 local introJump = true
 
@@ -173,7 +175,7 @@ function ItemType(id)
 	if (i >= 0x95 and i <= 0x97) and (i >= 0x9E and i <= 0xA7) then
 		attributes = attributes .. "Unique"
 	end
-	if (i >= 0xA8 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7 and i ~= 0xE0) or i == 0xD2 then
+	if (i >= 0xA8 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i == 0xD2 then
 		attributes = attributes .. "Key"
 	end
 	if (i == 0xC0 or (i >= 0xC4 and i <= 0xC6) or i == 0xD3) then
@@ -508,7 +510,17 @@ function ReplaceTexts()
 end
 
 -- Swap key items in inventory slots
-function UpdateInventory()
+function UpdateInventory(HUDNow)
+	if bufferRemove > 0 then
+		if bufferRemoveTimer > 0 then
+			bufferRemoveTimer = bufferRemoveTimer-1
+		else
+			local itemCount = ReadByte(inventory+(bufferRemove-1))
+			WriteByte(inventory+(bufferRemove-1), itemCount-1)
+			bufferRemove = 0
+			print("Late item rando to prevent softlock")
+		end
+	end
 	for i=0x1,0xFF do
 		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and
 																i ~= itemids[i] then
@@ -520,7 +532,13 @@ function UpdateInventory()
 					textFind = itemNames[i]
 					textReplace = itemNames[curid]
 					local otherCount = ReadByte(inventory+(curid-1))
-					WriteByte(inventory+(i-1), itemCount-dif)
+					if (i==0xE0) then
+						bufferRemove = i
+						bufferRemoveTimer = 360
+						inventoryUpdater[i] = itemCount+dif
+					else
+						WriteByte(inventory+(i-1), itemCount-dif)
+					end
 					WriteByte(inventory+(curid-1), otherCount+dif)
 					inventoryUpdater[curid] = otherCount+dif
 				else
@@ -597,8 +615,8 @@ function _OnFrame()
 		Randomize()
 	end
 	
-	UpdateInventory()
 	local HUDNow = ReadFloat(soraHUD)
+	UpdateInventory(HUDNow)
 	ReplaceTrinity(HUDNow)
 	if HUDNow < 1 then
 		ReplaceMagic(HUDNow)	
@@ -618,9 +636,6 @@ function _OnFrame()
 		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
 	end
 
-	if ReadByte(cutsceneFlags+0xB07) == 0x2B then -- Fix Wonderland Trickmaster softlock?
-		WriteByte(cutsceneFlags+0xB07, 0x2E)
-	end
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
