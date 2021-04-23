@@ -94,6 +94,7 @@ local donaldAbilities = {}
 local goofyLevels = {}
 local goofyAbilities = {}
 local chests = {}
+local randomGets = {}
 local randomized = false
 local initDone = false
 
@@ -142,6 +143,10 @@ function _OnInit()
 	end
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
+		if (i>= 0xB2 and i<= 0xCD) or i==0xD3 then
+			local rl = #randomGets+1
+			randomGets[rl] = i
+		end
 	end
 	for i=1, 7 do
 		magicUpdater[i] = 0
@@ -195,14 +200,8 @@ function ItemCompatibility(i, r)
 	if string.find(a, "Weapon") then
 		return a==b
 	end
-	if string.find(a, "Stock") then
-		return string.find(b, "Stock")
-	end
-	if string.find(a, "Use") then
-		return string.find(b, "Use")
-	end
-	if string.find(a, "Synth")then
-		return string.find(b, "Synth")
+	if string.find(a, "Stock") or string.find(a, "Use") or string.find(a, "Synth") then
+		return string.find(b, "Stock") or string.find(b, "Use") or string.find(b, "Synth")
 	end
 	if string.find(a, "Accessory") then
 		return string.find(b, "Accessory")
@@ -407,6 +406,9 @@ function ApplyRandomization()
 		WriteByte(donaldAbilityTable+(i-1), donaldAbilities[i])
 	end
 	randomized = true
+	for i=1, 0xFF do
+		print(string.format("%x became %x", i, itemids[i]))
+	end
 	print("Applied randomization")
 end
 
@@ -428,6 +430,8 @@ function CharSpacing(c)
 		return 13
 	elseif c and (c >= 11 and c <= 36) then
 		return 11
+	elseif c and c == 72 then
+		return 5
 	else
 		return (c == 0x2D or c == 0x30) and 6 or 10
 	end
@@ -533,8 +537,13 @@ function UpdateInventory(HUDNow)
 			if dif ~= 0 then
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
+					if (string.find(ItemType(i), "Synth") or i == 0xD3) and math.random(10) > 2 then
+						math.randomseed(ReadByte(room)*ReadByte(world))
+						curid = randomGets[math.random(#randomGets)]
+					end
 					textFind = itemNames[i]
 					textReplace = itemNames[curid]
+					print(string.format("Replacing %s with %s", textFind, textReplace))
 					local otherCount = ReadByte(inventory+(curid-1))
 					if (i==0xE0) then
 						bufferRemove = i
@@ -598,8 +607,9 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(cutsceneFlags+0xB0E) >= 0x32 then
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
+	WriteByte(trinityUnlock, HUDNow > 0 and unlock or 0)
 	local dif = ReadByte(trinityUnlock)
-	if HUDNow < 1 and dif > 0 then
+	if HUDNow < 1 and dif > 0 and textFind=="" then
 		for i=2,5 do
 			if dif == 2^(i-1) then
 				textFind = trinityTexts[i]
@@ -608,7 +618,6 @@ function ReplaceTrinity(HUDNow)
 			end
 		end
 	end
-	WriteByte(trinityUnlock, HUDNow > 0 and unlock or 0)
 end
 
 function StackAbilities()
