@@ -1,7 +1,8 @@
+local offset = 0x3A0606
 local worldWarpBase = 0x50B940
+local cutsceneFlagBase = 0x2DE65D0-0x200 - offset
 local djProgressFlag = 0x2DE79D0+0x6C+0x40
 local neverlandProgressFlag = 0x2DE79D0+0x6C+0xED
-local offset = 0x3A0606
 
 function _OnInit()
 	--if ReadByte(0x2DE78C7-offset) > 2 then
@@ -21,13 +22,13 @@ function _OnFrame()
 	local room = ReadByte(0x25346D0-offset)
 	
 	local monstroOpen = ReadByte(0x2DE78CA-offset) > 1
-	local neverlandState = ReadByte(neverlandProgressFlag-offset)
-	local deepJungleState = ReadByte(djProgressFlag-offset)
+	local neverlandState = ReadByte(cutsceneFlagBase+0xB0D) < 0x14
+	local deepJungleState = ReadByte(cutsceneFlagBase+0xB05) < 0x10
 
-	WriteByte(worldWarpBase+0x2A-offset, deepJungleState==0 and 0 or 0xE)
-	WriteByte(worldWarpBase+0x2C-offset, deepJungleState==0 and 0 or 0x2D)
-	WriteByte(worldWarpBase+0x9A-offset, neverlandState==0 and 6 or 0x7)
-	WriteByte(worldWarpBase+0x9C-offset, neverlandState==0 and 0x18 or 0x25)
+	WriteByte(worldWarpBase+0x2A-offset, deepJungleState and 0 or 0xE)
+	WriteByte(worldWarpBase+0x2C-offset, deepJungleState and 0 or 0x2D)
+	WriteByte(worldWarpBase+0x9A-offset, neverlandState and 6 or 0x7)
+	WriteByte(worldWarpBase+0x9C-offset, neverlandState and 0x18 or 0x25)
 
 	if room > 0 and soraWorld ~= selection then
 		WriteInt(0x503CEC-offset, soraWorld)

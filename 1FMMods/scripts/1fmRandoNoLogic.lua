@@ -68,6 +68,7 @@ local textReplace = ""
 local nextTextReplace = ""
 local magicTexts = {"fire.","ice.","thunder.","healing.","stars.","time.","wind."}
 local magicTexts2 = {"Fire","Blizzard","Thunder","Cure","Gravity","Stop","Aero"}
+local trinityTexts = {"Blue Trinity", "Red Trinity", "Green Trinity", "Yellow Trinity", "White Trinity"}
 local infoBoxWas = 1
 
 local trinityTable = {}
@@ -422,15 +423,17 @@ function CharToMem(c)
 end
 
 function CharSpacing(c)
-	if c and c >= 11 and c <= 36 then
-		return c == 0x17 and 13 or 11
+	if c and (c == 0x17 or c == 0x21 or c == 0x3B or c == 0x31) then
+		return 13
+	elseif c and (c >= 11 and c <= 36) then
+		return 11
 	else
-		return (c == 0x2d or c == 0x30) and 7 or 10
+		return (c == 0x2D or c == 0x30) and 6 or 10
 	end
 end
 
 function StringToMem(off, text, l, base)
-	local textlen = math.max(#text, l)
+	local textlen = math.max(#text, l+1)
 	local nextPos = 0
 	for i=1, textlen do
 		local c = string.byte(text, i,i)
@@ -589,7 +592,17 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(cutsceneFlags+0xB0E) >= 0x32 then
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
-	WriteByte(trinityUnlock, unlock)
+	local dif = ReadByte(trinityUnlock)
+	if HUDNow < 1 and dif > 0 then
+		for i=2,5 do
+			if dif == 2^(i-1) then
+				textFind = trinityTexts[i]
+				textReplace = trinityTexts[trinityTable[i]]
+				break
+			end
+		end
+	end
+	WriteByte(trinityUnlock, HUDNow > 0 and unlock or 0)
 end
 
 function StackAbilities()
@@ -651,7 +664,7 @@ function _OnFrame()
 		WriteByte(lockMenu, 0) -- Unlock menu
 	end
 	
-	if ReadByte(gummiFlagBase+14) ~= 3 then
+	if ReadByte(party1)==0xFF then
 		for i=0,1 do
 			WriteByte(party1+i, i+1)
 			WriteByte(party2+i, i+1)
