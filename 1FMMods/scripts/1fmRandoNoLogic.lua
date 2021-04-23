@@ -25,8 +25,7 @@ local gummiselect = 0x503CEC - offset
 local inGummi = 0x50421D - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
-local monstroCutsceneFlag = 0x2DE65D0-0x200+0xB09 - offset
-local hbCutsceneFlag = 0x2DE65D0-0x200+0xB0E
+local cutsceneFlags = 0x2DE65D0-0x200 - offset
 
 local soraStory = 0x2DE7367 - offset
 local OCFlag = 0x2DE75EA - offset
@@ -550,8 +549,8 @@ function StackAbilities()
 				jumpHeight = jumpHeight + 100
 			end
 		end
+		WriteFloat(soraJumpHeight, jumpHeight)
 	end
-	WriteFloat(soraJumpHeight, jumpHeight)
 end
 
 function InstantGummi()
@@ -588,11 +587,14 @@ function _OnFrame()
 		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
 	end
 
-	if ReadByte(monstroCutsceneFlag) < 0x14 then
-		WriteByte(monstroCutsceneFlag, 0x14)
+	if ReadByte(cutsceneFlags+0xB07) == 0x2B then -- Fix Wonderland Trickmaster softlock?
+		WriteByte(cutsceneFlags+0xB07, 0x2E)
 	end
-	if ReadByte(hbCutsceneFlag) < 0x14 then
-		WriteByte(monstroCutsceneFlag, 0x14)
+	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
+		WriteByte(cutsceneFlags+0xB09, 0x14)
+	end
+	if ReadByte(cutsceneFlags+0xB0E) < 0x14 then -- Trigger wooden sword cutscene HB
+		WriteByte(cutsceneFlags+0xB0E, 0x14)
 	end
 	
 	if ReadInt(input) == 3848 then
