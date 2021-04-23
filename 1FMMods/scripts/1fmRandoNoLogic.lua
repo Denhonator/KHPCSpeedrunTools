@@ -534,7 +534,7 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(OCTrinityFlag) > 0 then
 		unlock = unlock + (2^(trinityTable[4]-1))
 	end
-	if ReadByte(Riku1Flag) > 0 then
+	if ReadByte(cutsceneFlags+0xB0E) >= 0x32 then
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
 	WriteByte(trinityUnlock, unlock)
