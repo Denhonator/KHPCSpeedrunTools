@@ -80,8 +80,8 @@ A63
 A64
 Kingdom Key
 Dream Sword
-Dream Shield (Sora)
-Dream Rod (Sora)
+Dream Shield
+Dream Rod
 Wooden Sword
 Jungle King
 Three Wishes
@@ -115,7 +115,7 @@ Save the Queen
 Wizard's Relic
 Meteor Strike
 Fantasista
-???? (Donald Weapon)
+????
 Knight's Shield
 Mythril Shield
 Onyx Shield
@@ -126,17 +126,17 @@ Smasher
 Gigas Fist
 Genji Shield
 Herc's Shield
-Dream Shield (Goofy)
+Dream Shield
 Save the King
 Defender
 Mighty Shield
 Seven Elements
-???? (Goofy Weapon)
+????
 Spear
-No Weapon (Pooh)
+No Weapon
 Scimitar
-No Weapon (Ariel)
-No Weapon (Jack)
+No Weapon
+No Weapon
 Dagger
 Claws
 Tent

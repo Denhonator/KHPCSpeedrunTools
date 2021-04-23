@@ -63,14 +63,17 @@ local textsBase = 0x2EE03B0 - offset
 local textPointerBase = 0x2B98900 - offset
 local textPos = 0
 local textFind = ""
+local nextTextFind = ""
 local textReplace = ""
+local nextTextReplace = ""
+local magicTexts = {"fire.","ice.","thunder.","healing.","stars.","time.","wind."}
+local magicTexts2 = {"Fire","Blizzard","Thunder","Cure","Gravity","Stop","Aero"}
 local infoBoxWas = 1
 
 local trinityTable = {}
 local magicShuffled = {}
 local perMagicShuffle = {}
-local magicChecks = {soraStory, OCFlag}
-local magicCheckValues = {0x80, 1}
+local magicUpdater = {}
 local inventoryUpdater = {}
 local HUDWas = 0
 local introJump = true
@@ -135,6 +138,9 @@ function _OnInit()
 	end
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
+	end
+	for i=1, 7 do
+		magicUpdater[i] = 0
 	end
 	initDone = true
 	print("Init done")
@@ -401,12 +407,49 @@ function ApplyRandomization()
 end
 
 function CharToMem(c)
-	if c >= 65 and c <= 90 then
-		c = c-54
-	elseif c >= 97 and c <= 122 then
-		c = c-60
+	if c and c >= 65 and c <= 90 then
+		return c-54
+	elseif c and c >= 97 and c <= 122 then
+		return c-60
+	elseif c and c >= 48 and c <= 57 then
+		return c-47
+	elseif c and c == 46 then
+		return 72
 	end
-	return c
+	return 0x270F
+end
+
+function CharSpacing(c)
+	if c and c >= 11 and c <= 36 then
+		return c == 0x17 and 13 or 11
+	else
+		return (c == 0x2d or c == 0x30) and 7 or 10
+	end
+end
+
+function StringToMem(off, text, l, base)
+	local textlen = math.max(#text, l)
+	local nextPos = 0
+	for i=1, textlen do
+		local c = string.byte(text, i,i)
+		local d = CharToMem(c)
+		local addr = off+((i-1)*20)
+		if i > l then
+			local sample = ReadArrayA(addr-20, 20)
+			sample[5] = sample[5] + 10
+			WriteArrayA(addr, sample)
+		end
+		WriteShortA(addr, d)
+		if i > 1 then
+			local newPos = nextPos
+			WriteShortA(addr+4, newPos)
+		end
+		nextPos = ReadShortA(addr+4) + CharSpacing(d)
+	end
+	if textlen > l then
+		local size = ReadShortA(base+2)
+		WriteShortA(base+2, size+textlen-l-1)
+	end
 end
 
 function MemStringSearch(c, re)
@@ -430,7 +473,7 @@ function MemStringSearch(c, re)
 					if textMatch >= 4 then
 						local start = address+((i-textMatch+2)*20)
 						print(string.format("match at %x", ppos))
-						StringToMem(start, textReplace, math.max(#textFind, #textReplace))
+						StringToMem(start, textReplace, #textFind, address)
 						textMatch = 1
 						success = true
 					end
@@ -443,21 +486,7 @@ function MemStringSearch(c, re)
 		ppos = ppos+inc
 		--inc = inc==8 and 0x20 or 8
 	end
-	print("Looking for " .. textFind)
 	return success
-end
-
-function StringToMem(off, text, l)
-	for i=1, l do
-		local c = string.byte(text, i,i)
-		local d = 0x270F 
-		if c and c >= 65 and c <= 90 then
-			d = c-54
-		elseif c and c >= 97 and c <= 122 then
-			d = c-60
-		end
-		WriteShortA(off+((i-1)*20), d)
-	end
 end
 
 function ReplaceTexts()
@@ -471,7 +500,9 @@ function ReplaceTexts()
 
 		local rewardText = ReadLong(textsBase+8) + 0xC00000
 		if MemStringSearch(0xFFFF, re) then
-			textFind = ""
+			textFind = nextTextFind
+			textReplace = nextTextReplace
+			nextTextFind = ""
 		end
 	end
 end
@@ -501,13 +532,6 @@ function UpdateInventory()
 end
 
 function ReplaceMagic(HUDNow)
-	-- magicUpdater = {0,0,0,0,0,0,0}
-	-- for i=1, #magicChecks do
-		-- if ReadByte(magicChecks[i]) >= magicCheckValues[i] then
-			-- magicUpdater[magicShuffled[i]] = magicUpdater[magicShuffled[i]]+1
-			-- print(string.format("Magic check %x detected", i))
-		-- end
-	-- end
 	unlock = 0
 	for i=1,7 do
 		local r = perMagicShuffle[i]
@@ -515,6 +539,16 @@ function ReplaceMagic(HUDNow)
 		WriteByte(magicLevels+(r-1), math.max(l, 1))
 		if l > 0 then
 			unlock = unlock + (2^(r-1))
+		end
+		if l > magicUpdater[i] then
+			magicUpdater[i] = l
+			textFind = magicTexts[i]
+			textReplace = magicTexts[r]
+			nextTextFind = magicTexts2[i]
+			nextTextReplace = magicTexts2[r]
+			if l > 1 then
+				nextTextReplace = magicTexts2[r] .. " has been upgraded             "
+			end
 		end
 	end
 	WriteByte(magicUnlock, unlock)
@@ -567,7 +601,9 @@ function _OnFrame()
 	local HUDNow = ReadFloat(soraHUD)
 	ReplaceTrinity(HUDNow)
 	if HUDNow < 1 then
-		ReplaceMagic(HUDNow)
+		ReplaceMagic(HUDNow)	
+	else
+		nextTextFind = ""
 	end
 	ReplaceTexts()
 	HUDWas = HUDNow
