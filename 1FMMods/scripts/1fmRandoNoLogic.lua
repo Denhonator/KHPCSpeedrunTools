@@ -670,8 +670,10 @@ function _OnFrame()
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
-	if ReadByte(cutsceneFlags+0xB0E) < 0x14 then -- Trigger wooden sword cutscene HB
+	if ReadByte(cutsceneFlags+0xB0E) < 0x14 and ReadByte(gummiselect)==15 then
 		WriteByte(cutsceneFlags+0xB0E, 0x14)
+	elseif ReadByte(cutsceneFlags+0xB0E) == 0x14 then
+		WriteByte(cutsceneFlags+0xB0E, 1)
 	end
 	
 	if ReadInt(input) == 3848 then
