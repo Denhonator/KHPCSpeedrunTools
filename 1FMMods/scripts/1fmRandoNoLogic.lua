@@ -537,8 +537,8 @@ function UpdateInventory(HUDNow)
 			if dif ~= 0 then
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
+					math.randomseed(ReadByte(room)*ReadByte(world))
 					if (string.find(ItemType(i), "Synth") or i == 0xD3) and math.random(10) > 2 then
-						math.randomseed(ReadByte(room)*ReadByte(world))
 						curid = randomGets[math.random(#randomGets)]
 					end
 					textFind = itemNames[i]
