@@ -23,6 +23,7 @@ local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
 
 local inventory = 0x2DE5E6A - offset
+local gummiInventory = 0x2DF1848 - offset
 
 --local TTWarp = 0x5229B0+0x9B570C+6
 local worldWarps = 0x50B940 - offset
@@ -88,11 +89,13 @@ local magicShuffled = {}
 local perMagicShuffle = {}
 local magicUpdater = {}
 local inventoryUpdater = {}
+local gummiUpdater = {}
 local bufferRemove = 0
 local bufferRemoveTimer = 10
 local HUDWas = 0
 local introJump = true
 
+local gummiNames = {}
 local itemNames = {}
 local itemids = {}
 local rewards = {}
@@ -125,11 +128,17 @@ end
 
 function _OnInit()
 	local f = io.open("items.txt")
+	local f2 = io.open("gummis.txt")
 	if not f then
 		print("items.txt missing!")
+	elseif not f2 then
+		print("gummis.txt missing!")
 	else
 		for i=1,0xFF do
 			itemNames[i] = f:read("*l")
+		end
+		for i=1,0x40 do
+			gummiNames[i] = f2:read("*l")
 		end
 		f:close()
 	end
@@ -158,6 +167,9 @@ function _OnInit()
 			local rl = #randomGets+1
 			randomGets[rl] = i
 		end
+	end
+	for i=1, 0x40 do
+		gummiUpdater[i] = ReadByte(gummiInventory+(i-1))
 	end
 	for i=1, 7 do
 		magicUpdater[i] = 0
@@ -488,7 +500,7 @@ function StringToMem(off, text, l, base)
 		if i > l then
 			local sample = ReadArrayA(addr-20, 20)
 			sample[5] = sample[5] + 10
-			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F then
+			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F or ReadShortA(addr+2) > 0xFF or ReadShortA(addr+4)==0 then
 				garbageCount = garbageCount + 1
 			end
 			WriteArrayA(addr, sample)
@@ -617,35 +629,70 @@ function UpdateInventory(HUDNow)
 			end
 		end
 	end
+	for i=1,0x40 do
+		local itemCount = ReadByte(gummiInventory+(i-1))
+		if itemCount > gummiUpdater[i] then
+			if ReadByte(closeMenu) == 0 then
+				textFind = "Obtained " .. gummiNames[i]
+				local magicUp = -1
+				if i==2 then
+					magicUp = 3
+				elseif i==7 then
+					magicUp = 6
+				elseif i==60 then
+					magicUp = 5
+				end
+				if magicUp > 0 then
+					WriteByte(magicFlags+magicUp, ReadByte(magicFlags+magicUp)+1)
+					textReplace = "Power of " .. magicTexts[perMagicShuffle[magicUp+1]] .. "         "
+					print(string.format("Replacing %s with %s", textFind, textReplace))
+				end
+				magicUp = -1
+			end
+			gummiUpdater[i] = itemCount
+		end
+	end
 end
 
 function ReplaceMagic(HUDNow)
 	unlock = 0
+	local isUnlocked = {false,false,false,false,false,false,false}
 	for i=1,7 do
 		local r = perMagicShuffle[i]
 		local l = ReadByte(magicFlags+(i-1))
 		WriteByte(magicLevels+(r-1), math.max(l, 1))
 		if l > 0 then
 			unlock = unlock + (2^(r-1))
+			isUnlocked[r] = true
 		end
 		if l > magicUpdater[i] then
 			magicUpdater[i] = l
-			print("Replacing magic text")
-			textFind = magicTexts[i]
-			textReplace = magicTexts[r]
-			nextTextFind = magicTexts2[i]
-			nextTextReplace = magicTexts2[r]
-			if l > 1 then
-				nextTextReplace = magicTexts2[r] .. " has been upgraded               "
-			end
-			for j=0,2 do
-				if ReadByte(shortcuts+j) == i-1 then
-					WriteByte(shortcuts+j, r-1)
+			if not string.find(textFind, "-G") then
+				print("Replacing magic text")
+				textFind = magicTexts[i]
+				textReplace = magicTexts[r]
+				nextTextFind = magicTexts2[i]
+				nextTextReplace = magicTexts2[r]
+				if l > 1 then
+					nextTextReplace = magicTexts2[r] .. " has been upgraded               "
 				end
 			end
 		end
 	end
 	WriteByte(magicUnlock, unlock)
+	local isShortcut = {}
+	for j=0,2 do
+		isShortcut[ReadByte(shortcuts+j)+1] = true
+	end
+	for j=0,2 do
+		if not isUnlocked[ReadByte(shortcuts+j)+1] then
+			for i=1,7 do
+				if not isShortcut[i] then
+					WriteByte(shortcuts+j, i-1)
+				end
+			end
+		end
+	end
 end
 
 function ReplaceTrinity(HUDNow)
@@ -700,6 +747,9 @@ end
 function _OnFrame()
 	if not randomized and initDone then
 		Randomize()
+		if #itemNames==0 or #gummiNames==0 then
+			print("items.txt or gummis.txt missing! Get them from the Github")
+		end
 	end
 	
 	local HUDNow = ReadFloat(soraHUD)
