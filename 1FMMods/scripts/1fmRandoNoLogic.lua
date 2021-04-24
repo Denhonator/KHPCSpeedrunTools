@@ -201,7 +201,7 @@ end
 function ItemCompatibility(i, r)
 	a = ItemType(i)
 	b = ItemType(r)
-	if string.find(a, "Weapon") then
+	if string.find(a, "Weapon") or string.find(b, "Weapon") then
 		return a==b
 	end
 	if string.find(a, "Stock") or string.find(a, "Use") or string.find(a, "Synth") then
@@ -462,7 +462,7 @@ function CharSpacing(c)
 end
 
 function StringToMem(off, text, l, base)
-	local textlen = math.max(#text, l+1)
+	local textlen = math.max(#text, l)
 	local nextPos = 0
 	local garbageCount = 0
 	for i=1, textlen do
@@ -473,7 +473,7 @@ function StringToMem(off, text, l, base)
 			local sample = ReadArrayA(addr-20, 20)
 			sample[5] = sample[5] + 10
 			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F then
-				garbageCount = garbageCount
+				garbageCount = garbageCount + 1
 			end
 			WriteArrayA(addr, sample)
 		end
