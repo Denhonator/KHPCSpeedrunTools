@@ -782,7 +782,7 @@ function _OnFrame()
 	end
 	if ReadByte(cutsceneFlags+0xB0E) < 0x14 and ReadByte(gummiselect)==15 then
 		WriteByte(cutsceneFlags+0xB0E, 0x14)
-	elseif ReadByte(cutsceneFlags+0xB0E) == 0x14 then
+	elseif ReadByte(cutsceneFlags+0xB0E) == 0x14 and ReadByte(gummiselect)~=15 then
 		WriteByte(cutsceneFlags+0xB0E, 1)
 	end
 	
