@@ -35,6 +35,7 @@ local inGummi = 0x50421D - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
+local DIDay2WarpPointer = 0x23944B8 - offset
 
 local soraStory = 0x2DE7367 - offset
 local OCFlag = 0x2DE75EA - offset
@@ -93,6 +94,7 @@ local gummiUpdater = {}
 local bufferRemove = 0
 local bufferRemoveTimer = 10
 local HUDWas = 0
+local removeBlackTimer = 0
 local introJump = true
 
 local gummiNames = {}
@@ -744,6 +746,32 @@ function InstantGummi()
 	WriteLong(closeMenu, 0)
 end
 
+function FlagFixes()
+	if ReadByte(gummiselect)==3 then
+		WriteShort(worldWarps+0x18, 1) -- Add DI warp
+		WriteByte(unlockedWarps-7, 15)
+		WriteByte(warpCount+4*3, 4)
+	else
+		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
+	end
+
+	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
+		WriteByte(cutsceneFlags+0xB09, 0x14)
+	end
+	if ReadByte(cutsceneFlags+0xB0E) < 0x14 and ReadByte(gummiselect)==15 then
+		WriteByte(cutsceneFlags+0xB0E, 0x14)
+	elseif ReadByte(cutsceneFlags+0xB0E) == 0x14 and ReadByte(gummiselect)~=15 then
+		WriteByte(cutsceneFlags+0xB0E, 1)
+	end
+	
+	if ReadByte(party1)==0xFF then
+		for i=0,1 do
+			WriteByte(party1+i, i+1)
+			WriteByte(party2+i, i+1)
+		end
+	end
+end
+
 function _OnFrame()
 	if not randomized and initDone then
 		Randomize()
@@ -768,24 +796,35 @@ function _OnFrame()
 	HUDWas = HUDNow
 	
 	StackAbilities()
-
-	if ReadByte(gummiselect)==3 then
-		WriteShort(worldWarps+0x18, 1) -- Add DI warp
-		WriteByte(unlockedWarps-7, 15)
-		WriteByte(warpCount+4*3, 4)
-	else
-		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
-	end
-
-	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
-		WriteByte(cutsceneFlags+0xB09, 0x14)
-	end
-	if ReadByte(cutsceneFlags+0xB0E) < 0x14 and ReadByte(gummiselect)==15 then
-		WriteByte(cutsceneFlags+0xB0E, 0x14)
-	elseif ReadByte(cutsceneFlags+0xB0E) == 0x14 and ReadByte(gummiselect)~=15 then
-		WriteByte(cutsceneFlags+0xB0E, 1)
+	
+	FlagFixes()
+	
+	if ReadByte(world) == 1 then -- DI Day2 Warp to EotW
+		local warpAddr = ReadLong(DIDay2WarpPointer)+0x6F9D
+		if ReadByteA(warpAddr)==2 and ReadByteA(warpAddr+4)==1 then
+			print("DI to EotW warp")
+			WriteByteA(warpAddr,0x10)
+			WriteByteA(warpAddr+4,0x1E)
+		end
 	end
 	
+	if ReadInt(0x233C450-offset) == 0 then
+		removeBlackTimer = removeBlackTimer+1
+	else
+		removeBlackTimer = 0
+	end
+	
+	if HUDNow > 0 or removeBlackTimer > 300 then
+		WriteInt(0x233C450-offset, 128) --Remove black screen
+		WriteInt(0x233C454-offset, 128)
+		WriteInt(0x233C458-offset, 128)
+		WriteInt(0x233C45C-offset, 128)
+		if removeBlackTimer > 300 then
+			print("Removed black screen")
+			removeBlackTimer = 0
+		end
+	end
+
 	if ReadInt(input) == 3848 then
 		InstantGummi()
 	end
@@ -793,14 +832,7 @@ function _OnFrame()
 	if ReadFloat(soraHUD) > 0 and ReadByte(lockMenu) > 0 then
 		WriteByte(lockMenu, 0) -- Unlock menu
 	end
-	
-	if ReadByte(party1)==0xFF then
-		for i=0,1 do
-			WriteByte(party1+i, i+1)
-			WriteByte(party2+i, i+1)
-		end
-	end
-	
+
 	if ReadByte(enableRC) ~= 0x0 then
 		WriteByte(enableRC, 0x0)
 	end
