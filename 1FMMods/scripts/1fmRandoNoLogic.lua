@@ -454,16 +454,17 @@ function CharSpacing(c)
 		return 13
 	elseif c and (c >= 11 and c <= 36) then
 		return 11
-	elseif c and c == 72 then
+	elseif c and (c == 72 or c == 0x2D or c == 0x30) then
 		return 5
 	else
-		return (c == 0x2D or c == 0x30) and 6 or 10
+		return 10
 	end
 end
 
 function StringToMem(off, text, l, base)
 	local textlen = math.max(#text, l+1)
 	local nextPos = 0
+	local garbageCount = 0
 	for i=1, textlen do
 		local c = string.byte(text, i,i)
 		local d = CharToMem(c)
@@ -471,6 +472,9 @@ function StringToMem(off, text, l, base)
 		if i > l then
 			local sample = ReadArrayA(addr-20, 20)
 			sample[5] = sample[5] + 10
+			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F then
+				garbageCount = garbageCount + 1
+			end
 			WriteArrayA(addr, sample)
 		end
 		WriteShortA(addr, d)
@@ -482,7 +486,7 @@ function StringToMem(off, text, l, base)
 	end
 	if textlen > l then
 		local size = ReadShortA(base+2)
-		WriteShortA(base+2, size+textlen-l-1)
+		WriteShortA(base+2, size+garbageCount)
 	end
 end
 
@@ -615,7 +619,7 @@ function ReplaceMagic(HUDNow)
 			nextTextFind = magicTexts2[i]
 			nextTextReplace = magicTexts2[r]
 			if l > 1 then
-				nextTextReplace = magicTexts2[r] .. " has been upgraded             "
+				nextTextReplace = magicTexts2[r] .. " has been upgraded               "
 			end
 			for j=0,2 do
 				if ReadByte(shortcuts+j) == i-1 then
