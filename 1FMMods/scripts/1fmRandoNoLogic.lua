@@ -3,6 +3,7 @@ local keyitemsMatter = true
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
 local itemTable = btltbl+0x1A58
+local weaponTable = btltbl+0x94F8
 local soraStatTable = btltbl+0x3AC0
 local donaldStatTable = soraStatTable+0x3F8
 local goofyStatTable = donaldStatTable+0x198
@@ -408,10 +409,30 @@ function ApplyRandomization()
 		WriteByte(donaldStatTable+(i-1), donaldLevels[i])
 		WriteByte(donaldAbilityTable+(i-1), donaldAbilities[i])
 	end
+	local weaponStr = {}
+	local weaponMag = {}
+	local weaponItemData = {}
+	for i=0x51,0x85 do
+		if i~=itemids[i] and string.find(ItemType(i), "Weapon") then
+			local tablePos = (itemids[i]-0x51)*0x58
+			weaponStr[i] = ReadByte(weaponTable+tablePos+0x30)
+			weaponMag[i] = ReadByte(weaponTable+tablePos+0x38)
+			weaponItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
+		end
+	end
+	for i=0x51, 0x85 do
+		if weaponStr[i] then
+			local tablePos = (i-0x51)*0x58
+			WriteByte(weaponTable+tablePos+0x30, weaponStr[i])
+			WriteByte(weaponTable+tablePos+0x38, weaponMag[i])
+			WriteArray(itemTable+((i-1)*20), weaponItemData[i])
+		end
+	end
 	randomized = true
 	for i=1, 0xFF do
 		print(string.format("%x became %x", i, itemids[i]))
 	end
+	print("Weapons randomized. If this was not done on a fresh boot, they got shuffled some more")
 	print("Applied randomization")
 end
 
