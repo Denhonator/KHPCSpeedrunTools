@@ -784,11 +784,7 @@ function FlagFixes()
 	end
 	
 	if ReadByte(gummiFlagBase)==0 then
-		for i=0,14 do
-			if i~=9 then
-				WriteByte(gummiFlagBase+i, 3)
-			end
-		end
+		OpenGummi()
 	end
 end
 
