@@ -1,4 +1,11 @@
-local keyitemsMatter = true
+-- If you want guaranteed abilities on first level ups, put the hex codes for unequipped abilities here.
+-- Maximum 4 or they will replace other abilities.
+-- Find ability codes here https://pastebin.com/ZH0L3XXi
+-- Scroll down for the Not Equipped versions.
+-- For example, early scan and dodge roll would be:
+-- local earlyAbilities = {0x8A, 0x96}
+
+local earlyAbilities = {0x8A}
 
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
@@ -307,39 +314,45 @@ function Randomize()
 		soraLevels[i] = other
 		soraLevels[r] = orig
 		
-		r = math.random(99)
-		orig = soraAbilities[i]
-		if orig > 0 then
-			while soraAbilities[r] == 0 do
-				r = math.random(99)
+		if earlyAbilities[i] then
+			soraAbilities[i] = earlyAbilities[i]
+			soraAbilities2[i] = earlyAbilities[i]
+			soraAbilities3[i] = earlyAbilities[i]
+		else
+			r = math.random(95)+4
+			orig = soraAbilities[i]
+			if orig > 0 then
+				while soraAbilities[r] == 0 do
+					r = math.random(95)+4
+				end
+				other = soraAbilities[r]
+				soraAbilities[i] = other
+				soraAbilities[r] = orig
 			end
-			other = soraAbilities[r]
-			soraAbilities[i] = other
-			soraAbilities[r] = orig
-		end
-		
-		r = math.random(99)
-		orig = soraAbilities2[i]
-		if orig > 0 then
-			while soraAbilities2[r] == 0 do
-				r = math.random(99)
+			
+			r = math.random(95)+4
+			orig = soraAbilities2[i]
+			if orig > 0 then
+				while soraAbilities2[r] == 0 do
+					r = math.random(95)+4
+				end
+				other = soraAbilities2[r]
+				soraAbilities2[i] = other
+				soraAbilities2[r] = orig
 			end
-			other = soraAbilities2[r]
-			soraAbilities2[i] = other
-			soraAbilities2[r] = orig
-		end
-		
-		r = math.random(99)
-		orig = soraAbilities3[i]
-		if orig > 0 then
-			while soraAbilities3[r] == 0 do
-				r = math.random(99)
+			
+			r = math.random(95)+4
+			orig = soraAbilities3[i]
+			if orig > 0 then
+				while soraAbilities3[r] == 0 do
+					r = math.random(95)+4
+				end
+				other = soraAbilities3[r]
+				soraAbilities3[i] = other
+				soraAbilities3[r] = orig
 			end
-			other = soraAbilities3[r]
-			soraAbilities3[i] = other
-			soraAbilities3[r] = orig
 		end
-		
+
 		r = math.random(99)
 		orig = goofyLevels[i]
 		other = goofyLevels[r]
