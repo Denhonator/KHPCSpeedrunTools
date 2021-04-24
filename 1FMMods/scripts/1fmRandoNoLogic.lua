@@ -416,6 +416,15 @@ function Randomize()
 	for i=1,5 do
 		trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 	end
+	if trinityTable[4] == 3 then
+		local r = math.random(5)
+		while r == 4 do
+			r = math.random(5)
+		end
+		local newTrin = trinityTable[r]
+		trinityTable[r] = 3
+		trinityTable[i] = newTrin
+	end
 	
 	print("Randomized magic")
 	
@@ -457,6 +466,9 @@ function ApplyRandomization()
 			WriteByte(weaponTable+tablePos+0x38, weaponMag[i])
 			WriteArray(itemTable+((i-1)*20), weaponItemData[i])
 		end
+	end
+	for i=1,5 do
+		print(string.format("trinity %x became %x", i, trinityTable[i]))
 	end
 	randomized = true
 	for i=1, 0xFF do
