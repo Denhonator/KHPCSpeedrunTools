@@ -473,7 +473,7 @@ function StringToMem(off, text, l, base)
 			local sample = ReadArrayA(addr-20, 20)
 			sample[5] = sample[5] + 10
 			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F then
-				garbageCount = garbageCount + 1
+				garbageCount = garbageCount
 			end
 			WriteArrayA(addr, sample)
 		end
@@ -572,7 +572,7 @@ function UpdateInventory(HUDNow)
 			if dif ~= 0 then
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
-					math.randomseed(ReadByte(room)*ReadByte(world))
+					math.randomseed(ReadByte(room)+ReadByte(world)*0x100)
 					if (string.find(ItemType(i), "Synth") or i == 0xD3) and math.random(10) > 6 then
 						curid = randomGets[math.random(#randomGets)]
 					end
