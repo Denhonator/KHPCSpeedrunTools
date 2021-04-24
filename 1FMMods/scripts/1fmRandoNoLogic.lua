@@ -201,7 +201,7 @@ end
 function ItemCompatibility(i, r)
 	a = ItemType(i)
 	b = ItemType(r)
-	if string.find(a, "Weapon") or string.find(b, "Weapon") then
+	if string.find(a, "Weapon") then
 		return a==b
 	end
 	if string.find(a, "Stock") or string.find(a, "Use") or string.find(a, "Synth") then
@@ -212,6 +212,9 @@ function ItemCompatibility(i, r)
 	end
 	if string.find(a, "Unique") then
 		return string.find(b, "Unique")
+	end
+	if string.find(a, "Summon") then
+		return string.find(b, "Summon")
 	end
 	if a == "Key" then
 		return string.find(b, "Key") or string.find(b, "Synth") or string.find(b, "Unique")
@@ -486,6 +489,7 @@ function StringToMem(off, text, l, base)
 	end
 	if textlen > l then
 		local size = ReadShortA(base+2)
+		print(garbageCount)
 		WriteShortA(base+2, size+garbageCount)
 	end
 end
