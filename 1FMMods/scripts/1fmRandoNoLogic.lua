@@ -782,6 +782,24 @@ function FlagFixes()
 			WriteByte(party2+i, i+1)
 		end
 	end
+	
+	if ReadByte(gummiFlagBase)==0 then
+		for i=0,14 do
+			if i~=9 then
+				WriteByte(gummiFlagBase+i, 3)
+			end
+		end
+	end
+end
+
+function OpenGummi()
+	for i=0,14 do
+		if i~=9 then
+			WriteByte(gummiFlagBase+i, 3)
+		end
+	end
+	WriteInt(worldMapLines, 0xFFFFFFFF)
+	WriteByte(worldMapLines+4, 0xFF)
 end
 
 function _OnFrame()
@@ -850,14 +868,7 @@ function _OnFrame()
 	end
 	
 	if ReadByte(0x232A604-offset) and ReadByte(0x2E1CB9C-offset) < 5 and ReadShort(menuState)==62576 then
-		for i=0,14 do
-			if i~=9 then
-				WriteByte(gummiFlagBase+i, 3)
-			end
-		end
-		WriteInt(worldMapLines, 0xFFFFFFFF)
-		WriteByte(worldMapLines+4, 0xFF)
-		
+		OpenGummi()
 		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
 		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu
 		WriteByte(0x2E8F450-offset, 5) --Set 5 buttons to save menu
