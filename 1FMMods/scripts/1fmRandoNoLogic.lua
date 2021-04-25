@@ -524,8 +524,8 @@ function StringToMem(off, text, l, base)
 		if i > l then
 			local sample = ReadArrayA(addr-20, 20)
 			sample[5] = sample[5] + 10
-			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F or ReadShortA(addr+2) > 0xFF or ReadShortA(addr+4)==0 then
-				garbageCount = garbageCount + 1
+			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F or ReadShortA(addr+4)==0 then
+				garbageCount = garbageCount
 			end
 			WriteArrayA(addr, sample)
 		end
@@ -815,6 +815,10 @@ function OpenGummi()
 end
 
 function _OnFrame()
+	if ReadInt(input) == 3848 then
+		InstantGummi()
+	end
+
 	local HUDNow = ReadFloat(soraHUD)
 	if not randomized and initDone then
 		if ReadByte(soraHP) > 0 then
@@ -869,10 +873,6 @@ function _OnFrame()
 		end
 	end
 
-	if ReadInt(input) == 3848 then
-		InstantGummi()
-	end
-	
 	if ReadFloat(soraHUD) > 0 and ReadByte(lockMenu) > 0 then
 		WriteByte(lockMenu, 0) -- Unlock menu
 	end
