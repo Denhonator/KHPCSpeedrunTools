@@ -729,7 +729,7 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(cutsceneFlags+0xB0E) >= 0x32 then
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
-	WriteByte(trinityUnlock, HUDNow > 0 and unlock or 0)
+	WriteByte(trinityUnlock, (HUDNow > 0 or ReadByte(world)==3) and unlock or 0)
 	local dif = ReadByte(trinityUnlock)
 	if HUDNow < 1 and dif > 0 and textFind=="" then
 		for i=2,5 do
