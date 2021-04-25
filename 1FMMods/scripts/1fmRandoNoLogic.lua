@@ -839,7 +839,7 @@ function _OnFrame()
 		end
 	end
 	
-	if ReadInt(0x233C450-offset) == 0 then
+	if ReadInt(blackfade) == 0 then
 		removeBlackTimer = removeBlackTimer+1
 	else
 		removeBlackTimer = 0
