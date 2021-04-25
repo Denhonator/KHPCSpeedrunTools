@@ -713,11 +713,16 @@ function UpdateInventory(HUDNow)
 			if dif ~= 0 then
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
+					if string.find(ItemType(curid), "Important") then 
+						textFind = "Obtained"
+						textReplace = "Obtained " .. itemNames[curid]
+					else
+						textFind = itemNames[i]
+						textReplace = itemNames[curid]
+					end
 					idFind = i
 					idReplace = curid
 					print(string.format("Replacing %x with %x", i, curid))
-					textFind = itemNames[i]
-					textReplace = itemNames[curid]
 					print(string.format("Replacing %s with %s", textFind, textReplace))
 
 					local otherCount = ReadByte(inventory+(curid-1))
