@@ -415,21 +415,20 @@ function Randomize()
 		end
 	end
 	
-	local trinityPool = {1,2,3,4,5}
-	for i=1,5 do
-		trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
-	end
-	if trinityTable[4] == 3 then
-		local r = math.random(5)
-		while r == 4 do
-			r = math.random(5)
+	print("Randomized magic")
+	
+	trinityTable = {1,2,3,4,5}
+	local randoTrinity = true
+	
+	while trinityTable[4] == 3 or randoTrinity do
+		local trinityPool = {1,2,3,4,5}
+		for i=1,5 do
+			trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 		end
-		local newTrin = trinityTable[r]
-		trinityTable[r] = 3
-		trinityTable[i] = newTrin
+		randoTrinity = false
 	end
 	
-	print("Randomized magic")
+	print("Randomized trinities")
 	
 	ApplyRandomization()
 end
@@ -468,6 +467,11 @@ function ApplyRandomization()
 			WriteByte(weaponTable+tablePos+0x30, weaponStr[i])
 			WriteByte(weaponTable+tablePos+0x38, weaponMag[i])
 			WriteArray(itemTable+((i-1)*20), weaponItemData[i])
+			if i>= 0x52 and i<= 0x55 then
+				WriteArray(itemTable+((i-6)*20), weaponItemData[i])
+				itemNames[i-5] = itemNames[itemids[i]]
+				print(itemNames[i-5])
+			end
 		end
 	end
 	for i=1,5 do
@@ -475,6 +479,9 @@ function ApplyRandomization()
 	end
 	randomized = true
 	for i=1, 0xFF do
+		if itemids[i] >= 0xD9 and itemids[i] <= 0xDC then
+			itemids[i] = itemids[i]-0x8C
+		end
 		print(string.format("%x became %x", i, itemids[i]))
 	end
 	print("Weapons randomized. If this was not done on a fresh boot, they got shuffled some more")
