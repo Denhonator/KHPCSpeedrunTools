@@ -97,6 +97,8 @@ local HUDWas = 0
 local removeBlackTimer = 0
 local introJump = true
 
+local important = {0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
+local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x91, 0x94, 0x94, 0x92, 0x92, 0x92, 0x93, 0x93, 0x93}
 local gummiNames = {}
 local itemNames = {}
 local itemids = {}
@@ -112,6 +114,7 @@ local goofyAbilities = {}
 local chests = {}
 local randomGets = {}
 local randomized = false
+local successfulRando = true
 local initDone = false
 
 function RArray(off, c)
@@ -152,19 +155,39 @@ function _OnInit()
 		magicUpdater[i] = 0
 	end
 	initDone = true
-	print("Init done. Randomization happens when you start game")
+	print("Init done.	")
 end
 
-function ItemType(id)
-	local i = id
+-- function KeyItemWorlds(i)
+	-- if i >= 0xB2 and i <= 0xB9 then
+		-- return 0xF
+	-- elseif i == 0xBA or (i >= 0xC0 and i <= 0xC7) then
+		-- return 1
+	-- elseif i == 0xC8 then
+		-- return 5
+	-- elseif i == 0xC9 then
+		-- return 4
+	-- elseif i == 0xCB or i == 0xD4 then
+		-- return 3
+	-- elseif i == 0xCC then
+		-- return 0xD
+	-- elseif i == 0xD5 then
+		-- return 8
+	-- elseif i == 0xD6 then
+		-- return 0xC
+	-- elseif i == 0xD7 or i == 0xE3 or i == 0xE4 then
+		-- return 0xA
+	-- elseif i == 0xD8 then
+		-- return 9
+	-- end
+-- end
+
+function ItemType(i)
 	local attributes = ""
-	if (i >= 1 and i <= 8 and i~=5) then
+	if (i >= 1 and i <= 8 and i~=5) or (i >= 0x98 and i <= 0x9A) or (i >= 0x8E and i <= 0x90) then
 		attributes = attributes .. "Use"
 	end
-	if (i >= 0x98 and i <= 0x9A) or (i >= 0x8E and i <= 0x90) then
-		attributes = attributes .. "Stock"
-	end
-	if (i >= 9 and i <= 0x10) or (i >= 0x9B and i <= 0x9D) or i >= 0xE9 then
+	if (i >= 9 and i <= 0x10) or i >= 0xE9 then
 		attributes = attributes .. "Synth"
 	end
 	if (i >= 0x11 and i <= 0x47) then
@@ -179,17 +202,18 @@ function ItemType(id)
 	if (i >= 0x77 and i <= 0x85) then
 		attributes = attributes .. "GoofyWeapon"
 	end
-	if (i >= 0x95 and i <= 0x97) and (i >= 0x9E and i <= 0xA7) then
-		attributes = attributes .. "Unique"
-	end
-	if (i >= 0xA8 and i <= 0xCD) or (i >= 0xD4 and i <= 0xE7) or i == 0xD2 then
-		attributes = attributes .. "Key"
-	end
-	if (i == 0xC0 or (i >= 0xC4 and i <= 0xC6) or i == 0xD3) then
-		attributes = attributes .. "Farm"
-	end
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
+	end
+	if (i >= 0xC8 and i <= 0xCD) or (i >= 0xD9 and i<= 0xE7) then
+		attributes = attributes .. "Shuffle"
+	end
+
+	for j=1,#important do
+		if i==important[j] then
+			attributes = attributes .. "Important"
+			break
+		end
 	end
 	return attributes
 end
@@ -200,28 +224,20 @@ function ItemCompatibility(i, r)
 	if string.find(a, "Weapon") then
 		return a==b
 	end
-	if string.find(a, "Stock") or string.find(a, "Use") or string.find(a, "Synth") then
-		return string.find(b, "Stock") or string.find(b, "Use") or string.find(b, "Synth")
+	if string.find(a, "Use") or string.find(a, "Synth") then
+		return string.find(b, "Use") or string.find(b, "Synth")
 	end
 	if string.find(a, "Accessory") then
 		return string.find(b, "Accessory")
 	end
-	if string.find(a, "Unique") then
-		return string.find(b, "Unique")
-	end
 	if string.find(a, "Summon") then
 		return string.find(b, "Summon")
-	end
-	if a == "Key" then
-		return string.find(b, "Key") or string.find(b, "Synth") or string.find(b, "Unique")
-	end
-	if string.find(a, "Farm") then
-		return b == "Synth"
 	end
 	return true
 end
 
 function Randomize()
+	successfulRando = false
 	seedfile = io.open("seed.txt", "r")
 	if seedfile ~= nil then
 		math.randomseed(tonumber(seedfile:read()))
@@ -254,37 +270,58 @@ function Randomize()
 	
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
-		if (i>= 0xB2 and i<= 0xCD) or i==0xD3 then
+		if string.find(ItemType(i), "Weapon") or string.find(ItemType(i), "Accessory") or string.find(ItemType(i), "Use") then
 			local rl = #randomGets+1
 			randomGets[rl] = i
 		end
 	end
+	
 	for i=1, 0x40 do
 		gummiUpdater[i] = ReadByte(gummiInventory+(i-1))
 	end
 	
-	-- for i=1,0xFF do
-		-- if items[i][9]==0 and items[i][10]==0 then
-			-- items[i][9] = math.random(5)*40
-			-- items[i][10] = math.random(5)+3
-		-- end
-	-- end
-
-	for i=1,0xFF do
-		local itemtype = ItemType(i)
-		if itemtype ~= "" then
-			local r = math.random(0xFF)
-			while not ItemCompatibility(i, r) do
-				r = math.random(0xFF)
-			end
-			local origid = itemids[i]
-			local otherid = itemids[r]
-			itemids[i] = otherid
-			itemids[r] = origid
-			--print(string.format("%x : %x", itemids[i], itemids[r]))
+	-- Get rid of normal key items, replace with random good stuff
+	for i=0x9B, 0xFF do
+		if string.find(ItemType(i), "Important") then
+			itemids[i] = table.remove(randomGets, math.random(#randomGets))
 		end
 	end
-	print("Randomized item pool")
+	
+	local toShuffle = {}
+	local c = 1
+	for i=0xC8, 0xFF do
+		if string.find(ItemType(i), "Shuffle") then
+			toShuffle[c] = i
+			c = c + 1
+		end
+	end
+	
+	for i=0xC8, 0xFF do
+		if string.find(ItemType(i), "Shuffle") then
+			itemids[i] = table.remove(toShuffle, math.random(#toShuffle))
+		end
+	end
+	print("Shuffled some items")
+	
+	-- Need one of:
+	itemids[0x48] = 0xB2
+	itemids[0x49] = 0xB3
+	itemids[0x4A] = 0xB4
+	itemids[0x4B] = 0xB5
+	itemids[0x4C] = 0xB6
+	itemids[0x4D] = 0xB7
+	itemids[0x4E] = 0xB8
+	itemids[0x4F] = 0xB9
+	itemids[0x50] = 0xC1
+	itemids[0x39] = 0xC2
+	itemids[0x5] = 0xC3
+	itemids[0xE8] = 0xC7
+	-- Need two of:
+	itemids[0x91] = 0xC0
+	itemids[0x94] = 0xC6
+	-- Need three of:
+	itemids[0x92] = 0xC4
+	itemids[0x93] = 0xC5
 
 	for i=1, 0xA8 do
 		local r = math.random(0xA8)
@@ -293,13 +330,13 @@ function Randomize()
 		rewards[i] = other
 		rewards[r] = orig
 	end
-	
+
 	print("Randomized reward pool")
 	
 	for i=1, 0x1DD do
 		if ((chests[i]-2) % 0x10) == 0 then
-			local change = {-2, 4, 4, 12}
-			chests[i] = chests[i] + change[math.random(4)]
+			local change = {-2, 4, 12}
+			chests[i] = chests[i] + change[math.random(3)]
 		end
 	end
 	
@@ -321,7 +358,7 @@ function Randomize()
 			chests[r] = orig
 		end
 	end
-	
+
 	print("Randomized chests")
 	
 	for i=1, 99 do
@@ -437,6 +474,50 @@ function ApplyRandomization()
 	for i=1, 0xA8 do
 		WriteShort(rewardTable+((i-1)*2), rewards[i])
 	end
+	
+	local extraAbilities = {0x81,0x82,0x82,0x84,0x95,0x96}
+	for i=1, 0xA8 do
+		local offAddr = rewardTable+((i-1)*2)
+		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+2)) == "Synth" then
+			if #importantPool > 9 then
+				local r = math.random(#importantPool)
+				local it = importantPool[r]
+				-- Add check that it is accessible
+				WriteByte(offAddr+2, table.remove(importantPool, r))
+				print(string.format("Added %s into reward %x", itemNames[itemids[it]], i))
+			elseif #extraAbilities > 0 then
+				local r = math.random(#extraAbilities)
+				local ab = extraAbilities[r]
+				WriteByte(offAddr+2, table.remove(extraAbilities, r))
+				WriteByte(offAddr, ab <= 0x84 and 0xB1 or 1)
+			end
+		end
+	end
+	
+	print("Put key items into rewards")
+	
+	for i=8, 0x1A0 do
+		local sh = chests[i]
+		if ((sh % 0x10) == 0 and ItemType(sh//0x10) == "Synth") or (sh-6) % 0x10 == 0 then
+			local r = math.random(#importantPool)
+			local it = importantPool[r]
+			-- Add check that it is accessible
+			chests[i] = table.remove(importantPool, r)*0x10
+			print(string.format("Added %s into chest %x", itemNames[itemids[it]], i))
+		end
+		if #importantPool == 0 then
+			break
+		end
+	end
+	
+	if #importantPool > 0 then
+		print(string.format("%x important items still in pool! Re-roll", #importantPool))
+		successfulRando = false
+		return false
+	end
+	
+	print("Placed key items successfully")
+	
 	for i=1, 0x1DD do
 		WriteShort(chestTable+((i-1)*2), chests[i])
 	end
@@ -479,13 +560,11 @@ function ApplyRandomization()
 	end
 	randomized = true
 	for i=1, 0xFF do
-		if itemids[i] >= 0xD9 and itemids[i] <= 0xDC then
-			itemids[i] = itemids[i]-0x8C
-		end
 		print(string.format("%x became %x", i, itemids[i]))
 	end
 	print("Weapons randomized. If this was not done on a fresh boot, they got shuffled some more")
 	print("Applied randomization")
+	successfulRando = true
 end
 
 function CharToMem(c)
@@ -625,11 +704,6 @@ function UpdateInventory(HUDNow)
 			if dif ~= 0 then
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
-					math.randomseed(ReadByte(room)+ReadByte(world)*0x100)
-					if (string.find(ItemType(i), "Synth") or i == 0xD3) and math.random(10) > 6 then
-						curid = randomGets[math.random(#randomGets)]
-					end
-					
 					idFind = i
 					idReplace = curid
 					print(string.format("Replacing %x with %x", i, curid))
@@ -821,11 +895,13 @@ function _OnFrame()
 
 	local HUDNow = ReadFloat(soraHUD)
 	if not randomized and initDone then
-		if ReadByte(soraHP) > 0 then
+		if (ReadByte(soraHP) > 0 or ReadInt(0x7A8EE8-offset) == 1) and successfulRando then
 			Randomize()
 			if #itemNames==0 or #gummiNames==0 then
 				print("items.txt or gummis.txt missing! Get them from the Github")
 			end
+		elseif not successfulRando then
+			print("Rando unsuccesful! Try restarting and rolling a new seed")
 		end
 	elseif randomized then
 		UpdateInventory(HUDNow)
