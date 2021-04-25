@@ -152,7 +152,7 @@ function _OnInit()
 		magicUpdater[i] = 0
 	end
 	initDone = true
-	print("Init done")
+	print("Init done. Randomization happens when you start game")
 end
 
 function ItemType(id)
