@@ -147,32 +147,7 @@ function _OnInit()
 	for i=1,0xFF do
 		itemids[i] = i
 	end
-	for i=1, 0xA8 do
-		rewards[i] = ReadShort(rewardTable+((i-1)*2))
-	end
-	for i=1, 99 do
-		soraLevels[i] = ReadByte(soraStatTable+(i-1))
-		soraAbilities[i] = ReadByte(soraAbilityTable+(i-1))
-		soraAbilities2[i] = ReadByte(soraAbilityTable2+(i-1))
-		soraAbilities3[i] = ReadByte(soraAbilityTable3+(i-1))
-		goofyLevels[i] = ReadByte(goofyStatTable+(i-1))
-		goofyAbilities[i] = ReadByte(goofyAbilityTable+(i-1))
-		donaldLevels[i] = ReadByte(donaldStatTable+(i-1))
-		donaldAbilities[i] = ReadByte(donaldAbilityTable+(i-1))
-	end
-	for i=1, 0x1DD do
-		chests[i] = ReadShort(chestTable+((i-1)*2))
-	end
-	for i=1, 0xFF do
-		inventoryUpdater[i] = ReadByte(inventory+(i-1))
-		if (i>= 0xB2 and i<= 0xCD) or i==0xD3 then
-			local rl = #randomGets+1
-			randomGets[rl] = i
-		end
-	end
-	for i=1, 0x40 do
-		gummiUpdater[i] = ReadByte(gummiInventory+(i-1))
-	end
+	
 	for i=1, 7 do
 		magicUpdater[i] = 0
 	end
@@ -259,6 +234,34 @@ function Randomize()
 		print("Wrote new seed")
 	end
 	seedfile:close()
+	
+	for i=1, 0xA8 do
+		rewards[i] = ReadShort(rewardTable+((i-1)*2))
+	end
+	for i=1, 99 do
+		soraLevels[i] = ReadByte(soraStatTable+(i-1))
+		soraAbilities[i] = ReadByte(soraAbilityTable+(i-1))
+		soraAbilities2[i] = ReadByte(soraAbilityTable2+(i-1))
+		soraAbilities3[i] = ReadByte(soraAbilityTable3+(i-1))
+		goofyLevels[i] = ReadByte(goofyStatTable+(i-1))
+		goofyAbilities[i] = ReadByte(goofyAbilityTable+(i-1))
+		donaldLevels[i] = ReadByte(donaldStatTable+(i-1))
+		donaldAbilities[i] = ReadByte(donaldAbilityTable+(i-1))
+	end
+	for i=1, 0x1DD do
+		chests[i] = ReadShort(chestTable+((i-1)*2))
+	end
+	
+	for i=1, 0xFF do
+		inventoryUpdater[i] = ReadByte(inventory+(i-1))
+		if (i>= 0xB2 and i<= 0xCD) or i==0xD3 then
+			local rl = #randomGets+1
+			randomGets[rl] = i
+		end
+	end
+	for i=1, 0x40 do
+		gummiUpdater[i] = ReadByte(gummiInventory+(i-1))
+	end
 	
 	-- for i=1,0xFF do
 		-- if items[i][9]==0 and items[i][10]==0 then
@@ -799,28 +802,30 @@ function OpenGummi()
 end
 
 function _OnFrame()
-	if not randomized and initDone then
-		Randomize()
-		if #itemNames==0 or #gummiNames==0 then
-			print("items.txt or gummis.txt missing! Get them from the Github")
-		end
-	end
-	
 	local HUDNow = ReadFloat(soraHUD)
-	UpdateInventory(HUDNow)
-	ReplaceTrinity(HUDNow)
-	if HUDNow < 1 then
-		ReplaceMagic(HUDNow)	
-	else
-		nextTextFind = ""
-		if HUDWas < 1 then
-			textFind = ""
-			print("Text find reset")
+	if not randomized and initDone then
+		if ReadByte(soraHP) > 0 then
+			Randomize()
+			if #itemNames==0 or #gummiNames==0 then
+				print("items.txt or gummis.txt missing! Get them from the Github")
+			end
 		end
+	elseif randomized then
+		UpdateInventory(HUDNow)
+		ReplaceTrinity(HUDNow)
+		if HUDNow < 1 then
+			ReplaceMagic(HUDNow)	
+		else
+			nextTextFind = ""
+			if HUDWas < 1 then
+				textFind = ""
+				print("Text find reset")
+			end
+		end
+		ReplaceTexts()
+		HUDWas = HUDNow
 	end
-	ReplaceTexts()
-	HUDWas = HUDNow
-	
+
 	StackAbilities()
 	
 	FlagFixes()
