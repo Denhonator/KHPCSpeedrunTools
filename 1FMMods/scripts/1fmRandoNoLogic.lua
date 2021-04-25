@@ -646,8 +646,7 @@ function UpdateInventory(HUDNow)
 	for i=1,0x40 do
 		local itemCount = ReadByte(gummiInventory+(i-1))
 		if itemCount > gummiUpdater[i] then
-			if ReadByte(closeMenu) == 0 then
-				textFind = "Obtained " .. gummiNames[i]
+			if ReadByte(closeMenu) == 0 and ReadByte(world)==3 then
 				local magicUp = -1
 				if i==2 then
 					magicUp = 3
@@ -658,6 +657,7 @@ function UpdateInventory(HUDNow)
 				end
 				if magicUp > 0 then
 					WriteByte(magicFlags+magicUp, ReadByte(magicFlags+magicUp)+1)
+					textFind = "Obtained " .. gummiNames[i]
 					textReplace = "Power of " .. magicTexts[perMagicShuffle[magicUp+1]] .. "         "
 					print(string.format("Replacing %s with %s", textFind, textReplace))
 				end
