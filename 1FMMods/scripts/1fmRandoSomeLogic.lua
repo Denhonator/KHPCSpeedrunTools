@@ -498,7 +498,7 @@ function ApplyRandomization()
 				local r = math.random(#extraAbilities)
 				local ab = extraAbilities[r]
 				WriteByte(offAddr+2, table.remove(extraAbilities, r))
-				WriteByte(offAddr, ab <= 0x84 and 0xB1 or 1)
+				WriteByte(offAddr, ab > 0x84 and 0xB1 or 1)
 			end
 		end
 	end
