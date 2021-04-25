@@ -840,12 +840,12 @@ function _OnFrame()
 		removeBlackTimer = 0
 	end
 	
-	if HUDNow > 0 or removeBlackTimer > 300 then
+	if HUDNow > 0 or removeBlackTimer > 600 then
 		WriteInt(0x233C450-offset, 128) --Remove black screen
 		WriteInt(0x233C454-offset, 128)
 		WriteInt(0x233C458-offset, 128)
 		WriteInt(0x233C45C-offset, 128)
-		if removeBlackTimer > 300 then
+		if removeBlackTimer > 600 then
 			print("Removed black screen")
 			removeBlackTimer = 0
 		end
