@@ -604,7 +604,7 @@ function StringToMem(off, text, l, base)
 			local sample = ReadArrayA(addr-20, 20)
 			sample[5] = sample[5] + 10
 			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F or ReadShortA(addr+4)==0 then
-				garbageCount = garbageCount
+				garbageCount = garbageCount + 1
 			end
 			WriteArrayA(addr, sample)
 		end
@@ -615,10 +615,10 @@ function StringToMem(off, text, l, base)
 		end
 		nextPos = ReadShortA(addr+4) + CharSpacing(d)
 	end
-	if textlen > l then
+	if textlen > l and garbageCount > 0 then
 		local size = ReadShortA(base+2)
 		print(garbageCount)
-		WriteShortA(base+2, size+garbageCount)
+		WriteShortA(base+2, size+garbageCount-1)
 	end
 end
 
