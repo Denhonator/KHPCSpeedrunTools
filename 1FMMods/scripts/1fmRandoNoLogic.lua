@@ -779,6 +779,10 @@ function FlagFixes()
 		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
 	end
 
+	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
+		WriteByte(worldFlagBase+0x1C, 5) -- Cid outside
+		WriteByte(worldFlagBase+0x26, 2) -- Cid in accessory shop
+	end
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
