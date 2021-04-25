@@ -267,12 +267,21 @@ function Randomize()
 	for i=1, 0x1DD do
 		chests[i] = ReadShort(chestTable+((i-1)*2))
 	end
-	
+
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
-		if string.find(ItemType(i), "Weapon") or string.find(ItemType(i), "Accessory") or string.find(ItemType(i), "Use") then
+		local itype = ItemType(i)
+		if string.find(itype, "Weapon") or string.find(itype, "Accessory") or string.find(itype, "Use") then
 			local rl = #randomGets+1
 			randomGets[rl] = i
+		end
+		if string.find(itype, "Weapon") then
+			local r = 0x50 + math.random(0x35)
+			while not ItemCompatibility(i, r) do
+				r = 0x50 + math.random(0x35)
+			end
+			itemids[i] = r
+			itemids[r] = i
 		end
 	end
 	
