@@ -764,7 +764,9 @@ end
 function FlagFixes()
 	if ReadByte(gummiselect)==3 then
 		WriteShort(worldWarps+0x18, 1) -- Add DI warp
-		WriteByte(unlockedWarps-7, 15)
+		if (ReadByte(unlockedWarps-7) // 8) % 2 == 0 then
+			WriteByte(unlockedWarps-7, ReadByte(unlockedWarps-7)+8)
+		end
 		WriteByte(warpCount+4*3, 4)
 	else
 		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
