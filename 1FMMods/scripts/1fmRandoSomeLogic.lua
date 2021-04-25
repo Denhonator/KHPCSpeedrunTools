@@ -880,7 +880,7 @@ function FlagFixes()
 	end
 	if ReadByte(cutsceneFlags+0xB0E) < 0xA and ReadByte(gummiselect)==15 then
 		WriteByte(cutsceneFlags+0xB0E, 0xA)
-	elseif ReadByte(cutsceneFlags+0xB0E) == 0x14 and ReadByte(gummiselect)~=15 then
+	elseif (ReadByte(cutsceneFlags+0xB0E) == 0xA and ReadByte(gummiselect)~=15) or ReadByte(world)==0xD then
 		WriteByte(cutsceneFlags+0xB0E, 0)
 	end
 	
