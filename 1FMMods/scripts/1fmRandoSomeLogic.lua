@@ -630,8 +630,8 @@ function StringToMem(off, text, l, base)
 	end
 	if textlen > l and garbageCount > 0 then
 		local size = ReadShortA(base+2)
-		if string.find(textFind, "Obtained") then
-			size = #textReplace
+		if string.find(textFind, "btained") then
+			size = #textReplace+1
 			garbageCount = 0
 		end
 		print(garbageCount)
@@ -723,8 +723,8 @@ function UpdateInventory(HUDNow)
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
 					if string.find(ItemType(curid), "Important") then 
-						textFind = "Obtained"
-						textReplace = "Obtained " .. itemNames[curid] .. ". "
+						textFind = "btained"
+						textReplace = "btained " .. itemNames[curid] .. ". "
 					else
 						textFind = itemNames[i]
 						textReplace = itemNames[curid]
