@@ -484,7 +484,7 @@ function ApplyRandomization()
 		WriteShort(rewardTable+((i-1)*2), rewards[i])
 	end
 	
-	local extraAbilities = {0x81,0x82,0x82,0x84,0x95,0x96}
+	local extraAbilities = {1,2,3,4,0x15,0x16}
 	for i=1, 0xA8 do
 		local offAddr = rewardTable+((i-1)*2)
 		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+1)) == "Synth" then
@@ -498,7 +498,7 @@ function ApplyRandomization()
 				local r = math.random(#extraAbilities)
 				local ab = extraAbilities[r]
 				WriteByte(offAddr+1, table.remove(extraAbilities, r))
-				if ab <= 0x84 then
+				if ab <= 4 then
 					WriteByte(offAddr, 0xB1)
 				else
 					WriteByte(offAddr, 1)
