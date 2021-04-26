@@ -48,7 +48,6 @@ RandoSomeLogic:
 
 Unlock0Volume:
 - Allows setting any of the volume sliders to 0
-- Keeps getting reset, will have to work on this
 
 FastCamera:
 - Speeds up the camera and its acceleration
