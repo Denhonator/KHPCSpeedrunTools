@@ -41,10 +41,16 @@ Autoattack:
 - This will guarantee very quick combos
 - Made for accessibility reasons
 
-RandoNoLogic:
+RandoSomeLogic:
 - Randomizes items, level ups, rewards, magic, trinities and chests
 - If seed.txt exists, it will try to use it. Must be a number. Otherwise, the file will be created with a random seed.
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
 Unlock0Volume:
 - Allows setting any of the volume sliders to 0
+- Keeps getting reset, will have to work on this
+
+FastCamera:
+- Speeds up the camera and its acceleration
+- Makes camera centering instant
+- You can adjust the numbers in the script to your liking
