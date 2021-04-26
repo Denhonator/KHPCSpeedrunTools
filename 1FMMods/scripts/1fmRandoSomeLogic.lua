@@ -497,7 +497,7 @@ function ApplyRandomization()
 			elseif #extraAbilities > 0 then
 				local r = math.random(#extraAbilities)
 				local ab = extraAbilities[r]
-				WriteByte(offAddr+2, table.remove(extraAbilities, r))
+				WriteByte(offAddr+1, table.remove(extraAbilities, r))
 				if ab <= 0x84 then
 					WriteByte(offAddr, 0xB1)
 				else
