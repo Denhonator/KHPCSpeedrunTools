@@ -487,18 +487,22 @@ function ApplyRandomization()
 	local extraAbilities = {0x81,0x82,0x82,0x84,0x95,0x96}
 	for i=1, 0xA8 do
 		local offAddr = rewardTable+((i-1)*2)
-		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+2)) == "Synth" then
+		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+1)) == "Synth" then
 			if #importantPool > 9 then
 				local r = math.random(#importantPool)
 				local it = importantPool[r]
 				-- Add check that it is accessible
-				WriteByte(offAddr+2, table.remove(importantPool, r))
+				WriteByte(offAddr+1, table.remove(importantPool, r))
 				print(string.format("Added %s into reward %x", itemNames[itemids[it]], i))
 			elseif #extraAbilities > 0 then
 				local r = math.random(#extraAbilities)
 				local ab = extraAbilities[r]
 				WriteByte(offAddr+2, table.remove(extraAbilities, r))
-				WriteByte(offAddr, ab > 0x84 and 0xB1 or 1)
+				if ab <= 0x84 then
+					WriteByte(offAddr, 0xB1)
+				else
+					WriteByte(offAddr, 1)
+				end
 			end
 		end
 	end
@@ -715,6 +719,7 @@ function UpdateInventory(HUDNow)
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
+				print(string.format("%x %s", dif, itemNames[i]))
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
 					if string.find(ItemType(curid), "Important") then 
