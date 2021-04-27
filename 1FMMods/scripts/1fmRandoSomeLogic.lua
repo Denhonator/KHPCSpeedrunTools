@@ -205,7 +205,7 @@ function ItemType(i)
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
-	if (i >= 0xC8 and i <= 0xCD) or (i >= 0xD9 and i<= 0xE7) then
+	if (i == 0xC8 or i == 0xC9 or i==0xCB or i==0xCC) or (i >= 0xD4 and i<= 0xDE) or (i >= 0xE3 and i<= 0xE6) then
 		attributes = attributes .. "Shuffle"
 	end
 
