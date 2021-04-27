@@ -29,6 +29,7 @@ local donaldAbilityTable = soraAbilityTable+0x328
 local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
+local chestsOpened = 0x2DE5E00 - offset
 
 local inventory = 0x2DE5E6A - offset
 local gummiInventory = 0x2DF1848 - offset
@@ -919,9 +920,9 @@ function FlagFixes()
 	end
 	
 	if ReadByte(worldFlagBase+0x36) >= 0 then
-		if math.random(2) == 1 then
+		if (ReadByte(chestsOpened+0x1F8)//2) % 2 == 0 then
 			WriteByte(worldFlagBase+0x36, 0xD)
-		else
+		elseif (ReadByte(chestsOpened+0x1F8)//8) % 2 == 0 then
 			WriteByte(worldFlagBase+0x36, 0x10)
 		end
 	end
