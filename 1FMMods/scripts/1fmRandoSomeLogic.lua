@@ -7,6 +7,14 @@
 
 local earlyAbilities = {0x8A}
 
+-- Variable below determines how weapon stats will be randomized.
+-- 0 = Not at all
+-- 1 = Weak weapons buffed
+-- 2 = Stats shuffled between keyblades (str and magic only)
+-- 3 = Stats shuffled and weak stats buffed
+
+local weaponStatRando = 3
+
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
 local itemTable = btltbl+0x1A58
@@ -550,8 +558,21 @@ function ApplyRandomization()
 	for i=0x51,0x85 do
 		if i~=itemids[i] and string.find(ItemType(i), "Weapon") then
 			local tablePos = (itemids[i]-0x51)*0x58
+			if weaponStatRando < 2 then
+				tablePos = (i-0x51)*0x58
+			end
 			weaponStr[i] = ReadByte(weaponTable+tablePos+0x30)
 			weaponMag[i] = ReadByte(weaponTable+tablePos+0x38)
+			if weaponStatRando % 2 == 1 then
+				local randomPower = math.random(8)+6
+				while weaponStr[i]+weaponMag[i]*4 < randomPower do
+					if math.random(10) > 5 then
+						weaponStr[i] = weaponStr[i]+1
+					else
+						weaponMag[i] = weaponMag[i]+1
+					end
+				end
+			end
 			weaponItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
 		end
 	end
