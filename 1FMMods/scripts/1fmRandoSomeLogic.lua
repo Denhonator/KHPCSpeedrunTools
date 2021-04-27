@@ -922,6 +922,8 @@ function FlagFixes()
 	if ReadByte(worldFlagBase+0x36) >= 0 then
 		if (ReadByte(chestsOpened+0x1F8)//2) % 2 == 0 then
 			WriteByte(worldFlagBase+0x36, 0xD)
+		elseif (ReadByte(chestsOpened+0x1F8)//4) % 2 == 0 then
+			WriteByte(worldFlagBase+0x36, 0xE)
 		elseif (ReadByte(chestsOpened+0x1F8)//8) % 2 == 0 then
 			WriteByte(worldFlagBase+0x36, 0x10)
 		end
