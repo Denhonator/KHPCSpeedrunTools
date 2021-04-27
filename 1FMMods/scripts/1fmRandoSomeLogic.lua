@@ -889,6 +889,10 @@ function FlagFixes()
 		WriteByte(cutsceneFlags+0xB0E, 0)
 	end
 	
+	if (ReadByte(trinityUnlock) // 2) % 2 == 1 then
+		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
+	end
+	
 	if ReadByte(party1)==0xFF then
 		for i=0,1 do
 			WriteByte(party1+i, i+1)
