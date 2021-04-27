@@ -561,11 +561,11 @@ function ApplyRandomization()
 			WriteByte(weaponTable+tablePos+0x30, weaponStr[i])
 			WriteByte(weaponTable+tablePos+0x38, weaponMag[i])
 			WriteArray(itemTable+((i-1)*20), weaponItemData[i])
-			if i>= 0x52 and i<= 0x55 then
-				WriteArray(itemTable+((i-6)*20), weaponItemData[i])
-				itemNames[i-5] = itemNames[itemids[i]]
-				print(itemNames[i-5])
-			end
+			-- if i>= 0x52 and i<= 0x55 then
+				-- WriteArray(itemTable+((i-6)*20), weaponItemData[i])
+				-- itemNames[i-5] = itemNames[itemids[i]]
+				-- print(itemNames[i-5])
+			-- end
 		end
 	end
 	for i=1,5 do
