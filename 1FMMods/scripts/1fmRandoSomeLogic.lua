@@ -834,7 +834,11 @@ function ReplaceTrinity(HUDNow)
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
 	local dif = ReadByte(trinityUnlock)
-	WriteByte(trinityUnlock, (HUDNow > 0 or ReadByte(world)==3) and unlock or 0)
+	if ReadByte(OCTrinityFlag) == 0 and ReadByte(world) == 11 and ReadByte(room) == 1 then
+		WriteByte(trinityUnlock, 0)
+	else
+		WriteByte(trinityUnlock, (HUDNow > 0 or ReadByte(world)==3) and unlock or 0)
+	end
 	if HUDNow < 1 and dif > 0 and textFind=="" then
 		for i=2,5 do
 			if dif == 2^(i-1) then
