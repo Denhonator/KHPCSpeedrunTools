@@ -524,7 +524,7 @@ function ApplyRandomization()
 			local it = importantPool[r]
 			-- Add check that it is accessible
 			chests[i] = table.remove(importantPool, r)*0x10
-			print(string.format("Added %s into chest %x", itemNames[itemids[it]], i))
+			print(string.format("Added %s into chest %x", itemNames[itemids[it]], i-1))
 		end
 		if #importantPool == 0 then
 			break
@@ -916,6 +916,10 @@ function FlagFixes()
 	
 	if (ReadByte(trinityUnlock) // 2) % 2 == 1 then
 		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
+	end
+	
+	if ReadByte(worldFlagBase+0x36) > 0xD then
+		WriteByte(worldFlagBase+0x36, 0xD)
 	end
 	
 	if ReadByte(party1)==0xFF and ReadByte(inGummi) > 0 then
