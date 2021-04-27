@@ -369,10 +369,14 @@ function Randomize()
 				end
 			end
 
-			local orig = chests[i]
-			local other = chests[r]
-			chests[i] = other
-			chests[r] = orig
+			if chests[i] // 0x10 ~= 0xE4 and chests[r] // 0x10 ~= 0xE4 then
+				local orig = chests[i]
+				local other = chests[r]
+				chests[i] = other
+				chests[r] = orig
+			else
+				print(string.format("Not moving Jack in the Box chest at %x",i))
+			end
 		end
 	end
 
