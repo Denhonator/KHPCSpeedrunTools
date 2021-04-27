@@ -576,7 +576,7 @@ function ApplyRandomization()
 			weaponItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
 		end
 	end
-	for i=0x51, 0x85 do
+	for i=0x11, 0x85 do
 		if weaponStr[i] then
 			local tablePos = (i-0x51)*0x58
 			WriteByte(weaponTable+tablePos+0x30, weaponStr[i])
@@ -587,6 +587,9 @@ function ApplyRandomization()
 				-- itemNames[i-5] = itemNames[itemids[i]]
 				-- print(itemNames[i-5])
 			-- end
+		end
+		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
+			WriteShort(itemTable+((i-1)*20)+8, (math.random(5)+1)*500)
 		end
 	end
 	for i=1,5 do
