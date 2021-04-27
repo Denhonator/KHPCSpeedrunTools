@@ -918,8 +918,12 @@ function FlagFixes()
 		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
 	end
 	
-	if ReadByte(worldFlagBase+0x36) > 0xD then
-		WriteByte(worldFlagBase+0x36, 0xD)
+	if ReadByte(worldFlagBase+0x36) >= 0 then
+		if math.random(2) == 1 then
+			WriteByte(worldFlagBase+0x36, 0xD)
+		else
+			WriteByte(worldFlagBase+0x36, 0x10)
+		end
 	end
 	
 	if ReadByte(party1)==0xFF and ReadByte(inGummi) > 0 then
