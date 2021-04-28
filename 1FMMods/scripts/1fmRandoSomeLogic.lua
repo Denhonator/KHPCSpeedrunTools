@@ -1023,7 +1023,7 @@ function _OnFrame()
 		removeBlackTimer = 0
 	end
 	
-	if ((HUDNow > 0 or removeBlackTimer > 300) and ReadByte(world)==0x10) then
+	if removeBlackTimer > 300 and ReadByte(world)==0x10 then
 		WriteInt(0x233C450-offset, 128) --Remove black screen
 		WriteInt(0x233C454-offset, 128)
 		WriteInt(0x233C458-offset, 128)
