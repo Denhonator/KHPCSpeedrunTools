@@ -597,8 +597,8 @@ function ApplyRandomization()
 			weaponMag[i] = ReadByte(weaponTable+tablePos+0x38)
 			if weaponStatRando % 2 == 1 then
 				local randomPower = math.random(8)+6
-				while weaponStr[i]+weaponMag[i]*4 < randomPower do
-					if math.random(10) > 5 then
+				while weaponStr[i]+weaponMag[i]*5 < randomPower do
+					if math.random(10) > 4 then
 						weaponStr[i] = weaponStr[i]+1
 					else
 						weaponMag[i] = weaponMag[i]+1
