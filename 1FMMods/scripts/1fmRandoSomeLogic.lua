@@ -752,10 +752,10 @@ function UpdateInventory(HUDNow)
 					local curid = itemids[i]
 					if string.find(ItemType(curid), "Important") then 
 						textFind = "btained"
-						textReplace = "btained " .. itemNames[curid] .. ". "
+						textReplace = "btained " .. itemNames[curid] .. ".   "
 					else
-						textFind = itemNames[i]
-						textReplace = itemNames[curid]
+						textFind = "btained"
+						textReplace = "btained " .. itemNames[curid] .. ".   "
 					end
 					idFind = i
 					idReplace = curid
