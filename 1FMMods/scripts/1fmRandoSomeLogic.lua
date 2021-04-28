@@ -967,7 +967,7 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(gummiFlagBase)==0 then
+	if ReadByte(gummiFlagBase+11)==0 then
 		OpenGummi()
 	end
 end
