@@ -245,11 +245,27 @@ function ItemCompatibility(i, r)
 	return true
 end
 
+-- simple string hashing algorithm designed by Daniel J. Bernstein
+function Djb2(str)
+	hash = 5381
+
+	for c in string.gmatch(str, '.') do
+		hash = ((hash << 5) + hash) + string.byte(c)
+	end
+
+	return hash
+end
+
 function Randomize()
 	successfulRando = false
 	seedfile = io.open("seed.txt", "r")
 	if seedfile ~= nil then
-		math.randomseed(tonumber(seedfile:read()))
+		text = seedfile:read()
+		seed = tonumber(text)
+		if seed == nil then
+			seed = Djb2(text)
+		end
+		math.randomseed(seed)
 		print("Found existing seed")
 	else
 		seedfile = io.open("seed.txt", "w")
