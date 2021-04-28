@@ -979,7 +979,6 @@ function OpenGummi()
 		end
 	end
 	WriteInt(worldMapLines, 0xFFFFFFFF)
-	WriteByte(worldMapLines+4, 0xFF)
 end
 
 function _OnFrame()
@@ -1052,7 +1051,6 @@ function _OnFrame()
 	end
 	
 	if ReadByte(0x232A604-offset) and ReadByte(0x2E1CB9C-offset) < 5 and ReadShort(menuState)==62576 then
-		OpenGummi()
 		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
 		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu
 		WriteByte(0x2E8F450-offset, 5) --Set 5 buttons to save menu
