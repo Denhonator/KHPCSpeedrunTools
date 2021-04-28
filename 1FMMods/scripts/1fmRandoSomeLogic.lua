@@ -231,7 +231,7 @@ end
 function ItemCompatibility(i, r)
 	a = ItemType(i)
 	b = ItemType(r)
-	if string.find(a, "Weapon") then
+	if string.find(a, "Weapon") or string.find(b, "Weapon") then
 		return a==b
 	end
 	if string.find(a, "Use") or string.find(a, "Synth") then
