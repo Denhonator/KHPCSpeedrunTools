@@ -200,7 +200,7 @@ function ItemType(i)
 	if (i >= 9 and i <= 0x10) or i >= 0xE9 then
 		attributes = attributes .. "Synth"
 	end
-	if (i >= 0x11 and i <= 0x47) then
+	if (i >= 0x11 and i <= 0x47) and i ~= 0x39 then
 		attributes = attributes .. "Accessory"
 	end
 	if (i >= 0x51 and i <= 0x66) then
