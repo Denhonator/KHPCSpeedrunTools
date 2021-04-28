@@ -108,6 +108,7 @@ local introJump = true
 
 local important = {0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
 local importantPool = {0x5, 0x39, 0x48, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x91, 0x94, 0x94, 0x92, 0x92, 0x92, 0x93, 0x93, 0x93}
+local missableRewards = {0, 2, 4}
 local gummiNames = {}
 local itemNames = {}
 local itemids = {}
@@ -375,7 +376,12 @@ function Randomize()
 	
 	for i=1, 0x1DD do
 		if ((chests[i]-2) % 0x10) == 0 then
-			chests[i] = chests[i] + 4
+			if #missableRewards > 0 then
+				chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
+				print("Added missable reward to chest")
+			else
+				chests[i] = chests[i] + 4
+			end
 		end
 	end
 	
@@ -772,7 +778,7 @@ function UpdateInventory(HUDNow)
 				print(string.format("%x %s", dif, itemNames[i]))
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
-					if string.find(ItemType(curid), "Shuffle") then 
+					if string.find(ItemType(curid), "Shuffle") or string.find(ItemType(i), "Important") then 
 						textFind = "btained"
 						textReplace = "btained " .. itemNames[curid] .. ".   "
 					end
