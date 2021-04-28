@@ -356,6 +356,12 @@ function Randomize()
 	-- Need three of:
 	itemids[0x92] = 0xC4
 	itemids[0x93] = 0xC5
+	
+	for i=5, 0xFF do
+		if string.find(ItemType(itemids[i]), "Important") then
+			WriteArray(itemTable+((i-1)*20), ReadArray(itemTable+((itemids[i]-1)*20), 20))
+		end
+	end
 
 	for i=1, 0xA8 do
 		local r = math.random(0xA8)
@@ -766,10 +772,7 @@ function UpdateInventory(HUDNow)
 				print(string.format("%x %s", dif, itemNames[i]))
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
-					if string.find(ItemType(curid), "Important") then 
-						textFind = "btained"
-						textReplace = "btained " .. itemNames[curid] .. ".   "
-					else
+					if string.find(ItemType(curid), "Shuffle") then 
 						textFind = "btained"
 						textReplace = "btained " .. itemNames[curid] .. ".   "
 					end
