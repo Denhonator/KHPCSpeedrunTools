@@ -800,6 +800,12 @@ function UpdateInventory(HUDNow)
 				else
 					inventoryUpdater[i] = itemCount
 				end
+			elseif string.find(ItemType(itemids[i]), "Important") and itemCount>0 then
+				WriteByte(inventory+(itemids[i]-1), itemCount)
+				WriteByte(inventory+(i-1), 0)
+				inventoryUpdater[i] = 0
+				inventoryUpdater[itemids[i]] = itemCount
+				print(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]]))
 			end
 		end
 	end
