@@ -395,7 +395,9 @@ function Randomize()
 				valid = valid and not ((i >= 0x1C0 or i == 0) and chests[r] // 0x10 == 0xD3)
 			end
 
-			if chests[i] // 0x10 ~= 0xE4 and chests[r] // 0x10 ~= 0xE4 then
+			if string.find(ItemType(chests[i] // 0x10), "Shuffle") or string.find(ItemType(chests[r] // 0x10), "Shuffle") then
+				print("Prevented moving key item check chests")
+			else
 				local orig = chests[i]
 				local other = chests[r]
 				chests[i] = other
