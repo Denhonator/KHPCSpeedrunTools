@@ -297,7 +297,7 @@ function Randomize()
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
 		local itype = ItemType(i)
-		if string.find(itype, "Weapon") or string.find(itype, "Accessory") or string.find(itype, "Use") then
+		if string.find(itype, "Use") then
 			local rl = #randomGets+1
 			randomGets[rl] = i
 		end
@@ -318,7 +318,7 @@ function Randomize()
 	-- Get rid of normal key items, replace with random good stuff
 	for i=0x9B, 0xFF do
 		if string.find(ItemType(i), "Important") then
-			itemids[i] = table.remove(randomGets, math.random(#randomGets))
+			itemids[i] = randomGets[math.random(#randomGets)]
 		end
 	end
 	
@@ -932,7 +932,7 @@ function FlagFixes()
 	if ReadByte(gummiselect)==3 then
 		WriteShort(worldWarps+0x18, 1) -- Add DI warp
 		if (ReadByte(unlockedWarps-7) // 8) % 2 == 0 then
-			WriteByte(unlockedWarps-7, ReadByte(unlockedWarps-7)+8)
+			WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7)+8, 9))
 		end
 		WriteByte(warpCount+4*3, 4)
 	else
