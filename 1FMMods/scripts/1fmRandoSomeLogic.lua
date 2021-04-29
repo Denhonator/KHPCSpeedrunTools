@@ -517,13 +517,28 @@ function Randomize()
 	ApplyRandomization()
 end
 
+function GetRandomOrder(size)
+	randomOrderPool = {}
+	randomOrder = {}
+	for i=1, size do
+		randomOrderPool[i] = i
+	end
+	for i=1, size do
+		randomOrder[i] = table.remove(randomOrderPool, math.random(#randomOrderPool))
+	end
+	return randomOrder
+end
+
 function ApplyRandomization()
 	for i=1, 0xA8 do
 		WriteShort(rewardTable+((i-1)*2), rewards[i])
 	end
 	
+	local guaranteedMovement = 0
 	local extraAbilities = {1,2,3,4,0x15,0x16}
-	for i=1, 0xA8 do
+	local order = GetRandomOrder(0xA8)
+	for j=1, 0xA8 do
+		local i = order[j]
 		local offAddr = rewardTable+((i-1)*2)
 		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+1)) == "Synth" then
 			if #importantPool > 11 then
@@ -534,6 +549,9 @@ function ApplyRandomization()
 				print(string.format("Added %s into reward %x", itemNames[itemids[it]], i))
 			elseif #extraAbilities > 0 then
 				local r = math.random(#extraAbilities)
+				if (r == 1 or r == 3 or r == 4) and guaranteedMovement == 0 then
+					guaranteedMovement = i
+				end
 				local ab = extraAbilities[r]
 				WriteByte(offAddr+1, table.remove(extraAbilities, r))
 				if ab <= 4 then
@@ -547,17 +565,25 @@ function ApplyRandomization()
 	
 	print("Put key items into rewards")
 	
-	for i=8, 0x1A0 do
-		local sh = chests[i]
-		if ((sh % 0x10) == 0 and ItemType(sh//0x10) == "Synth") or (sh-6) % 0x10 == 0 then
-			local r = math.random(#importantPool)
-			local it = importantPool[r]
-			-- Add check that it is accessible
-			chests[i] = table.remove(importantPool, r)*0x10
-			print(string.format("Added %s into chest %x", itemNames[itemids[it]], i-1))
-		end
-		if #importantPool == 0 then
-			break
+	order = GetRandomOrder(0x1A0)
+	for j=1, 0x1A0 do
+		local i = order[j]
+		if i >= 8 then
+			local sh = chests[i]
+			if ((sh % 0x10) == 0 and ItemType(sh//0x10) == "Synth") or (sh-6) % 0x10 == 0 then
+				if guaranteedMovement > 0 then
+					chests[i] = guaranteedMovement*0x10 + 0xE
+					guaranteedMovement = 0
+				end
+				local r = math.random(#importantPool)
+				local it = importantPool[r]
+				-- Add check that it is accessible
+				chests[i] = table.remove(importantPool, r)*0x10
+				print(string.format("Added %s into chest %x", itemNames[itemids[it]], i-1))
+			end
+			if #importantPool == 0 then
+				break
+			end
 		end
 	end
 	
@@ -944,11 +970,10 @@ function FlagFixes()
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
-	-- if ReadByte(cutsceneFlags+0xB0E) < 0xA and ReadByte(gummiselect)==15 then
-		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
-	-- elseif ReadByte(cutsceneFlags+0xB0E) < 0x32 and ReadByte(gummiselect)~=15 then
-		-- WriteByte(cutsceneFlags+0xB0E, 0)
-	-- end
+	
+	if ReadByte(cutsceneFlags+0xB0E) == 1 then
+		WriteByte(cutsceneFlags+0xB0E, 0xA)
+	end
 	
 	if (ReadByte(trinityUnlock) // 2) % 2 == 1 then
 		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
