@@ -112,6 +112,7 @@ local gummiUpdater = {}
 local bufferRemove = 0
 local bufferRemoveTimer = 10
 local HUDWas = 0
+local menuWas = 0
 local removeBlackTimer = 0
 local introJump = true
 
@@ -120,6 +121,7 @@ local importantPool = {0x5, 0x39, 0x48, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4D
 local missableRewards = {0, 2, 4}
 local gummiNames = {}
 local itemNames = {}
+local itemData = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
@@ -367,10 +369,11 @@ function Randomize()
 	itemids[0x92] = 0xC4
 	itemids[0x93] = 0xC5
 	
-	for i=5, 0xFF do
+	for i=1, 0xFF do
 		if string.find(ItemType(itemids[i]), "Important") then
 			WriteArray(itemTable+((i-1)*20), ReadArray(itemTable+((itemids[i]-1)*20), 20))
 		end
+		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
 	end
 
 	for i=1, 0xA8 do
@@ -790,6 +793,18 @@ function ReplaceTexts()
 	end
 end
 
+function MenuNameSwap(menuNow)
+	for i=1, 0xFF do
+		if (string.find(ItemType(i), "Important") or string.find(ItemType(i), "Shuffle")) and i~=itemids[i] then
+			if menuNow > 0 then
+				WriteArray(itemTable+((i-1)*20), itemData[i])
+			else
+				WriteArray(itemTable+((i-1)*20), itemData[itemids[i]])
+			end
+		end
+	end
+end
+
 -- Swap key items in inventory slots
 function UpdateInventory(HUDNow)
 	if bufferRemove > 0 then
@@ -811,10 +826,10 @@ function UpdateInventory(HUDNow)
 				print(string.format("%x %s", dif, itemNames[i]))
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
-					if string.find(ItemType(curid), "Shuffle") or string.find(ItemType(i), "Important") then 
-						textFind = "btained"
-						textReplace = "btained " .. itemNames[curid] .. ".   "
-					end
+					-- if string.find(ItemType(curid), "Shuffle") or string.find(ItemType(i), "Important") then 
+						-- textFind = "btained"
+						-- textReplace = "btained " .. itemNames[curid] .. ".   "
+					-- end
 					idFind = i
 					idReplace = curid
 					print(string.format("Replacing %x with %x", i, curid))
@@ -1077,6 +1092,7 @@ function _OnFrame()
 			print("Rando unsuccesful! Try restarting and rolling a new seed")
 		end
 	elseif randomized then
+		local menuNow = ReadByte(menuCheck)
 		UpdateInventory(HUDNow)
 		ReplaceTrinity(HUDNow)
 		if HUDNow < 1 then
@@ -1089,7 +1105,11 @@ function _OnFrame()
 			end
 		end
 		ReplaceTexts()
+		if menuWas ~= menuNow then
+			MenuNameSwap(menuNow)
+		end
 		HUDWas = HUDNow
+		menuWas = menuNow
 	end
 
 	if stackAbilities > 0 then
