@@ -107,7 +107,7 @@ local removeBlackTimer = 0
 local introJump = true
 
 local important = {0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
-local importantPool = {0x5, 0x39, 0x48, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x91, 0x94, 0x94, 0x92, 0x92, 0x92, 0x93, 0x93, 0x93}
+local importantPool = {0x5, 0x39, 0x48, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x94, 0x92, 0x93}
 local missableRewards = {0, 2, 4}
 local gummiNames = {}
 local itemNames = {}
@@ -541,7 +541,7 @@ function ApplyRandomization()
 		local i = order[j]
 		local offAddr = rewardTable+((i-1)*2)
 		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+1)) == "Synth" then
-			if #importantPool > 11 then
+			if #importantPool > 8 then
 				local r = math.random(#importantPool)
 				local it = importantPool[r]
 				-- Add check that it is accessible
@@ -819,6 +819,11 @@ function UpdateInventory(HUDNow)
 					else
 						WriteByte(inventory+(i-1), itemCount-dif)
 					end
+					if curid == 0xC0 or curid == 0xC6 then
+						dif = 2
+					elseif curid == 0xC4 or curid == 0xC5 then
+						dif = 3
+					end
 					WriteByte(inventory+(curid-1), otherCount+dif)
 					inventoryUpdater[curid] = otherCount+dif
 				else
@@ -859,10 +864,12 @@ function UpdateInventory(HUDNow)
 	if ReadByte(inventory+0xCA-1) > 0 then
 		WriteByte(inventory+0xC8-1, 0)
 		WriteByte(inventory+0xC9-1, 0)
+		print("Removed excess Gummi Pieces")
 	end
 	if ReadByte(inventory+0xCD-1) > 0 then
 		WriteByte(inventory+0xCB-1, 0)
 		WriteByte(inventory+0xCC-1, 0)
+		print("Removed excess Gummi Pieces")
 	end
 end
 
