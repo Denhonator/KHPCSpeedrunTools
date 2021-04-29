@@ -506,9 +506,9 @@ function Randomize()
 	trinityTable = {1,2,3,4,5}
 	local randoTrinity = true
 	
-	while trinityTable[4] == 3 or randoTrinity do
-		local trinityPool = {1,2,3,4,5}
-		for i=1,5 do
+	while randoTrinity do
+		local trinityPool = {1,2,3}
+		for i=1,3 do
 			trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 		end
 		randoTrinity = false
@@ -946,11 +946,11 @@ function FlagFixes()
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
-	if ReadByte(cutsceneFlags+0xB0E) < 0xA and ReadByte(gummiselect)==15 then
-		WriteByte(cutsceneFlags+0xB0E, 0xA)
-	elseif ReadByte(cutsceneFlags+0xB0E) < 0x32 and ReadByte(gummiselect)~=15 then
-		WriteByte(cutsceneFlags+0xB0E, 0)
-	end
+	-- if ReadByte(cutsceneFlags+0xB0E) < 0xA and ReadByte(gummiselect)==15 then
+		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
+	-- elseif ReadByte(cutsceneFlags+0xB0E) < 0x32 and ReadByte(gummiselect)~=15 then
+		-- WriteByte(cutsceneFlags+0xB0E, 0)
+	-- end
 	
 	if (ReadByte(trinityUnlock) // 2) % 2 == 1 then
 		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
