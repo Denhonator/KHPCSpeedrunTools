@@ -15,6 +15,14 @@ local earlyAbilities = {0x8A}
 
 local weaponStatRando = 3
 
+-- Stack abilities. Currently, you can sometimes get duplicate abilities.
+-- This will determine if having multiple equipped is beneficial
+-- 0 = No stacking. Vanilla. You just have excess abilities in the menu.
+-- 1 = High Jump stacks: Jump higher the more you have.
+-- 2 = High Jump and Glides. First glide/superglide turns into glide, next into superglide and past that it gets faster.
+
+local stackAbilities = 2
+
 local offset = 0x3A0606
 local btltbl = 0x2D1F3C0 - offset
 local itemTable = btltbl+0x1A58
@@ -71,6 +79,7 @@ local world = 0x233CADC - offset
 local room = world + 0x68
 local sharedAbilities = 0x2DE5F69 - offset
 local soraJumpHeight = 0x2D592A0 - offset
+local superglideSpeedHack = 0x2AE104 - offset
 
 local gotoWorldMap = 0x2E1CC24 - offset
 local openMenu = 0x2350CD4 - offset
@@ -953,12 +962,39 @@ function StackAbilities()
 	local jumpHeight = ReadFloat(soraJumpHeight)
 	if jumpHeight == 290 then
 		jumpHeight = jumpHeight-100
-		for i=0,7 do
+		for i=0,9 do
 			if ReadByte(sharedAbilities+i) == 1 then
 				jumpHeight = jumpHeight + 100
 			end
 		end
 		WriteFloat(soraJumpHeight, jumpHeight)
+	end
+	
+	if stackAbilities > 1 then
+		local glides = 0
+		local superglides = 0
+		for i=0,9 do
+			if ReadByte(sharedAbilities+i) % 0x80 == 3 then
+				glides = glides + 1
+			elseif ReadByte(sharedAbilities+i) % 0x80 == 4 then
+				superglides = superglides + 1
+			end
+		end
+		local equippedGlides = 0
+		for i=0,9 do
+			local ab = ReadByte(sharedAbilities+i)
+			if ab == 3 or ab == 4 then
+				equippedGlides = equippedGlides+1
+			end
+			if ab % 0x80 == 3 and glides > 1 then
+				WriteByte(sharedAbilities+i, ab+1)
+				glides = glides - 1
+			end
+			if ab % 0x80 == 4 and glides == 0 then
+				WriteByte(sharedAbilities+i, ab-1)
+			end
+		end
+		WriteInt(superglideSpeedHack, 0x17F50C + math.max(equippedGlides-2, 0)*4)
 	end
 end
 
@@ -1056,7 +1092,9 @@ function _OnFrame()
 		HUDWas = HUDNow
 	end
 
-	StackAbilities()
+	if stackAbilities > 0 then
+		StackAbilities()
+	end
 	
 	FlagFixes()
 	
