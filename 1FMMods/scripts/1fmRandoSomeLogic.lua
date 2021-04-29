@@ -392,9 +392,7 @@ function Randomize()
 			while not (valid and (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10))) do
 				r = math.random(0x1DD)
 				valid = not ((i >= 0x1C0 or i == 0) and ((chests[r]-4) % 0x10) == 0)
-				if not valid then
-					print("Prevented EotW dalmatians")
-				end
+				valid = valid and not ((i >= 0x1C0 or i == 0) and chests[r] // 0x10 == 0xD3)
 			end
 
 			if chests[i] // 0x10 ~= 0xE4 and chests[r] // 0x10 ~= 0xE4 then
@@ -402,8 +400,6 @@ function Randomize()
 				local other = chests[r]
 				chests[i] = other
 				chests[r] = orig
-			else
-				print(string.format("Not moving Jack in the Box chest at %x",i))
 			end
 		end
 	end
