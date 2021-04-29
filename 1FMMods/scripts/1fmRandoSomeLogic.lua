@@ -856,6 +856,14 @@ function UpdateInventory(HUDNow)
 			gummiUpdater[i] = itemCount
 		end
 	end
+	if ReadByte(inventory+0xCA-1) > 0 then
+		WriteByte(inventory+0xC8-1, 0)
+		WriteByte(inventory+0xC9-1, 0)
+	end
+	if ReadByte(inventory+0xCD-1) > 0 then
+		WriteByte(inventory+0xCB-1, 0)
+		WriteByte(inventory+0xCC-1, 0)
+	end
 end
 
 function ReplaceMagic(HUDNow)
@@ -971,9 +979,9 @@ function FlagFixes()
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
 	
-	if ReadByte(cutsceneFlags+0xB0E) == 1 then
-		WriteByte(cutsceneFlags+0xB0E, 0xA)
-	end
+	-- if ReadByte(cutsceneFlags+0xB0E) == 1 then
+		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
+	-- end
 	
 	if (ReadByte(trinityUnlock) // 2) % 2 == 1 then
 		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
