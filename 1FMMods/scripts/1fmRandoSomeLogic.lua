@@ -52,7 +52,7 @@ local inGummi = 0x50421D - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
-local DIDay2WarpPointer = 0x23944B8 - offset
+local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
 
 local soraStory = 0x2DE7367 - offset
@@ -889,12 +889,10 @@ function UpdateInventory(HUDNow)
 	if ReadByte(inventory+0xCA-1) > 0 then
 		WriteByte(inventory+0xC8-1, 0)
 		WriteByte(inventory+0xC9-1, 0)
-		print("Removed excess Gummi Pieces")
 	end
 	if ReadByte(inventory+0xCD-1) > 0 then
 		WriteByte(inventory+0xCB-1, 0)
 		WriteByte(inventory+0xCC-1, 0)
-		print("Removed excess Gummi Pieces")
 	end
 end
 
@@ -1065,6 +1063,25 @@ function FlagFixes()
 		end
 	end
 	
+	if ReadByte(world) == 1 then -- DI Day2 Warp to EotW
+		local warpAddr = ReadLong(CutsceneWarpPointer)+0x6F9D
+		if ReadByteA(warpAddr)==2 and ReadByteA(warpAddr+4)==1 then
+			print("DI to EotW warp")
+			WriteByteA(warpAddr,0x10)
+			WriteByteA(warpAddr+4,0x1E)
+		end
+	end
+	
+	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
+		local warpAddr = ReadLong(CutsceneWarpPointer)+0x677D
+		if ReadByteA(warpAddr)==0xF and ReadByteA(warpAddr+4)==0xB then
+			print("Skipping HB cutscenes to avoid story flag conflicts")
+			WriteByte(cutsceneFlags+0xB0D, 0x6A)
+			WriteByteA(warpAddr,0xD)
+			WriteByteA(warpAddr+4,0x9)
+		end
+	end
+	
 	if ReadByte(gummiFlagBase+11)==0 then
 		OpenGummi()
 	end
@@ -1119,16 +1136,7 @@ function _OnFrame()
 	end
 	
 	FlagFixes()
-	
-	if ReadByte(world) == 1 then -- DI Day2 Warp to EotW
-		local warpAddr = ReadLong(DIDay2WarpPointer)+0x6F9D
-		if ReadByteA(warpAddr)==2 and ReadByteA(warpAddr+4)==1 then
-			print("DI to EotW warp")
-			WriteByteA(warpAddr,0x10)
-			WriteByteA(warpAddr+4,0x1E)
-		end
-	end
-	
+
 	if ReadInt(blackfade) == 0 then
 		removeBlackTimer = removeBlackTimer+1
 	else
