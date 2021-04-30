@@ -37,6 +37,7 @@ local donaldAbilityTable = soraAbilityTable+0x328
 local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
+local shopTableBase = 0x4FB374 - offset
 local chestsOpened = 0x2DE5E00 - offset
 
 local inventory = 0x2DE5E6A - offset
@@ -120,6 +121,7 @@ local introJump = true
 local important = {0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
 local importantPool = {0x5, 0x39, 0x48, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x94, 0x92, 0x93}
 local missableRewards = {0, 2, 4}
+local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
 local itemData = {}
@@ -172,7 +174,7 @@ function _OnInit()
 	for i=1,0xFF do
 		itemids[i] = i
 	end
-	
+
 	for i=1, 7 do
 		magicUpdater[i] = 0
 	end
@@ -375,6 +377,14 @@ function Randomize()
 			WriteArray(itemTable+((i-1)*20), ReadArray(itemTable+((itemids[i]-1)*20), 20))
 		end
 		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
+		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
+			WriteShort(itemTable+((i-1)*20)+8, (math.random(9)+1)*250)
+		end
+		
+		if ((string.find(ItemType(i), "Weapon") or string.find(ItemType(itemids[i]), "Important")) and i~=itemids[i]) or
+													i==itemids[i] and ItemType(i) ~= "" then
+			shopPool[(#shopPool)+1] = i
+		end
 	end
 
 	for i=1, 0xA8 do
@@ -608,6 +618,23 @@ function ApplyRandomization()
 	
 	print("Placed key items successfully")
 	
+	local shopMap = {}
+	for i=0,7 do
+		if i == 4 or i == 7 then
+			shopMap = {}
+		end
+		local shopItem = 0
+		local shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
+		while shopItemID > 0 do
+			if not shopMap[shopItemID] then
+				shopMap[shopItemID] = table.remove(shopPool, math.random(#shopPool))
+			end
+			WriteInt(shopTableBase+(i*0xD4)+(shopItem*4), shopMap[shopItemID])
+			shopItem = shopItem + 1
+			shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
+		end
+	end
+	
 	for i=1, 0x1DD do
 		WriteShort(chestTable+((i-1)*2), chests[i])
 	end
@@ -632,14 +659,11 @@ function ApplyRandomization()
 			end
 			weaponStr[i] = ReadByte(weaponTable+tablePos+0x30)
 			weaponMag[i] = ReadByte(weaponTable+tablePos+0x38)
+			local magSigned = (weaponMag[i] > 127) and -(256 - weaponMag[i]) or weaponMag[i]
 			if weaponStatRando % 2 == 1 then
 				local randomPower = math.random(8)+6
-				while weaponStr[i]+weaponMag[i]*5 < randomPower do
-					if math.random(10) > 4 then
-						weaponStr[i] = weaponStr[i]+1
-					else
-						weaponMag[i] = weaponMag[i]+1
-					end
+				while weaponStr[i]+magSigned*5 < randomPower do
+					weaponStr[i] = weaponStr[i]+1
 				end
 			end
 			weaponItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
@@ -656,9 +680,6 @@ function ApplyRandomization()
 				-- itemNames[i-5] = itemNames[itemids[i]]
 				-- print(itemNames[i-5])
 			-- end
-		end
-		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
-			WriteShort(itemTable+((i-1)*20)+8, (math.random(5)+1)*500)
 		end
 	end
 	for i=1,5 do
@@ -854,8 +875,8 @@ function UpdateInventory(HUDNow)
 				else
 					inventoryUpdater[i] = itemCount
 				end
-			elseif string.find(ItemType(itemids[i]), "Important") and itemCount>0 then
-				WriteByte(inventory+(itemids[i]-1), itemCount)
+			elseif string.find(ItemType(itemids[i]), "Important") and itemCount>0 and HUDNow>0 then
+				WriteByte(inventory+(itemids[i]-1), itemCount + ReadByte(inventory+(itemids[i]-1)))
 				WriteByte(inventory+(i-1), 0)
 				inventoryUpdater[i] = 0
 				inventoryUpdater[itemids[i]] = itemCount
@@ -967,7 +988,7 @@ function ReplaceTrinity(HUDNow)
 		end
 		if i > 0 then
 			textFind = trinityTexts[i]
-			textReplace = trinityTexts[trinityTable[i]]
+			textReplace = trinityTexts[trinityTable[i]] .. ".     "
 		end
 	end
 end
