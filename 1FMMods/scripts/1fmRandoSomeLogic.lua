@@ -518,8 +518,8 @@ function Randomize()
 	local randoTrinity = true
 	
 	while randoTrinity do
-		local trinityPool = {1,2,3}
-		for i=1,3 do
+		local trinityPool = {1,2,3,4,5}
+		for i=1,5 do
 			trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 		end
 		randoTrinity = false
