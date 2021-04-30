@@ -503,7 +503,9 @@ function Randomize()
 		for i=1,5 do
 			trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 		end
-		randoTrinity = false
+		if trinityTable[5] == 2 then
+			randoTrinity = false
+		end
 	end
 	
 	print("Randomized trinities")
