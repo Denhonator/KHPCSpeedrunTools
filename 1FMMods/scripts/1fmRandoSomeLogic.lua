@@ -118,8 +118,8 @@ local menuWas = 0
 local removeBlackTimer = 0
 local introJump = true
 
-local important = {0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
-local importantPool = {0x5, 0x39, 0x48, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x94, 0x92, 0x93}
+local important = {0xB2, 0xB4, 0xB7, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
+local importantPool = {0x5, 0x39, 0x48, 0x48, 0x4A, 0x4A, 0x4D, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93}
 local missableRewards = {0, 2, 4}
 local shopPool = {}
 local gummiNames = {}
@@ -181,30 +181,6 @@ function _OnInit()
 	initDone = true
 	print("Init done.	")
 end
-
--- function KeyItemWorlds(i)
-	-- if i >= 0xB2 and i <= 0xB9 then
-		-- return 0xF
-	-- elseif i == 0xBA or (i >= 0xC0 and i <= 0xC7) then
-		-- return 1
-	-- elseif i == 0xC8 then
-		-- return 5
-	-- elseif i == 0xC9 then
-		-- return 4
-	-- elseif i == 0xCB or i == 0xD4 then
-		-- return 3
-	-- elseif i == 0xCC then
-		-- return 0xD
-	-- elseif i == 0xD5 then
-		-- return 8
-	-- elseif i == 0xD6 then
-		-- return 0xC
-	-- elseif i == 0xD7 or i == 0xE3 or i == 0xE4 then
-		-- return 0xA
-	-- elseif i == 0xD8 then
-		-- return 9
-	-- end
--- end
 
 function ItemType(i)
 	local attributes = ""
@@ -354,13 +330,8 @@ function Randomize()
 	
 	-- Need one of:
 	itemids[0x48] = 0xB2
-	itemids[0x49] = 0xB3
 	itemids[0x4A] = 0xB4
-	itemids[0x4B] = 0xB5
-	itemids[0x4C] = 0xB6
 	itemids[0x4D] = 0xB7
-	itemids[0x4E] = 0xB8
-	itemids[0x4F] = 0xB9
 	itemids[0x50] = 0xC1
 	itemids[0x39] = 0xC2
 	itemids[0x5] = 0xC3
@@ -564,7 +535,7 @@ function ApplyRandomization()
 		local i = order[j]
 		local offAddr = rewardTable+((i-1)*2)
 		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+1)) == "Synth" then
-			if #importantPool > 8 then
+			if #importantPool > 6 then
 				local r = math.random(#importantPool)
 				local it = importantPool[r]
 				-- Add check that it is accessible
@@ -1050,7 +1021,7 @@ function FlagFixes()
 	end
 
 	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
-		WriteByte(worldFlagBase+0x1C, 5) -- Cid outside
+		--WriteByte(worldFlagBase+0x1C, 5) -- Cid outside
 		WriteByte(worldFlagBase+0x26, 2) -- Cid in accessory shop
 	end
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
@@ -1091,7 +1062,7 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(world) == 1 then -- DI Day2 Warp to EotW
+	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
 		local warpAddr = ReadLong(CutsceneWarpPointer)+0x6F9D
 		if ReadByteA(warpAddr)==2 and ReadByteA(warpAddr+4)==1 then
 			print("DI to EotW warp")
