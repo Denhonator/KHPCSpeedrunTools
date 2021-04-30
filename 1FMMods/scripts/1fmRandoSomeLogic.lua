@@ -1102,7 +1102,7 @@ function FlagFixes()
 	
 	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
 		local warpAddr = ReadLong(CutsceneWarpPointer)+0x677D
-		if ReadByteA(warpAddr)==0xF and ReadByteA(warpAddr+4)==0xB then
+		if ReadByteA(warpAddr)==0xF and ReadByteA(warpAddr+4)==0xB and ReadByte(blackfade)>0 then
 			print("Skipping HB cutscenes to avoid story flag conflicts")
 			WriteByte(cutsceneFlags+0xB0D, 0x6A)
 			WriteByteA(warpAddr,0xD)
