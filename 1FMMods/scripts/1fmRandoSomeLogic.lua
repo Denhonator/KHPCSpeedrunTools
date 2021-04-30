@@ -1042,7 +1042,7 @@ function FlagFixes()
 		WriteInt(OCCupUnlock, 0x0A0A0A0A)	-- Unlock cups
 	end
 	
-	if (ReadByte(trinityUnlock) // 2) % 2 == 1 then
+	if (ReadByte(trinityUnlock) // 2) % 2 == 1 and ReadByte(cutsceneFlags+0xB04) >= 0x31 then
 		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
 	end
 	
