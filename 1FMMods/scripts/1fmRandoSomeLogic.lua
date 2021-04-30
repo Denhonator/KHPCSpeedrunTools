@@ -949,20 +949,25 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(cutsceneFlags+0xB0E) >= 0x32 then
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
-	local dif = ReadByte(trinityUnlock)
 	if ReadByte(OCTrinityFlag) == 0 and ReadByte(world) == 11 and ReadByte(room) == 1 then
 		WriteByte(trinityUnlock, 0)
 	else
-		WriteByte(trinityUnlock, (HUDNow > 0 or ReadByte(world)==3) and unlock or 0)
+		WriteByte(trinityUnlock, unlock)
 	end
-	if HUDNow < 1 and dif > 0 and textFind=="" then
-		for i=2,5 do
-			if dif == 2^(i-1) then
-				print("Replacing trinity text")
-				textFind = trinityTexts[i]
-				textReplace = trinityTexts[trinityTable[i]]
-				break
-			end
+	if HUDNow < 1 then
+		i = 0
+		if ReadByte(cutsceneFlags+0xB05) == 0x5F then
+			i = 2
+		elseif ReadByte(cutsceneFlags+0xB08) == 0x6E then
+			i = 3
+		elseif ReadByte(OCTrinityFlag) > 0 and ReadByte(world) == 11 and ReadByte(room) == 1 then
+			i = 4
+		elseif ReadByte(cutsceneFlags+0xB0E) == 0x28 then
+			i = 5
+		end
+		if i > 0 then
+			textFind = trinityTexts[i]
+			textReplace = trinityTexts[trinityTable[i]]
 		end
 	end
 end
@@ -1035,11 +1040,13 @@ function FlagFixes()
 		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
 	-- end
 	
-	if ReadInt(OCCupUnlock) ~= 0x0A0A0A0A then
-		if ReadInt(OCCupUnlock) > 0 then
-			print(string.format("Changed OC cup status from %x to %x", ReadInt(OCCupUnlock), 0x0A0A0A0A))
+	for i=0,3 do
+		if ReadByte(OCCupUnlock+i) ~= 0x0A and ReadByte(OCCupUnlock+i) ~= 1 then
+			if ReadByte(OCCupUnlock+i) > 0 then
+				print(string.format("Changed OC cup status from %x to %x", ReadByte(OCCupUnlock+i), 0x0A))
+			end
+			WriteByte(OCCupUnlock+i, 0x0A)	-- Unlock cups
 		end
-		WriteInt(OCCupUnlock, 0x0A0A0A0A)	-- Unlock cups
 	end
 	
 	if (ReadByte(trinityUnlock) // 2) % 2 == 1 and ReadByte(cutsceneFlags+0xB04) >= 0x31 then
