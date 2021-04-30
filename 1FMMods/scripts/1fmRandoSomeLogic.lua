@@ -53,6 +53,7 @@ local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local DIDay2WarpPointer = 0x23944B8 - offset
+local OCCupUnlock = 0x2DE77D0 - offset
 
 local soraStory = 0x2DE7367 - offset
 local OCFlag = 0x2DE75EA - offset
@@ -833,7 +834,7 @@ function UpdateInventory(HUDNow)
 					idFind = i
 					idReplace = curid
 					print(string.format("Replacing %x with %x", i, curid))
-					print(string.format("Replacing %s with %s", textFind, textReplace))
+					-- print(string.format("Replacing %s with %s", textFind, textReplace))
 
 					local otherCount = ReadByte(inventory+(curid-1))
 					if (i==0xE0) then
@@ -875,7 +876,7 @@ function UpdateInventory(HUDNow)
 					magicUp = 5
 				end
 				if magicUp > 0 then
-					WriteByte(magicFlags+magicUp, ReadByte(magicFlags+magicUp)+1)
+					WriteByte(magicFlags+magicUp, math.min(ReadByte(magicFlags+magicUp)+1, 3))
 					textFind = "Obtained " .. gummiNames[i]
 					textReplace = "Power of " .. magicTexts[perMagicShuffle[magicUp+1]] .. "         "
 					print(string.format("Replacing %s with %s", textFind, textReplace))
@@ -902,6 +903,9 @@ function ReplaceMagic(HUDNow)
 	local isUnlocked = {false,false,false,false,false,false,false}
 	for i=1,7 do
 		local r = perMagicShuffle[i]
+		if ReadByte(magicFlags+(i-1)) > 3 then
+			WriteByte(magicFlags+(i-1), 3)
+		end
 		local l = ReadByte(magicFlags+(i-1))
 		WriteByte(magicLevels+(r-1), math.max(l, 1))
 		if l > 0 then
@@ -923,17 +927,9 @@ function ReplaceMagic(HUDNow)
 		end
 	end
 	WriteByte(magicUnlock, unlock)
-	local isShortcut = {}
-	for j=0,2 do
-		isShortcut[ReadByte(shortcuts+j)+1] = true
-	end
 	for j=0,2 do
 		if not isUnlocked[ReadByte(shortcuts+j)+1] then
-			for i=1,7 do
-				if not isShortcut[i] then
-					WriteByte(shortcuts+j, i-1)
-				end
-			end
+			WriteByte(0xFF)
 		end
 	end
 end
@@ -1041,6 +1037,13 @@ function FlagFixes()
 		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
 	-- end
 	
+	if ReadInt(OCCupUnlock) ~= 0x0A0A0A0A then
+		if ReadInt(OCCupUnlock) > 0 then
+			print(string.format("Changed OC cup status from %x to %x", ReadInt(OCCupUnlock), 0x0A0A0A0A))
+		end
+		WriteInt(OCCupUnlock, 0x0A0A0A0A)	-- Unlock cups
+	end
+	
 	if (ReadByte(trinityUnlock) // 2) % 2 == 1 then
 		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
 	end
@@ -1101,7 +1104,6 @@ function _OnFrame()
 			nextTextFind = ""
 			if HUDWas < 1 then
 				textFind = ""
-				print("Text find reset")
 			end
 		end
 		ReplaceTexts()
