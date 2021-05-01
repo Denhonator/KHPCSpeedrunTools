@@ -8,8 +8,9 @@ local soraHUD = 0x280EB1C - offset
 local soraHP = 0x2D592CC - offset
 local stateFlag = 0x2863958 - offset
 local deathCheck = 0x297730 - offset
+local safetyMeasure = 0x297746 - offset
 local whiteFade = 0x233C49C - offset
-local deathScreenPointer = 0x23944B8 - offset
+local closeMenu = 0x2E90820 - offset
 
 function _OnInit()
 
@@ -27,14 +28,16 @@ function _OnFrame()
 	-- Remove white screen on death (it bugs out this way normally)
 	if removeWhite > 0 then
 		removeWhite = removeWhite - 1
+		-- WriteLong(closeMenu, 0)
 		if ReadByte(whiteFade) == 128 then
 			WriteByte(whiteFade, 0)
 		end
 	end
 	
 	-- Reverts disabling death condition check (or it crashes)
-	if revertCode and ReadLong(deathScreenPointer) == 0x7FF7292F7980 then
+	if revertCode and ReadLong(closeMenu) > 0 then
 		WriteShort(deathCheck, 0x2E74)
+		WriteLong(safetyMeasure, 0x8902AB8973058948)
 		removeWhite = 1000
 		revertCode = false
 	end
@@ -47,6 +50,7 @@ function _OnFrame()
 		WriteByte(soraHP, 0)
 		WriteByte(stateFlag, 1)
 		WriteShort(deathCheck, 0x9090)
+		WriteLong(safetyMeasure, 0x89020B958735894C)
 		revertCode = true
 	end
 	
