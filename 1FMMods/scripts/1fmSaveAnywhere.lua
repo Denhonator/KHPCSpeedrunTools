@@ -1,9 +1,11 @@
+local extraSafety = false
 local offset = 0x3A0606
 local lasttitle = 0
 local addgummi = 0
 local lastInput = 0
 local revertCode = false
 local removeWhite = 0
+local lastDeathPointer = 0
 local soraHUD = 0x280EB1C - offset
 local soraHP = 0x2D592CC - offset
 local stateFlag = 0x2863958 - offset
@@ -11,9 +13,10 @@ local deathCheck = 0x297730 - offset
 local safetyMeasure = 0x297746 - offset
 local whiteFade = 0x233C49C - offset
 local closeMenu = 0x2E90820 - offset
+local deathPointer = 0x23944B8 - offset
 
 function _OnInit()
-
+	lastDeathPointer = ReadLong(deathPointer)
 end
 
 function _OnFrame()
@@ -35,7 +38,7 @@ function _OnFrame()
 	end
 	
 	-- Reverts disabling death condition check (or it crashes)
-	if revertCode and ReadLong(closeMenu) > 0 then
+	if revertCode and ReadLong(deathPointer) ~= lastDeathPointer then
 		WriteShort(deathCheck, 0x2E74)
 		WriteLong(safetyMeasure, 0x8902AB8973058948)
 		removeWhite = 1000
@@ -50,7 +53,9 @@ function _OnFrame()
 		WriteByte(soraHP, 0)
 		WriteByte(stateFlag, 1)
 		WriteShort(deathCheck, 0x9090)
-		WriteLong(safetyMeasure, 0x89020B958735894C)
+		if extraSafety then
+			WriteLong(safetyMeasure, 0x89020B958735894C)
+		end
 		revertCode = true
 	end
 	
@@ -72,4 +77,5 @@ function _OnFrame()
 	end
 	lasttitle = titletest
 	lastInput = input
+	lastDeathPointer = ReadLong(deathPointer)
 end
