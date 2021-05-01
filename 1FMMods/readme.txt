@@ -7,8 +7,7 @@ SaveAnywhere:
 - In-game, press L1+L2+R2+Select (or equivalent on your input device)
 - You can use this to essentially soft reset by going to title screen
 - You can use this to save anywhere. Saving during cutscenes or combat may have unexpected consequences.
-- You can access the normal menu through here as well. I have not tested all interactions
-- I have prevented opening save menus on top of each other to prevent crashing
+- You can also instantly die with R1+R2+L2+Select
 
 InstantGummi:
 - Instantly arrive at any selected world
@@ -43,7 +42,7 @@ Autoattack:
 
 RandoSomeLogic:
 - Randomizes items, level ups, rewards, magic, trinities and chests
-- If seed.txt exists, it will try to use it. Must be a number. Otherwise, the file will be created with a random seed.
+- If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
 Unlock0Volume:
