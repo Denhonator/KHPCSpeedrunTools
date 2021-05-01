@@ -1,13 +1,20 @@
 local lastInput = 0
 local bufferPause = 0
 
-function _OnInit()
+local canExecute = false
 
+function _OnInit()
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		canExecute = true
+		print("KH1 detected, running script")
+	else
+		print("KH1 not detected, not running script")
+	end
 end
 
 function _OnFrame()
 	nowInput = ReadInt(0x233D034-0x3A0606)
-	if ReadInt(0x233AE74-0x3A0606)==1 then
+	if canExecute and ReadInt(0x233AE74-0x3A0606)==1 then
 		if bufferPause == 2 then
 			WriteInt(0x22E86C8-0x3A0606, 0) --pause
 			bufferPause = 0
