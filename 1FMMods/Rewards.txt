@@ -1,0 +1,169 @@
+00 Elixir (Leon)
+01 Dodge Roll (Goofy)
+02 Mega Potion (Aerith)
+03 Dodge Roll (?)
+04 Treasure Magnet (Donald)
+05 Second Wind (Goofy)
+06 High Jump
+07 Potion
+08 Potion
+09 Potion
+0A Potion
+0B Potion
+0C Potion
+0D Potion
+0E Mermaid Kick
+0F Glide (Neverland)
+10 Superglide (Chernabog)
+11 Fireglow
+12 Earthshine (Secret Waterway)
+13 Jungle King (Deep Jungle)
+14 Three Wishes (Agrabah)
+15 Fairy Harp (Neverland)
+16 Pumpinhead (Halloween Town)
+17 Crabclaw (Atlantica)
+18 Divine Rose
+19 Lionheart
+1A Metal Chocobo
+1B Oathkeeper
+1C Genji Shield
+1D Herc's Shield
+1E Sonic Blade (Olympus Coliseum)
+1F Raven's Claw
+20 Strike Raid
+21 Ragnarok
+22 Trinity Limit
+23 Ars Arcanum
+24 Cheer (Donald)
+25 Cheer (Goofy)
+26 Lord Fortune
+27 High Jump (Chest)
+28 Watergleam (Chest)
+29 Mythril (Chest)
+2A Naturespark
+2B Mythril Shard
+2C Mythril
+2D EXP Ring
+2E Cheer (Sora)
+2F Dream Shield (Arts items to Merlin)
+30 Olympia (Olympus Coliseum)
+31 Oblivion (Chest)
+32 Mythril (Chest)
+33 Wishing Star (Chest)
+34 Mythril Shard
+35 Megaelixir
+36 Orichalcum
+37 Tech Boost
+38 Brave Warrior
+39 Ifrit's Horn
+3A Inferno Band
+3B White Fang
+3C Ray of Light
+3D Holy Circlet
+3E Omega Arts
+3F Defense Up (TT Chest)
+40 Elixir (TT Chest)
+41 AP Up (TT Chest)
+42 Orichalcum (TT Chest)
+43 Camping Set (Chest)
+44 Mega-Potion (Chest)
+45 Megaelixir (Chest)
+46 Mythril Shard (Chest)
+47 Orichalcum (Chest)
+48 Lady Luck (Chest)
+49 Mega-Potion (Chest)
+4A Protect Chain (Chest)
+4B Orichalcum (Chest)
+4C Mythril Shard (Chest)
+4D AP Up (Chest)
+4E Cottage (Chest)
+4F Fire Ring (Chest)
+50 Mythril (Chest)
+51 Cottage (Chest)
+52 Elixir (Chest)
+53 Mega-Potion (Chest)
+54 Protera Chain (Chest)
+55 Mythril Shard (Chest)
+56 Violetta (Chest)
+57 Mythril Shard (Chest)
+58 Defense Up (Chest)
+59 Orichalcum (Chest)
+5A Thundara Ring (Chest)
+5B AP Up (Chest)
+5C Spellbinder (Merlin)
+5D Dream Rod (Max spells, Merlin)
+5E Combo Plus
+5F Orichalcum
+60 Critical Plus (Sora)
+61 Save the Queen
+62 Tech Boost
+63 Dark Matter
+64 Gravity Break
+65 Save the King
+66 Protect Chain (DI Chest)
+67 Cottage (Postcard 1)
+68 Mythril Shard (Postcard 2)
+69 Mega-Potion (Postcard 3)
+6A Mega-Ether (Postcard 4)
+6B Mythril (Postcard 5)
+6C Elixir (Postcard 6)
+6D Mega-Elixir (Postcard 7)
+6E Orichalcum (Postcard 8)
+6F AP Up (Postcard 9)
+70 Defense Up (Postcard 10)
+71 Mythril
+72 Mega-Potion (Chest)
+73 Mythril Shard (Chest)
+74 Elixir (Chest)
+75 Mythril (Chest)
+76 Protera Chain (Chest)
+77 Thunder Ring (Chest)
+78 Protera Chain (Chest)
+79 Blizzara Ring (Chest)
+7A Fira Ring (Chest)
+7B Mythril Shard (Chest)
+7C Pretty Stone (Chest)
+7D Mega-Potion (Chest)
+7E Mythril (Chest)
+7F Elixir (Chest)
+80 Mythril Shard (Chest)
+81 Pretty Stone (Chest)
+82 Cottage (Chest)
+83 Gale (Chest) 
+84 AP Up (Chest)
+85 Megaelixir
+86 Megaelixir
+87 Spirit Gem (Chest)
+88 Thunder Gem (Chest)
+89 Frost Gem (Chest)
+8A Bright Gem (Chest)
+8B Blaze Gem (Chest)
+8C Lucid Gem (Chest)
+8D Mighty Shield (Chest)
+8E Elixir (Chest)
+8F Elixir
+90 AP Up
+91 Dark Matter
+92 Defense Up
+93 Power Up
+94 Diamond Dust (Ice Titan)
+95 One-Winged Angel (Sephiroth)
+96 Zantetsuken
+97 EXP Necklace
+98 Firagun Band
+99 Dark Matter (Chest)
+9A Shiva Belt (Chest)
+9B Dark Matter (Chest)
+9C Dark Matter (Chest)
+9D Ifrit Belt (Chest)
+9E Dark Matter
+9F Orichalcum (Chest)
+A0 Dark Matter (Chest)
+A1 Dark Matter (Chest)
+A2 Orichalcum (Chest)
+A3 Ramuh Belt (Chest)
+A4 Royal Crown (Chest)
+A5 Dark Matter (Chest)
+A6 Dark Matter (Chest)
+A7 Dark Matter (Chest)
+A8 Meteor Strike (Chest)

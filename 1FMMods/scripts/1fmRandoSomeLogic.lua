@@ -267,7 +267,7 @@ function Randomize()
 	end
 	seedfile:close()
 	
-	for i=1, 0xA8 do
+	for i=1, 0xA9 do
 		rewards[i] = ReadShort(rewardTable+((i-1)*2))
 	end
 	for i=1, 99 do
@@ -280,7 +280,8 @@ function Randomize()
 		donaldLevels[i] = ReadByte(donaldStatTable+(i-1))
 		donaldAbilities[i] = ReadByte(donaldAbilityTable+(i-1))
 	end
-	for i=1, 0x1DD do
+	
+	for i=1, 0x1DE do
 		chests[i] = ReadShort(chestTable+((i-1)*2))
 	end
 
@@ -358,8 +359,8 @@ function Randomize()
 		end
 	end
 
-	for i=1, 0xA8 do
-		local r = math.random(0xA8)
+	for i=1, 0xA9 do
+		local r = math.random(0xA9)
 		local orig = rewards[i]
 		local other = rewards[r]
 		rewards[i] = other
@@ -368,7 +369,7 @@ function Randomize()
 
 	print("Randomized reward pool")
 	
-	for i=1, 0x1DD do
+	for i=1, 0x1DE do
 		if ((chests[i]-2) % 0x10) == 0 then
 			if #missableRewards > 0 then
 				chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
@@ -379,12 +380,12 @@ function Randomize()
 		end
 	end
 	
-	for i=1, 0x1DD do
-		local r = math.random(0x1DD)
-		if chests[i] > 0x10 or (i>1 and i<0x1DD and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
+	for i=1, 0x1DE do
+		local r = math.random(0x1DE)
+		if chests[i] > 0x10 or (i>1 and i<0x1DE and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
 			local valid = false
-			while not (valid and (chests[r] > 0x10 or (r>1 and r<0x1DD and chests[r-1] > 0x10 and chests[r+1] > 0x10))) do
-				r = math.random(0x1DD)
+			while not (valid and (chests[r] > 0x10 or (r>1 and r<0x1DE and chests[r-1] > 0x10 and chests[r+1] > 0x10))) do
+				r = math.random(0x1DE)
 				valid = not ((i >= 0x1C0 or i == 0) and ((chests[r]-4) % 0x10) == 0)
 				valid = valid and not ((i >= 0x1C0 or i == 0) and chests[r] // 0x10 == 0xD3)
 			end
@@ -526,14 +527,14 @@ function GetRandomOrder(size)
 end
 
 function ApplyRandomization()
-	for i=1, 0xA8 do
+	for i=1, 0xA9 do
 		WriteShort(rewardTable+((i-1)*2), rewards[i])
 	end
 	
 	local guaranteedMovement = 0
 	local extraAbilities = {1,2,3,4,0x15,0x16}
-	local order = GetRandomOrder(0xA8)
-	for j=1, 0xA8 do
+	local order = GetRandomOrder(0xA9)
+	for j=1, 0xA9 do
 		local i = order[j]
 		local offAddr = rewardTable+((i-1)*2)
 		if ReadByte(offAddr) == 0xF0 and ItemType(ReadByte(offAddr+1)) == "Synth" then
@@ -608,7 +609,7 @@ function ApplyRandomization()
 		end
 	end
 	
-	for i=1, 0x1DD do
+	for i=1, 0x1DE do
 		WriteShort(chestTable+((i-1)*2), chests[i])
 	end
 	for i=1, 99 do

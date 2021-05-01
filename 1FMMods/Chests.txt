@@ -1,0 +1,478 @@
+0: Reward 66
+1: Potion
+2: Ether
+3: Ether
+4: Potion
+5: Potion
+6: Ether
+7: Ether
+8: Potion
+9: Potion
+a: Ether
+b: Ether
+c: Potion
+d: Potion
+e: Ether
+f: Ether
+10: Potion
+11: Potion
+12: Potion
+13: Potion
+14: Reward 3f
+15: Postcard
+16: Postcard
+17: Mythril Shard
+18: Mega-Potion
+19: Potion
+1a: Pretty Stone
+1b: Potion
+1c: Mega-Potion
+1d: Mythril
+1e: Reward 40
+1f: Pretty Stone
+20: Reward 41
+21: Mythril Shard
+22: Reward 42
+23: Reward 33
+24: Mythril Shard
+25: Potion
+26: Potion
+27: Potion
+28: Postcard
+29: Potion
+2a: Potion
+2b: Potion
+2c: Potion
+2d: Potion
+2e: Potion
+2f: Potion
+30: Potion
+31: Potion
+32: Potion
+33: Potion
+34: Potion
+35: Potion
+36: Potion
+37: Potion
+38: Potion
+39: Potion
+3a: Potion
+3b: Potion
+3c: Potion
+3d: Potion
+3e: Potion
+3f: Potion
+40: Potion
+41: Potion
+42: Potion
+43: Potion
+44: Potion
+45: Potion
+46: Potion
+47: Potion
+48: Potion
+49: Potion
+4a: Potion
+4b: Potion
+4c: Potion
+4d: Potion
+4e: Potion
+4f: Potion
+50: Potion
+51: Potion
+52: Potion
+53: Potion
+54: Potion
+55: Potion
+56: Potion
+57: Potion
+58: Dalmatians 1
+59: Dalmatians 2
+5a: Dalmatians 3
+5b: Dalmatians 4
+5c: Reward 74
+5d: Reward 43
+5e: Reward 44
+5f: Reward 45
+60: Reward 46
+61: Mega-Potion
+62: Mega-Potion
+63: Mega-Potion
+64: Gummi
+65: Dalmatians 5
+66: Gummi
+67: Gummi
+68: Dalmatians 20
+69: Reward 47
+6a: Dalmatians 6
+6b: Gummi
+6c: Defense Up
+6d: Mega-Potion
+6e: Gummi
+6f: Dalmatians 7
+70: Reward 99
+71: Reward 32
+72: Reward 48
+73: Potion
+74: Potion
+75: Potion
+76: Potion
+77: Potion
+78: Potion
+79: Potion
+7a: Reward 49
+7b: Reward 4a
+7c: Dalmatians 9
+7d: Mega-Potion
+7e: Gummi
+7f: Ether
+80: Mythril
+81: Dalmatians 10
+82: Gummi
+83: Potion
+84: Mega-Ether
+85: Reward 4b
+86: Dalmatians 12
+87: Mythril Shard
+88: Mythril Shard
+89: Dalmatians 11
+8a: Mythril
+8b: Orichalcum
+8c: Reward 72
+8d: Reward 73
+8e: Reward 75
+8f: Potion
+90: Potion
+91: Potion
+92: Potion
+93: Potion
+94: Potion
+95: Potion
+96: Potion
+97: Potion
+98: Potion
+99: Potion
+9a: Potion
+9b: Potion
+9c: Potion
+9d: Potion
+9e: Potion
+9f: Potion
+a0: Potion
+a1: Potion
+a2: Potion
+a3: Potion
+a4: Potion
+a5: Potion
+a6: Potion
+a7: Mythril Shard
+a8: Reward 4c
+a9: Reward 9b
+aa: Reward 4d
+ab: Potion
+ac: Potion
+ad: Potion
+ae: Potion
+af: Potion
+b0: Potion
+b1: Potion
+b2: Potion
+b3: Potion
+b4: Potion
+b5: Potion
+b6: Potion
+b7: Potion
+b8: Potion
+b9: Potion
+ba: Potion
+bb: Potion
+bc: Potion
+bd: Potion
+be: Potion
+bf: Potion
+c0: Potion
+c1: Potion
+c2: Potion
+c3: Potion
+c4: Potion
+c5: Mega-Potion
+c6: Mega-Ether
+c7: Reward 4e
+c8: Mega-Potion
+c9: Gummi
+ca: Reward 4f
+cb: Mega-Ether
+cc: Reward 9c
+cd: Reward 50
+ce: Reward 76
+cf: Dalmatians 18
+d0: Gummi
+d1: Reward 51
+d2: Mega-Potion
+d3: Mega-Ether
+d4: Dalmatians 17
+d5: Elixir
+d6: Mythril Shard
+d7: Cottage
+d8: Reward 52
+d9: Reward 53
+da: Dalmatians 13
+db: Mythril Shard
+dc: Gummi
+dd: Defense Up
+de: Mythril
+df: Reward 77
+e0: Reward 54
+e1: Gummi
+e2: Torn Page 3
+e3: Cottage
+e4: Gummi
+e5: Gummi
+e6: Dalmatians 16
+e7: Gummi
+e8: Megalixir
+e9: Reward 9d
+ea: Potion
+eb: Potion
+ec: Potion
+ed: Potion
+ee: Potion
+ef: Potion
+f0: Potion
+f1: Potion
+f2: Megalixir
+f3: Torn Page 2
+f4: Reward 29
+f5: Dalmatians 26
+f6: Potion
+f7: Potion
+f8: Potion
+f9: Potion
+fa: Potion
+fb: Potion
+fc: Potion
+fd: Potion
+fe: Potion
+ff: Potion
+100: Potion
+101: Potion
+102: Potion
+103: Potion
+104: Potion
+105: Potion
+106: Potion
+107: Potion
+108: Potion
+109: Potion
+10a: Potion
+10b: Potion
+10c: Potion
+10d: Potion
+10e: Potion
+10f: Potion
+110: Potion
+111: Potion
+112: Potion
+113: Potion
+114: Potion
+115: Potion
+116: Potion
+117: Potion
+118: Potion
+119: Potion
+11a: Potion
+11b: Potion
+11c: Potion
+11d: Potion
+11e: Potion
+11f: Potion
+120: Potion
+121: Potion
+122: Potion
+123: Potion
+124: Potion
+125: Potion
+126: Potion
+127: Potion
+128: Potion
+129: Potion
+12a: Potion
+12b: Potion
+12c: Potion
+12d: Potion
+12e: Mega-Potion
+12f: Dalmatians 23
+130: Gummi
+131: Jack-In-The-Box
+132: Defense Up
+133: Reward a0
+134: Dalmatians 22
+135: Gummi
+136: Reward 9f
+137: Mega-Ether
+138: Dalmatians 14
+139: Mythril Shard
+13a: Power Up
+13b: Elixir
+13c: Ether
+13d: Ether
+13e: Potion
+13f: Potion
+140: Potion
+141: Potion
+142: Potion
+143: Potion
+144: Potion
+145: Potion
+146: Potion
+147: Potion
+148: Gummi
+149: Gummi
+14a: Gummi
+14b: Dalmatians 24
+14c: Potion
+14d: Mega-Potion
+14e: Dalmatians 8
+14f: Reward 55
+150: Reward 56
+151: Gummi
+152: Reward 9a
+153: Potion
+154: Potion
+155: Potion
+156: Potion
+157: Potion
+158: Potion
+159: Potion
+15a: Potion
+15b: Reward 27
+15c: Cottage
+15d: Dalmatians 25
+15e: Gummi
+15f: Reward 57
+160: Potion
+161: Potion
+162: Potion
+163: Cottage
+164: Megalixir
+165: Potion
+166: Potion
+167: Potion
+168: Potion
+169: Potion
+16a: Mythril
+16b: Mega-Ether
+16c: Dalmatians 19
+16d: Gummi
+16e: Gummi
+16f: Potion
+170: Potion
+171: Potion
+172: Potion
+173: Potion
+174: Potion
+175: Reward 28
+176: Dalmatians 27
+177: Mega-Ether
+178: Gummi
+179: Dalmatians 15
+17a: Reward a2
+17b: Orichalcum
+17c: Reward a1
+17d: Gummi
+17e: Reward 78
+17f: Dalmatians 28
+180: Potion
+181: Potion
+182: Potion
+183: Potion
+184: Potion
+185: Potion
+186: Potion
+187: Potion
+188: Potion
+189: Potion
+18a: Potion
+18b: Potion
+18c: Potion
+18d: Potion
+18e: Potion
+18f: Potion
+190: Potion
+191: Potion
+192: Potion
+193: Gummi
+194: Gummi
+195: Dalmatians 29
+196: Dalmatians 30
+197: Gummi
+198: Gummi
+199: Reward 58
+19a: Dalmatians 31
+19b: Reward 79
+19c: Megalixir
+19d: Dalmatians 32
+19e: Reward 59
+19f: Gummi
+1a0: Orichalcum
+1a1: Gummi
+1a2: Gummi
+1a3: Reward 5a
+1a4: Megalixir
+1a5: Reward 5b
+1a6: Gummi
+1a7: Potion
+1a8: Mega-Potion
+1a9: Mega-Potion
+1aa: Potion
+1ab: Reward a3
+1ac: Gummi
+1ad: Reward a4
+1ae: Dalmatians 33
+1af: Orichalcum
+1b0: Mythril
+1b1: Gummi
+1b2: Gummi
+1b3: Reward 7a
+1b4: Reward a5
+1b5: Gummi
+1b6: Gummi
+1b7: Gummi
+1b8: Potion
+1b9: Potion
+1ba: Potion
+1bb: Potion
+1bc: Potion
+1bd: Potion
+1be: Potion
+1bf: Reward a6
+1c0: Reward 31
+1c1: Dalmatians 21
+1c2: Mega-Potion
+1c3: Gummi
+1c4: Reward 7b
+1c5: Reward 7c
+1c6: Reward 7d
+1c7: Reward 7e
+1c8: Reward 7f
+1c9: Reward 80
+1ca: Reward 81
+1cb: Reward 82
+1cc: Reward 83
+1cd: Reward 84
+1ce: Gummi
+1cf: Reward a8
+1d0: Gummi
+1d1: Reward a7
+1d2: Gummi
+1d3: Reward 87
+1d4: Reward 88
+1d5: Reward 89
+1d6: Reward 8a
+1d7: Reward 8b
+1d8: AP Up
+1d9: Reward 8c
+1da: Reward 8d
+1db: Megalixir
+1dc: Reward 8e
+1dd: Megalixir
