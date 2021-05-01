@@ -12,6 +12,7 @@ local stateFlag = 0x2863958 - offset
 local deathCheck = 0x297730 - offset
 local safetyMeasure = 0x297746 - offset
 local whiteFade = 0x233C49C - offset
+local blackfade = 0x4D93B8 - offset
 local closeMenu = 0x2E90820 - offset
 local deathPointer = 0x23944B8 - offset
 
@@ -49,7 +50,7 @@ function _OnFrame()
 	-- Sora HP to 0 (not necessary)
 	-- State to combat
 	-- Death condition check disable
-	if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0 then
+	if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0 and ReadByte(blackFade)==255 then
 		WriteByte(soraHP, 0)
 		WriteByte(stateFlag, 1)
 		WriteShort(deathCheck, 0x9090)
