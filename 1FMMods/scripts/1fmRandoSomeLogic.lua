@@ -140,6 +140,7 @@ local randomGets = {}
 local randomized = false
 local successfulRando = true
 local initDone = false
+local canExecute = false
 
 function RArray(off, c)
 	local l = {}
@@ -156,30 +157,39 @@ function WArray(off, l, c)
 end
 
 function _OnInit()
-	local f = io.open("items.txt")
-	local f2 = io.open("gummis.txt")
-	if not f then
-		print("items.txt missing!")
-	elseif not f2 then
-		print("gummis.txt missing!")
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		canExecute = true
+		print("KH1 detected, running script")
 	else
-		for i=1,0xFF do
-			itemNames[i] = f:read("*l")
-		end
-		for i=1,0x40 do
-			gummiNames[i] = f2:read("*l")
-		end
-		f:close()
-	end
-	for i=1,0xFF do
-		itemids[i] = i
+		print("KH1 not detected, not running script")
 	end
 
-	for i=1, 7 do
-		magicUpdater[i] = 0
+	if canExecute then
+		local f = io.open("items.txt")
+		local f2 = io.open("gummis.txt")
+		if not f then
+			print("items.txt missing!")
+		elseif not f2 then
+			print("gummis.txt missing!")
+		else
+			for i=1,0xFF do
+				itemNames[i] = f:read("*l")
+			end
+			for i=1,0x40 do
+				gummiNames[i] = f2:read("*l")
+			end
+			f:close()
+		end
+		for i=1,0xFF do
+			itemids[i] = i
+		end
+
+		for i=1, 7 do
+			magicUpdater[i] = 0
+		end
+		initDone = true
+		print("Init done.	")
 	end
-	initDone = true
-	print("Init done.	")
 end
 
 function ItemType(i)
@@ -1099,6 +1109,10 @@ function OpenGummi()
 end
 
 function _OnFrame()
+	if not canExecute then
+		goto done
+	end
+
 	if ReadInt(input) == 3848 then
 		InstantGummi()
 	end
@@ -1173,4 +1187,6 @@ function _OnFrame()
 			WriteByte(0x2E1CBA0+i*4-offset, i) --Set button types
 		end
 	end
+	
+	::done::
 end

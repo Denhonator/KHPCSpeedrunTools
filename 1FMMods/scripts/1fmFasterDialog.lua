@@ -2,11 +2,22 @@ local lastProg = 0
 local textSpeedup = false
 local turbo = false
 
-function _OnInit()
+local canExecute = false
 
+function _OnInit()
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		canExecute = true
+		print("KH1 detected, running script")
+	else
+		print("KH1 not detected, not running script")
+	end
 end
 
 function _OnFrame()
+	if not canExecute then
+		goto done
+	end
+
 	local textProg = ReadShort(0x232A5F4-0x3A0606)
 	
 	WriteFloat(0x22E8744-0x3A0606, 0) --finishes box transitions
@@ -19,4 +30,6 @@ function _OnFrame()
 	end
 
 	lastProg = textProg
+	
+	::done::
 end

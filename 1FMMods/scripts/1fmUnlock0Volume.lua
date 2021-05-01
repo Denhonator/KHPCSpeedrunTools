@@ -8,12 +8,17 @@ local minVolumeVoices = 0x115578 - offset
 local minSaveVolume = 0x14E50D - offset
 
 function _OnInit()
-	WriteShort(minSaveVolume, 0x9090)
-	WriteShort(minVolume, 0x10EB)
-	WriteShort(minVolumeMaster, 0x9090)
-	WriteShort(minVolumeBGM, 0x9090)
-	WriteArray(minVolumeSFX, {0x90, 0x90, 0x90, 0x90, 0x90, 0x90})
-	WriteArray(minVolumeVoices, {0x90, 0x90, 0x90, 0x90, 0x90, 0x90})
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		WriteShort(minSaveVolume, 0x9090)
+		WriteShort(minVolume, 0x10EB)
+		WriteShort(minVolumeMaster, 0x9090)
+		WriteShort(minVolumeBGM, 0x9090)
+		WriteArray(minVolumeSFX, {0x90, 0x90, 0x90, 0x90, 0x90, 0x90})
+		WriteArray(minVolumeVoices, {0x90, 0x90, 0x90, 0x90, 0x90, 0x90})
+		print("KH1 detected, running script")
+	else
+		print("KH1 not detected, not running script")
+	end
 end
 
 function _OnFrame()

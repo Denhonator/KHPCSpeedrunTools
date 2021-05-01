@@ -4,17 +4,22 @@ local cutsceneFlagBase = 0x2DE65D0-0x200 - offset
 local djProgressFlag = 0x2DE79D0+0x6C+0x40
 local neverlandProgressFlag = 0x2DE79D0+0x6C+0xED
 
+local canExecute = false
+
 function _OnInit()
-	--if ReadByte(0x2DE78C7-offset) > 2 then
-	--	neverlandOpen = 0
-	--end
-	--
-	--if ReadByte(0x2DE78C3-offset) > 2 then
-	--	djOpen = 0
-	--end
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		canExecute = true
+		print("KH1 detected, running script")
+	else
+		print("KH1 not detected, not running script")
+	end
 end
 
 function _OnFrame()
+	if not canExecute then
+		goto done
+	end
+
 	local selection = ReadInt(0x503CEC-offset)
 	local realSelection = selection
 	local realWorld = ReadByte(0x503C04-offset)
@@ -60,4 +65,6 @@ function _OnFrame()
 	else
 		WriteInt(0x503C00-offset, realSelection)
 	end
+	
+	::done::
 end

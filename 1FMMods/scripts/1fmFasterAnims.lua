@@ -4,11 +4,22 @@ local lastProg = 0
 local offset = 0x3A0606
 local soraHUD = 0x280EB1C - offset
 
-function _OnInit()
+local canExecute = false
 
+function _OnInit()
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		canExecute = true
+		print("KH1 detected, running script")
+	else
+		print("KH1 not detected, not running script")
+	end
 end
 
 function _OnFrame()
+	if not canExecute then
+		goto done
+	end
+
 	local cutscene = ReadInt(0x2378B60-offset)
 	local skippable = ReadInt(0x23944E4-offset)
 	local summoning = ReadInt(0x2D5D62C-offset)
@@ -21,4 +32,6 @@ function _OnFrame()
 	end
 
 	lastProg = textProg
+	
+	::done::
 end

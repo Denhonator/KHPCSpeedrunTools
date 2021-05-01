@@ -16,11 +16,24 @@ local blackfade = 0x4D93B8 - offset
 local closeMenu = 0x2E90820 - offset
 local deathPointer = 0x23944B8 - offset
 
+local canExecute = false
+
 function _OnInit()
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		canExecute = true
+		print("KH1 detected, running script")
+	else
+		print("KH1 not detected, not running script")
+	end
+
 	lastDeathPointer = ReadLong(deathPointer)
 end
 
 function _OnFrame()
+	if not canExecute then
+		goto done
+	end
+
 	local input = ReadInt(0x233D034-offset)
 	local savemenuopen = ReadByte(0x232A604-offset)
 	
@@ -79,4 +92,6 @@ function _OnFrame()
 	lasttitle = titletest
 	lastInput = input
 	lastDeathPointer = ReadLong(deathPointer)
+	
+	::done::
 end
