@@ -897,7 +897,7 @@ function UpdateInventory(HUDNow)
 			if ReadByte(closeMenu) == 0 and ReadByte(world)==3 then
 				local magicUp = -1
 				if i==2 then
-					magicUp = 3
+					magicUp = 4
 				elseif i==7 then
 					magicUp = 6
 				elseif i==60 then
