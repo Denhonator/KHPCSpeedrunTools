@@ -8,14 +8,16 @@ local accelHack = 0x1E2924 - offset
 local deaccelHack = 0x1E291B - offset
 local speed = 0x503A1C - offset
 
+local versionCheck = 0x3D6AB8 - offset
+
 local canExecute = false
 
 function _OnInit()
-	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" and ReadFloat(versionCheck) == 0 then
 		canExecute = true
 		print("KH1 detected, running script")
 	else
-		print("KH1 not detected, not running script")
+		print("KH1 Global not detected, not running script")
 	end
 
 	if canExecute then

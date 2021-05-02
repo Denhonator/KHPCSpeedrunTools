@@ -12,7 +12,7 @@ local stateFlag = 0x2863958 - offset
 local deathCheck = 0x297730 - offset
 local safetyMeasure = 0x297746 - offset
 local whiteFade = 0x233C49C - offset
-local blackfade = 0x4D93B8 - offset
+local blackFade = 0x4D93B8 - offset
 local closeMenu = 0x2E90820 - offset
 local deathPointer = 0x23944B8 - offset
 
@@ -20,8 +20,16 @@ local canExecute = false
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
-		print("KH1 detected, running script")
+		if ReadShort(deathCheck) == 0x2E74 then
+			print("Global version detected")
+			canExecute = true
+		elseif ReadShort(deathCheck-0x1C0) == 0x2E74 then
+			deathCheck = deathCheck-0x1C0
+			safetyMeasure = safetyMeasure-0x1C0
+			extraSafety = false
+			print("JP detected")
+			canExecute = true
+		end
 	else
 		print("KH1 not detected, not running script")
 	end
@@ -54,7 +62,9 @@ function _OnFrame()
 	-- Reverts disabling death condition check (or it crashes)
 	if revertCode and ReadLong(deathPointer) ~= lastDeathPointer then
 		WriteShort(deathCheck, 0x2E74)
-		WriteLong(safetyMeasure, 0x8902AB8973058948)
+		if extraSafety then
+			WriteLong(safetyMeasure, 0x8902AB8973058948)
+		end
 		removeWhite = 1000
 		revertCode = false
 	end
@@ -63,7 +73,7 @@ function _OnFrame()
 	-- Sora HP to 0 (not necessary)
 	-- State to combat
 	-- Death condition check disable
-	if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0 and ReadByte(blackFade)==255 then
+	if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0 and ReadByte(blackFade)==128 then
 		WriteByte(soraHP, 0)
 		WriteByte(stateFlag, 1)
 		WriteShort(deathCheck, 0x9090)
