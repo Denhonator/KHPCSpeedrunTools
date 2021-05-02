@@ -371,7 +371,7 @@ function Randomize()
 			WriteShort(itemTable+((i-1)*20)+8, (math.random(9)+1)*250)
 		end
 		
-		if ((string.find(ItemType(i), "Weapon")
+		if (((string.find(ItemType(i), "Weapon") and not (i>=0x52 and i<=0x55))
 				or string.find(ItemType(itemids[i]), "Important")
 				or string.find(ItemType(itemids[i]), "Accessory"))
 				and i~=itemids[i])
