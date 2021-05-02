@@ -46,7 +46,7 @@ RandoSomeLogic:
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
 Unlock0Volume:
-- Allows setting any of the volume sliders to 0
+- Setting BGM volume to 1 mutes it
 
 FastCamera:
 - Speeds up the camera and its acceleration
