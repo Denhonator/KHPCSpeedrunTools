@@ -237,8 +237,8 @@ function ItemCompatibility(i, r)
 	if string.find(a, "Use") or string.find(a, "Synth") then
 		return string.find(b, "Use") or string.find(b, "Synth")
 	end
-	if string.find(a, "Accessory") then
-		return string.find(b, "Accessory")
+	if string.find(a, "Accessory") or string.find(b, "Accessory") then
+		return a==b
 	end
 	if string.find(a, "Summon") then
 		return string.find(b, "Summon")
@@ -310,6 +310,14 @@ function Randomize()
 			itemids[i] = r
 			itemids[r] = i
 		end
+		if string.find(itype, "Accessory") then
+			local r = 0x10 + math.random(0x37)
+			while not ItemCompatibility(i, r) do
+				r = 0x10 + math.random(0x37)
+			end
+			itemids[i] = r
+			itemids[r] = i
+		end
 	end
 	
 	for i=1, 0x40 do
@@ -363,8 +371,11 @@ function Randomize()
 			WriteShort(itemTable+((i-1)*20)+8, (math.random(9)+1)*250)
 		end
 		
-		if ((string.find(ItemType(i), "Weapon") or string.find(ItemType(itemids[i]), "Important")) and i~=itemids[i]) or
-													i==itemids[i] and ItemType(i) ~= "" then
+		if ((string.find(ItemType(i), "Weapon")
+				or string.find(ItemType(itemids[i]), "Important")
+				or string.find(ItemType(itemids[i]), "Accessory"))
+				and i~=itemids[i])
+				or i==itemids[i] and ItemType(i) ~= "" then
 			shopPool[(#shopPool)+1] = i
 		end
 	end
@@ -659,13 +670,25 @@ function ApplyRandomization()
 			WriteByte(weaponTable+tablePos+0x30, weaponStr[i])
 			WriteByte(weaponTable+tablePos+0x38, weaponMag[i])
 			WriteArray(itemTable+((i-1)*20), weaponItemData[i])
-			-- if i>= 0x52 and i<= 0x55 then
-				-- WriteArray(itemTable+((i-6)*20), weaponItemData[i])
-				-- itemNames[i-5] = itemNames[itemids[i]]
-				-- print(itemNames[i-5])
-			-- end
 		end
 	end
+	
+	print("Weapon randomization applied")
+	
+	local accessoryItemData = {}
+	for i=0x11, 0x47 do
+		if i~=itemids[i] and string.find(ItemType(i), "Accessory") then
+			accessoryItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
+		end
+	end
+	for i=0x11, 0x47 do
+		if i~=itemids[i] and string.find(ItemType(i), "Accessory") then
+			WriteArray(itemTable+((i-1)*20), accessoryItemData[i])
+		end
+	end
+	
+	print("Accessory randomization applied")
+	
 	for i=1,5 do
 		print(string.format("trinity %x became %x", i, trinityTable[i]))
 	end
