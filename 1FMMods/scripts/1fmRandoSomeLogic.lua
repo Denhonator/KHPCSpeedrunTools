@@ -83,6 +83,11 @@ local sharedAbilities = 0x2DE5F69 - offset
 local soraJumpHeight = 0x2D592A0 - offset
 local superglideSpeedHack = 0x2AE104 - offset
 
+local soraStats = 0x2DE59D0 - offset
+local donaldStats = soraStats + 0x74
+local goofyStats = donaldStats + 0x74
+local experienceMult = 0x2D59180 - offset
+
 local gotoWorldMap = 0x2E1CC24 - offset
 local openMenu = 0x2350CD4 - offset
 local closeMenu = 0x2E90820 - offset
@@ -1124,6 +1129,23 @@ function FlagFixes()
 	end
 end
 
+function EquipmentFixes()
+	local expMult = 1.0
+	for p=0,2 do
+		local accOff = (p*0x74) + 0x1D
+		for i=0,3 do
+			local eqID = ReadByte(soraStats + accOff+i)
+			local eqName = ReadByte(itemTable+((eqID-1)*20))
+			if eqName == 0x56 or eqName == 0x58 then
+				expMult = expMult + 0.2
+			elseif eqName == 0x59 or eqName == 0x5A then
+				expMult = expMult + 0.3
+			end
+		end
+	end
+	WriteFloat(experienceMult, expMult)
+end
+
 function OpenGummi()
 	for i=0,14 do
 		if i~=9 then
@@ -1175,6 +1197,8 @@ function _OnFrame()
 	if stackAbilities > 0 then
 		StackAbilities()
 	end
+	
+	EquipmentFixes()
 	
 	FlagFixes()
 
