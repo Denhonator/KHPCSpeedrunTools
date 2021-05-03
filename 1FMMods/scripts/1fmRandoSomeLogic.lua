@@ -532,7 +532,7 @@ function Randomize()
 		for i=1,5 do
 			trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 		end
-		if trinityTable[5] ~= 2 or trinityTable[5] ~= 3 then
+		if trinityTable[5] ~= 2 and trinityTable[5] ~= 3 then
 			randoTrinity = false
 		end
 	end
