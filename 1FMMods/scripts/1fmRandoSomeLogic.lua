@@ -55,6 +55,7 @@ local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
+local unequipBlacklist = 0x541FA0 - offset
 
 local soraStory = 0x2DE7367 - offset
 local OCFlag = 0x2DE75EA - offset
@@ -378,7 +379,7 @@ function Randomize()
 			WriteShort(itemTable+((i-1)*20)+8, (math.random(9)+1)*250)
 		end
 		
-		if (((string.find(ItemType(i), "Weapon") and not (i>=0x52 and i<=0x55))
+		if ((string.find(ItemType(i), "Weapon")
 				or string.find(ItemType(itemids[i]), "Important")
 				or string.find(ItemType(itemids[i]), "Accessory"))
 				and i~=itemids[i])
@@ -703,6 +704,11 @@ function ApplyRandomization()
 	for i=1, 0xFF do
 		print(string.format("%x became %x", i, itemids[i]))
 	end
+	
+	for i=0,3 do
+		WriteByte(unequipBlacklist + (i*4), 0)
+	end
+	
 	print("Weapons randomized. If this was not done on a fresh boot, they got shuffled some more")
 	print("Applied randomization")
 	successfulRando = true
