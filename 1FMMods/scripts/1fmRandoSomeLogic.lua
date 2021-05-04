@@ -302,6 +302,16 @@ function Randomize()
 	for i=1, 0x1DE do
 		chests[i] = ReadShort(chestTable+((i-1)*2))
 	end
+	
+	local weaponPool = {}
+	local accessoryPool = {}
+	for i=0x11, 0x86 do
+		if string.find(ItemType(i), "Weapon") then
+			weaponPool[(#weaponPool)+1] = i
+		elseif string.find(ItemType(i), "Accessory") then
+			accessoryPool[(#accessoryPool)+1] = i
+		end
+	end
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
@@ -311,20 +321,18 @@ function Randomize()
 			randomGets[rl] = i
 		end
 		if string.find(itype, "Weapon") then
-			local r = 0x50 + math.random(0x35)
-			while not ItemCompatibility(i, r) do
-				r = 0x50 + math.random(0x35)
+			local r = math.random(#weaponPool)
+			while not ItemCompatibility(i, weaponPool[r]) do
+				r = math.random(#weaponPool)
 			end
-			itemids[i] = r
-			itemids[r] = i
+			itemids[i] = table.remove(weaponPool, r)
 		end
 		if string.find(itype, "Accessory") then
-			local r = 0x10 + math.random(0x37)
-			while not ItemCompatibility(i, r) do
-				r = 0x10 + math.random(0x37)
+			local r = math.random(#accessoryPool)
+			while not ItemCompatibility(i, accessoryPool[r]) do
+				r = math.random(#accessoryPool)
 			end
-			itemids[i] = r
-			itemids[r] = i
+			itemids[i] = table.remove(accessoryPool, r)
 		end
 	end
 	
@@ -676,7 +684,7 @@ function ApplyRandomization()
 			weaponItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
 		end
 	end
-	for i=0x11, 0x85 do
+	for i=0x51, 0x85 do
 		if weaponStr[i] then
 			local tablePos = (i-0x51)*0x58
 			WriteByte(weaponTable+tablePos+0x30, weaponStr[i])
