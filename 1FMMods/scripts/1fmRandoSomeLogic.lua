@@ -350,7 +350,11 @@ function Randomize()
 	
 	for i=0xC8, 0xFF do
 		if string.find(ItemType(i), "Shuffle") then
-			itemids[i] = table.remove(toShuffle, math.random(#toShuffle))
+			local r = math.random(#toShuffle)
+			while i==0xCB and (r==0xC8 or r==0xC9) do
+				r = math.random(#toShuffle)
+			end
+			itemids[i] = table.remove(toShuffle, r)
 		end
 	end
 	print("Shuffled some items")
