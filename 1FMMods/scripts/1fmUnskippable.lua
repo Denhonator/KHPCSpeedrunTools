@@ -1,4 +1,5 @@
 local lastCutscene = 0
+local lastSkippable = 0
 local canExecute = false
 
 function _OnInit()
@@ -16,13 +17,14 @@ function _OnFrame()
 	end
 	
 	local cutsceneNow = ReadInt(0x233AE74-0x3A0606)
-	local skippableStatus = ReadInt(0x23944E4-0x3A0606)
-	if cutsceneNow>0 then
-		WriteInt(0x23944E4-0x3A0606, 1025) --make skippable
-	elseif lastCutscene>0 and skippableStatus==1025 then
-		WriteInt(0x23944E4-0x3A0606, 0) --make skippable
+	local skippableStatus = ReadByte(0x23944E4-0x3A0606)
+	local HUD = ReadFloat(0x280EB1C-0x3A0606)
+	local blackFade = ReadByte(0x4D93B8-0x3A0606)
+	if cutsceneNow > 0 then
+		WriteByte(0x23944E4-0x3A0606, 1) --make skippable
 	end
 	
+	lastSkippable = skippableStatus
 	lastCutscene = cutsceneNow
 	::done::
 end
