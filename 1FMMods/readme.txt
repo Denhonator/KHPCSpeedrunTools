@@ -52,3 +52,7 @@ FastCamera:
 - Speeds up the camera and its acceleration
 - Makes camera centering instant
 - You can adjust the numbers in the script to your liking
+
+ZantekGravBreakAlways:
+- Makes Zantetsuken and Gravity Break trigger 100% of the time
+- Gravity Break prevents Zantetsuken as it is checked first in game's code, so only equip the one you want to use.
