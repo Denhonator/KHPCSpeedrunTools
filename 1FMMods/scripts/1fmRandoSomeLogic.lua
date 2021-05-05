@@ -300,7 +300,10 @@ function Randomize()
 	end
 	
 	for i=1, 0x1DE do
-		chests[i] = ReadShort(chestTable+((i-1)*2))
+		local cont = ReadShort(chestTable+((i-1)*2))
+		if (cont % 0x10 ~= 0 or cont//0x10 ~= 1) and (i == 1 or i > 0x14) then
+			chests[i] = cont
+		end
 	end
 	
 	local weaponPool = {}
@@ -412,7 +415,7 @@ function Randomize()
 	print("Randomized reward pool")
 	
 	for i=1, 0x1DE do
-		if ((chests[i]-2) % 0x10) == 0 then
+		if chests[i] and ((chests[i]-2) % 0x10) == 0 then
 			if #missableRewards > 0 then
 				chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
 				print("Added missable reward to chest")
@@ -424,12 +427,14 @@ function Randomize()
 	
 	for i=1, 0x1DE do
 		local r = math.random(0x1DE)
-		if chests[i] > 0x10 or (i>1 and i<0x1DE and chests[i-1] > 0x10 and chests[i+1] > 0x10) then
+		if chests[i] then
 			local valid = false
-			while not (valid and (chests[r] > 0x10 or (r>1 and r<0x1DE and chests[r-1] > 0x10 and chests[r+1] > 0x10))) do
+			while not (valid and chests[r]) do
 				r = math.random(0x1DE)
-				valid = not ((i >= 0x1C0 or i == 0) and ((chests[r]-4) % 0x10) == 0)
-				valid = valid and not ((i >= 0x1C0 or i == 0) and chests[r] // 0x10 == 0xD3)
+				if chests[r] then
+					valid = not ((i >= 0x1C0 or i == 0) and ((chests[r]-4) % 0x10) == 0)
+					valid = valid and not ((i >= 0x1C0 or i == 0) and chests[r] // 0x10 == 0xD3)
+				end
 			end
 
 			if string.find(ItemType(chests[i] // 0x10), "Shuffle") or string.find(ItemType(chests[r] // 0x10), "Shuffle") then
@@ -607,7 +612,7 @@ function ApplyRandomization()
 	order = GetRandomOrder(0x1A0)
 	for j=1, 0x1A0 do
 		local i = order[j]
-		if i >= 8 then
+		if chests[i] and i >= 8 then
 			local sh = chests[i]
 			if ((sh % 0x10) == 0 and ItemType(sh//0x10) == "Synth") or (sh-6) % 0x10 == 0 then
 				if guaranteedMovement > 0 then
@@ -652,7 +657,9 @@ function ApplyRandomization()
 	end
 	
 	for i=1, 0x1DE do
-		WriteShort(chestTable+((i-1)*2), chests[i])
+		if chests[i] then
+			WriteShort(chestTable+((i-1)*2), chests[i])
+		end
 	end
 	for i=1, 99 do
 		WriteByte(soraStatTable+(i-1), soraLevels[i])
