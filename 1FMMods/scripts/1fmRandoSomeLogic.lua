@@ -301,7 +301,11 @@ function Randomize()
 	
 	for i=1, 0x1DE do
 		local cont = ReadShort(chestTable+((i-1)*2))
-		if (cont % 0x10 ~= 0 or cont//0x10 ~= 1) and (i == 1 or i > 0x14) then
+		local nextCont = ReadShort(chestTable+(i*2))
+		local prevCont = ReadShort(chestTable+((i-2)*2))
+		
+		if (cont % 0x10 ~= 0 or cont//0x10 ~= 1 or (nextCont//0x10 ~= 1 and prevCont//0x10 ~= 1))
+												and (i == 1 or i > 0x14) then
 			chests[i] = cont
 		end
 	end
