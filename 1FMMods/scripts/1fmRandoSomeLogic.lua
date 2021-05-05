@@ -890,7 +890,7 @@ function UpdateInventory(HUDNow)
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
 				print(string.format("%x %s", dif, itemNames[i]))
-				if dif > 0 and ReadByte(closeMenu) == 0 then
+				if dif > 0 and (ReadByte(closeMenu) == 0 or string.find(ItemType(i), "Shuffle")) then
 					local curid = itemids[i]
 					-- if string.find(ItemType(curid), "Shuffle") or string.find(ItemType(i), "Important") then 
 						-- textFind = "btained"
