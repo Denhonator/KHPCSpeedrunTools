@@ -42,6 +42,7 @@ local chestsOpened = 0x2DE5E00 - offset
 
 local inventory = 0x2DE5E6A - offset
 local gummiInventory = 0x2DF1848 - offset
+local reports = 0x2DE7390 - offset
 
 --local TTWarp = 0x5229B0+0x9B570C+6
 local worldWarps = 0x50B940 - offset
@@ -117,6 +118,7 @@ local perMagicShuffle = {}
 local magicUpdater = {}
 local inventoryUpdater = {}
 local gummiUpdater = {}
+local reportUpdater = 0
 local bufferRemove = 0
 local bufferRemoveTimer = 10
 local HUDWas = 0
@@ -193,6 +195,7 @@ function _OnInit()
 		for i=1, 7 do
 			magicUpdater[i] = 0
 		end
+		reportUpdater = ReadShort(reports)
 		initDone = true
 		print("Init done.	")
 	end
@@ -883,6 +886,21 @@ function UpdateInventory(HUDNow)
 			print("Late item rando to prevent softlock")
 		end
 	end
+	
+	local reportDif = ReadShort(reports) - reportUpdater
+	if reportDif > 0 then
+		local reportTable = {[1]=8, [2]=7, [4]=6, [8]=5, [16]=4, [32]=3, [64]=2, [128]=1, 
+							[0x800]=13, [0x1000]=12, [0x2000]=11, [0x4000]=10, [0x8000]=9}
+		local receivedReport = reportTable[reportDif]
+		if receivedReport then
+			local i = itemids[0xA7 + receivedReport]
+			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+1)
+			inventoryUpdater[i] = ReadByte(inventory+(i-1))
+			reportUpdater = ReadShort(reports)
+			print(string.format("Gave %x instead of report", i))
+		end
+	end
+	
 	for i=0x1,0xFF do
 		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and
 																i ~= itemids[i] then
@@ -890,7 +908,7 @@ function UpdateInventory(HUDNow)
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
 				print(string.format("%x %s", dif, itemNames[i]))
-				if dif > 0 and (ReadByte(closeMenu) == 0 or string.find(ItemType(i), "Shuffle")) then
+				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
 					-- if string.find(ItemType(curid), "Shuffle") or string.find(ItemType(i), "Important") then 
 						-- textFind = "btained"
