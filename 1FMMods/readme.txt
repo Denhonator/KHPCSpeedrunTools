@@ -53,6 +53,6 @@ FastCamera:
 - Makes camera centering instant
 - You can adjust the numbers in the script to your liking
 
-ZantekGravBreakAlways:
-- Makes Zantetsuken and Gravity Break trigger 100% of the time
-- Gravity Break prevents Zantetsuken as it is checked first in game's code, so only equip the one you want to use.
+ConsistentFinishers:
+- Makes Zantetsuken, Gravity Break and Stun Impact trigger 100% of the time
+- Priority: Stun Impact -> Gravity Break -> Zantetsuken
