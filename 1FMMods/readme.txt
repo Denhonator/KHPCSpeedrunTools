@@ -45,6 +45,10 @@ RandoSomeLogic:
 - If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
+ConsistentFinishers:
+- Makes Zantetsuken, Gravity Break and Stun Impact trigger 100% of the time
+- Priority: Stun Impact -> Gravity Break -> Zantetsuken
+
 Unlock0Volume:
 - Setting BGM volume to 1 mutes it
 
@@ -53,6 +57,8 @@ FastCamera:
 - Makes camera centering instant
 - You can adjust the numbers in the script to your liking
 
-ConsistentFinishers:
-- Makes Zantetsuken, Gravity Break and Stun Impact trigger 100% of the time
-- Priority: Stun Impact -> Gravity Break -> Zantetsuken
+4By3:
+- Sets the aspect ratio of the game to 4:3
+- You can set the resolution via display settings or by resizing the window directly. That height will be applied and width cut to match 4:3
+- Visit display settings to get rid of black bars
+- Menus appear slightly cut-off since they were made for 16:9
