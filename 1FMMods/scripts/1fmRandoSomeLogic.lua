@@ -132,6 +132,8 @@ local missableRewards = {0, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
+local chestDetails = {}
+local rewardDetails = {}
 local itemData = {}
 local itemids = {}
 local rewards = {}
@@ -164,6 +166,29 @@ function WArray(off, l, c)
 	end
 end
 
+function LoadRewards(f)
+	local detailsTable = {}
+	while true do
+		local line = f:read("*l")
+		if not line then
+			break
+		elseif not string.find(line, "?") then
+			local chestID = tonumber(string.sub(line, 1, 3), 16)
+			if chestID then
+				line = string.sub(line, 5)
+				local details = {}
+				local loop = 1
+				for word in string.gmatch(line, "([^;]+)") do
+					details[loop] = word:gsub("^%s*(.-)%s*$", "%1")
+					loop = loop+1
+				end
+				detailsTable[chestID] = details
+			end
+		end
+	end
+	return detailsTable
+end
+
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
@@ -175,10 +200,16 @@ function _OnInit()
 	if canExecute then
 		local f = io.open("items.txt")
 		local f2 = io.open("gummis.txt")
+		local f3 = io.open("Chests.txt")
+		local f4 = io.open("Rewards.txt")
 		if not f then
 			print("items.txt missing!")
 		elseif not f2 then
 			print("gummis.txt missing!")
+		elseif not f3 then
+			print("Chests.txt missing!")
+		elseif not f4 then
+			print("Rewards.txt missing!")
 		else
 			for i=1,0xFF do
 				itemNames[i] = f:read("*l")
@@ -186,7 +217,12 @@ function _OnInit()
 			for i=1,0x40 do
 				gummiNames[i] = f2:read("*l")
 			end
+			chestDetails = LoadRewards(f3)
+			rewardDetails = LoadRewards(f4)
 			f:close()
+			f2:close()
+			f3:close()
+			f4:close()
 		end
 		for i=1,0xFF do
 			itemids[i] = i
