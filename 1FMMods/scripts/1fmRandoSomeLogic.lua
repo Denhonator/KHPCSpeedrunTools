@@ -607,7 +607,7 @@ function Randomize()
 		end
 		
 		if ((string.find(ItemType(i), "Weapon")
-				or string.find(ItemType(itemids[i]), "Important")
+				or string.find(ItemType(i), "Important")
 				or string.find(ItemType(itemids[i]), "Accessory"))
 				and i~=itemids[i])
 				or i==itemids[i] and ItemType(i) ~= "" then
