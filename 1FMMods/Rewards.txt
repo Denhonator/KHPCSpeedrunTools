@@ -1,169 +1,169 @@
-00 Elixir ; Defeat Leon
-01 Dodge Roll ; End of TT
-02 Mega Potion ; Aerith before Guard Armor
-03 Dodge Roll ; ?
-04 Treasure Magnet ; ?
-05 Second Wind ; ?
-06 High Jump ; ?
-07 Potion ; ?
-08 Potion ; ?
-09 Potion ; ?
-0A Potion ; ?
-0B Potion ; ?
-0C Potion ; ?
-0D Potion ; ?
-0E Mermaid Kick ; Ursula 1
-0F Glide ; Neverland ; Green Trinity
-10 Superglide ; Chernabog ; EotW
-11 Fireglow ; Dragon Maleficent ; HB1 ; Library
-12 Earthshine ; Secret Waterway ; Red Trinity
-13 Jungle King ; Deep Jungle
-14 Three Wishes ; Agrabah
-15 Fairy Harp ; Neverland ; Green Trinity
-16 Pumpinhead ; Halloween Town ; Jack-In-The-Box
-17 Crabclaw ; Atlantica ; Mermaid Kick
-18 Divine Rose ; Belle in HB2 ; HB1 ; Library ; HB2
-19 Lionheart ; Leon & Cloud Hades Cup
-1A Metal Chocobo ; Cloud Hercules Cup
-1B Oathkeeper ; Kairi TT4 ; HB1 ; Library
-1C Genji Shield ; Yuffie Hades Cup
-1D Herc's Shield ; Hercules Cup
-1E Sonic Blade ; Olympus Coliseum
-1F Raven's Claw ; Anti-Sora ; Green Trinity
-20 Strike Raid ; Pegasus Cup
-21 Ragnarok ; Riku 2 ; HB1 ; Library
-22 Trinity Limit ; Hades Cup
-23 Ars Arcanum ; Capt. Hook ; Green Trinity
-24 Cheer (Donald) ; Maleficent ; Library
-25 Cheer (Goofy); Parasite Cage; High Jump OR Glide
-26 Lord Fortune ; Fairy Godmother ; All Summons ; Fire Magic
-27 High Jump ; Chest
-28 Watergleam ; Chest
-29 Mythril ; Chest
-2A Naturespark ; Hundred Acre Wood ; Page1
-2B Mythril Shard ; Hundred Acre Wood ; Page2
-2C Mythril ; Hundred Acre Wood ; Page4
-2D EXP Ring ; Hundred Acre Wood ; Page5
-2E Cheer (Sora) ; From Owl ; Page5
-2F Dream Shield ; Merlin ; Arts ; Fire Magic
-30 Olympia ; Olympus Coliseum
-31 Oblivion ; Chest
-32 Mythril ; Chest
-33 Wishing Star ; Chest
-34 Mythril Shard ; TT ; 42 Puppies
-35 Megaelixir ; TT ; 60 Puppies
-36 Orichalcum ; TT ; 72 Puppies
-37 Tech Boost ; TT ; 90 Puppies
-38 Brave Warrior ; Guard Armor
-39 Ifrit's Horn ; Trickmaster
-3A Inferno Band ; Cerberus
-3B White Fang ; Sabor 2
-3C Ray of Light ; Pot Centipede
-3D Holy Circlet ; Oogie Boogie ; Jack-In-The-Box
-3E Omega Arts ; Behemoth ; HB1 ; Library ; HB2
-3F Defense Up ; Chest
-40 Elixir ; Chest
-41 AP Up ; Chest
-42 Orichalcum ; Chest
-43 Camping Set ; Chest
-44 Mega-Potion ; Chest
-45 Megaelixir ; Chest
-46 Mythril Shard ; Chest
-47 Orichalcum ; Chest
-48 Lady Luck ; Chest
-49 Mega-Potion ; Chest
-4A Protect Chain ; Chest
-4B Orichalcum ; Chest
-4C Mythril Shard ; Chest
-4D AP Up ; Chest
-4E Cottage ; Chest
-4F Fire Ring ; Chest
-50 Mythril ; Chest
-51 Cottage ; Chest
-52 Elixir ; Chest
-53 Mega-Potion ; Chest
-54 Protera Chain ; Chest
-55 Mythril Shard ; Chest
-56 Violetta ; Chest
-57 Mythril Shard ; Chest
-58 Defense Up ; Chest
-59 Orichalcum ; Chest
-5A Thundara Ring ; Chest
-5B AP Up ; Chest
-5C Spellbinder ; Merlin ; All Spells
-5D Dream Rod ; Merlin ; Max Spells
-5E Combo Plus ; Phil Cup Solo
-5F Orichalcum ; Pegasus Cup Solo
-60 Critical Plus ; Hercules Cup Solo
-61 Save the Queen ; Hades Cup Solo
-62 Tech Boost ; Phil Cup Time Trial
-63 Dark Matter ; Pegasus Cup Time Trial
-64 Gravity Break ; Hercules Cup Time Trial
-65 Save the King ; Hades Cup Time Trial
-66 Protect Chain ; Chest
-67 Cottage ; Postcard 1
-68 Mythril Shard ; Postcard 2
-69 Mega-Potion ; Postcard 3
-6A Mega-Ether ; Postcard 4
-6B Mythril ; Postcard 5
-6C Elixir ; Postcard 6
-6D Mega-Elixir ; Postcard 7
-6E Orichalcum ; Postcard 8
-6F AP Up ; Postcard 9
-70 Defense Up ; Postcard 10
-71 Mythril ; ?
-72 Mega-Potion ; Chest
-73 Mythril Shard ; Chest
-74 Elixir ; Chest
-75 Mythril ; Chest
-76 Protera Chain ; Chest
-77 Thunder Ring ; Chest
-78 Protera Chain ; Chest
-79 Blizzara Ring ; Chest
-7A Fira Ring ; Chest
-7B Mythril Shard ; Chest
-7C Pretty Stone ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
-7D Mega-Potion ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
-7E Mythril ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
-7F Elixir ; Chest
-80 Mythril Shard ; Chest
-81 Pretty Stone ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
-82 Cottage ; Chest
-83 Gale ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
-84 AP Up ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
-85 Megaelixir ; ?
-86 Megaelixir ; ?
-87 Spirit Gem ; Chest
-88 Thunder Gem ; Chest
-89 Frost Gem ; Chest
-8A Bright Gem ; Chest
-8B Blaze Gem ; Chest
-8C Lucid Gem ; Chest
-8D Mighty Shield ; Chest
-8E Elixir ; Chest
-8F Elixir ; 10 Fruits Jungle Slider
-90 AP Up ; 20 Fruits Jungle Slider
-91 Dark Matter ; 30 fruits in Jungle Slider
-92 Defense Up ; 40 Jungle Slider
-93 Power Up ; 50 Jungle Slider
-94 Diamond Dust ; Ice Titan
-95 One-Winged Angel ; Sephiroth ; HB1 ; Library ; HB2 ; EotW
-96 Zantetsuken ; Kurt Zisa ; HB1 ; Library ; HB2 ; EotW
-97 EXP Necklace ; Unknown ; HB1 ; Library ; HB2 ; EotW
-98 Firagun Band ; ?
-99 Dark Matter ; Chest
-9A Shiva Belt ; Chest
-9B Dark Matter ; Chest
-9C Dark Matter ; Chest
-9D Ifrit Belt ; Chest
-9E Dark Matter ; Chest
-9F Orichalcum ; Chest
-A0 Dark Matter ; Chest
-A1 Dark Matter ; Chest
-A2 Orichalcum ; Chest
-A3 Ramuh Belt ; Chest
-A4 Royal Crown ; Chest
-A5 Dark Matter ; Chest
-A6 Dark Matter ; Chest
-A7 Dark Matter ; Chest
-A8 Meteor Strike ; Chest
+00  Elixir ; Defeat Leon
+01  Dodge Roll ; End of TT
+02  Mega Potion ; Aerith before Guard Armor
+03  Dodge Roll ; ?
+04  Treasure Magnet ; ?
+05  Second Wind ; ?
+06  High Jump ; ?
+07  Potion ; ?
+08  Potion ; ?
+09  Potion ; ?
+0A  Potion ; ?
+0B  Potion ; ?
+0C  Potion ; ?
+0D  Potion ; ?
+0E  Mermaid Kick ; Ursula 1
+0F  Glide ; Neverland ; Green Trinity
+10  Superglide ; Chernabog ; EotW
+11  Fireglow ; Dragon Maleficent ; HB1 ; Library
+12  Earthshine ; Secret Waterway ; Red Trinity
+13  Jungle King ; Deep Jungle
+14  Three Wishes ; Agrabah
+15  Fairy Harp ; Neverland ; Green Trinity
+16  Pumpinhead ; Halloween Town ; Jack-In-The-Box
+17  Crabclaw ; Atlantica ; Mermaid Kick
+18  Divine Rose ; Belle in HB2 ; HB1 ; Library ; HB2
+19  Lionheart ; Leon & Cloud Hades Cup
+1A  Metal Chocobo ; Cloud Hercules Cup
+1B  Oathkeeper ; Kairi TT4 ; HB1 ; Library
+1C  Genji Shield ; Yuffie Hades Cup
+1D  Herc's Shield ; Hercules Cup
+1E  Sonic Blade ; Olympus Coliseum
+1F  Raven's Claw ; Anti-Sora ; Green Trinity
+20  Strike Raid ; Pegasus Cup
+21  Ragnarok ; Riku 2 ; HB1 ; Library
+22  Trinity Limit ; Hades Cup
+23  Ars Arcanum ; Capt. Hook ; Green Trinity
+24  Cheer (Donald) ; Maleficent ; Library
+25  Cheer (Goofy); Parasite Cage; High Jump OR Glide
+26  Lord Fortune ; Fairy Godmother ; All Summons ; Fire Magic
+27  High Jump ; Chest
+28  Watergleam ; Chest
+29  Mythril ; Chest
+2A  Naturespark ; Hundred Acre Wood ; Page1
+2B  Mythril Shard ; Hundred Acre Wood ; Page2
+2C  Mythril ; Hundred Acre Wood ; Page4
+2D  EXP Ring ; Hundred Acre Wood ; Page5
+2E  Cheer (Sora) ; From Owl ; Page5
+2F  Dream Shield ; Merlin ; Arts ; Fire Magic
+30  Olympia ; Olympus Coliseum
+31  Oblivion ; Chest
+32  Mythril ; Chest
+33  Wishing Star ; Chest
+34  Mythril Shard ; TT ; 42 Puppies
+35  Megaelixir ; TT ; 60 Puppies
+36  Orichalcum ; TT ; 72 Puppies
+37  Tech Boost ; TT ; 90 Puppies
+38  Brave Warrior ; Guard Armor
+39  Ifrit's Horn ; Trickmaster
+3A  Inferno Band ; Cerberus
+3B  White Fang ; Sabor 2
+3C  Ray of Light ; Pot Centipede
+3D  Holy Circlet ; Oogie Boogie ; Jack-In-The-Box
+3E  Omega Arts ; Behemoth ; HB1 ; Library ; HB2
+3F  Defense Up ; Chest
+40  Elixir ; Chest
+41  AP Up ; Chest
+42  Orichalcum ; Chest
+43  Camping Set ; Chest
+44  Mega-Potion ; Chest
+45  Megaelixir ; Chest
+46  Mythril Shard ; Chest
+47  Orichalcum ; Chest
+48  Lady Luck ; Chest
+49  Mega-Potion ; Chest
+4A  Protect Chain ; Chest
+4B  Orichalcum ; Chest
+4C  Mythril Shard ; Chest
+4D  AP Up ; Chest
+4E  Cottage ; Chest
+4F  Fire Ring ; Chest
+50  Mythril ; Chest
+51  Cottage ; Chest
+52  Elixir ; Chest
+53  Mega-Potion ; Chest
+54  Protera Chain ; Chest
+55  Mythril Shard ; Chest
+56  Violetta ; Chest
+57  Mythril Shard ; Chest
+58  Defense Up ; Chest
+59  Orichalcum ; Chest
+5A  Thundara Ring ; Chest
+5B  AP Up ; Chest
+5C  Spellbinder ; Merlin ; All Spells
+5D  Dream Rod ; Merlin ; Max Spells
+5E  Combo Plus ; Phil Cup Solo
+5F  Orichalcum ; Pegasus Cup Solo
+60  Critical Plus ; Hercules Cup Solo
+61  Save the Queen ; Hades Cup Solo
+62  Tech Boost ; Phil Cup Time Trial
+63  Dark Matter ; Pegasus Cup Time Trial
+64  Gravity Break ; Hercules Cup Time Trial
+65  Save the King ; Hades Cup Time Trial
+66  Protect Chain ; Chest
+67  Cottage ; Postcard 1
+68  Mythril Shard ; Postcard 2
+69  Mega-Potion ; Postcard 3
+6A  Mega-Ether ; Postcard 4
+6B  Mythril ; Postcard 5
+6C  Elixir ; Postcard 6
+6D  Mega-Elixir ; Postcard 7
+6E  Orichalcum ; Postcard 8
+6F  AP Up ; Postcard 9
+70  Defense Up ; Postcard 10
+71  Mythril ; ?
+72  Mega-Potion ; Chest
+73  Mythril Shard ; Chest
+74  Elixir ; Chest
+75  Mythril ; Chest
+76  Protera Chain ; Chest
+77  Thunder Ring ; Chest
+78  Protera Chain ; Chest
+79  Blizzara Ring ; Chest
+7A  Fira Ring ; Chest
+7B  Mythril Shard ; Chest
+7C  Pretty Stone ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
+7D  Mega-Potion ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
+7E  Mythril ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
+7F  Elixir ; Chest
+80  Mythril Shard ; Chest
+81  Pretty Stone ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
+82  Cottage ; Chest
+83  Gale ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
+84  AP Up ; EotW Trap ; HB1 ; Library ; HB2 ; EotW
+85  Megaelixir ; ?
+86  Megaelixir ; ?
+87  Spirit Gem ; Chest
+88  Thunder Gem ; Chest
+89  Frost Gem ; Chest
+8A  Bright Gem ; Chest
+8B  Blaze Gem ; Chest
+8C  Lucid Gem ; Chest
+8D  Mighty Shield ; Chest
+8E  Elixir ; Chest
+8F  Elixir ; 10 Fruits Jungle Slider
+90  AP Up ; 20 Fruits Jungle Slider
+91  Dark Matter ; 30 fruits in Jungle Slider
+92  Defense Up ; 40 Jungle Slider
+93  Power Up ; 50 Jungle Slider
+94  Diamond Dust ; Ice Titan
+95  One-Winged Angel ; Sephiroth ; HB1 ; Library ; HB2 ; EotW
+96  Zantetsuken ; Kurt Zisa ; HB1 ; Library ; HB2 ; EotW
+97  EXP Necklace ; Unknown ; HB1 ; Library ; HB2 ; EotW
+98  Firagun Band ; ?
+99  Dark Matter ; Chest
+9A  Shiva Belt ; Chest
+9B  Dark Matter ; Chest
+9C  Dark Matter ; Chest
+9D  Ifrit Belt ; Chest
+9E  Dark Matter ; Chest
+9F  Orichalcum ; Chest
+A0  Dark Matter ; Chest
+A1  Dark Matter ; Chest
+A2  Orichalcum ; Chest
+A3  Ramuh Belt ; Chest
+A4  Royal Crown ; Chest
+A5  Dark Matter ; Chest
+A6  Dark Matter ; Chest
+A7  Dark Matter ; Chest
+A8  Meteor Strike ; Chest

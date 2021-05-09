@@ -165,7 +165,8 @@ function WArray(off, l, c)
 	end
 end
 
-function LoadRewards(f)
+function LoadRewards(fs)
+	f = io.open(fs)
 	local detailsTable = {}
 	while true do
 		local line = f:read("*l")
@@ -174,6 +175,7 @@ function LoadRewards(f)
 		elseif not string.find(line, "?") then
 			local chestID = tonumber(string.sub(line, 1, 3), 16)
 			if chestID then
+				chestID = chestID + 1
 				line = string.sub(line, 5)
 				local details = {}
 				local loop = 1
@@ -185,6 +187,7 @@ function LoadRewards(f)
 			end
 		end
 	end
+	f:close()
 	return detailsTable
 end
 
@@ -199,16 +202,10 @@ function _OnInit()
 	if canExecute then
 		local f = io.open("items.txt")
 		local f2 = io.open("gummis.txt")
-		local f3 = io.open("Chests.txt")
-		local f4 = io.open("Rewards.txt")
 		if not f then
 			print("items.txt missing!")
 		elseif not f2 then
 			print("gummis.txt missing!")
-		elseif not f3 then
-			print("Chests.txt missing!")
-		elseif not f4 then
-			print("Rewards.txt missing!")
 		else
 			for i=1,0xFF do
 				itemNames[i] = f:read("*l")
@@ -216,12 +213,11 @@ function _OnInit()
 			for i=1,0x40 do
 				gummiNames[i] = f2:read("*l")
 			end
-			chestDetails = LoadRewards(f3)
-			rewardDetails = LoadRewards(f4)
+			chestDetails = LoadRewards("Chests.txt")
+			rewardDetails = LoadRewards("Rewards.txt")
+			print(rewardDetails[1][1])
 			f:close()
 			f2:close()
-			f3:close()
-			f4:close()
 		end
 		for i=1,0xFF do
 			itemids[i] = i
@@ -344,11 +340,11 @@ function ItemAccessible(i, c)
 			accessibleCount = accessibleCount+1
 		elseif i==0xCB and ItemAccessible(0xC8) and ItemAccessible(0xC9) then
 			accessibleCount = accessibleCount+1
-		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity")
+		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
 			accessibleCount = accessibleCount+1
-		elseif i==0xAA and AbilityAccessible(2, 1)
+		elseif i==0xAA and AbilityAccessible(2, 1) then
 			accessibleCount = accessibleCount+1
-		elseif i==0xAE and ItemAccessible(0xE4, 1)
+		elseif i==0xAE and ItemAccessible(0xE4, 1) then
 			accessibleCount = accessibleCount+1
 		end
 	end
@@ -771,7 +767,7 @@ end
 function ValidSeed()
 	return (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
 			and MagicAccessible("Fire Magic") and TrinityAccessible("Red Trinity") and (AbilityAccessible(1, 2)
-			or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1)))
+			or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1))))
 			or (ItemAccessible(0xC0, 1) and ItemAccessible(0xC1, 1) and ItemAccessible(0xC2, 1) and ItemAccessible(0xC3, 1)
 			and ItemAccessible(0xC4, 1) and ItemAccessible(0xC5, 1) and ItemAccessible(0xC6, 1) and ItemAccessible(0xC7, 1))
 end
