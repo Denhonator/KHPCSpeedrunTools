@@ -335,7 +335,7 @@ function ItemAccessible(i, c)
 	for j=1,0xFF do
 		for o=1,#options do
 			if options[o] == itemids[j] and not adjusted[o] then
-				options[o] = itemids[j]
+				options[o] = j
 				adjusted[o] = true
 			end
 		end
@@ -376,7 +376,7 @@ end
 function AbilityAccessible(a, c)
 	local accessibleCount = 0
 	for r=1,0xA9 do
-		if rewards[r] // 0x100 ~= 0xF0 and rewards[r] % 0x100 == a and IsAccessible(rewardDetails, r) then
+		if rewards[r] and rewards[r] // 0x100 ~= 0xF0 and rewards[r] % 0x100 == a and IsAccessible(rewardDetails, r) then
 			accessibleCount = accessibleCount+1
 			if accessibleCount == c then
 				return true
@@ -475,7 +475,7 @@ function IsAccessible(t, i)
 		
 	elseif t[i][2] == "Chest" then
 		for c=1,0x1FE do
-			if chests[c] % 0x10 == 0xE and chests[c] // 0x10 == i-1 then
+			if chests[c] and chests[c] % 0x10 == 0xE and chests[c] // 0x10 == i-1 then
 				return IsAccessible(chestDetails, c)
 			end
 		end
