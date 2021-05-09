@@ -304,6 +304,98 @@ function Djb2(str)
 	return hash
 end
 
+function ItemAccessible(i, c)
+	local accessibleCount = 0
+	for c=1,0x1FE do
+		if chests[c] % 0x10 == 0 and chests[c] // 0x10 == i and IsAccessible(chestDetails, c) then
+			accessibleCount = accessibleCount+1
+		end
+	end
+	
+	for r=1,0xA9 do
+		if rewards[r] // 0x100 == 0xF0 and rewards[r] % 0x100 == i and IsAccessible(rewardDetails, r) then
+			accessibleCount = accessibleCount+1
+		end
+	end
+	
+	return accessibleCount >= c
+end
+
+function AbilityAccessible(a, c)
+	local accessibleCount = 0
+	for r=1,0xA9 do
+		if rewards[r] // 0x100 ~= 0xF0 and rewards[r] % 0x100 == a and IsAccessible(rewardDetails, r) then
+			accessibleCount = accessibleCount+1
+			if accessibleCount == c then
+				return true
+			end
+		end
+	end
+	
+	return false
+end
+
+function IsAccessible(t, i)
+	if t[i][3] then
+		local canAccess = true
+		for k=3,6 do			
+			if not t[i][k] then
+				break
+			end
+			local thisAccess = false
+			if string.find(t[i][k], "Day1") then
+				thisAccess = thisAccess or (ItemAccessible(0xC0, 1) and ItemAccessible(0xC1, 1) and ItemAccessible(0xC2, 1))
+			end
+			if string.find(t[i][k], "High Jumpra") then
+				thisAccess = thisAccess or AbilityAccessible(1, 2)
+			elseif string.find(t[i][k], "High Jump") then
+				thisAccess = thisAccess or AbilityAccessible(1, 1)
+			end
+			if string.find(t[i][k], "Glide") then
+				thisAccess = thisAccess or AbilityAccessible(3) or AbilityAccessible(4)
+			end
+			if string.find(t[i][k], "Mermaid Kick") then
+				thisAccess = thisAccess or AbilityAccessible(2)
+			end
+			if string.find(t[i][k], "HB1") then
+				thisAccess = thisAccess or 
+				(ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1))
+			end
+			if string.find(t[i][k], "Library") then
+				thisAccess = thisAccess or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1))
+							or AbilityAccessible(1, 2)
+			elseif string.find(t[i][k], "Khama") then
+				thisAccess = thisAccess or ItemAccessible(0xB2, 1) or AbilityAccessible(1, 2)
+			end
+			if string.find(t[i][k], "Jack-In-The-Box") then
+				thisAccess = thisAccess or ItemAccessible(0xE4, 1)
+			end
+			if string.find(t[i][k], "Postcard") then
+				thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9)))
+			end
+			if string.find(t[i][k], "HB2") then
+				thisAccess = thisAccess or true
+			end
+			if string.find(t[i][k], "EotW") then
+				thisAccess = thisAccess or true
+			end
+			canAccess = canAccess and thisAccess
+		end
+		return canAccess
+		
+	elseif t[i][2] == "Chest" then
+		for c=1,0x1FE do
+			if chests[c] % 0x10 == 0xE and chests[c] // 0x10 == i-1 then
+				return IsAccessible(chestDetails, c)
+			end
+		end
+	else
+		return true
+	end
+	
+	return false
+end
+
 function Randomize()
 	successfulRando = false
 	seedfile = io.open("seed.txt", "r")
