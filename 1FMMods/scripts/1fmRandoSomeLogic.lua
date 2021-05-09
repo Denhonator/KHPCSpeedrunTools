@@ -227,6 +227,25 @@ function _OnInit()
 			magicUpdater[i] = 0
 		end
 		reportUpdater = ReadShort(reports)
+		
+		seedfile = io.open("seed.txt", "r")
+		if seedfile ~= nil then
+			text = seedfile:read()
+			seed = tonumber(text)
+			if seed == nil then
+				seed = Djb2(text)
+			end
+			math.randomseed(seed)
+			print("Found existing seed")
+		else
+			seedfile = io.open("seed.txt", "w")
+			local newseed = os.time()
+			math.randomseed(newseed)
+			seedfile:write(newseed)
+			print("Wrote new seed")
+		end
+		seedfile:close()
+		
 		initDone = true
 		print("Init done.	")
 	end
@@ -467,31 +486,14 @@ end
 
 function Randomize()
 	successfulRando = false
-	seedfile = io.open("seed.txt", "r")
-	if seedfile ~= nil then
-		text = seedfile:read()
-		seed = tonumber(text)
-		if seed == nil then
-			seed = Djb2(text)
-		end
-		math.randomseed(seed)
-		print("Found existing seed")
-	else
-		seedfile = io.open("seed.txt", "w")
-		local newseed = os.time()
-		math.randomseed(newseed)
-		seedfile:write(newseed)
-		print("Wrote new seed")
-	end
-	seedfile:close()
-	
+
 	local missableRewards = {0, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD}
 	local importantPool = {0x5, 0x39, 0x48, 0x48, 0x4D, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
 	local rewardPool = {}
 	
 	for i=1, 0xA9 do
 		if rewardDetails[i] then
-			rewardPool[i] = ReadShort(rewardTable+((i-1)*2))
+			rewardPool[(#rewardPool)+1] = ReadShort(rewardTable+((i-1)*2))
 		end
 	end
 	for i=1, 99 do
@@ -507,9 +509,9 @@ function Randomize()
 	
 	local chestPool = {}
 	
-	for i=1, 0x1DE do
+	for i=1, 0x1FF do
 		if chestDetails[i] then
-			chestPool[i] = ReadShort(chestTable+((i-1)*2))
+			chestPool[(#chestPool)+1] = ReadShort(chestTable+((i-1)*2))
 		end
 	end
 	
@@ -633,13 +635,23 @@ function Randomize()
 
 	print("Randomized reward pool")
 	
-	for i=1, 0x1DE do
+	for i=1, 0x1FF do
 		if chestDetails[i] then
 			local r = math.random(#chestPool)
-			while (i >= 0x1C0 or i == 0) and ((chestPool[r]-4) % 0x10) == 0 do
+			while i == 0 and chestPool[r] % 0x10 == 4 do
 				r = math.random(#chestPool)
 			end
 			chests[i] = table.remove(chestPool, r)
+			if (i >= 0x1BF or i == 0) and ((chests[i]-4) % 0x10) == 0 then
+				for j=10, 0x1BE do
+					if chests[j] and chests[j] % 0x10 ~= 4 then
+						local temp = chests[j]
+						chests[j] = chests[i]
+						chests[i] = temp
+						break
+					end
+				end
+			end
 			if (chests[i]-2) % 0x10 == 0 then
 				if #importantPool > 0 then
 					chests[i] = table.remove(importantPool, math.random(#importantPool)) * 0x10
@@ -762,6 +774,7 @@ function Randomize()
 	end
 	
 	print("Randomized trinities")
+	successfulRando = true
 end
 
 function ValidSeed()
