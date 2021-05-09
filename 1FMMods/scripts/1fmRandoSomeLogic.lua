@@ -340,21 +340,23 @@ function ItemAccessible(i, c)
 			end
 		end
 	end
-	
+
 	for j=1,#options do
 		i = options[j]
 		for c=1,0x1FE do
-			if chests[c] % 0x10 == 0 and chests[c] // 0x10 == i and IsAccessible(chestDetails, c) then
+			if chests[c] and chests[c] % 0x10 == 0 and chests[c] // 0x10 == i
+							and IsAccessible(chestDetails, c) then
 				accessibleCount = accessibleCount+1
 			end
 		end
-		
+
 		for r=1,0xA9 do
-			if rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i and IsAccessible(rewardDetails, r) then
+			if rewards[r] and rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i
+							and IsAccessible(rewardDetails, r) then
 				accessibleCount = accessibleCount+1
 			end
 		end
-		
+
 		if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
 			accessibleCount = accessibleCount+1
 		elseif i==0xCB and ItemAccessible(0xC8) and ItemAccessible(0xC9) then
@@ -778,6 +780,13 @@ function Randomize()
 end
 
 function ValidSeed()
+	print(ItemAccessible(0xC8, 1))
+	print(ItemAccessible(0xC9, 1))
+	print(ItemAccessible(0xCB, 1))
+	print(ItemAccessible(0xCC, 1))
+	print(MagicAccessible("Fire Magic"))
+	print(TrinityAccessible("Red Trinity"))
+	print(AbilityAccessible(1, 2))
 	return (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
 			and MagicAccessible("Fire Magic") and TrinityAccessible("Red Trinity") and (AbilityAccessible(1, 2)
 			or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1))))
