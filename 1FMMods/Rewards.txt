@@ -15,7 +15,7 @@
 0E Mermaid Kick ; Ursula 1
 0F Glide ; Neverland ; Green Trinity
 10 Superglide ; Chernabog ; EotW
-11 Fireglow ; Dragon Maleficent ; Library
+11 Fireglow ; Dragon Maleficent ; HB1 ; Library
 12 Earthshine ; Secret Waterway ; Red Trinity
 13 Jungle King ; Deep Jungle
 14 Three Wishes ; Agrabah
@@ -31,12 +31,12 @@
 1E Sonic Blade ; Olympus Coliseum
 1F Raven's Claw ; Anti-Sora ; Green Trinity
 20 Strike Raid ; Pegasus Cup
-21 Ragnarok ; Riku 2 ; Library
+21 Ragnarok ; Riku 2 ; HB1 ; Library
 22 Trinity Limit ; Hades Cup
 23 Ars Arcanum ; Capt. Hook ; Green Trinity
 24 Cheer (Donald) ; Maleficent ; Library
 25 Cheer (Goofy); Parasite Cage; High Jump OR Glide
-26 Lord Fortune ; Fairy Godmother ; All Summons
+26 Lord Fortune ; Fairy Godmother ; All Summons ; Fire Magic
 27 High Jump ; Chest
 28 Watergleam ; Chest
 29 Mythril ; Chest
@@ -45,15 +45,15 @@
 2C Mythril ; Hundred Acre Wood ; Page4
 2D EXP Ring ; Hundred Acre Wood ; Page5
 2E Cheer (Sora) ; From Owl ; Page5
-2F Dream Shield ; Merlin ; Arts
+2F Dream Shield ; Merlin ; Arts ; Fire Magic
 30 Olympia ; Olympus Coliseum
 31 Oblivion ; Chest
 32 Mythril ; Chest
 33 Wishing Star ; Chest
-34 Mythril Shard ; 42 Puppies
-35 Megaelixir ; 60 Pupies
-36 Orichalcum ; 72 Puppies
-37 Tech Boost ; 90 Puppies
+34 Mythril Shard ; TT ; 42 Puppies
+35 Megaelixir ; TT ; 60 Puppies
+36 Orichalcum ; TT ; 72 Puppies
+37 Tech Boost ; TT ; 90 Puppies
 38 Brave Warrior ; Guard Armor
 39 Ifrit's Horn ; Trickmaster
 3A Inferno Band ; Cerberus
@@ -90,7 +90,7 @@
 59 Orichalcum ; Chest
 5A Thundara Ring ; Chest
 5B AP Up ; Chest
-5C Spellbinder ; Merlin
+5C Spellbinder ; Merlin ; All Spells
 5D Dream Rod ; Merlin ; Max Spells
 5E Combo Plus ; Phil Cup Solo
 5F Orichalcum ; Pegasus Cup Solo
@@ -147,9 +147,9 @@
 92 Defense Up ; 40 Jungle Slider
 93 Power Up ; 50 Jungle Slider
 94 Diamond Dust ; Ice Titan
-95 One-Winged Angel ; Sephiroth
-96 Zantetsuken ; Kurt Zisa
-97 EXP Necklace ; Unknown
+95 One-Winged Angel ; Sephiroth ; HB1 ; Library ; HB2 ; EotW
+96 Zantetsuken ; Kurt Zisa ; HB1 ; Library ; HB2 ; EotW
+97 EXP Necklace ; Unknown ; HB1 ; Library ; HB2 ; EotW
 98 Firagun Band ; ?
 99 Dark Matter ; Chest
 9A Shiva Belt ; Chest

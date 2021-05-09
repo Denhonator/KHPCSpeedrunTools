@@ -127,8 +127,6 @@ local removeBlackTimer = 0
 local introJump = true
 
 local important = {0xB2, 0xB7, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
-local importantPool = {0x5, 0x39, 0x48, 0x48, 0x4D, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
-local missableRewards = {0, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -150,6 +148,7 @@ local randomGets = {}
 local randomized = false
 local successfulRando = true
 local initDone = false
+local infiniteDetection = 0
 local canExecute = false
 
 function RArray(off, c)
@@ -305,19 +304,55 @@ function Djb2(str)
 end
 
 function ItemAccessible(i, c)
+	infiniteDetection = infiniteDetection + 1
 	local accessibleCount = 0
-	for c=1,0x1FE do
-		if chests[c] % 0x10 == 0 and chests[c] // 0x10 == i and IsAccessible(chestDetails, c) then
-			accessibleCount = accessibleCount+1
+	local options = {i}
+	
+	if infiniteDetection >= 10000 then
+		return false
+	end
+	
+	if i == 0xD4 then
+		options = {0xD4, 0xD5, 0xD6, 0xD7, 0xD8}
+	end
+	
+	local adjusted = {}
+	for j=1,0xFF do
+		for o=1,#options do
+			if options[o] == itemids[j] and not adjusted[o] then
+				options[o] = itemids[j]
+				adjusted[o] = true
+			end
 		end
 	end
 	
-	for r=1,0xA9 do
-		if rewards[r] // 0x100 == 0xF0 and rewards[r] % 0x100 == i and IsAccessible(rewardDetails, r) then
+	for j=1,#options do
+		i = options[j]
+		for c=1,0x1FE do
+			if chests[c] % 0x10 == 0 and chests[c] // 0x10 == i and IsAccessible(chestDetails, c) then
+				accessibleCount = accessibleCount+1
+			end
+		end
+		
+		for r=1,0xA9 do
+			if rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i and IsAccessible(rewardDetails, r) then
+				accessibleCount = accessibleCount+1
+			end
+		end
+		
+		if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
+			accessibleCount = accessibleCount+1
+		elseif i==0xCB and ItemAccessible(0xC8) and ItemAccessible(0xC9) then
+			accessibleCount = accessibleCount+1
+		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity")
+			accessibleCount = accessibleCount+1
+		elseif i==0xAA and AbilityAccessible(2, 1)
+			accessibleCount = accessibleCount+1
+		elseif i==0xAE and ItemAccessible(0xE4, 1)
 			accessibleCount = accessibleCount+1
 		end
 	end
-	
+
 	return accessibleCount >= c
 end
 
@@ -333,6 +368,29 @@ function AbilityAccessible(a, c)
 	end
 	
 	return false
+end
+
+function TrinityAccessible(s)
+	for i=1,5 do
+		if trinityTexts[i] == s then
+			if trinityTable[5] == i then
+				return ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1)
+					and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
+			end
+		end
+	end
+	return true
+end
+
+function MagicAccessible(s)
+	--magicRef = {"Fir","Blizzar","Thund","Cur","Gravi","Stop","Aero"}
+	--for i=1,#magicRef do
+	--	
+	--end
+	if string.find(s, "ga") or string.find(s, "ra") then
+		return false
+	end
+	return true
 end
 
 function IsAccessible(t, i)
@@ -372,6 +430,21 @@ function IsAccessible(t, i)
 			end
 			if string.find(t[i][k], "Postcard") then
 				thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9)))
+			end
+			if string.find(t[i][k], "Page") then 
+				thisAccess = thisAccess or ItemAccessible(0xD4, tonumber(string.sub(t[i][k], 5)))
+			end
+			if string.find(t[i][k], "All Summons") then
+				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
+				ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1) and MagicAccessible("Fire Magic"))
+			elseif string.find(t[i][k], "Dumbo") then
+				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and MagicAccessible("Fire Magic"))
+			end
+			if string.find(t[i][k], "Trinity") then
+				thisAccess = thisAccess or TrinityAccessible(t[i][k])
+			end
+			if string.find(t[i][k], "Magic") then
+				thisAccess = thisAccess or MagicAccessible(t[i][k])
 			end
 			if string.find(t[i][k], "HB2") then
 				thisAccess = thisAccess or true
@@ -416,8 +489,14 @@ function Randomize()
 	end
 	seedfile:close()
 	
+	local missableRewards = {0, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD}
+	local importantPool = {0x5, 0x39, 0x48, 0x48, 0x4D, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
+	local rewardPool = {}
+	
 	for i=1, 0xA9 do
-		rewards[i] = ReadShort(rewardTable+((i-1)*2))
+		if rewardDetails[i] then
+			rewardPool[i] = ReadShort(rewardTable+((i-1)*2))
+		end
 	end
 	for i=1, 99 do
 		soraLevels[i] = ReadByte(soraStatTable+(i-1))
@@ -430,14 +509,11 @@ function Randomize()
 		donaldAbilities[i] = ReadByte(donaldAbilityTable+(i-1))
 	end
 	
+	local chestPool = {}
+	
 	for i=1, 0x1DE do
-		local cont = ReadShort(chestTable+((i-1)*2))
-		local nextCont = ReadShort(chestTable+(i*2))
-		local prevCont = ReadShort(chestTable+((i-2)*2))
-		
-		if (cont % 0x10 ~= 0 or cont//0x10 ~= 1 or (nextCont//0x10 ~= 1 and prevCont//0x10 ~= 1))
-												and (i == 1 or i > 0x14) then
-			chests[i] = cont
+		if chestDetails[i] then
+			chestPool[i] = ReadShort(chestTable+((i-1)*2))
 		end
 	end
 	
@@ -538,47 +614,45 @@ function Randomize()
 			shopPool[(#shopPool)+1] = i
 		end
 	end
+	
+	local extraAbilities = {1,2,3,4,0x15,0x16}
 
 	for i=1, 0xA9 do
-		local r = math.random(0xA9)
-		local orig = rewards[i]
-		local other = rewards[r]
-		rewards[i] = other
-		rewards[r] = orig
+		if rewardDetails[i] then
+			rewards[i] = table.remove(rewardPool, math.random(#rewardPool))
+			if rewards[i] % 0x100 == 0xF0 and ItemType(rewards[i] // 0x100)=="Synth" then
+				if #importantPool > 4 then
+					rewards[i] = table.remove(importantPool, math.random(#importantPool)) * 0x100 + 0xF0
+				elseif #extraAbilities > 0 then
+					rewards[i] = table.remove(extraAbilities, math.random(#extraAbilities)) * 0x100
+					if rewards[i] // 0x100 <= 4 then
+						rewards[i] = rewards[i] + 0xB0
+					else
+						rewards[i] = rewards[i] + 1
+					end
+				end
+			end
+		end
 	end
 
 	print("Randomized reward pool")
 	
 	for i=1, 0x1DE do
-		if chests[i] and ((chests[i]-2) % 0x10) == 0 then
-			if #missableRewards > 0 then
-				chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
-				print("Added missable reward to chest")
-			else
-				chests[i] = chests[i] + 4
+		if chestDetails[i] then
+			local r = math.random(#chestPool)
+			while (i >= 0x1C0 or i == 0) and ((chestPool[r]-4) % 0x10) == 0 do
+				r = math.random(#chestPool)
 			end
-		end
-	end
-	
-	for i=1, 0x1DE do
-		local r = math.random(0x1DE)
-		if chests[i] then
-			local valid = false
-			while not (valid and chests[r]) do
-				r = math.random(0x1DE)
-				if chests[r] then
-					valid = not ((i >= 0x1C0 or i == 0) and ((chests[r]-4) % 0x10) == 0)
-					valid = valid and not ((i >= 0x1C0 or i == 0) and chests[r] // 0x10 == 0xD3)
+			chests[i] = table.remove(chestPool, r)
+			if (chests[i]-2) % 0x10 == 0 then
+				if #importantPool > 0 then
+					chests[i] = table.remove(importantPool, math.random(#importantPool)) * 0x10
+				elseif #missableRewards > 0 then
+					chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
+					print("Added missable reward to chest")
+				else
+					chests[i] = chests[i] + 4
 				end
-			end
-
-			if string.find(ItemType(chests[i] // 0x10), "Shuffle") or string.find(ItemType(chests[r] // 0x10), "Shuffle") then
-				print("Prevented moving key item check chests")
-			else
-				local orig = chests[i]
-				local other = chests[r]
-				chests[i] = other
-				chests[r] = orig
 			end
 		end
 	end
@@ -692,8 +766,14 @@ function Randomize()
 	end
 	
 	print("Randomized trinities")
-	
-	ApplyRandomization()
+end
+
+function ValidSeed()
+	return (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
+			and MagicAccessible("Fire Magic") and TrinityAccessible("Red Trinity") and (AbilityAccessible(1, 2)
+			or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1)))
+			or (ItemAccessible(0xC0, 1) and ItemAccessible(0xC1, 1) and ItemAccessible(0xC2, 1) and ItemAccessible(0xC3, 1)
+			and ItemAccessible(0xC4, 1) and ItemAccessible(0xC5, 1) and ItemAccessible(0xC6, 1) and ItemAccessible(0xC7, 1))
 end
 
 function GetRandomOrder(size)
@@ -712,68 +792,7 @@ function ApplyRandomization()
 	for i=1, 0xA9 do
 		WriteShort(rewardTable+((i-1)*2), rewards[i])
 	end
-	
-	local guaranteedMovement = 0
-	local extraAbilities = {1,2,3,4,0x15,0x16}
-	local order = GetRandomOrder(0xA9)
-	for j=1, 0xA9 do
-		local i = order[j]
-		local offAddr = rewardTable+((i-1)*2)
-		if ReadByte(offAddr) == 0xF0 and (ItemType(ReadByte(offAddr+1)) == "Synth" or ReadByte(offAddr+1) == 1) then
-			if #importantPool > 3 then
-				local r = math.random(#importantPool)
-				local it = importantPool[r]
-				-- Add check that it is accessible
-				WriteByte(offAddr+1, table.remove(importantPool, r))
-				print(string.format("Added %s into reward %x", itemNames[itemids[it]], i))
-			elseif #extraAbilities > 0 then
-				local r = math.random(#extraAbilities)
-				if (r == 1 or r == 3 or r == 4) and guaranteedMovement == 0 then
-					guaranteedMovement = i
-				end
-				local ab = extraAbilities[r]
-				WriteByte(offAddr+1, table.remove(extraAbilities, r))
-				if ab <= 4 then
-					WriteByte(offAddr, 0xB1)
-				else
-					WriteByte(offAddr, 1)
-				end
-			end
-		end
-	end
-	
-	print("Put key items into rewards")
-	
-	order = GetRandomOrder(0x1A0)
-	for j=1, 0x1A0 do
-		local i = order[j]
-		if chests[i] and i >= 8 then
-			local sh = chests[i]
-			if ((sh % 0x10) == 0 and ItemType(sh//0x10) == "Synth") or (sh-6) % 0x10 == 0 then
-				if guaranteedMovement > 0 then
-					chests[i] = guaranteedMovement*0x10 + 0xE
-					guaranteedMovement = 0
-				end
-				local r = math.random(#importantPool)
-				local it = importantPool[r]
-				-- Add check that it is accessible
-				chests[i] = table.remove(importantPool, r)*0x10
-				print(string.format("Added %s into chest %x", itemNames[itemids[it]], i-1))
-			end
-			if #importantPool == 0 then
-				break
-			end
-		end
-	end
-	
-	if #importantPool > 0 then
-		print(string.format("%x important items still in pool! Re-roll", #importantPool))
-		successfulRando = false
-		return false
-	end
-	
-	print("Placed key items successfully")
-	
+
 	local shopMap = {}
 	for i=0,7 do
 		if i == 4 or i == 7 then
@@ -1344,6 +1363,11 @@ function _OnFrame()
 	if not randomized and initDone then
 		if (ReadByte(soraHP) > 0 or ReadInt(0x7A8EE8-offset) == 1) and successfulRando then
 			Randomize()
+			while not ValidSeed() do
+				infiniteDetection = 0
+				Randomize()
+			end
+			ApplyRandomization()
 			if #itemNames==0 or #gummiNames==0 then
 				print("items.txt or gummis.txt missing! Get them from the Github")
 			end

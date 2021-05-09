@@ -30,7 +30,7 @@ f   Ether            ; ?
 1d  Mythril          ; Green Room
 1e  Reward 40        ; Green Room
 1f  Pretty Stone     ; Red Room
-20  Reward 41        ; Mystical House ; Fire ; High Jump OR Yellow Trinity
+20  Reward 41        ; Mystical House ; Fire Magic ; High Jump OR Yellow Trinity
 21  Mythril Shard    ; Accessory Shop
 22  Reward 42        ; Secret Waterway ; White Trinity
 23  Reward 33        ; Gepetto's House ; High Jump OR Glide
@@ -86,7 +86,7 @@ f   Ether            ; ?
 55  Potion           ; ?
 56  Potion           ; ?
 57  Potion           ; ?
-58  Dalmatians 1     ; Traverse Town ; Glide ; Fire
+58  Dalmatians 1     ; Traverse Town ; Glide ; Fire Magic
 59  Dalmatians 2     ; Traverse Town ; Red Trinity
 5a  Dalmatians 3     ; Traverse Town ; Green Trinity
 5b  Dalmatians 4     ; Traverse Town ; Red Trinity
@@ -101,8 +101,8 @@ f   Ether            ; ?
 64  Thundara-G       ; Queen's Castle
 65  Dalmatians 5     ; Queen's Castle
 66  Meteor-G         ; Queen's Castle
-67  Thundara-G       ; Lotus Forest ; Thunder
-68  Dalmatians 20    ; Lotus Forest ; Thunder
+67  Thundara-G       ; Lotus Forest ; Thunder Magic
+68  Dalmatians 20    ; Lotus Forest ; Thunder Magic
 69  Reward 47        ; Lotus Forest ; Glide OR High Jump
 6a  Dalmatians 6     ; Lotus Forest
 6b  Scan-G           ; Lotus Forest
@@ -335,8 +335,8 @@ ff  Potion           ; ?
 14e Dalmatians 8    ; Olympus Coliseum ; Blue Trinity
 14f Reward 55       ; Olympus Coliseum ; Blue Trinity
 150 Reward 56       ; Olympus Coliseum ; White Trinity
-151 Gummi           ; Olympus Coliseum ; Blizzara
-152 Reward 9a       ; Olympus Coliseum ; Blizzaga
+151 Gummi           ; Olympus Coliseum ; Blizzara Magic
+152 Reward 9a       ; Olympus Coliseum ; Blizzaga Magic
 153 Potion          ; ?
 154 Potion          ; ?
 155 Potion          ; ?
@@ -408,16 +408,16 @@ ff  Potion           ; ?
 197 Life-G          ; Rising Falls
 198 Meteor-G        ; Rising Falls
 199 Reward 58       ; Rising Falls ; HB1; Library ; HB2
-19a Dalmatians 31   ; Rising Falls ; Blizzard
-19b Reward 79       ; Rising Falls ; Blizzard
+19a Dalmatians 31   ; Rising Falls ; Blizzard Magic
+19b Reward 79       ; Rising Falls ; Blizzard Magic
 19c Megalixir       ; Rising Falls
-19d Dalmatians 32   ; Castle Gates ; High Jumpra OR Dumbo ; Gravity
+19d Dalmatians 32   ; Castle Gates ; High Jumpra OR Dumbo ; Gravity Magic
 19e Reward 59       ; Castle Gates ; High Jumpra OR Dumbo
 19f Haste2-G        ; Castle Gates ; High Jumpra OR Dumbo
-1a0 Orichalcum      ; Great Crest ; Library
-1a1 Thundaga-G      ; Great Crest ; Library
-1a2 Osmose-G        ; High Tower ; HB1 ; Library ; Gravity
-1a3 Reward 5a       ; High Tower ; HB1 ; Library ; Gravity
+1a0 Orichalcum      ; Great Crest ; HB1 ; Library
+1a1 Thundaga-G      ; Great Crest ; HB1 ; Library
+1a2 Osmose-G        ; High Tower ; HB1 ; Library ; Gravity Magic
+1a3 Reward 5a       ; High Tower ; HB1 ; Library ; Gravity Magic
 1a4 Megalixir       ; High Tower ; HB1 ; Library
 1a5 Reward 5b       ; Entrance Hall ; HB1 ; High Jump
 1a6 Ultima-G        ; Library ; Glide ; HB1
@@ -425,16 +425,16 @@ ff  Potion           ; ?
 1a8 Mega-Potion     ; ?
 1a9 Mega-Potion     ; ?
 1aa Potion          ; ?
-1ab Reward a3       ; Lift Stop ; HB1 ; Library ; Gravity
+1ab Reward a3       ; Lift Stop ; HB1 ; Library ; Gravity Magic
 1ac Gummi           ; Lift Stop ; HB1 ; Khama OR High Jumpra
-1ad Reward a4       ; Lift Stop ; HB1 ; Library ; Gravity
+1ad Reward a4       ; Lift Stop ; HB1 ; Library ; Gravity Magic
 1ae Dalmatians 33   ; Lift Stop ; HB1 ; Khama OR High Jumpra
 1af Orichalcum      ; Lift Stop ; High Jumpra OR Dumbo
 1b0 Mythril         ; Base Level
 1b1 Paper-G         ; Base Level
 1b2 Thundara-G      ; Base Level
 1b3 Reward 7a       ; Waterway
-1b4 Reward a5       ; Waterway ; High Jump ; Blizzard
+1b4 Reward a5       ; Waterway ; High Jump ; Blizzard Magic
 1b5 Thundaga-G      ; Waterway ; HB1
 1b6 Ultima-G        ; Dungeon ; High Jumpra OR Dumbo
 1b7 Thundaga-G      ; Dungeon ; High Jumpra OR Dumbo
