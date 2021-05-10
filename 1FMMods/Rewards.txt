@@ -1,6 +1,6 @@
-00  Elixir ; Defeat Leon
+00  Elixir ; Defeat Leon ; Missable
 01  Dodge Roll ; End of TT
-02  Mega Potion ; Aerith before Guard Armor
+02  Mega Potion ; Aerith before Guard Armor ; Missable
 03  Dodge Roll ; ?
 04  Treasure Magnet ; ?
 05  Second Wind ; ?
