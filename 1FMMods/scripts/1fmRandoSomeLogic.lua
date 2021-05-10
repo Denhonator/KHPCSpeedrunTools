@@ -234,6 +234,10 @@ function _OnInit()
 		seedfile = io.open("seed.txt", "r")
 		if seedfile ~= nil then
 			text = seedfile:read()
+			if text == "Disabled" then
+				print("Disabling rando because of seed Disabled")
+				canExecute = false
+			end
 			seed = tonumber(text)
 			if seed == nil then
 				seed = Djb2(text)
@@ -520,7 +524,7 @@ end
 function Randomize()
 	successfulRando = false
 
-	local missableRewards = {0, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD}
+	local missableRewards = {0, 2}
 	local importantPool = {0x5, 0x39, 0x48, 0x48, 0x4D, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
 	local rewardPool = {}
 	
