@@ -383,7 +383,7 @@ end
 function AbilityAccessible(a, c)
 	local accessibleCount = 0
 	for r=1,0xA9 do
-		if rewards[r] and rewards[r] // 0x100 ~= 0xF0 and rewards[r] % 0x100 == a and not rewardAccessCheck[r] then
+		if rewards[r] and rewards[r] % 0x100 ~= 0xF0 and rewards[r] // 0x100 == a and not rewardAccessCheck[r] then
 			rewardAccessCheck[r] = true
 			if IsAccessible(rewardDetails, r) then
 				accessibleCount = accessibleCount+1
@@ -421,6 +421,20 @@ function MagicAccessible(s)
 end
 
 function IsAccessible(t, i)
+	if t==chestDetails then
+		if chests[i] % 0x10 == 0 then
+			print(string.format("Chest at %s has %s", t[i][2], itemNames[itemids[chests[i]//0x10]]))
+		elseif chests[i] % 0x10 == 0xE then
+			print(string.format("Chest at %s has reward %x", t[i][2], chests[i]//0x10))
+		end
+	elseif t==rewardDetails then
+		if rewards[i] % 0x100 == 0xF0 then
+			print(string.format("Reward %x at %s has %s", i-1, t[i][2], itemNames[itemids[rewards[i]//0x100]]))
+		else
+			print(string.format("Reward %x at %s has ability %x", i-1, t[i][2], rewards[i]//0x100))
+		end
+	end
+	
 	if t[i][3] then
 		local canAccess = true
 		for k=3,6 do
