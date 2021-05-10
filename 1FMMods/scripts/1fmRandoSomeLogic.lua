@@ -893,7 +893,9 @@ end
 
 function ApplyRandomization()
 	for i=1, 0xA9 do
-		WriteShort(rewardTable+((i-1)*2), rewards[i])
+		if rewards[i] then
+			WriteShort(rewardTable+((i-1)*2), rewards[i])
+		end
 	end
 
 	local shopMap = {}
