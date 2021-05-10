@@ -324,67 +324,56 @@ end
 function ItemAccessible(i, c)
 	infiniteDetection = infiniteDetection + 1
 	local accessibleCount = 0
-	local options = {i}
 	local oi = i
 	
 	if infiniteDetection >= 1000 then
 		print("Infinite")
 		return false
 	end
-	
-	if i == 0xD4 then
-		options = {0xD4, 0xD5, 0xD6, 0xD7, 0xD8}
-	end
-	
-	local adjusted = {}
+
 	for j=1,0xFF do
-		for o=1,#options do
-			if options[o] == itemids[j] and not adjusted[o] then
-				options[o] = j
-				adjusted[o] = true
+		if i == itemids[j] then
+			i = j
+			break
+		end
+	end
+
+	for c=1,0x1FE do
+		if chests[c] and chests[c] % 0x10 == 0 and chests[c] // 0x10 == i
+						and not chestAccessCheck[c] then
+			chestAccessCheck[c] = true
+			if IsAccessible(chestDetails, c) then
+				accessibleCount = accessibleCount+1
 			end
 		end
 	end
 
-	for j=1,#options do
-		i = options[j]
-		for c=1,0x1FE do
-			if chests[c] and chests[c] % 0x10 == 0 and chests[c] // 0x10 == i
-							and not chestAccessCheck[c] then
-				chestAccessCheck[c] = true
-				if IsAccessible(chestDetails, c) then
-					accessibleCount = accessibleCount+1
-				end
-			end
-		end
-
-		for r=1,0xA9 do
-			if rewards[r] and rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i
-							and not rewardAccessCheck[r] then
-				rewardAccessCheck[r] = true
-				if IsAccessible(rewardDetails, r) then
-					accessibleCount = accessibleCount+1
-				end
-			end
-		end
-
-		if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
-			accessibleCount = accessibleCount+1
-		elseif i==0xCB and not itemAccessCheck[oi] then
-			itemAccessCheck[0xC8] = true
-			itemAccessCheck[0xC9] = true
-			if ItemAccessible(0xC8) and ItemAccessible(0xC9) then
+	for r=1,0xA9 do
+		if rewards[r] and rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i
+						and not rewardAccessCheck[r] then
+			rewardAccessCheck[r] = true
+			if IsAccessible(rewardDetails, r) then
 				accessibleCount = accessibleCount+1
 			end
-		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
+		end
+	end
+
+	if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
+		accessibleCount = accessibleCount+1
+	elseif i==0xCB and not itemAccessCheck[oi] then
+		itemAccessCheck[0xC8] = true
+		itemAccessCheck[0xC9] = true
+		if ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) then
 			accessibleCount = accessibleCount+1
-		elseif i==0xAA and AbilityAccessible(2, 1) then
+		end
+	elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
+		accessibleCount = accessibleCount+1
+	elseif i==0xAA and AbilityAccessible(2, 1) then
+		accessibleCount = accessibleCount+1
+	elseif i==0xAE and not itemAccessCheck[oi] then
+		itemAccessCheck[0xE4] = true
+		if ItemAccessible(0xE4, 1) then
 			accessibleCount = accessibleCount+1
-		elseif i==0xAE and not itemAccessCheck[oi] then
-			itemAccessCheck[0xE4] = true
-			if ItemAccessible(0xE4, 1) then
-				accessibleCount = accessibleCount+1
-			end
 		end
 	end
 
@@ -467,10 +456,17 @@ function IsAccessible(t, i)
 				thisAccess = thisAccess or ItemAccessible(0xE4, 1)
 			end
 			if string.find(t[i][k], "Postcard") then
-				thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9)))
+				thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9))-5)
 			end
-			if string.find(t[i][k], "Page") then 
-				thisAccess = thisAccess or ItemAccessible(0xD4, tonumber(string.sub(t[i][k], 5)))
+			if string.find(t[i][k], "Page") then
+				local accessiblePages = 0
+				for p=0xD4,0xD8 do
+					itemAccessCheck[p] = true
+					if ItemAccessible(p, 1) then
+						accessiblePages = accessiblePages + 1
+					end
+				end
+				thisAccess = thisAccess or tonumber(string.sub(t[i][k], 5)) <= accessiblePages
 			end
 			if string.find(t[i][k], "All Summons") then
 				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
@@ -809,11 +805,6 @@ function ValidSeed()
 	chestAccessCheck = {}
 	rewardAccessCheck = {}
 	itemAccessCheck = {[0xC9]=true}
-	for i=1, 0xFF do
-		if itemids[i] == 0xC9 then
-			print(i)
-		end
-	end
 	local g2 = ItemAccessible(0xC9, 1)
 	print(g2)
 	chestAccessCheck = {}
@@ -861,7 +852,9 @@ function ValidSeed()
 			chestAccessCheck = {}
 			rewardAccessCheck = {}
 			itemAccessCheck = {[i]=true}
-			DIWin = DIWin and ItemAccessible(i, 1)
+			local thisDI = ItemAccessible(i, 1)
+			DIWin = DIWin and thisDI
+			print(string.format("%x %x", i, thisDI and 1 or 0))
 		end
 		print("DI Win")
 		return DIWin
