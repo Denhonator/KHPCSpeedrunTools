@@ -423,15 +423,15 @@ end
 function IsAccessible(t, i)
 	if t==chestDetails then
 		if chests[i] % 0x10 == 0 then
-			print(string.format("Chest at %s has %s", t[i][2], itemNames[itemids[chests[i]//0x10]]))
+			print(string.format("%s chest at %s has %s", t[i][1], t[i][2], itemNames[itemids[chests[i]//0x10]]))
 		elseif chests[i] % 0x10 == 0xE then
-			print(string.format("Chest at %s has reward %x", t[i][2], chests[i]//0x10))
+			print(string.format("%s chest at %s has reward %x", t[i][1], t[i][2], chests[i]//0x10))
 		end
 	elseif t==rewardDetails then
 		if rewards[i] % 0x100 == 0xF0 then
-			print(string.format("Reward %x at %s has %s", i-1, t[i][2], itemNames[itemids[rewards[i]//0x100]]))
+			print(string.format("%s reward %x at %s has %s", t[i][1], i-1, t[i][2], itemNames[itemids[rewards[i]//0x100]]))
 		else
-			print(string.format("Reward %x at %s has ability %x", i-1, t[i][2], rewards[i]//0x100))
+			print(string.format("%s reward %x at %s has ability %x", t[i][1], i-1, t[i][2], rewards[i]//0x100))
 		end
 	end
 	
@@ -1467,7 +1467,7 @@ function _OnFrame()
 				Randomize()
 			end
 			randomized = true
-			-- ApplyRandomization()
+			ApplyRandomization()
 			if #itemNames==0 or #gummiNames==0 then
 				print("items.txt or gummis.txt missing! Get them from the Github")
 			end
