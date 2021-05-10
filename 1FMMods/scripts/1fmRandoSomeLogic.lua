@@ -145,6 +145,9 @@ local goofyLevels = {}
 local goofyAbilities = {}
 local chests = {}
 local randomGets = {}
+local chestAccessCheck = {}
+local rewardAccessCheck = {}
+local itemAccessCheck = {}
 local randomized = false
 local successfulRando = true
 local initDone = false
@@ -322,8 +325,10 @@ function ItemAccessible(i, c)
 	infiniteDetection = infiniteDetection + 1
 	local accessibleCount = 0
 	local options = {i}
+	local oi = i
 	
-	if infiniteDetection >= 10000 then
+	if infiniteDetection >= 1000 then
+		print("Infinite")
 		return false
 	end
 	
@@ -345,28 +350,41 @@ function ItemAccessible(i, c)
 		i = options[j]
 		for c=1,0x1FE do
 			if chests[c] and chests[c] % 0x10 == 0 and chests[c] // 0x10 == i
-							and IsAccessible(chestDetails, c) then
-				accessibleCount = accessibleCount+1
+							and not chestAccessCheck[c] then
+				chestAccessCheck[c] = true
+				if IsAccessible(chestDetails, c) then
+					accessibleCount = accessibleCount+1
+				end
 			end
 		end
 
 		for r=1,0xA9 do
 			if rewards[r] and rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i
-							and IsAccessible(rewardDetails, r) then
-				accessibleCount = accessibleCount+1
+							and not rewardAccessCheck[r] then
+				rewardAccessCheck[r] = true
+				if IsAccessible(rewardDetails, r) then
+					accessibleCount = accessibleCount+1
+				end
 			end
 		end
 
 		if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
 			accessibleCount = accessibleCount+1
-		elseif i==0xCB and ItemAccessible(0xC8) and ItemAccessible(0xC9) then
-			accessibleCount = accessibleCount+1
+		elseif i==0xCB and not itemAccessCheck[oi] then
+			itemAccessCheck[0xC8] = true
+			itemAccessCheck[0xC9] = true
+			if ItemAccessible(0xC8) and ItemAccessible(0xC9) then
+				accessibleCount = accessibleCount+1
+			end
 		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
 			accessibleCount = accessibleCount+1
 		elseif i==0xAA and AbilityAccessible(2, 1) then
 			accessibleCount = accessibleCount+1
-		elseif i==0xAE and ItemAccessible(0xE4, 1) then
-			accessibleCount = accessibleCount+1
+		elseif i==0xAE and not itemAccessCheck[oi] then
+			itemAccessCheck[0xE4] = true
+			if ItemAccessible(0xE4, 1) then
+				accessibleCount = accessibleCount+1
+			end
 		end
 	end
 
@@ -376,10 +394,13 @@ end
 function AbilityAccessible(a, c)
 	local accessibleCount = 0
 	for r=1,0xA9 do
-		if rewards[r] and rewards[r] // 0x100 ~= 0xF0 and rewards[r] % 0x100 == a and IsAccessible(rewardDetails, r) then
-			accessibleCount = accessibleCount+1
-			if accessibleCount == c then
-				return true
+		if rewards[r] and rewards[r] // 0x100 ~= 0xF0 and rewards[r] % 0x100 == a and not rewardAccessCheck[r] then
+			rewardAccessCheck[r] = true
+			if IsAccessible(rewardDetails, r) then
+				accessibleCount = accessibleCount+1
+				if accessibleCount == c then
+					return true
+				end
 			end
 		end
 	end
@@ -780,23 +801,71 @@ function Randomize()
 end
 
 function ValidSeed()
-	print(ItemAccessible(0xC8, 1))
-	print(ItemAccessible(0xC9, 1))
-	print(ItemAccessible(0xCB, 1))
-	print(ItemAccessible(0xCC, 1))
-	print(MagicAccessible("Fire Magic"))
-	print(TrinityAccessible("Red Trinity"))
-	for i=1, 0xA9 do
-		if rewards[i] and rewards[i] % 0x100 == 0xB1 and rewards[i] // 0x100 == 2 then
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {[0xC8]=true}
+	local g1 = ItemAccessible(0xC8, 1)
+	print(g1)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {[0xC9]=true}
+	for i=1, 0xFF do
+		if itemids[i] == 0xC9 then
 			print(i)
 		end
 	end
-	print(AbilityAccessible(1, 2))
-	return (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
-			and MagicAccessible("Fire Magic") and TrinityAccessible("Red Trinity") and (AbilityAccessible(1, 2)
-			or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1))))
-			or (ItemAccessible(0xC0, 1) and ItemAccessible(0xC1, 1) and ItemAccessible(0xC2, 1) and ItemAccessible(0xC3, 1)
-			and ItemAccessible(0xC4, 1) and ItemAccessible(0xC5, 1) and ItemAccessible(0xC6, 1) and ItemAccessible(0xC7, 1))
+	local g2 = ItemAccessible(0xC9, 1)
+	print(g2)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {[0xCB]=true}
+	local g3 = ItemAccessible(0xCB, 1)
+	print(g3)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {[0xCC]=true}
+	local g4 = ItemAccessible(0xCC, 1)
+	print(g4)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {}
+	local f1 = MagicAccessible("Fire Magic")
+	print(f1)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {}
+	local tr = TrinityAccessible("Red Trinity")
+	print(tr)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {}
+	local hj2 = AbilityAccessible(1, 2)
+	print(hj2)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {[0xB2]=true}
+	local khama = ItemAccessible(0xB2, 1)
+	print(khama)
+	chestAccessCheck = {}
+	rewardAccessCheck = {}
+	itemAccessCheck = {[0xB7]=true}
+	local theon = ItemAccessible(0xB7, 1)
+	print(theon)
+	
+	if g1 and g2 and g3 and g4 and f1 and tr and (hj2 or (khama and theon)) then
+		print("HBWin")
+		return true
+	else
+		local DIWin = true
+		for i=0xC0,0xC7 do
+			chestAccessCheck = {}
+			rewardAccessCheck = {}
+			itemAccessCheck = {[i]=true}
+			DIWin = DIWin and ItemAccessible(i, 1)
+		end
+		print("DI Win")
+		return DIWin
+	end
 end
 
 function GetRandomOrder(size)
@@ -1390,7 +1459,8 @@ function _OnFrame()
 				infiniteDetection = 0
 				Randomize()
 			end
-			ApplyRandomization()
+			randomized = true
+			-- ApplyRandomization()
 			if #itemNames==0 or #gummiNames==0 then
 				print("items.txt or gummis.txt missing! Get them from the Github")
 			end
