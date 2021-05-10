@@ -413,7 +413,7 @@ end
 function IsAccessible(t, i)
 	if t[i][3] then
 		local canAccess = true
-		for k=3,6 do			
+		for k=3,6 do
 			if not t[i][k] then
 				break
 			end
@@ -626,7 +626,7 @@ function Randomize()
 				elseif #extraAbilities > 0 then
 					rewards[i] = table.remove(extraAbilities, math.random(#extraAbilities)) * 0x100
 					if rewards[i] // 0x100 <= 4 then
-						rewards[i] = rewards[i] + 0xB0
+						rewards[i] = rewards[i] + 0xB1
 					else
 						rewards[i] = rewards[i] + 1
 					end
@@ -786,6 +786,11 @@ function ValidSeed()
 	print(ItemAccessible(0xCC, 1))
 	print(MagicAccessible("Fire Magic"))
 	print(TrinityAccessible("Red Trinity"))
+	for i=1, 0xA9 do
+		if rewards[i] and rewards[i] % 0x100 == 0xB1 and rewards[i] // 0x100 == 2 then
+			print(i)
+		end
+	end
 	print(AbilityAccessible(1, 2))
 	return (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
 			and MagicAccessible("Fire Magic") and TrinityAccessible("Red Trinity") and (AbilityAccessible(1, 2)
