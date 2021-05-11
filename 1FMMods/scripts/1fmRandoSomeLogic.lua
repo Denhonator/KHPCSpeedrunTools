@@ -96,6 +96,7 @@ local closeMenu = 0x2E90820 - offset
 local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
+local report1 = 0x1D03586 - offset
 
 local itemDropID = 0x2849FC8 - offset
 local textsBase = 0x2EE03B0 - offset
@@ -224,11 +225,18 @@ function _OnInit()
 		end
 		for i=1,0xFF do
 			itemids[i] = i
+			inventoryUpdater[i] = ReadByte(inventory+(i-1))
+		end
+		
+		for i=1, 0x40 do
+			gummiUpdater[i] = ReadByte(gummiInventory+(i-1))
 		end
 
 		for i=1, 7 do
 			magicUpdater[i] = 0
 		end
+		
+		trinityTable = {1,2,3,4,5}
 		reportUpdater = ReadShort(reports)
 		
 		seedfile = io.open("seed.txt", "r")
@@ -236,7 +244,7 @@ function _OnInit()
 			text = seedfile:read()
 			if text == "Disabled" then
 				print("Disabling rando because of seed Disabled")
-				canExecute = false
+				randomized = true
 			end
 			seed = tonumber(text)
 			if seed == nil then
@@ -590,11 +598,7 @@ function Randomize()
 			itemids[i] = table.remove(accessoryPool, r)
 		end
 	end
-	
-	for i=1, 0x40 do
-		gummiUpdater[i] = ReadByte(gummiInventory+(i-1))
-	end
-	
+
 	-- Get rid of normal key items, replace with random good stuff
 	for i=0x9B, 0xFF do
 		if string.find(ItemType(i), "Important") then
@@ -803,7 +807,6 @@ function Randomize()
 	
 	print("Randomized magic")
 	
-	trinityTable = {1,2,3,4,5}
 	local randoTrinity = true
 	
 	while randoTrinity do
@@ -1144,21 +1147,7 @@ function UpdateInventory(HUDNow)
 			print("Late item rando to prevent softlock")
 		end
 	end
-	
-	local reportDif = ReadShort(reports) - reportUpdater
-	if reportDif > 0 then
-		local reportTable = {[1]=8, [2]=7, [4]=6, [8]=5, [16]=4, [32]=3, [64]=2, [128]=1, 
-							[0x800]=13, [0x1000]=12, [0x2000]=11, [0x4000]=10, [0x8000]=9}
-		local receivedReport = reportTable[reportDif]
-		if receivedReport then
-			local i = itemids[0xA7 + receivedReport]
-			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+1)
-			inventoryUpdater[i] = ReadByte(inventory+(i-1))
-			reportUpdater = ReadShort(reports)
-			print(string.format("Gave %x instead of report", i))
-		end
-	end
-	
+
 	for i=0x1,0xFF do
 		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and
 																i ~= itemids[i] then
@@ -1204,6 +1193,7 @@ function UpdateInventory(HUDNow)
 			end
 		end
 	end
+	
 	for i=1,0x40 do
 		local itemCount = ReadByte(gummiInventory+(i-1))
 		if itemCount > gummiUpdater[i] then
@@ -1234,6 +1224,74 @@ function UpdateInventory(HUDNow)
 	if ReadByte(inventory+0xCD-1) > 0 then
 		WriteByte(inventory+0xCB-1, 0)
 		WriteByte(inventory+0xCC-1, 0)
+	end
+end
+
+function StringToKHText(s, mempos)
+	reftable = {[58]=0x6B, [39]=0x71, [45]=0x6E, [46]=0x68, [10]=2}
+	for i=1,#s do
+		local c = string.byte(s, i)
+		if c >= 97 then
+			c = c - 97 + 0x45
+		elseif c >= 65 then
+			c = c - 65 + 0x2B
+		elseif c >= 48 and c <=57 then
+			c = c - 48 + 0x21
+		elseif c == 58 then
+			c = 0x6B
+		elseif reftable[c] then
+			c = reftable[c]
+		else
+			c = 1
+		end
+		WriteByte(mempos, c)
+		mempos = mempos + 1
+	end
+	WriteByte(mempos, 0)
+	return mempos+1
+end
+
+function UpdateReports(HUDNow)
+	if HUDNow < 1 then
+		local reportTable = {[1]=8, [2]=7, [4]=6, [8]=5, [16]=4, [32]=3, [64]=2, [128]=1, 
+						[0x800]=13, [0x1000]=12, [0x2000]=11, [0x4000]=10, [0x8000]=9}
+		local receivedReport = reportTable[ReadShort(reports)]
+		if receivedReport and HUDWas == HUDNow then
+			local i = itemids[0xA7 + receivedReport]
+			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+1)
+			inventoryUpdater[i] = ReadByte(inventory+(i-1))
+			print(string.format("Gave %x instead of report", i))
+		end
+		WriteShort(reports, 0)
+	else
+		local reportTable = {[8]=1, [7]=2, [6]=4, [5]=8, [4]=16, [3]=32, [2]=64, [1]=128, 
+						[13]=0x800, [12]=0x1000, [11]=0x2000, [10]=0x4000, [9]=0x8000}
+		local reportStatus = 0
+		for i=1, 13 do
+			local off = i<=10 and 0xA7 or 0x94
+			if ReadByte(inventory+(off+i-1)) > 0 then
+				reportStatus = reportStatus + reportTable[i]
+			end
+		end
+		WriteShort(reports, reportStatus)
+		if ReadByte(report1) == 0x37 then
+			local mempos = report1
+			local itemhint = {[1]=0xC8, [3]=0xC9, [7]=0xCB, [9]=0xCC}
+			for i=1, 13 do
+				if itemhint[i] then
+					for it=1, 0xFF do
+						j = itemids[it]
+						if j==itemhint[i] then
+							mempos = StringToKHText(string.format("%s became\n%s", itemNames[it], itemNames[j]), mempos)
+						end
+					end
+				else
+					mempos = StringToKHText("Nothing here\nlol", mempos)
+				end
+			end
+
+			print("Wrote hints")
+		end
 	end
 end
 
@@ -1490,6 +1548,7 @@ function _OnFrame()
 		local menuNow = ReadByte(menuCheck)
 		UpdateInventory(HUDNow)
 		ReplaceTrinity(HUDNow)
+		UpdateReports(HUDNow)
 		if HUDNow < 1 then
 			ReplaceMagic(HUDNow)	
 		else

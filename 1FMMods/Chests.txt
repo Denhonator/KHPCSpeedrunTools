@@ -165,10 +165,10 @@ a3  Potion           ; ?
 a4  Potion           ; ?
 a5  Potion           ; ?
 a6  Potion           ; ?
-a7  Mythril Shard    ; ?
-a8  Reward 4c        ; ?
-a9  Reward 9b        ; ?
-aa  Reward 4d        ; ?
+a7  Mythril Shard    ; Hundred Acre Woods
+a8  Reward 4c        ; Hundred Acre Woods ; Page3
+a9  Reward 9b        ; Hundred Acre Woods ; Page3
+aa  Reward 4d        ; Hundred Acre Woods ; Page3
 ab  Potion           ; ?
 ac  Potion           ; ?
 ad  Potion           ; ?
@@ -401,7 +401,7 @@ ff  Potion           ; ?
 190 Potion          ; ?
 191 Potion          ; ?
 192 Potion          ; ?
-193 Flare-G	        ; Clock Tower ; Green Trinity
+193 Flare-G	    ; Clock Tower ; Green Trinity
 194 Paper-G         ; Ship: Hold ; Green Trinity
 195 Dalmatians 29   ; Ship: Hold ; Yellow Trinity
 196 Dalmatians 30   ; Captain's Cabin ; Green Trinity
