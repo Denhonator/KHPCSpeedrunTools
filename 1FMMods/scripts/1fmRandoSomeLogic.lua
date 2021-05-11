@@ -97,6 +97,7 @@ local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 local report1 = 0x1D03586 - offset
+local report11 = 0x1D04FB9 - offset
 
 local itemDropID = 0x2849FC8 - offset
 local textsBase = 0x2EE03B0 - offset
@@ -539,7 +540,8 @@ function Randomize()
 	successfulRando = false
 
 	local missableRewards = {0, 2}
-	local importantPool = {0x5, 0x39, 0x48, 0x48, 0x4D, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
+	local addItems = {0x95,0x96,0x97,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1}
+	local importantPool = {0x5, 0x39, 0x48, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
 	local rewardPool = {}
 	
 	for i=1, 0xA9 do
@@ -661,8 +663,10 @@ function Randomize()
 	end
 	
 	local extraAbilities = {1,2,3,4,0x15,0x16}
+	local order = GetRandomOrder(0xA9)
 
-	for i=1, 0xA9 do
+	for r=1, 0xA9 do
+		local i=order[r]
 		if rewardDetails[i] then
 			rewards[i] = table.remove(rewardPool, math.random(#rewardPool))
 			if rewards[i] % 0x100 == 0xF0 and ItemType(rewards[i] // 0x100)=="Synth" then
@@ -682,7 +686,10 @@ function Randomize()
 
 	print("Randomized reward pool")
 	
-	for i=1, 0x1FF do
+	order = GetRandomOrder(0x1FF)
+	
+	for c=1, 0x1FF do
+		local i=order[c]
 		if chestDetails[i] then
 			local r = math.random(#chestPool)
 			while i == 0 and chestPool[r] % 0x10 == 4 do
@@ -705,6 +712,9 @@ function Randomize()
 				elseif #missableRewards > 0 then
 					chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
 					print("Added missable reward to chest")
+				elseif #addItems > 0 then
+					chests[i] = table.remove(addItems, 1) * 0x10
+					print("Added additional reports to chest")
 				else
 					chests[i] = chests[i] + 4
 				end
@@ -1276,20 +1286,77 @@ function UpdateReports(HUDNow)
 		WriteShort(reports, reportStatus)
 		if ReadByte(report1) == 0x37 then
 			local mempos = report1
+			local chestProg = 1
+			local rewardProg = 1
 			local itemhint = {[1]=0xC8, [3]=0xC9, [7]=0xCB, [9]=0xCC}
 			for i=1, 13 do
 				if itemhint[i] then
 					for it=1, 0xFF do
 						j = itemids[it]
 						if j==itemhint[i] then
-							mempos = StringToKHText(string.format("%s became\n%s", itemNames[it], itemNames[j]), mempos)
+							local inchest = false
+							for c=1, 0x1FF do
+								if chests[c] and chests[c] == j*0x10 then
+									mempos = StringToKHText(string.format(
+										"Chest at\n%s\nhas %s", 
+										chestDetails[c][2], itemNames[it]), mempos)
+									inchest = true
+									break
+								end
+							end
+							if not inchest then
+								mempos = StringToKHText(string.format("%s became\n%s", 
+													itemNames[it], itemNames[j]), mempos)
+							end
 						end
 					end
 				else
-					mempos = StringToKHText("Nothing here\nlol", mempos)
+					local putHint = 0
+					math.randomseed(0)
+					order = GetRandomOrder(0x1FF)
+					for ch=chestProg, 0x1FF do
+						local c = order[ch]
+						if chests[c] then
+							local it = 1
+							if chests[c]%0x10==0 then
+								it = itemids[chests[c]//0x10]
+							elseif chests[c]%0x10==0xE and rewards[chests[c]//0x10] and
+														rewards[chests[c]//0x10]%0x100 == 0xF0 then
+								it = itemids[rewards[chests[c]//0x10] // 0x100]
+							end
+							local itype = ItemType(it)
+							if string.find(itype, "Important") then
+								mempos = StringToKHText(string.format(
+									"Chest at\n%s\nhas %s", 
+									chestDetails[c][2], itemNames[it]), mempos)
+								putHint = 1
+								chestProg = ch+1
+								break
+							end
+						end
+					end
+					math.randomseed(0)
+					order = GetRandomOrder(0xA9)
+					for re=rewardProg+(putHint*999), 0xA9 do
+						local r = order[re]
+						if rewards[r] and rewards[r] % 0x100 == 0xF0 then
+							local it = itemids[rewards[r]//0x100]
+							local itype = ItemType(it)
+							if string.find(itype, "Important") and rewardDetails[r][2]~="Chest" then
+								mempos = StringToKHText(string.format(
+									"Reward %s\n%s\nhas %s", rewardDetails[r][1],
+									rewardDetails[r][2], itemNames[it]), mempos)
+								putHint = 2
+								rewardProg = re+1
+								break
+							end
+						end
+					end
+					if putHint == 0 then
+						mempos = StringToKHText("Nothing here\nlol", mempos)
+					end
 				end
 			end
-
 			print("Wrote hints")
 		end
 	end
