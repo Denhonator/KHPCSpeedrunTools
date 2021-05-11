@@ -341,11 +341,14 @@ function ItemAccessible(i, c)
 			break
 		end
 	end
+	
+	local inChestReward = false
 
 	for c=1,0x1FE do
 		if chests[c] and chests[c] % 0x10 == 0 and chests[c] // 0x10 == i
 						and not chestAccessCheck[c] then
 			chestAccessCheck[c] = true
+			inChestReward = true
 			if IsAccessible(chestDetails, c) then
 				accessibleCount = accessibleCount+1
 			end
@@ -356,28 +359,31 @@ function ItemAccessible(i, c)
 		if rewards[r] and rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i
 						and not rewardAccessCheck[r] then
 			rewardAccessCheck[r] = true
+			inChestReward = true
 			if IsAccessible(rewardDetails, r) then
 				accessibleCount = accessibleCount+1
 			end
 		end
 	end
-
-	if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
-		accessibleCount = accessibleCount+1
-	elseif i==0xCB and not itemAccessCheck[oi] then
-		itemAccessCheck[0xC8] = true
-		itemAccessCheck[0xC9] = true
-		if ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) then
+	
+	if not inChestReward then
+		if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
 			accessibleCount = accessibleCount+1
-		end
-	elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
-		accessibleCount = accessibleCount+1
-	elseif i==0xAA and AbilityAccessible(2, 1) then
-		accessibleCount = accessibleCount+1
-	elseif i==0xAE and not itemAccessCheck[oi] then
-		itemAccessCheck[0xE4] = true
-		if ItemAccessible(0xE4, 1) then
+		elseif i==0xCB and not itemAccessCheck[oi] then
+			itemAccessCheck[0xC8] = true
+			itemAccessCheck[0xC9] = true
+			if ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) then
+				accessibleCount = accessibleCount+1
+			end
+		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
 			accessibleCount = accessibleCount+1
+		elseif i==0xAA and AbilityAccessible(2, 1) then
+			accessibleCount = accessibleCount+1
+		elseif i==0xAE and not itemAccessCheck[oi] then
+			itemAccessCheck[0xE4] = true
+			if ItemAccessible(0xE4, 1) then
+				accessibleCount = accessibleCount+1
+			end
 		end
 	end
 
