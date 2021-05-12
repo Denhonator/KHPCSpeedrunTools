@@ -56,6 +56,8 @@ local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
+local sliderProgress = 0x2DE7709 - offset
+local collectedFruits = 0x232A688 - offset
 local unequipBlacklist = 0x541FA0 - offset
 
 local soraStory = 0x2DE7367 - offset
@@ -97,7 +99,11 @@ local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 local report1 = 0x1D03586 - offset
-local report11 = 0x1D04FB9 - offset
+local worldWarp = 0x233CB70 - offset
+local roomWarp = worldWarp + 4
+local warpTrigger = 0x22E86DC - offset
+local warpType1 = 0x233C240 - offset
+local warpType2 = 0x22E86E0 - offset
 
 local itemDropID = 0x2849FC8 - offset
 local textsBase = 0x2EE03B0 - offset
@@ -120,12 +126,14 @@ local perMagicShuffle = {}
 local magicUpdater = {}
 local inventoryUpdater = {}
 local gummiUpdater = {}
+local sliderSavedProg = {0,0,0,0,0}
 local reportUpdater = 0
 local bufferRemove = 0
 local bufferRemoveTimer = 10
 local HUDWas = 0
 local menuWas = 0
 local removeBlackTimer = 0
+local prevBlack = 128
 local introJump = true
 
 local important = {0xB2, 0xB7, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
@@ -1555,6 +1563,25 @@ function FlagFixes()
 		end
 	end
 	
+	if ReadByte(world) == 5 then
+		if ReadByte(blackfade) < 128 and prevBlack == 128 then
+			sliderSavedProg = ReadArray(sliderProgress, 5)
+			WriteArray(sliderProgress, {1,1,1,1,1})
+		elseif ReadByte(blackfade) > 0 and prevBlack == 0 then
+			WriteArray(sliderProgress, sliderSavedProg)
+		end
+		-- if ReadByte(room) == 0xF and ReadByte(sliderProgress) == 1 and ReadByte(collectedFruits) == 0 then
+			-- for i=1,4 do
+				-- if ReadByte(sliderProgress+i) == 0 then
+					-- print(string.format("Warping to jungle slider %x", i+1))
+					-- WriteByte(collectedFruits, i*10)
+					-- RoomWarp(5, 0x27+i)
+					-- break
+				-- end
+			-- end
+		-- end
+	end
+	
 	if ReadByte(gummiFlagBase+11)==0 then
 		OpenGummi()
 	end
@@ -1584,6 +1611,14 @@ function OpenGummi()
 		end
 	end
 	WriteInt(worldMapLines, 0xFFFFFFFF)
+end
+
+function RoomWarp(w, r)
+	WriteByte(warpType1, 5)
+	WriteByte(warpType2, 10)
+	WriteByte(worldWarp, w)
+	WriteByte(roomWarp, r)
+	WriteByte(warpTrigger, 2)
 end
 
 function _OnFrame()
@@ -1646,16 +1681,18 @@ function _OnFrame()
 		removeBlackTimer = 0
 	end
 	
-	if removeBlackTimer > 500 and ReadByte(world)==0x10 then
+	if removeBlackTimer > 300 and ReadByte(world)==0x10 then
 		WriteInt(0x233C450-offset, 128) --Remove black screen
 		WriteInt(0x233C454-offset, 128)
 		WriteInt(0x233C458-offset, 128)
 		WriteInt(0x233C45C-offset, 128)
-		if removeBlackTimer > 500 then
+		if removeBlackTimer > 300 then
 			print("Removed black screen")
 			removeBlackTimer = 0
 		end
 	end
+	
+	prevBlack = ReadByte(blackfade)
 
 	if ReadFloat(soraHUD) > 0 and ReadByte(lockMenu) > 0 then
 		WriteByte(lockMenu, 0) -- Unlock menu
