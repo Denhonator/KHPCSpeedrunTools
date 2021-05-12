@@ -1334,8 +1334,8 @@ function UpdateReports(HUDNow)
 							local it = 1
 							if chests[c]%0x10==0 then
 								it = itemids[chests[c]//0x10]
-							elseif chests[c]%0x10==0xE and rewards[chests[c]//0x10] and
-														rewards[chests[c]//0x10]%0x100 == 0xF0 then
+							elseif chests[c]%0x10==0xE and rewards[(chests[c]//0x10)+1] and
+														rewards[(chests[c]//0x10)+1]%0x100 == 0xF0 then
 								it = itemids[rewards[(chests[c]//0x10)+1] // 0x100]
 							end
 							local itype = ItemType(it)
