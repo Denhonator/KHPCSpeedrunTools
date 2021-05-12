@@ -56,8 +56,10 @@ local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
+local speedup = 0x233C24C - offset
 local sliderProgress = 0x2DE7709 - offset
-local collectedFruits = 0x232A688 - offset
+local minigameTimer = 0x232A684 - offset
+local collectedFruits = minigameTimer + 4
 local unequipBlacklist = 0x541FA0 - offset
 
 local soraStory = 0x2DE7367 - offset
@@ -1580,6 +1582,12 @@ function FlagFixes()
 				-- end
 			-- end
 		-- end
+	end
+	
+	if ReadByte(world) == 6 then
+		if ReadByte(collectedFruits) >= 100 and ReadByte(room) == 4 then
+			WriteInt(minigameTimer, 0)
+		end
 	end
 	
 	if ReadByte(gummiFlagBase+11)==0 then
