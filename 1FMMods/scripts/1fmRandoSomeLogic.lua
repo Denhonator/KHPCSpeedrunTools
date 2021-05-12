@@ -890,19 +890,20 @@ function ValidSeed()
 	local theon = ItemAccessible(0xB7, 1)
 	print(theon)
 	
+	local DIWin = true
+	for i=0xC0,0xC7 do
+		chestAccessCheck = {}
+		rewardAccessCheck = {}
+		itemAccessCheck = {[i]=true}
+		local thisDI = ItemAccessible(i, 1)
+		DIWin = DIWin and thisDI
+		print(string.format("%x %x", i, thisDI and 1 or 0))
+	end
+	
 	if g1 and g2 and g3 and g4 and f1 and tr and (hj2 or (khama and theon)) then
 		print("HBWin")
 		return true
 	else
-		local DIWin = true
-		for i=0xC0,0xC7 do
-			chestAccessCheck = {}
-			rewardAccessCheck = {}
-			itemAccessCheck = {[i]=true}
-			local thisDI = ItemAccessible(i, 1)
-			DIWin = DIWin and thisDI
-			print(string.format("%x %x", i, thisDI and 1 or 0))
-		end
 		print("DI Win")
 		return DIWin
 	end
@@ -1332,7 +1333,7 @@ function UpdateReports(HUDNow)
 								it = itemids[chests[c]//0x10]
 							elseif chests[c]%0x10==0xE and rewards[chests[c]//0x10] and
 														rewards[chests[c]//0x10]%0x100 == 0xF0 then
-								it = itemids[rewards[chests[c]//0x10] // 0x100]
+								it = itemids[rewards[(chests[c]//0x10)+1] // 0x100]
 							end
 							local itype = ItemType(it)
 							if string.find(itype, "Important") then
