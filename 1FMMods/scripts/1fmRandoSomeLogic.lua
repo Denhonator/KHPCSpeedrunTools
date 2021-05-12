@@ -156,7 +156,6 @@ local donaldAbilities = {}
 local goofyLevels = {}
 local goofyAbilities = {}
 local chests = {}
-local randomGets = {}
 local chestAccessCheck = {}
 local rewardAccessCheck = {}
 local itemAccessCheck = {}
@@ -553,6 +552,7 @@ function Randomize()
 	local addItems = {0x95,0x96,0x97,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1}
 	local importantPool = {0x5, 0x39, 0x48, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
 	local rewardPool = {}
+	local randomGets = {}
 	
 	for i=1, 0xA9 do
 		if rewardDetails[i] then
@@ -902,11 +902,14 @@ function ValidSeed()
 	
 	if g1 and g2 and g3 and g4 and f1 and tr and (hj2 or (khama and theon)) then
 		print("HBWin")
-		return true
-	else
-		print("DI Win")
-		return DIWin
+		-- return true
 	end
+	if DIWin then
+		print("DI Win")
+		return true
+	end
+	print("Unwinnable, rerolling")
+	return false
 end
 
 function GetRandomOrder(size)

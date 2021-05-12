@@ -45,15 +45,15 @@
 2C  Mythril ; Hundred Acre Wood ; Page4
 2D  EXP Ring ; Hundred Acre Wood ; Page5
 2E  Cheer (Sora) ; From Owl ; Page5
-2F  Dream Shield ; Merlin ; Arts ; Fire Magic
+2F  Dream Shield ; Merlin ; Arts ; All Spells
 30  Olympia ; Olympus Coliseum
 31  Oblivion ; Chest
 32  Mythril ; Chest
 33  Wishing Star ; Chest
 34  Mythril Shard ; TT ; 42 Puppies
 35  Megaelixir ; TT ; 60 Puppies
-36  Orichalcum ; TT ; 72 Puppies
-37  Tech Boost ; TT ; 90 Puppies
+36  Orichalcum ; TT ; 72 Puppies ; HB1 ; Library
+37  Tech Boost ; TT ; 90 Puppies ; HB1 ; Library
 38  Brave Warrior ; Guard Armor
 39  Ifrit's Horn ; Trickmaster
 3A  Inferno Band ; Cerberus
