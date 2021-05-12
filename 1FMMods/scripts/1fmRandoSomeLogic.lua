@@ -1278,7 +1278,7 @@ function UpdateReports(HUDNow)
 						[13]=0x800, [12]=0x1000, [11]=0x2000, [10]=0x4000, [9]=0x8000}
 		local reportStatus = 0
 		for i=1, 13 do
-			local off = i<=10 and 0xA7 or 0x94
+			local off = i<=10 and 0xA7 or 0x94-10
 			if ReadByte(inventory+(off+i-1)) > 0 then
 				reportStatus = reportStatus + reportTable[i]
 			end
