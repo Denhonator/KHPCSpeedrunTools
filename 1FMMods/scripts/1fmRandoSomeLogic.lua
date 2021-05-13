@@ -1573,7 +1573,7 @@ function FlagFixes()
 		if ReadByte(blackfade) < 128 and prevBlack == 128 then
 			sliderSavedProg = ReadArray(sliderProgress, 5)
 			WriteArray(sliderProgress, {1,1,1,1,1})
-		elseif ReadByte(blackfade) > 0 and prevBlack == 0 then
+		elseif ReadByte(blackfade) == 128 and prevBlack < 128 then
 			WriteArray(sliderProgress, sliderSavedProg)
 		end
 		-- if ReadByte(room) == 0xF and ReadByte(sliderProgress) == 1 and ReadByte(collectedFruits) == 0 then
