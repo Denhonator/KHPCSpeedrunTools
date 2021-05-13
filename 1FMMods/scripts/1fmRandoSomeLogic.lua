@@ -398,7 +398,7 @@ function ItemAccessible(i, c)
 		elseif i==0xCB and not itemAccessCheck[oi] then
 			itemAccessCheck[0xC8] = true
 			itemAccessCheck[0xC9] = true
-			if ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) then
+			if ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and TrinityAccessible("Red Trinity") then
 				accessibleCount = accessibleCount+1
 			end
 		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
