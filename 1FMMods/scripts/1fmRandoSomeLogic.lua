@@ -1310,10 +1310,10 @@ function UpdateReports(HUDNow)
 						if j==itemhint[i] then
 							local inchest = false
 							for c=1, 0x1FF do
-								if chests[c] and chests[c] == j*0x10 then
+								if chests[c] and chests[c] == it*0x10 then
 									mempos = StringToKHText(string.format(
 										"Chest at\n%s\nhas %s", 
-										chestDetails[c][2], itemNames[it]), mempos)
+										chestDetails[c][2], itemNames[j]), mempos)
 									inchest = true
 									break
 								end
