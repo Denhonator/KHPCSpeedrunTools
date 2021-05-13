@@ -731,8 +731,48 @@ function Randomize()
 			end
 		end
 	end
-
 	print("Randomized chests")
+	
+	local order = GetRandomOrder(0xA9)
+	for j=1, 0xA9 do
+		local i = order[j]
+		if rewards[i] and rewards[i] % 0x100 == 1 then
+			local r = math.random(95)+4
+			while soraAbilities[r] < 0x81 do
+				r = math.random(95)+4
+			end
+			local ab = soraAbilities[r]
+			for l=1,99 do
+				if soraAbilities[l] == ab then
+					soraAbilities[l] = (rewards[i] // 0x100) + 0x80
+				end
+				if soraAbilities2[l] == ab then
+					soraAbilities2[l] = (rewards[i] // 0x100) + 0x80
+				end
+				if soraAbilities3[l] == ab then
+					soraAbilities3[l] = (rewards[i] // 0x100) + 0x80
+				end
+			end
+			rewards[i] = ((ab-0x80) * 0x100) + 1
+		elseif rewards[i] and rewards[i] % 0x100 == 0x21 then
+			local r = math.random(95)+4
+			while goofyAbilities[r] < 0x81 do
+				r = math.random(95)+4
+			end
+			local ab = goofyAbilities[r]
+			goofyAbilities[r] = (rewards[i] // 0x100) + 0x80
+			rewards[i] = ((ab-0x80) * 0x100) + 0x21
+		elseif rewards[i] and rewards[i] % 0x100 == 0x11 then
+			local r = math.random(95)+4
+			while donaldAbilities[r] < 0x81 do
+				r = math.random(95)+4
+			end
+			local ab = donaldAbilities[r]
+			donaldAbilities[r] = (rewards[i] // 0x100) + 0x80
+			rewards[i] = ((ab-0x80) * 0x100) + 0x21
+		end
+	end
+	print("Mixed level up abilities with reward abilities")
 	
 	for i=1, 99 do
 		local r = math.random(99)
