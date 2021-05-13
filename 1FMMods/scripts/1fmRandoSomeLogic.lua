@@ -56,6 +56,8 @@ local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
+local waterwayGate = 0x2DE763D - offset
+local waterwayTrinity = 0x2DE7681 - offset
 local speedup = 0x233C24C - offset
 local sliderProgress = 0x2DE7709 - offset
 local minigameTimer = 0x232A684 - offset
@@ -144,7 +146,6 @@ local gummiNames = {}
 local itemNames = {}
 local chestDetails = {}
 local rewardDetails = {}
-local itemData = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
@@ -155,12 +156,18 @@ local donaldLevels = {}
 local donaldAbilities = {}
 local goofyLevels = {}
 local goofyAbilities = {}
+local weaponStr = {}
+local weaponMag = {}
+local itemData = {}
+local shops = {}
 local chests = {}
 local chestAccessCheck = {}
 local rewardAccessCheck = {}
 local itemAccessCheck = {}
+local seedstring = ""
 local randomized = false
 local successfulRando = true
+local isValidSeed = false
 local initDone = false
 local infiniteDetection = 0
 local canExecute = false
@@ -214,8 +221,8 @@ function _OnInit()
 	end
 
 	if canExecute then
-		local f = io.open("items.txt")
-		local f2 = io.open("gummis.txt")
+		local f = io.open("randofiles/items.txt")
+		local f2 = io.open("randofiles/gummis.txt")
 		if not f then
 			print("items.txt missing!")
 		elseif not f2 then
@@ -227,8 +234,8 @@ function _OnInit()
 			for i=1,0x40 do
 				gummiNames[i] = f2:read("*l")
 			end
-			chestDetails = LoadRewards("Chests.txt")
-			rewardDetails = LoadRewards("Rewards.txt")
+			chestDetails = LoadRewards("randofiles/Chests.txt")
+			rewardDetails = LoadRewards("randofiles/Rewards.txt")
 			print(rewardDetails[1][1])
 			f:close()
 			f2:close()
@@ -249,9 +256,10 @@ function _OnInit()
 		trinityTable = {1,2,3,4,5}
 		reportUpdater = ReadShort(reports)
 		
-		seedfile = io.open("seed.txt", "r")
+		seedfile = io.open("randofiles/seed.txt", "r")
 		if seedfile ~= nil then
 			text = seedfile:read()
+			seedstring = text
 			if text == "Disabled" then
 				print("Disabling rando because of seed Disabled")
 				randomized = true
@@ -263,7 +271,7 @@ function _OnInit()
 			math.randomseed(seed)
 			print("Found existing seed")
 		else
-			seedfile = io.open("seed.txt", "w")
+			seedfile = io.open("randofiles/seed.txt", "w")
 			local newseed = os.time()
 			math.randomseed(newseed)
 			seedfile:write(newseed)
@@ -547,6 +555,11 @@ end
 
 function Randomize()
 	successfulRando = false
+	
+	if LoadRando() then
+		successfulRando = true
+		goto loaded
+	end
 
 	local missableRewards = {0, 2}
 	local addItems = {0x95,0x96,0x97,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1}
@@ -658,10 +671,10 @@ function Randomize()
 		if string.find(ItemType(itemids[i]), "Important") then
 			WriteArray(itemTable+((i-1)*20), ReadArray(itemTable+((itemids[i]-1)*20), 20))
 		end
-		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
 		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
 			WriteShort(itemTable+((i-1)*20)+8, (math.random(9)+1)*250)
 		end
+		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
 		
 		if ((string.find(ItemType(i), "Weapon")
 				or string.find(ItemType(i), "Important")
@@ -734,7 +747,7 @@ function Randomize()
 	print("Randomized chests")
 	
 	local order = GetRandomOrder(0xA9)
-	for j=1, 0xA9 do
+	for j=1, 0x49 do
 		local i = order[j]
 		if rewards[i] and rewards[i] % 0x100 == 1 then
 			local r = math.random(95)+4
@@ -743,14 +756,18 @@ function Randomize()
 			end
 			local ab = soraAbilities[r]
 			for l=1,99 do
-				if soraAbilities[l] == ab then
+				replaced = {false,false,false}
+				if soraAbilities[l] == ab and not replaced[1] then
 					soraAbilities[l] = (rewards[i] // 0x100) + 0x80
+					replaced[1] = true
 				end
-				if soraAbilities2[l] == ab then
+				if soraAbilities2[l] == ab and not replaced[2] then
 					soraAbilities2[l] = (rewards[i] // 0x100) + 0x80
+					replaced[2] = true
 				end
-				if soraAbilities3[l] == ab then
+				if soraAbilities3[l] == ab and not replaced[3] then
 					soraAbilities3[l] = (rewards[i] // 0x100) + 0x80
+					replaced[2] = true
 				end
 			end
 			rewards[i] = ((ab-0x80) * 0x100) + 1
@@ -864,23 +881,60 @@ function Randomize()
 			perMagicShuffle[i] = table.remove(magicPool2, math.random(#magicPool2))
 		end
 	end
-	
 	print("Randomized magic")
+
+	local trinityPool = {1,2,3,4,5}
+	for i=1,5 do
+		trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
+	end
+	print("Randomized trinities")
 	
-	local randoTrinity = true
-	
-	while randoTrinity do
-		local trinityPool = {1,2,3,4,5}
-		for i=1,5 do
-			trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
-		end
-		if trinityTable[5] ~= 2 and trinityTable[5] ~= 3 then
-			randoTrinity = false
-		end
+	for i=1,5 do
+		print(string.format("trinity %x became %x", i, trinityTable[i]))
+	end
+	for i=1, 0xFF do
+		print(string.format("%x became %x", i, itemids[i]))
 	end
 	
-	print("Randomized trinities")
+	for i=0x51,0x85 do
+		if string.find(ItemType(i), "Weapon") then
+			local tablePos = (itemids[i]-0x51)*0x58
+			if weaponStatRando < 2 then
+				tablePos = (i-0x51)*0x58
+			end
+			weaponStr[i] = ReadByte(weaponTable+tablePos+0x30)
+			weaponMag[i] = ReadByte(weaponTable+tablePos+0x38)
+			local magSigned = (weaponMag[i] > 127) and -(256 - weaponMag[i]) or weaponMag[i]
+			if weaponStatRando % 2 == 1 then
+				local randomPower = math.random(8)+6
+				while weaponStr[i]+magSigned*5 < randomPower do
+					weaponStr[i] = weaponStr[i]+1
+				end
+			end
+		end
+	end
+	print("Randomized equipment")
+	
+	local shopMap = {}
+	for i=0,7 do
+		if i == 4 or i == 7 then
+			shopMap = {}
+		end
+		local shopItem = 0
+		local shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
+		while shopItemID > 0 do
+			if not shopMap[shopItemID] then
+				shopMap[shopItemID] = table.remove(shopPool, math.random(#shopPool))
+			end
+			shops[i*0x100+shopItem+1] = shopMap[shopItemID]
+			shopItem = shopItem + 1
+			shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
+		end
+	end
+	print("Randomized shops")
+
 	successfulRando = true
+	::loaded::
 end
 
 function ValidSeed()
@@ -946,6 +1000,7 @@ function ValidSeed()
 	end
 	if DIWin then
 		print("DI Win")
+		SaveRando()
 		return true
 	end
 	print("Unwinnable, rerolling")
@@ -964,35 +1019,223 @@ function GetRandomOrder(size)
 	return randomOrder
 end
 
+function SaveRando()
+	randosave = io.open("randofiles/" .. string.sub(seedstring, 1, 10) .. ".save", "w")
+	randosave:write("Rewards:\n")
+	for i=1, 0xA9 do
+		if rewards[i] then
+			randosave:write(string.format("%03x %04x\n", i, rewards[i]))
+		end
+	end
+	randosave:write("\nChests:\n")
+	for i=1, 0x1FF do
+		if chests[i] then
+			randosave:write(string.format("%03x %04x\n", i, chests[i]))
+		end
+	end
+	randosave:write("\nItem swaps:\n")
+	for i=1, 0xFF do
+		randosave:write(string.format("%02x %02x\n", i, itemids[i]))
+	end
+	randosave:write("\nShops:\n")
+	for i=1, 0x9FF do
+		if shops[i] then
+			randosave:write(string.format("%03x %02x\n", i, shops[i]))
+		end
+	end
+	randosave:write("\nMagic:\n")
+	for i=1, 0x7 do
+		randosave:write(string.format("%x %x\n", i, perMagicShuffle[i]))
+	end
+	randosave:write("\nTrinities:\n")
+	for i=1, 0x5 do
+		randosave:write(string.format("%x %x\n", i, trinityTable[i]))
+	end
+	randosave:write("\nSora stats:\n")
+	for i=1, 99 do
+		if soraLevels[i] then
+			randosave:write(string.format("%02d %x\n", i, soraLevels[i]))
+		end
+	end
+	randosave:write("\nSora abilities1:\n")
+	for i=1, 99 do
+		if soraAbilities[i] then
+			randosave:write(string.format("%02d %x\n", i, soraAbilities[i]))
+		end
+	end
+	randosave:write("\nSora abilities2:\n")
+	for i=1, 99 do
+		if soraAbilities2[i] then
+			randosave:write(string.format("%02d %x\n", i, soraAbilities2[i]))
+		end
+	end
+	randosave:write("\nSora abilities3:\n")
+	for i=1, 99 do
+		if soraAbilities3[i] then
+			randosave:write(string.format("%02d %x\n", i, soraAbilities3[i]))
+		end
+	end
+	randosave:write("\nDonald stats:\n")
+	for i=1, 99 do
+		if donaldLevels[i] then
+			randosave:write(string.format("%02d %x\n", i, donaldLevels[i]))
+		end
+	end
+	randosave:write("\nDonald abilities:\n")
+	for i=1, 99 do
+		if donaldAbilities[i] then
+			randosave:write(string.format("%02d %x\n", i, donaldAbilities[i]))
+		end
+	end
+	randosave:write("\nGoofy stats:\n")
+	for i=1, 99 do
+		if goofyLevels[i] then
+			randosave:write(string.format("%02d %x\n", i, goofyLevels[i]))
+		end
+	end
+	randosave:write("\nGoofy abilities:\n")
+	for i=1, 99 do
+		if goofyAbilities[i] then
+			randosave:write(string.format("%02d %x\n", i, goofyAbilities[i]))
+		end
+	end
+	randosave:write("\nWeapons:\n")
+	for i=0x51, 0x86 do
+		if weaponStr[i] then
+			randosave:write(string.format("%02x %02x %02x\n", i, weaponStr[i], weaponMag[i]))
+		end
+	end
+	randosave:write("\nItem data:\n")
+	for i=1, 0xFF do
+		randosave:write(string.format("%02x ", i))
+		for j=1, 20 do
+			randosave:write(string.format("%02x", itemData[i][j]))
+		end
+		randosave:write("\n")
+	end
+	randosave:close()
+	print("Saved rando")
+end
+
+function LoadRando()
+	randosave = io.open("randofiles/" .. string.sub(seedstring, 1, 10) .. ".save", "r")
+	if not randosave then
+		return false
+	end
+	local loadstate = ""
+	while randosave do
+		local line = randosave:read("*l")
+		if line == nil then
+			break
+		elseif #line < 3 then
+			loadstate = ""
+		elseif loadstate == "" then
+			loadstate = line
+		elseif string.find(loadstate, "ewards") then
+			local i = tonumber(string.sub(line, 1, 3), 16)
+			local v = tonumber(string.sub(line, 5, 8), 16)
+			rewards[i] = v
+		elseif string.find(loadstate, "hests") then
+			local i = tonumber(string.sub(line, 1, 3), 16)
+			local v = tonumber(string.sub(line, 5, 8), 16)
+			chests[i] = v
+		elseif string.find(loadstate, "tem swaps") then
+			local i = tonumber(string.sub(line, 1, 2), 16)
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			itemids[i] = v
+		elseif string.find(loadstate, "hops") then
+			local i = tonumber(string.sub(line, 1, 3), 16)
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			shops[i] = v
+		elseif string.find(loadstate, "agic") then
+			local i = tonumber(string.sub(line, 1, 1), 16)
+			local v = tonumber(string.sub(line, 3, 3), 16)
+			perMagicShuffle[i] = v
+		elseif string.find(loadstate, "rinit") then
+			local i = tonumber(string.sub(line, 1, 1), 16)
+			local v = tonumber(string.sub(line, 3, 3), 16)
+			trinityTable[i] = v
+		elseif string.find(loadstate, "ora stats") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			soraLevels[i] = v
+		elseif string.find(loadstate, "onald stats") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			donaldLevels[i] = v
+		elseif string.find(loadstate, "oofy stats") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			goofyLevels[i] = v
+		elseif string.find(loadstate, "ora abilities1") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			soraAbilities[i] = v
+		elseif string.find(loadstate, "ora abilities2") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			soraAbilities2[i] = v
+		elseif string.find(loadstate, "ora abilities3") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			soraAbilities3[i] = v
+		elseif string.find(loadstate, "onald abilities") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			donaldAbilities[i] = v
+		elseif string.find(loadstate, "oofy abilities") then
+			local i = tonumber(string.sub(line, 1, 2))
+			local v = tonumber(string.sub(line, 4, 5), 16)
+			goofyAbilities[i] = v
+		elseif string.find(loadstate, "eapons") then
+			local i = tonumber(string.sub(line, 1, 2), 16)
+			local str = tonumber(string.sub(line, 4, 5), 16)
+			local mag = tonumber(string.sub(line, 7, 8), 16)
+			weaponStr[i] = str
+			weaponMag[i] = mag
+		elseif string.find(loadstate, "tem data") then
+			local i = tonumber(string.sub(line, 1, 2), 16)
+			itemData[i] = {}
+			for j=1, 20 do
+				if j<=12 then
+					local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
+					itemData[i][j] = v
+				else
+					itemData[i][j] = ReadByte(itemTable+((i-1)*20)+j-1)
+				end
+			end
+		end
+	end
+	randosave:close()
+	print("Loaded saved rando")
+	isValidSeed = true
+	return true
+end
+
 function ApplyRandomization()
 	for i=1, 0xA9 do
 		if rewards[i] then
 			WriteShort(rewardTable+((i-1)*2), rewards[i])
 		end
 	end
-
-	local shopMap = {}
-	for i=0,7 do
-		if i == 4 or i == 7 then
-			shopMap = {}
-		end
-		local shopItem = 0
-		local shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
-		while shopItemID > 0 do
-			if not shopMap[shopItemID] then
-				shopMap[shopItemID] = table.remove(shopPool, math.random(#shopPool))
-			end
-			WriteInt(shopTableBase+(i*0xD4)+(shopItem*4), shopMap[shopItemID])
-			shopItem = shopItem + 1
-			shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
-		end
-	end
+	print("Reward randomization applied")
 	
-	for i=1, 0x1DE do
+	for i=1, 0x1FF do
 		if chests[i] then
 			WriteShort(chestTable+((i-1)*2), chests[i])
 		end
 	end
+	print("Chest randomization applied")
+
+	for i=0,7 do
+		local shopItem = 0
+		while shops[i*0x100+shopItem+1] do
+			WriteInt(shopTableBase+(i*0xD4)+(shopItem*4), shops[i*0x100+shopItem+1])
+			shopItem = shopItem + 1
+		end
+	end
+	print("Shop randomization applied")
+	
 	for i=1, 99 do
 		WriteByte(soraStatTable+(i-1), soraLevels[i])
 		WriteByte(soraAbilityTable+(i-1), soraAbilities[i])
@@ -1003,65 +1246,26 @@ function ApplyRandomization()
 		WriteByte(donaldStatTable+(i-1), donaldLevels[i])
 		WriteByte(donaldAbilityTable+(i-1), donaldAbilities[i])
 	end
-	local weaponStr = {}
-	local weaponMag = {}
-	local weaponItemData = {}
-	for i=0x51,0x85 do
-		if i~=itemids[i] and string.find(ItemType(i), "Weapon") then
-			local tablePos = (itemids[i]-0x51)*0x58
-			if weaponStatRando < 2 then
-				tablePos = (i-0x51)*0x58
-			end
-			weaponStr[i] = ReadByte(weaponTable+tablePos+0x30)
-			weaponMag[i] = ReadByte(weaponTable+tablePos+0x38)
-			local magSigned = (weaponMag[i] > 127) and -(256 - weaponMag[i]) or weaponMag[i]
-			if weaponStatRando % 2 == 1 then
-				local randomPower = math.random(8)+6
-				while weaponStr[i]+magSigned*5 < randomPower do
-					weaponStr[i] = weaponStr[i]+1
-				end
-			end
-			weaponItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
-		end
-	end
+	print("Level randomization applied")
+	
 	for i=0x51, 0x85 do
 		if weaponStr[i] then
 			local tablePos = (i-0x51)*0x58
 			WriteByte(weaponTable+tablePos+0x30, weaponStr[i])
 			WriteByte(weaponTable+tablePos+0x38, weaponMag[i])
-			WriteArray(itemTable+((i-1)*20), weaponItemData[i])
+			WriteArray(itemTable+((i-1)*20), itemData[itemids[i]])
 		end
 	end
-	
 	print("Weapon randomization applied")
 	
-	local accessoryItemData = {}
 	for i=0x11, 0x47 do
 		if i~=itemids[i] and string.find(ItemType(i), "Accessory") then
-			accessoryItemData[i] = ReadArray(itemTable+((itemids[i]-1)*20), 20)
+			WriteArray(itemTable+((i-1)*20), itemData[itemids[i]])
 		end
 	end
-	for i=0x11, 0x47 do
-		if i~=itemids[i] and string.find(ItemType(i), "Accessory") then
-			WriteArray(itemTable+((i-1)*20), accessoryItemData[i])
-		end
-	end
-	
 	print("Accessory randomization applied")
 	
-	for i=1,5 do
-		print(string.format("trinity %x became %x", i, trinityTable[i]))
-	end
 	randomized = true
-	for i=1, 0xFF do
-		print(string.format("%x became %x", i, itemids[i]))
-	end
-	
-	for i=0,3 do
-		WriteByte(unequipBlacklist + (i*4), 0)
-	end
-	
-	print("Weapons randomized. If this was not done on a fresh boot, they got shuffled some more")
 	print("Applied randomization")
 	successfulRando = true
 end
@@ -1568,9 +1772,13 @@ function FlagFixes()
 			WriteByte(OCCupUnlock+i, 0x0A)	-- Unlock cups
 		end
 	end
+
+	if (ReadByte(waterwayGate) // 0x80) % 2 == 0 then
+		WriteByte(waterwayGate, ReadByte(waterwayGate)+0x80)
+	end
 	
-	if (ReadByte(trinityUnlock) // 2) % 2 == 1 and ReadByte(cutsceneFlags+0xB04) >= 0x31 then
-		WriteByte(worldFlagBase+0x20, 0) -- Secret waterway trinity crash fix
+	if (ReadByte(waterwayTrinity) // 0x20) % 2 == 0 then
+		WriteByte(waterwayTrinity, ReadByte(waterwayTrinity)+0x20)
 	end
 	
 	if ReadByte(worldFlagBase+0x36) >= 0 then
@@ -1587,6 +1795,18 @@ function FlagFixes()
 		for i=0,1 do
 			WriteByte(party1+i, i+1)
 			WriteByte(party2+i, i+1)
+		end
+		
+		for i=0,3 do
+			WriteByte(unequipBlacklist + (i*4), 0)
+		end
+		
+		if ReadFloat(soraHUD) > 0 and ReadByte(lockMenu) > 0 then
+			WriteByte(lockMenu, 0) -- Unlock menu
+		end
+
+		if ReadByte(enableRC) ~= 0x0 then
+			WriteByte(enableRC, 0x0)
 		end
 	end
 	
@@ -1686,7 +1906,7 @@ function _OnFrame()
 	if not randomized and initDone then
 		if (ReadByte(soraHP) > 0 or ReadInt(0x7A8EE8-offset) == 1) and successfulRando then
 			Randomize()
-			while not ValidSeed() do
+			while not isValidSeed and not ValidSeed() do
 				infiniteDetection = 0
 				Randomize()
 			end
@@ -1746,14 +1966,6 @@ function _OnFrame()
 	
 	prevBlack = ReadByte(blackfade)
 
-	if ReadFloat(soraHUD) > 0 and ReadByte(lockMenu) > 0 then
-		WriteByte(lockMenu, 0) -- Unlock menu
-	end
-
-	if ReadByte(enableRC) ~= 0x0 then
-		WriteByte(enableRC, 0x0)
-	end
-	
 	if ReadByte(0x232A604-offset) and ReadByte(0x2E1CB9C-offset) < 5 and ReadShort(menuState)==62576 then
 		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
 		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu

@@ -4,3 +4,5 @@
 1FMMods/seed.txt
 1FMMods/itemdata
 *.dll
+*.save
+1FMMods/randofiles/seed.txt
