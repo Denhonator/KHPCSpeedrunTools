@@ -1830,22 +1830,24 @@ function FlagFixes()
 	end
 	
 	if ReadByte(world) == 5 then
-		if ReadByte(blackfade) < 128 and prevBlack == 128 then
-			sliderSavedProg = ReadArray(sliderProgress, 5)
-			WriteArray(sliderProgress, {1,1,1,1,1})
-		elseif ReadByte(blackfade) == 128 and prevBlack < 128 then
-			WriteArray(sliderProgress, sliderSavedProg)
-		end
-		-- if ReadByte(room) == 0xF and ReadByte(sliderProgress) == 1 and ReadByte(collectedFruits) == 0 then
-			-- for i=1,4 do
-				-- if ReadByte(sliderProgress+i) == 0 then
-					-- print(string.format("Warping to jungle slider %x", i+1))
-					-- WriteByte(collectedFruits, i*10)
-					-- RoomWarp(5, 0x27+i)
-					-- break
-				-- end
-			-- end
+		-- if ReadByte(blackfade) < 128 and prevBlack == 128 then
+			-- sliderSavedProg = ReadArray(sliderProgress, 5)
+			-- WriteArray(sliderProgress, {1,1,1,1,1})
+		-- elseif ReadByte(blackfade) == 128 and prevBlack < 128 then
+			-- WriteArray(sliderProgress, sliderSavedProg)
 		-- end
+		if ReadByte(room) == 0xF and ReadByte(sliderProgress) == 1 
+								and ReadByte(blackfade) > 100 and ReadByte(collectedFruits) == 0 then
+			for i=1,4 do
+				if ReadByte(sliderProgress+i) == 0 then
+					print(string.format("Warping to jungle slider %x", i+1))
+					RoomWarp(5, 0x27+i)
+					break
+				end
+			end
+		elseif ReadByte(room) > 0xF then
+			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
+		end
 	end
 	
 	if ReadByte(world) == 6 then
