@@ -1803,7 +1803,7 @@ function FlagFixes()
 			WriteByte(unequipBlacklist + (i*4), 0)
 		end
 		
-		if ReadFloat(soraHUD) > 0 and ReadByte(lockMenu) > 0 then
+		if ReadByte(lockMenu) > 0 then
 			WriteByte(lockMenu, 0) -- Unlock menu
 		end
 
