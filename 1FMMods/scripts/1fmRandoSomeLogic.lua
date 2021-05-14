@@ -83,16 +83,19 @@ local lockMenu = 0x232A60C - offset
 local party1 = 0x2DE5E5F - offset
 local party2 = 0x2E1CBE5 - offset
 local soraHUD = 0x280EB1C - offset
+local stateFlag = 0x2863958 - offset
 local magicUnlock = 0x2DE5A44 - offset
 local magicLevels = magicUnlock + 0x41E
 local magicFlags = 0x2DE75EE - offset
 local shortcuts = 0x2DE6214 - offset
 local trinityUnlock = magicUnlock + 0x1BA7
-local soraHP = 0x2D592CC - offset
 local world = 0x233CADC - offset
 local room = world + 0x68
 local sharedAbilities = 0x2DE5F69 - offset
+local soraPointer = 0x2534680 - offset
 local soraJumpHeight = 0x2D592A0 - offset
+local jumpHeights = 0x2D1F46C - offset
+local soraHP = 0x2D592CC - offset
 local superglideSpeedHack = 0x2AE104 - offset
 
 local soraStats = 0x2DE59D0 - offset
@@ -407,7 +410,9 @@ function ItemAccessible(i, c)
 				accessibleCount = accessibleCount+1
 			end
 		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
-			accessibleCount = accessibleCount+1
+			if i==0xB0 or AbilityAccessible(3, 1) or AbilityAccessible(4, 1) then
+				accessibleCount = accessibleCount+1
+			end
 		elseif i==0xAA and AbilityAccessible(2, 1) then
 			accessibleCount = accessibleCount+1
 		elseif i==0xAE and not itemAccessCheck[oi] then
@@ -492,10 +497,10 @@ function IsAccessible(t, i)
 				thisAccess = thisAccess or AbilityAccessible(1, 1)
 			end
 			if string.find(t[i][k], "Glide") then
-				thisAccess = thisAccess or AbilityAccessible(3) or AbilityAccessible(4)
+				thisAccess = thisAccess or AbilityAccessible(3, 1) or AbilityAccessible(4, 1)
 			end
 			if string.find(t[i][k], "Mermaid Kick") then
-				thisAccess = thisAccess or AbilityAccessible(2)
+				thisAccess = thisAccess or AbilityAccessible(2, 1)
 			end
 			if string.find(t[i][k], "HB1") then
 				thisAccess = thisAccess or 
@@ -1712,8 +1717,20 @@ function ReplaceTrinity(HUDNow)
 	end
 end
 
+function EquippedGlides()
+	local equippedGlides = 0
+	for i=0,9 do
+		local ab = ReadByte(sharedAbilities+i)
+		if ab == 3 or ab == 4 then
+			equippedGlides = equippedGlides+1
+		end
+	end
+	return equippedGlides
+end
+
 function StackAbilities()
-	local jumpHeight = ReadFloat(soraJumpHeight)
+	local equippedGlides = EquippedGlides()
+	local jumpHeight = ReadShort(jumpHeights+2)
 	if jumpHeight == 290 then
 		jumpHeight = jumpHeight-100
 		for i=0,9 do
@@ -1721,7 +1738,12 @@ function StackAbilities()
 				jumpHeight = jumpHeight + 100
 			end
 		end
-		WriteFloat(soraJumpHeight, jumpHeight)
+		WriteShort(jumpHeights+2, jumpHeight)
+		if ReadByte(world) == 0x10 and equippedGlides == 0 and (ReadByte(room) == 0x21 or 
+				(ReadByte(cutsceneFlags+0xB0F) >= 0x6E) and ReadFloat(soraHUD) > 0) then
+			WriteShort(jumpHeights, 390)
+			WriteShort(jumpHeights+2, math.max(390, jumpHeight))
+		end
 	end
 	
 	if stackAbilities > 1 then
@@ -1734,12 +1756,8 @@ function StackAbilities()
 				superglides = superglides + 1
 			end
 		end
-		local equippedGlides = 0
 		for i=0,9 do
 			local ab = ReadByte(sharedAbilities+i)
-			if ab == 3 or ab == 4 then
-				equippedGlides = equippedGlides+1
-			end
 			if ab % 0x80 == 3 and glides > 1 then
 				WriteByte(sharedAbilities+i, ab+1)
 				glides = glides - 1
@@ -1749,6 +1767,19 @@ function StackAbilities()
 			end
 		end
 		WriteInt(superglideSpeedHack, 0x17F50C + math.max(equippedGlides-2, 0)*4)
+		if equippedGlides == 0 and ReadLong(soraPointer) then
+			if (ReadByte(stateFlag) // 0x20) % 2 == 1 then
+				WriteByte(stateFlag, ReadByte(stateFlag) - 0x20)
+			end
+			local airGround = ReadLong(soraPointer)+0x70
+			if ReadInt(ReadLong(soraPointer)+0xB0) > 0 then
+				WriteByteA(airGround, 2)
+			end
+		elseif equippedGlides > 0 and ReadLong(soraPointer) and ReadByte(world) == 0xD then
+			if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
+				WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
+			end
+		end
 	end
 end
 
@@ -1847,6 +1878,25 @@ function FlagFixes()
 		end
 	end
 	
+	-- Fall in flight sections without glide
+	if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
+		local soraYPos = ReadFloatA(ReadLong(soraPointer)+0x14)
+		if ReadByte(world) == 0xD then
+			if (ReadByte(room) == 9 and soraYPos > 900) or 
+				(ReadByte(room) == 8 and soraYPos > 600) then
+				InstantContinue()
+			end
+		end
+		
+		if ReadByte(world) == 0x10 then
+			if ReadByte(room) == 0x1A and soraYPos > -400 then
+				InstantContinue()
+			elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
+				WriteFloatA(ReadLong(soraPointer)+0x14, -7000)
+			end
+		end
+	end
+	
 	if ReadByte(world) == 5 then
 		-- if ReadByte(blackfade) < 128 and prevBlack == 128 then
 			-- sliderSavedProg = ReadArray(sliderProgress, 5)
@@ -1915,6 +1965,15 @@ function OpenGummi()
 	end
 	WriteInt(worldMapLines, 0xFFFFFFFF)
 	WriteByte(worldMapLines+4, 0xFF)
+end
+
+function InstantContinue()
+	if ReadByte(warpTrigger) == 0 then
+		print("Instant continue trigger")
+		WriteByte(warpType1, 5)
+		WriteByte(warpType2, 12)
+		WriteByte(warpTrigger, 2)
+	end
 end
 
 function RoomWarp(w, r)

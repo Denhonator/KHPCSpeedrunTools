@@ -375,13 +375,13 @@ ff  Potion           ; ?
 176 Dalmatians 27   ; Chamber 5
 177 Mega-Ether      ; Chamber 5
 178 Thundaga-G      ; Chamber 5
-179 Dalmatians 15   ; Pirate Ship ; White Trinity ; Green Trinity
-17a Reward a2       ; Pirate Ship ; Green Trinity
+179 Dalmatians 15   ; Pirate Ship ; White Trinity ; Green Trinity ; Glide
+17a Reward a2       ; Pirate Ship ; Green Trinity ; Glide
 17b Orichalcum      ; Ship: Hold ; Yellow Trinity
 17c Reward a1       ; Ship: Hold ; Yellow Trinity
 17d Meteor-G        ; Ship: Galley
 17e Reward 78       ; Ship: Cabin ; Green Trinity
-17f Dalmatians 28   ; Ship: Hold ; Green Trinity
+17f Dalmatians 28   ; Ship: Hold ; Glide
 180 Potion          ; ?
 181 Potion          ; ?
 182 Potion          ; ?
@@ -402,7 +402,7 @@ ff  Potion           ; ?
 191 Potion          ; ?
 192 Potion          ; ?
 193 Flare-G	    ; Clock Tower ; Green Trinity
-194 Paper-G         ; Ship: Hold ; Green Trinity
+194 Paper-G         ; Ship: Hold ; Glide
 195 Dalmatians 29   ; Ship: Hold ; Yellow Trinity
 196 Dalmatians 30   ; Captain's Cabin ; Green Trinity
 197 Life-G          ; Rising Falls

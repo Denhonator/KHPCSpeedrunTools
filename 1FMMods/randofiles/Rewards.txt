@@ -13,13 +13,13 @@
 0C  Potion ; ?
 0D  Potion ; ?
 0E  Mermaid Kick ; Ursula 1
-0F  Glide ; Neverland ; Green Trinity
+0F  Glide ; Neverland ; Green Trinity ; Glide
 10  Superglide ; Chernabog ; EotW
 11  Fireglow ; Dragon Maleficent ; HB1 ; Library
 12  Earthshine ; Secret Waterway ; Red Trinity
 13  Jungle King ; Deep Jungle
 14  Three Wishes ; Agrabah
-15  Fairy Harp ; Neverland ; Green Trinity
+15  Fairy Harp ; Neverland ; Green Trinity ; Glide
 16  Pumpinhead ; Halloween Town ; Jack-In-The-Box
 17  Crabclaw ; Atlantica ; Mermaid Kick
 18  Divine Rose ; Belle in HB2 ; HB1 ; Library ; HB2
