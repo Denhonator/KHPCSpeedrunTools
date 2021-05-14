@@ -274,6 +274,7 @@ function _OnInit()
 			seedfile = io.open("randofiles/seed.txt", "w")
 			local newseed = os.time()
 			math.randomseed(newseed)
+			seedstring = string.format("%d", newseed)
 			seedfile:write(newseed)
 			print("Wrote new seed")
 		end
