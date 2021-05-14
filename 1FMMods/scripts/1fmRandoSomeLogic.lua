@@ -20,6 +20,7 @@ local weaponStatRando = 3
 -- 0 = No stacking. Vanilla. You just have excess abilities in the menu.
 -- 1 = High Jump stacks: Jump higher the more you have.
 -- 2 = High Jump and Glides. First glide/superglide turns into glide, next into superglide and past that it gets faster.
+-- 3 = Glide is also required for flight.
 
 local stackAbilities = 2
 
