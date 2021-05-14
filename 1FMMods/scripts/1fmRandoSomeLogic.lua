@@ -1744,23 +1744,29 @@ function EquippedGlides()
 	return equippedGlides
 end
 
-function StackAbilities()
-	local equippedGlides = EquippedGlides()
-	local jumpHeight = ReadShort(jumpHeights+2)
-	if jumpHeight == 290 then
-		jumpHeight = jumpHeight-100
-		for i=0,9 do
-			if ReadByte(sharedAbilities+i) == 1 then
-				jumpHeight = jumpHeight + 100
-			end
-		end
-		WriteShort(jumpHeights+2, jumpHeight)
-		if ReadByte(world) == 0x10 and equippedGlides == 0 and (ReadByte(room) == 0x21 or 
-				(ReadByte(cutsceneFlags+0xB0F) >= 0x6E) and ReadFloat(soraHUD) > 0) then
-			WriteShort(jumpHeights, 390)
-			WriteShort(jumpHeights+2, math.max(390, jumpHeight))
+function EquippedJumps()
+	local EquippedJumps = 0
+	for i=0,9 do
+		local ab = ReadByte(sharedAbilities+i)
+		if ab == 1 then
+			EquippedJumps = EquippedJumps+1
 		end
 	end
+	return EquippedJumps
+end
+
+function StackAbilities()
+	local equippedGlides = EquippedGlides()
+	local equippedJumps = EquippedJumps()
+	local jumpHeight = math.max(290, 190+(equippedJumps*100))
+
+	WriteShort(jumpHeights+2, jumpHeight)
+	if ReadByte(world) == 0x10 and equippedGlides == 0 and (ReadByte(room) == 0x21 or 
+			(ReadByte(cutsceneFlags+0xB0F) >= 0x6E) and ReadFloat(soraHUD) > 0) then
+		WriteShort(jumpHeights, 390)
+		WriteShort(jumpHeights+2, math.max(390, jumpHeight))
+	end
+
 	
 	if stackAbilities > 1 then
 		local glides = 0
