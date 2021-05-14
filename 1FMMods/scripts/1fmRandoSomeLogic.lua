@@ -1402,7 +1402,10 @@ end
 
 function MenuNameSwap(menuNow)
 	for i=1, 0xFF do
-		if (string.find(ItemType(i), "Important") or string.find(ItemType(i), "Shuffle")) and i~=itemids[i] then
+		if (string.find(ItemType(i), "Important") or 
+			string.find(ItemType(itemids[i]), "Important") or 
+			string.find(ItemType(i), "Shuffle")) and i~=itemids[i] then
+			
 			if menuNow > 0 then
 				WriteArray(itemTable+((i-1)*20), itemData[i])
 			else
