@@ -668,13 +668,12 @@ function Randomize()
 	itemids[0x93] = 0xC5
 	
 	for i=1, 0xFF do
-		if string.find(ItemType(itemids[i]), "Important") then
-			WriteArray(itemTable+((i-1)*20), ReadArray(itemTable+((itemids[i]-1)*20), 20))
-		end
-		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
-			WriteShort(itemTable+((i-1)*20)+8, (math.random(9)+1)*250)
-		end
 		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
+		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
+			local price = (math.random(9)+1)*250
+			itemData[i][9] = price % 0x100
+			itemData[i][10] = price // 0x100
+		end
 		
 		if ((string.find(ItemType(i), "Weapon")
 				or string.find(ItemType(i), "Important")
@@ -1122,6 +1121,11 @@ function LoadRando()
 	if not randosave then
 		return false
 	end
+	
+	for i=1, 0xFF do
+		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
+	end
+	
 	local loadstate = ""
 	while randosave do
 		local line = randosave:read("*l")
@@ -1145,7 +1149,7 @@ function LoadRando()
 			itemids[i] = v
 		elseif string.find(loadstate, "hops") then
 			local i = tonumber(string.sub(line, 1, 3), 16)
-			local v = tonumber(string.sub(line, 4, 5), 16)
+			local v = tonumber(string.sub(line, 5, 6), 16)
 			shops[i] = v
 		elseif string.find(loadstate, "agic") then
 			local i = tonumber(string.sub(line, 1, 1), 16)
@@ -1195,14 +1199,9 @@ function LoadRando()
 			weaponMag[i] = mag
 		elseif string.find(loadstate, "tem data") then
 			local i = tonumber(string.sub(line, 1, 2), 16)
-			itemData[i] = {}
-			for j=1, 20 do
-				if j<=12 then
-					local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
-					itemData[i][j] = v
-				else
-					itemData[i][j] = ReadByte(itemTable+((i-1)*20)+j-1)
-				end
+			for j=1, 12 do
+				local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
+				itemData[i][j] = v
 			end
 		end
 	end
@@ -1226,6 +1225,15 @@ function ApplyRandomization()
 		end
 	end
 	print("Chest randomization applied")
+	
+	for i=1, 0xFF do
+		if string.find(ItemType(itemids[i]), "Important") then
+			WriteArray(itemTable+((i-1)*20), itemData[i])
+		end
+		WriteByte(itemTable+((i-1)*20)+8, itemData[i][9])
+		WriteByte(itemTable+((i-1)*20)+9, itemData[i][10])
+	end
+	print("Applied item manipulation")
 
 	for i=0,7 do
 		local shopItem = 0
