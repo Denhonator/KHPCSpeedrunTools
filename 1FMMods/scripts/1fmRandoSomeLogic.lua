@@ -771,7 +771,7 @@ function Randomize()
 				end
 				if soraAbilities3[l] == ab and not replaced[3] then
 					soraAbilities3[l] = (rewards[i] // 0x100) + 0x80
-					replaced[2] = true
+					replaced[3] = true
 				end
 			end
 			rewards[i] = ((ab-0x80) * 0x100) + 1
