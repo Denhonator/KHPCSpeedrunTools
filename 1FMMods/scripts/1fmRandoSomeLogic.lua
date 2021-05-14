@@ -1767,7 +1767,6 @@ function StackAbilities()
 		WriteShort(jumpHeights+2, math.max(390, jumpHeight))
 	end
 
-	
 	if stackAbilities > 1 then
 		local glides = 0
 		local superglides = 0
@@ -1947,7 +1946,7 @@ function FlagFixes()
 	end
 	
 	--Early EotW, blocked until HB2
-	if ReadByte(cutsceneFlags+0xB0E) < 0xC3 then
+	if ReadByte(cutsceneFlags+0xB0E) < 0xC3 and ReadByte(world) == 0x10 then
 		WriteByte(currentTerminus, math.min(ReadByte(currentTerminus), 9)) --Max 100 acre portal accessible
 		if ReadByte(currentTerminus) == 9 then								--Hide teleporter to HB portal
 			WriteInt(terminusTeleUsable, 0xFFFFD8F0)
