@@ -147,7 +147,7 @@ local removeBlackTimer = 0
 local prevBlack = 128
 local introJump = true
 
-local important = {0xB2, 0xB7, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7}
+local important = {0xB2, 0xB7, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7, 0xCB, 0xCC}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -315,7 +315,7 @@ function ItemType(i)
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
-	if (i == 0xC8 or i == 0xC9 or i==0xCB or i==0xCC) or (i >= 0xD4 and i<= 0xDE) 
+	if (i == 0xC8 or i == 0xC9) or (i >= 0xD4 and i<= 0xDE) 
 								or (i >= 0xE3 and i <= 0xE6) or i==0xD2 or i==0xA8
 								or i==0xAA or i==0xAE or i==0xB0 then
 		attributes = attributes .. "Shuffle"
@@ -385,6 +385,7 @@ function ItemAccessible(i, c)
 			inChestReward = true
 			if IsAccessible(chestDetails, c) then
 				accessibleCount = accessibleCount+1
+				chestAccessCheck[c] = false
 			end
 		end
 	end
@@ -396,6 +397,7 @@ function ItemAccessible(i, c)
 			inChestReward = true
 			if IsAccessible(rewardDetails, r) then
 				accessibleCount = accessibleCount+1
+				rewardAccessCheck[r] = false
 			end
 		end
 	end
@@ -408,6 +410,8 @@ function ItemAccessible(i, c)
 			itemAccessCheck[0xC9] = true
 			if ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and TrinityAccessible("Red Trinity") then
 				accessibleCount = accessibleCount+1
+				itemAccessCheck[0xC8] = false
+				itemAccessCheck[0xC9] = false
 			end
 		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
 			if i==0xB0 or AbilityAccessible(3, 1) or AbilityAccessible(4, 1) then
@@ -419,6 +423,7 @@ function ItemAccessible(i, c)
 			itemAccessCheck[0xE4] = true
 			if ItemAccessible(0xE4, 1) then
 				accessibleCount = accessibleCount+1
+				itemAccessCheck[0xE4] = false
 			end
 		end
 	end
@@ -524,6 +529,7 @@ function IsAccessible(t, i)
 					itemAccessCheck[p] = true
 					if ItemAccessible(p, 1) then
 						accessiblePages = accessiblePages + 1
+						itemAccessCheck[p] = false
 					end
 				end
 				thisAccess = thisAccess or tonumber(string.sub(t[i][k], 5)) <= accessiblePages
@@ -573,7 +579,7 @@ function Randomize()
 
 	local missableRewards = {0, 2}
 	local addItems = {0x95,0x96,0x97,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1}
-	local importantPool = {0x5, 0x39, 0x48, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
+	local importantPool = {0x5, 0x39, 0x48, 0x4A, 0x4B, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
 	local rewardPool = {}
 	local randomGets = {}
 	
@@ -664,7 +670,8 @@ function Randomize()
 	
 	-- Need one of:
 	itemids[0x48] = 0xB2
-	--itemids[0x4A] = 0xB4
+	itemids[0x4A] = 0xCB
+	itemids[0x4B] = 0xCC
 	itemids[0x4D] = 0xB7
 	itemids[0x50] = 0xC1
 	itemids[0x39] = 0xC2
@@ -728,16 +735,7 @@ function Randomize()
 				r = math.random(#chestPool)
 			end
 			chests[i] = table.remove(chestPool, r)
-			if (i >= 0x1BF or i == 0) and ((chests[i]-4) % 0x10) == 0 then
-				for j=10, 0x1BE do
-					if chests[j] and chests[j] % 0x10 ~= 4 then
-						local temp = chests[j]
-						chests[j] = chests[i]
-						chests[i] = temp
-						break
-					end
-				end
-			end
+			
 			if (chests[i]-2) % 0x10 == 0 then
 				if #importantPool > 0 then
 					chests[i] = table.remove(importantPool, math.random(#importantPool)) * 0x10
@@ -749,6 +747,18 @@ function Randomize()
 					print("Added additional reports to chest")
 				else
 					chests[i] = chests[i] + 4
+				end
+			end
+		end
+	end
+	for i=1, 0x1FF do
+		if chests[i] and (i >= 0x1BF or i == 0) and ((chests[i]-4) % 0x10) == 0 then
+			for j=10, 0x1BE do
+				if chests[j] and chests[j] % 0x10 ~= 4 then
+					local temp = chests[j]
+					chests[j] = chests[i]
+					chests[i] = temp
+					break
 				end
 			end
 		end
@@ -1283,6 +1293,12 @@ function ApplyRandomization()
 	end
 	print("Accessory randomization applied")
 	
+	print(string.rep("\nHiding spoilers\n", 30))
+	for i=0x51, 0x60 do
+		print(string.format("%x became %x", i, itemids[i]))
+	end
+	print("You can verify you have the same seed by referring to above")
+	
 	randomized = true
 	print("Applied randomization")
 	successfulRando = true
@@ -1567,7 +1583,7 @@ function UpdateReports(HUDNow)
 			local mempos = report1
 			local chestProg = 1
 			local rewardProg = 1
-			local itemhint = {[1]=0xC8, [3]=0xC9, [7]=0xCB, [9]=0xCC}
+			local itemhint = {[1]=0xC8, [3]=0xC9}
 			for i=1, 13 do
 				if itemhint[i] then
 					for it=1, 0xFF do
@@ -1584,7 +1600,7 @@ function UpdateReports(HUDNow)
 								end
 							end
 							if not inchest then
-								mempos = StringToKHText(string.format("%s became\n%s", 
+								mempos = StringToKHText(string.format("%s\nbecame\n%s", 
 													itemNames[it], itemNames[j]), mempos)
 							end
 						end
