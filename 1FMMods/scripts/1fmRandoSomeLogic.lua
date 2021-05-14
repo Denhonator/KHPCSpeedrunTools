@@ -1761,7 +1761,7 @@ function StackAbilities()
 	local jumpHeight = math.max(290, 190+(equippedJumps*100))
 
 	WriteShort(jumpHeights+2, jumpHeight)
-	if ReadByte(world) == 0x10 and equippedGlides == 0 and (ReadByte(room) == 0x21 or 
+	if ReadByte(world) == 0x10 and equippedGlides == 0 and stackAbilities == 3 and (ReadByte(room) == 0x21 or 
 			(ReadByte(cutsceneFlags+0xB0F) >= 0x6E) and ReadFloat(soraHUD) > 0) then
 		WriteShort(jumpHeights, 390)
 		WriteShort(jumpHeights+2, math.max(390, jumpHeight))
@@ -1788,17 +1788,20 @@ function StackAbilities()
 			end
 		end
 		WriteInt(superglideSpeedHack, 0x17F50C + math.max(equippedGlides-2, 0)*4)
-		if equippedGlides == 0 and ReadLong(soraPointer) then
-			if (ReadByte(stateFlag) // 0x20) % 2 == 1 then
-				WriteByte(stateFlag, ReadByte(stateFlag) - 0x20)
-			end
-			local airGround = ReadLong(soraPointer)+0x70
-			if ReadInt(ReadLong(soraPointer)+0xB0) > 0 then
-				WriteByteA(airGround, 2)
-			end
-		elseif equippedGlides > 0 and ReadLong(soraPointer) and ReadByte(world) == 0xD then
-			if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
-				WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
+		
+		if stackAbilities == 3 then
+			if equippedGlides == 0 and ReadLong(soraPointer) then
+				if (ReadByte(stateFlag) // 0x20) % 2 == 1 then
+					WriteByte(stateFlag, ReadByte(stateFlag) - 0x20)
+				end
+				local airGround = ReadLong(soraPointer)+0x70
+				if ReadInt(ReadLong(soraPointer)+0xB0) > 0 then
+					WriteByteA(airGround, 2)
+				end
+			elseif equippedGlides > 0 and ReadLong(soraPointer) and ReadByte(world) == 0xD then
+				if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
+					WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
+				end
 			end
 		end
 	end
