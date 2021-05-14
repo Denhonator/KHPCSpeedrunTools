@@ -1907,9 +1907,10 @@ function FlagFixes()
 	if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
 		local soraYPos = ReadFloatA(ReadLong(soraPointer)+0x14)
 		if ReadByte(world) == 0xD then
-			if (ReadByte(room) == 9 and soraYPos > 900) or 
-				(ReadByte(room) == 8 and soraYPos > 600) then
+			if ReadByte(room) == 8 and soraYPos > 600 then
 				InstantContinue()
+			elseif ReadByte(room) == 9 and soraYPos > 900 then
+				RoomWarp(0xD, 0x27)
 			end
 		end
 		
@@ -1935,6 +1936,7 @@ function FlagFixes()
 				if ReadByte(sliderProgress+i) == 0 then
 					print(string.format("Warping to jungle slider %x", i+1))
 					RoomWarp(5, 0x27+i)
+					WriteByte(collectedFruits, 10)
 					break
 				end
 			end
