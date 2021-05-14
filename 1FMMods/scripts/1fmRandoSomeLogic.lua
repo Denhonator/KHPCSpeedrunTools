@@ -148,7 +148,7 @@ local removeBlackTimer = 0
 local prevBlack = 128
 local introJump = true
 
-local important = {0xB2, 0xB7, 0xC0, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC4, 0xC4, 0xC5, 0xC5, 0xC5, 0xC6, 0xC6, 0xC7, 0xCB, 0xCC}
+local important = {0xB2, 0xB7, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCB, 0xCC, 0xCD}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -548,10 +548,10 @@ function IsAccessible(t, i)
 				thisAccess = thisAccess or MagicAccessible(t[i][k])
 			end
 			if string.find(t[i][k], "HB2") then
-				thisAccess = thisAccess or true
+				thisAccess = thisAccess or ItemAccessible(0xCD, 1)
 			end
 			if string.find(t[i][k], "EotW") then
-				thisAccess = thisAccess or true
+				thisAccess = thisAccess or ItemAccessible(0xCD, 1)
 			end
 			canAccess = canAccess and thisAccess
 		end
@@ -580,7 +580,7 @@ function Randomize()
 
 	local missableRewards = {0, 2}
 	local addItems = {0x95,0x96,0x97,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1}
-	local importantPool = {0x5, 0x39, 0x48, 0x4A, 0x4B, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
+	local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
 	local rewardPool = {}
 	local randomGets = {}
 	
@@ -671,6 +671,7 @@ function Randomize()
 	
 	-- Need one of:
 	itemids[0x48] = 0xB2
+	itemids[0x49] = 0xCD
 	itemids[0x4A] = 0xCB
 	itemids[0x4B] = 0xCC
 	itemids[0x4D] = 0xB7
@@ -1527,10 +1528,6 @@ function UpdateInventory(HUDNow)
 		WriteByte(inventory+0xC8-1, 0)
 		WriteByte(inventory+0xC9-1, 0)
 	end
-	if ReadByte(inventory+0xCD-1) > 0 then
-		WriteByte(inventory+0xCB-1, 0)
-		WriteByte(inventory+0xCC-1, 0)
-	end
 end
 
 function StringToKHText(s, mempos)
@@ -1799,11 +1796,14 @@ function StackAbilities()
 				if ReadInt(ReadLong(soraPointer)+0xB0) > 0 then
 					WriteByteA(airGround, 2)
 				end
-			elseif equippedGlides > 0 and ReadLong(soraPointer) and ReadByte(world) == 0xD then
-				if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
-					WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
-				end
 			end
+		end
+	end
+	
+	-- Allow early flight in Neverland if glide equipped
+	if equippedGlides > 0 and ReadByte(world) == 0xD then
+		if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
+			WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
 		end
 	end
 end
@@ -1964,6 +1964,10 @@ function FlagFixes()
 		WriteByte(battleLevel, ReadByte(battleLevel)-1)
 	end
 	
+	if ReadByte(gummiFlagBase+0xE) == 4 then
+		WriteByte(worldMapLines+4, 0xFF)
+	end
+	
 	if ReadByte(gummiFlagBase+9)==0 then
 		OpenGummi()
 	end
@@ -1991,7 +1995,6 @@ function OpenGummi()
 		WriteByte(gummiFlagBase+i, 3)
 	end
 	WriteInt(worldMapLines, 0xFFFFFFFF)
-	WriteByte(worldMapLines+4, 0xFF)
 end
 
 function InstantContinue()
