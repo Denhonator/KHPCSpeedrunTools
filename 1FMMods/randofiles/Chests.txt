@@ -450,30 +450,30 @@ ff  Potion           ; ?
 1c1 Dalmatians 21   ; Grand Hall ; HB1 ; Library ; HB2
 1c2 Mega-Potion     ; ?
 1c3 Thundaga-G      ; Rising Falls ; White Trinity
-1c4 Reward 7b       ; Final Dimension ; HB1 ; Library ; EotW
+1c4 Reward 7b       ; Final Dimension
 1c5 Reward 7c       ; ?
 1c6 Reward 7d       ; ?
 1c7 Reward 7e       ; ?
-1c8 Reward 7f       ; Final Dimension ; HB1 ; Library ;  EotW
-1c9 Reward 80       ; Final Dimension ; HB1 ; Library ; EotW
+1c8 Reward 7f       ; Final Dimension
+1c9 Reward 80       ; Final Dimension
 1ca Reward 81       ; ?
-1cb Reward 82       ; Final Dimension ; HB1 ; Library ; EotW
+1cb Reward 82       ; Final Dimension
 1cc Reward 83       ; ?
 1cd Reward 84       ; ?
-1ce Full-Life-G     ; Giant Crevasse ; HB1 ; Library ; EotW ; Glide
-1cf Reward a8       ; Giant Crevasse ; HB1 ; Library ; EotW
-1d0 Drill-G         ; Giant Crevasse ; HB1 ; Library ; EotW
-1d1 Reward a7       ; Giant Crevasse ; HB1 ; Library ; EotW ; Glide
-1d2 Ultima-G        ; Giant Crevasse ; HB1 ; Library ; EotW
-1d3 Reward 87       ; World Terminus ; HB1 ; Library ; EotW
-1d4 Reward 88       ; World Terminus ; HB1 ; Library ; EotW
-1d5 Reward 89       ; World Terminus ; HB1 ; Library ; EotW
-1d6 Reward 8a       ; World Terminus ; HB1 ; Library ; EotW
-1d7 Reward 8b       ; World Terminus ; HB1 ; Library ; EotW
+1ce Full-Life-G     ; Giant Crevasse ; Glide
+1cf Reward a8       ; Giant Crevasse
+1d0 Drill-G         ; Giant Crevasse
+1d1 Reward a7       ; Giant Crevasse ; Glide
+1d2 Ultima-G        ; Giant Crevasse
+1d3 Reward 87       ; World Terminus
+1d4 Reward 88       ; World Terminus
+1d5 Reward 89       ; World Terminus
+1d6 Reward 8a       ; World Terminus
+1d7 Reward 8b       ; World Terminus
 1d8 AP Up           ; ?
-1d9 Reward 8c       ; World Terminus ; HB1 ; Library ; EotW
-1da Reward 8d       ; World Terminus ; HB1 ; Library ; EotW
-1db Megalixir       ; World Terminus ; HB1 ; Library ; EotW
-1dc Reward 8e       ; World Terminus ; HB1 ; Library ; EotW
-1dd Megalixir       ; Final Rest ; HB1 ; Library ; EotW
+1d9 Reward 8c       ; World Terminus
+1da Reward 8d       ; World Terminus
+1db Megalixir       ; World Terminus
+1dc Reward 8e       ; World Terminus ; HB1 ; Library ; HB2 ; EotW
+1dd Megalixir       ; Final Rest ; HB1 ; Library ; HB2 ; EotW
 1fd Reward 9E	    ; Chamber 6 ; White Trinity

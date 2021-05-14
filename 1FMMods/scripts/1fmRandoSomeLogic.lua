@@ -51,6 +51,7 @@ local gummiFlagBase = 0x2DE78C0 - offset
 local worldMapLines = 0x2DE78E2 - offset
 local gummiselect = 0x503CEC - offset
 local inGummi = 0x50421D - offset
+local battleLevel = 0x2DE7394 - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
@@ -58,6 +59,9 @@ local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
 local waterwayGate = 0x2DE763D - offset
 local waterwayTrinity = 0x2DE7681 - offset
+local currentTerminus = 0x2392964 - offset
+local terminusTeleUsable = 0x23928A4 - offset --On: 0000111A Off: FFFFD8F0
+local terminusTeleVisible = 0x2674AC8 - offset --On: 4588D000 Off: C61C4000
 local speedup = 0x233C24C - offset
 local sliderProgress = 0x2DE7709 - offset
 local minigameTimer = 0x232A684 - offset
@@ -1870,7 +1874,20 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(gummiFlagBase+11)==0 then
+	--Early EotW, blocked until HB2
+	if ReadByte(cutsceneFlags+0xB0E) < 0xC3 then
+		WriteByte(currentTerminus, math.min(ReadByte(currentTerminus), 9)) --Max 100 acre portal accessible
+		if ReadByte(currentTerminus) == 9 then								--Hide teleporter to HB portal
+			WriteInt(terminusTeleUsable, 0xFFFFD8F0)
+			WriteInt(terminusTeleVisible, 0xC61C4000)
+		end
+	end
+	
+	if ReadByte(battleLevel) % 2 == 1 and ReadByte(cutsceneFlags+0xB0E) < 0x8C then
+		WriteByte(battleLevel, ReadByte(battleLevel)-1)
+	end
+	
+	if ReadByte(gummiFlagBase+9)==0 then
 		OpenGummi()
 	end
 end
@@ -1894,11 +1911,10 @@ end
 
 function OpenGummi()
 	for i=0,14 do
-		if i~=9 then
-			WriteByte(gummiFlagBase+i, 3)
-		end
+		WriteByte(gummiFlagBase+i, 3)
 	end
 	WriteInt(worldMapLines, 0xFFFFFFFF)
+	WriteByte(worldMapLines+4, 0xFF)
 end
 
 function RoomWarp(w, r)
