@@ -1528,6 +1528,24 @@ function UpdateInventory(HUDNow)
 		WriteByte(inventory+0xC8-1, 0)
 		WriteByte(inventory+0xC9-1, 0)
 	end
+	if ReadByte(inventory+0xCD-1) > 0 then
+		if ReadByte(inventory+0xCB-1) > 0 then
+			WriteByte(gummiInventory+0x70, 1)
+			WriteByte(inventory+0xCB-1, 0)
+		end
+		if ReadByte(inventory+0xCC-1) > 0 then
+			WriteByte(gummiInventory+0x71, 1)
+			WriteByte(inventory+0xCC-1, 0)
+		end
+	elseif ReadByte(gummiInventory+0x70) > 0 then
+		WriteByte(gummiInventory+0x70, 0)
+		WriteByte(inventory+0xCB-1, 1)
+		inventoryUpdater[0xCB] = 1
+	elseif ReadByte(gummiInventory+0x71) > 0 then
+		WriteByte(gummiInventory+0x71, 0)
+		WriteByte(inventory+0xCC-1, 1)
+		inventoryUpdater[0xCC] = 1
+	end
 end
 
 function StringToKHText(s, mempos)
