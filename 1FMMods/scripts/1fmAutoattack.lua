@@ -16,7 +16,8 @@ function _OnFrame()
 		goto done
 	end
 
-	local attackInput = (ReadByte(0x233D035-0x3A0606)//2//2//2//2//2//2)%2 == 1
+	local swapped = ReadByte(0x22D6C7E - 0x3A0606)
+	local attackInput = (ReadByte(0x233D035-0x3A0606)//(64-(32*swapped)))%2 == 1
 	local menu = ReadInt(0x232A600-0x3A0606) == 1
 	local dialog = ReadInt(0x2998188-0x3A0606) == 0
 	if menu or dialog then
