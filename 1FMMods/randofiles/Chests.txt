@@ -420,7 +420,7 @@ ff  Potion           ; ?
 1a3 Reward 5a       ; High Tower ; HB1 ; Library ; Gravity Magic
 1a4 Megalixir       ; High Tower ; HB1 ; Library
 1a5 Reward 5b       ; Entrance Hall ; HB1 ; High Jump
-1a6 Ultima-G        ; Library ; Glide ; HB1
+1a6 Ultima-G        ; Library ; Khama ; HB1
 1a7 Potion          ; ?
 1a8 Mega-Potion     ; ?
 1a9 Mega-Potion     ; ?

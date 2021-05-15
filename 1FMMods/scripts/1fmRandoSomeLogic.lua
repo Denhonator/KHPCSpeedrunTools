@@ -756,7 +756,7 @@ function Randomize()
 		end
 	end
 	for i=1, 0x1FF do
-		if chests[i] and (i >= 0x1BF or i == 0) and ((chests[i]-4) % 0x10) == 0 then
+		if chests[i] and (i >= 0x1BF or i == 1) and ((chests[i]-4) % 0x10) == 0 then
 			for j=10, 0x1BE do
 				if chests[j] and chests[j] % 0x10 ~= 4 then
 					local temp = chests[j]

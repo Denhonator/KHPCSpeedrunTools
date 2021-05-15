@@ -199,10 +199,10 @@ Coconut
 Drinking Water
 Navi-G Piece 1
 Navi-G Piece 2
-Navi-Gummi 1
+Navi-Gummi Unused?
 Navi-G Piece 3
 Navi-G Piece 4
-Navi-Gummi 2
+Navi-Gummi
 Watergleam
 Naturespark
 Fireglow
