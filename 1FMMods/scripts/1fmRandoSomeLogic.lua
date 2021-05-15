@@ -1463,7 +1463,7 @@ function UpdateInventory(HUDNow)
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
-				print(string.format("%x %s", dif, itemNames[i]))
+				print(string.format("%d %s", dif, itemNames[i]))
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
 					-- if string.find(ItemType(curid), "Shuffle") or string.find(ItemType(i), "Important") then 
@@ -1500,6 +1500,10 @@ function UpdateInventory(HUDNow)
 				inventoryUpdater[itemids[i]] = itemCount
 				print(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]]))
 			end
+		end
+		if i >= 0xCE and i <= 0xD1 and ReadByte(inventory+(i-1)) > 1 then
+			WriteByte(inventory+(i-1), 1)
+			print("Removed duplicate summon gem")
 		end
 	end
 	
