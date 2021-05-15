@@ -65,6 +65,7 @@ local terminusTeleUsable = 0x23928A4 - offset --On: 0000111A Off: FFFFD8F0
 local terminusTeleVisible = 0x2674AC8 - offset --On: 4588D000 Off: C61C4000
 local speedup = 0x233C24C - offset
 local sliderProgress = 0x2DE7709 - offset
+local savedFruits = 0x2DE770E - offset
 local minigameTimer = 0x232A684 - offset
 local collectedFruits = minigameTimer + 4
 local unequipBlacklist = 0x541FA0 - offset
@@ -116,6 +117,7 @@ local roomWarp = worldWarp + 4
 local warpTrigger = 0x22E86DC - offset
 local warpType1 = 0x233C240 - offset
 local warpType2 = 0x22E86E0 - offset
+local warpDefinitions = 0x232A580 - offset
 
 local itemDropID = 0x2849FC8 - offset
 local textsBase = 0x2EE03B0 - offset
@@ -1949,17 +1951,17 @@ function FlagFixes()
 		-- elseif ReadByte(blackfade) == 128 and prevBlack < 128 then
 			-- WriteArray(sliderProgress, sliderSavedProg)
 		-- end
-		if ReadByte(room) == 0xF and ReadByte(sliderProgress) == 1 
-								and ReadByte(blackfade) > 100 and ReadByte(collectedFruits) == 0 then
-			for i=1,4 do
-				if ReadByte(sliderProgress+i) == 0 then
-					print(string.format("Warping to jungle slider %x", i+1))
-					RoomWarp(5, 0x27+i)
-					WriteByte(collectedFruits, 10)
-					break
+		if ReadByte(room) == 8 and ReadByte(sliderProgress) == 1 then
+			WriteByte(collectedFruits, 0)
+			WriteByte(savedFruits, 0)
+			local warpsAddr = ReadLong(warpDefinitions)
+			for i=0, 4 do
+				if ReadByte(sliderProgress+i) == 1 and ReadByte(warpsAddr+0x9C0) < 0x10+i then
+					WriteArrayA(warpsAddr+0x9C0, ReadArrayA(warpsAddr+0x9C0+(0x40*(i+1)), 0x40))
 				end
 			end
-		elseif ReadByte(room) > 0xF then
+		end
+		if ReadByte(room) > 0xF then
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
 		end
 	end
