@@ -1524,11 +1524,12 @@ function UpdateInventory(HUDNow)
 			gummiUpdater[i] = itemCount
 		end
 	end
+	
 	if ReadByte(inventory+0xCA-1) > 0 then
 		WriteByte(inventory+0xC8-1, 0)
 		WriteByte(inventory+0xC9-1, 0)
 	end
-	if ReadByte(inventory+0xCD-1) > 0 then
+	if ReadByte(inventory+0xCD-1) > 0 and ReadByte(closeMenu) == 0 then
 		if ReadByte(inventory+0xCB-1) > 0 then
 			WriteByte(gummiInventory+0x70, 1)
 			WriteByte(inventory+0xCB-1, 0)
