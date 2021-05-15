@@ -551,7 +551,7 @@ function IsAccessible(t, i)
 				thisAccess = thisAccess or ItemAccessible(0xCD, 1)
 			end
 			if string.find(t[i][k], "EotW") then
-				thisAccess = thisAccess or ItemAccessible(0xCD, 1)
+				thisAccess = thisAccess or (ItemAccessible(0xCD, 1) and ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
 			end
 			canAccess = canAccess and thisAccess
 		end
