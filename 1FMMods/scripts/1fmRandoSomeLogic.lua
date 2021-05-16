@@ -45,6 +45,7 @@ local chestsOpened = 0x2DE5E00 - offset
 
 local inventory = 0x2DE5E6A - offset
 local tornPageCount = 0x2DE6DD0 - offset
+local minigameStatus = 0x2DE73A5 - offset
 local gummiInventory = 0x2DF1848 - offset
 local reports = 0x2DE7390 - offset
 
@@ -137,6 +138,7 @@ local nextTextReplace = ""
 local magicTexts = {"fire.","ice.","thunder.","healing.","stars.","time.","wind."}
 local magicTexts2 = {"Fire","Blizzard","Thunder","Cure","Gravity","Stop","Aero"}
 local trinityTexts = {"Blue Trinity", "Red Trinity", "Green Trinity", "Yellow Trinity", "White Trinity"}
+local abilityNames = {"High Jump", "Mermaid Kick", "Glide", "Superglide"}
 local infoBoxWas = 1
 
 local trinityTable = {}
@@ -980,7 +982,7 @@ function Randomize()
 		shopItem = shopItem + 1
 		synths[shopItem] = {}
 		synths[shopItem][1] = table.remove(shopPool, math.random(#shopPool))
-		if math.random(10) > 7 and #synthUnique > 0 then
+		if math.random(10) == 10 and #synthUnique > 0 then
 			synths[shopItem][2] = table.remove(synthUnique, math.random(#synthUnique))
 		else
 			synths[shopItem][2] = synthCommon[math.random(#synthCommon)]
@@ -1573,10 +1575,17 @@ function UpdateInventory(HUDNow)
 	end
 	
 	if ReadByte(world) == 6 and ReadByte(room) == 10 and prevRoom ~= 10 then
+		local poohGames = ReadByte(minigameStatus+2)
+		local gamesUnlocked = 0
+		for i=1, 5 do
+			if (poohGames // 2^i) % 2 == 1 then
+				gamesUnlocked = gamesUnlocked + 1
+			end
+		end
 		if prevWorld == 3 then
-			WriteByte(tornPageCount, pages > 0 and 5 or 0)
+			WriteByte(tornPageCount, pages > 0 and 5 or gamesUnlocked)
 		else
-			WriteByte(tornPageCount, pages > 1 and 5 or 0)
+			WriteByte(tornPageCount, pages > 1 and 5 or gamesUnlocked)
 		end
 	end
 	
@@ -1703,25 +1712,39 @@ function UpdateReports(HUDNow)
 					end
 				else
 					local putHint = 0
+					local hintText = ""
 					math.randomseed(0)
+					local hintCount = 2
 					order = GetRandomOrder(0x1FF)
 					for ch=chestProg, 0x1FF do
 						local c = order[ch]
 						if chests[c] then
 							local it = 1
+							local ab = 0
 							if chests[c]%0x10==0 then
 								it = itemids[chests[c]//0x10]
-							elseif chests[c]%0x10==0xE and rewards[(chests[c]//0x10)+1] and
-														rewards[(chests[c]//0x10)+1]%0x100 == 0xF0 then
-								it = itemids[rewards[(chests[c]//0x10)+1] // 0x100]
+							elseif chests[c]%0x10==0xE and rewards[(chests[c]//0x10)+1] then
+								if rewards[(chests[c]//0x10)+1]%0x100 == 0xF0 then
+									it = itemids[rewards[(chests[c]//0x10)+1] // 0x100]
+								elseif rewards[(chests[c]//0x10)+1]%0x100 == 0xB1 then
+									ab = rewards[(chests[c]//0x10)+1] // 0x100
+								end
 							end
 							local itype = ItemType(it)
-							if string.find(itype, "Important") then
-								mempos = StringToKHText(string.format(
-									"Chest at\n%s\nhas %s", 
-									chestDetails[c][2], itemNames[it]), mempos)
-								putHint = 1
+							if ab > 0 then
+								hintText = hintText .. string.format(
+									"Chest at\n%s\nhas %s\n\n", 
+									chestDetails[c][2], abilityNames[ab])
+								putHint = putHint + 1
 								chestProg = ch+1
+							elseif string.find(itype, "Important") then
+								hintText = hintText .. string.format(
+									"Chest at\n%s\nhas %s\n\n", 
+									chestDetails[c][2], itemNames[it])
+								putHint = putHint + 1
+								chestProg = ch+1
+							end
+							if putHint == hintCount then
 								break
 							end
 						end
@@ -1730,22 +1753,33 @@ function UpdateReports(HUDNow)
 					order = GetRandomOrder(0xA9)
 					for re=rewardProg+(putHint*999), 0xA9 do
 						local r = order[re]
-						if rewards[r] and rewards[r] % 0x100 == 0xF0 then
-							local it = itemids[rewards[r]//0x100]
+						if rewards[r] then
+							local it = rewards[r] % 0x100 == 0xF0 and itemids[rewards[r]//0x100] or 1
 							local itype = ItemType(it)
-							if string.find(itype, "Important") and rewardDetails[r][2]~="Chest" then
-								mempos = StringToKHText(string.format(
-									"Reward %s\n%s\nhas %s", rewardDetails[r][1],
-									rewardDetails[r][2], itemNames[it]), mempos)
-								putHint = 2
+							local ab = 0
+							if rewards[r] % 0x100 == 0xB1 and rewardDetails[r][2]~="Chest" then
+								ab = rewards[r]//0x100
+								hintText = hintText .. string.format(
+									"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+									rewardDetails[r][2], abilityNames[ab])
+								putHint = putHint + 1
 								rewardProg = re+1
+							elseif string.find(itype, "Important") and rewardDetails[r][2]~="Chest" then
+								hintText = hintText .. string.format(
+									"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+									rewardDetails[r][2], itemNames[it])
+								putHint = putHint + 1
+								rewardProg = re+1
+							end
+							if putHint == hintCount then
 								break
 							end
 						end
 					end
-					if putHint == 0 then
-						mempos = StringToKHText("Nothing here\nlol", mempos)
+					if putHint == 0 and hintText == "" then
+						hintText = "Nothing here\nlol"
 					end
+					mempos = StringToKHText(hintText, mempos)
 				end
 			end
 			print("Wrote hints")
