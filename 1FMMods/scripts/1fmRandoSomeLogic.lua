@@ -981,8 +981,9 @@ function Randomize()
 	while shopItemID > 0 and #shopPool > 0 do
 		shopItem = shopItem + 1
 		synths[shopItem] = {}
-		synths[shopItem][1] = table.remove(shopPool, math.random(#shopPool))
-		if math.random(10) == 10 and #synthUnique > 0 then
+		local it = table.remove(shopPool, math.random(#shopPool))
+		synths[shopItem][1] = it
+		if math.random(10) >= 8 and #synthUnique > 0 and not (it>=0xC0 and it<=0xC6) then
 			synths[shopItem][2] = table.remove(synthUnique, math.random(#synthUnique))
 		else
 			synths[shopItem][2] = synthCommon[math.random(#synthCommon)]
