@@ -39,6 +39,8 @@ local goofyAbilityTable = donaldAbilityTable+0x198
 local rewardTable = btltbl+0xC6A8
 local chestTable = 0x5259E0 - offset
 local shopTableBase = 0x4FB374 - offset
+local synthRequirements = 0x544320 - offset
+local synthItems = synthRequirements + 0x1E0
 local chestsOpened = 0x2DE5E00 - offset
 
 local inventory = 0x2DE5E6A - offset
@@ -174,6 +176,7 @@ local weaponStr = {}
 local weaponMag = {}
 local itemData = {}
 local shops = {}
+local synths = {}
 local chests = {}
 local chestAccessCheck = {}
 local rewardAccessCheck = {}
@@ -692,6 +695,8 @@ function Randomize()
 	itemids[0x92] = 0xC4
 	itemids[0x93] = 0xC5
 	
+	shopPool = {}
+	
 	for i=1, 0xFF do
 		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
 		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
@@ -949,7 +954,7 @@ function Randomize()
 		end
 		local shopItem = 0
 		local shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
-		while shopItemID > 0 do
+		while shopItemID > 0 and #shopPool > 0 do
 			if not shopMap[shopItemID] then
 				shopMap[shopItemID] = table.remove(shopPool, math.random(#shopPool))
 			end
@@ -959,6 +964,29 @@ function Randomize()
 		end
 	end
 	print("Randomized shops")
+	
+	synthCommon = {0x9C, 0xFE, 0xFF}
+	synthUnique = {}
+	for i=10, 0x86 do
+		if string.find(ItemType(i), "Accessory") or string.find(ItemType(i), "Weapon") then
+			synthUnique[(#synthUnique)+1] = i
+		end
+	end
+	
+	local shopItem = 0
+	local shopItemID = ReadByte(synthItems+(shopItem*10))
+	while shopItemID > 0 and #shopPool > 0 do
+		shopItem = shopItem + 1
+		synths[shopItem] = {}
+		synths[shopItem][1] = table.remove(shopPool, math.random(#shopPool))
+		if math.random(10) > 7 and #synthUnique > 0 then
+			synths[shopItem][2] = table.remove(synthUnique, math.random(#synthUnique))
+		else
+			synths[shopItem][2] = synthCommon[math.random(#synthCommon)]
+		end
+		shopItemID = ReadByte(synthItems+(shopItem*10))
+	end
+	print("Randomized synth")
 
 	successfulRando = true
 	::loaded::
@@ -1070,6 +1098,14 @@ function SaveRando()
 			randosave:write(string.format("%03x %02x\n", i, shops[i]))
 		end
 	end
+	randosave:write("\nSynths:\n")
+	for i=1, #synths do
+		randosave:write(string.format("%02x ", i))
+		for j=1, #synths[i] do
+			randosave:write(string.format("%02x", synths[i][j]))
+		end
+		randosave:write("\n")
+	end
 	randosave:write("\nMagic:\n")
 	for i=1, 0x7 do
 		randosave:write(string.format("%x %x\n", i, perMagicShuffle[i]))
@@ -1179,6 +1215,13 @@ function LoadRando()
 			local i = tonumber(string.sub(line, 1, 3), 16)
 			local v = tonumber(string.sub(line, 5, 6), 16)
 			shops[i] = v
+		elseif string.find(loadstate, "ynths") then
+			local i = tonumber(string.sub(line, 1, 2), 16)
+			synths[i] = {}
+			for j=1, 6 do
+				local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
+				synths[i][j] = v
+			end
 		elseif string.find(loadstate, "agic") then
 			local i = tonumber(string.sub(line, 1, 1), 16)
 			local v = tonumber(string.sub(line, 3, 3), 16)
@@ -1271,6 +1314,18 @@ function ApplyRandomization()
 		end
 	end
 	print("Shop randomization applied")
+	
+	local reqOff = 0
+	for i=0, (#synths)-1 do
+		WriteByte(synthItems+(i*10), synths[i+1][1]) -- Synth item
+		WriteByte(synthItems+(i*10)+2, reqOff) -- Requirement table offset
+		WriteByte(synthItems+(i*10)+3, #synths[i+1]-1) -- Requirement count
+		for j=2, #synths[i+1] do
+			WriteByte(synthRequirements+(reqOff*4), synths[i+1][j]) -- Requirement item
+			WriteByte(synthRequirements+(reqOff*4)+2, 1) -- Requirement count
+			reqOff = reqOff + 1
+		end
+	end
 	
 	for i=1, 99 do
 		WriteByte(soraStatTable+(i-1), soraLevels[i])
