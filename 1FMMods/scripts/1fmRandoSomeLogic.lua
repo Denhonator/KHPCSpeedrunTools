@@ -61,6 +61,7 @@ local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
+local cupCurrentSeed = 0x2389480 - offset
 local waterwayGate = 0x2DE763D - offset
 local waterwayTrinity = 0x2DE7681 - offset
 local currentTerminus = 0x2392964 - offset
@@ -1932,6 +1933,14 @@ function FlagFixes()
 	-- if ReadByte(cutsceneFlags+0xB0E) == 1 then
 		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
 	-- end
+	
+	-- Shorten solo and time trial
+	if ReadByte(world) == 0xB and ReadShort(cupCurrentSeed) == 0x0101 and ReadFloat(soraHUD) > 0
+				and (ReadByte(party1) == 0xFF or ReadInt(minigameTimer) > 0) then
+		WriteShort(cupCurrentSeed, 0x0909)
+	elseif ReadByte(world) == 0xB and ReadByte(room) == 1 then
+		WriteInt(minigameTimer, 0)
+	end
 	
 	for i=0,3 do
 		if ReadByte(OCCupUnlock+i) ~= 0x0A and ReadByte(OCCupUnlock+i) ~= 1 then
