@@ -107,6 +107,7 @@ local goofyStats = donaldStats + 0x74
 local experienceMult = 0x2D59180 - offset
 
 local gotoWorldMap = 0x2E1CC24 - offset
+local worldMapTriggerFlag = 0x2DE6ED0 - offset
 local openMenu = 0x2350CD4 - offset
 local closeMenu = 0x2E90820 - offset
 local menuCheck = 0x2E8EE98 - offset
@@ -2009,7 +2010,10 @@ function FlagFixes()
 		WriteByte(battleLevel, ReadByte(battleLevel)-1)
 	end
 	
-	if ReadByte(gummiFlagBase+0xE) == 4 then
+	-- Navi Gummi delivery
+	if (ReadByte(worldMapTriggerFlag) == 0xDC and ReadByte(worldMapTriggerFlag+4) == 0x96) 
+												or ReadByte(gummiFlagBase+0xE) == 4 then
+		WriteByte(gummiFlagBase+0xE, 4)
 		WriteByte(worldMapLines+4, 0xFF)
 	end
 	
