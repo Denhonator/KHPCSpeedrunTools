@@ -1970,7 +1970,10 @@ function FlagFixes()
 	end
 	
 	if ReadByte(inGummi) > 0 then
-		if ReadByte(party1)==0xFF then
+		if ReadByte(gummiselect) == 3 and ReadByte(cutsceneFlags+0xB04) < 0x31 then
+			WriteByte(party1, 0xFF)
+			WriteByte(party1+1, 0xFF)
+		elseif ReadByte(party1)==0xFF then
 			for i=0,1 do
 				WriteByte(party1+i, i+1)
 				WriteByte(party2+i, i+1)
