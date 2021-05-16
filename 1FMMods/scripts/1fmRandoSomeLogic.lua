@@ -1907,6 +1907,10 @@ function FlagFixes()
 		if ReadByte(enableRC) ~= 0x0 then
 			WriteByte(enableRC, 0x0)
 		end
+		
+		if ReadByte(reports+4) == 0 then
+			WriteByte(reports+4, 0xE)
+		end
 	end
 	
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
