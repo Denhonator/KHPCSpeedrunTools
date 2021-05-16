@@ -42,6 +42,7 @@ local shopTableBase = 0x4FB374 - offset
 local chestsOpened = 0x2DE5E00 - offset
 
 local inventory = 0x2DE5E6A - offset
+local tornPageCount = 0x2DE6DD0 - offset
 local gummiInventory = 0x2DF1848 - offset
 local reports = 0x2DE7390 - offset
 
@@ -148,6 +149,8 @@ local HUDWas = 0
 local menuWas = 0
 local removeBlackTimer = 0
 local prevBlack = 128
+local prevWorld = 0
+local prevRoom = 0
 local introJump = true
 
 local important = {0xB2, 0xB7, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCB, 0xCC, 0xCD}
@@ -1456,6 +1459,8 @@ function UpdateInventory(HUDNow)
 			print("Late item rando to prevent softlock")
 		end
 	end
+	
+	local pages = 0
 
 	for i=0x1,0xFF do
 		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and
@@ -1504,6 +1509,17 @@ function UpdateInventory(HUDNow)
 		if i >= 0xCE and i <= 0xD1 and ReadByte(inventory+(i-1)) > 1 then
 			WriteByte(inventory+(i-1), 1)
 			print("Removed duplicate summon gem")
+		end
+		if i >= 0xD4 and i <= 0xD8 and ReadByte(inventory+(i-1)) > 0 then
+			pages = pages+1
+		end
+	end
+	
+	if ReadByte(world) == 6 and ReadByte(room) == 10 and prevRoom ~= 10 then
+		if prevWorld == 3 then
+			WriteByte(tornPageCount, pages > 0 and 5 or 0)
+		else
+			WriteByte(tornPageCount, pages > 1 and 5 or 0)
 		end
 	end
 	
@@ -2115,6 +2131,8 @@ function _OnFrame()
 	end
 	
 	prevBlack = ReadByte(blackfade)
+	prevWorld = ReadByte(world)
+	prevRoom = ReadByte(room)
 
 	if ReadByte(0x232A604-offset) and ReadByte(0x2E1CB9C-offset) < 5 and ReadShort(menuState)==62576 then
 		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
