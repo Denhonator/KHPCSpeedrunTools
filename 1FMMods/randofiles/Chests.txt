@@ -381,7 +381,7 @@ ff  Potion           ; ?
 17c Reward a1       ; Ship: Hold ; Yellow Trinity
 17d Meteor-G        ; Ship: Galley
 17e Reward 78       ; Ship: Cabin ; Green Trinity
-17f Dalmatians 28   ; Ship: Hold ; Glide OR Green Trinity
+17f Dalmatians 28   ; Ship: Hold ; Glide ; Green Trinity
 180 Potion          ; ?
 181 Potion          ; ?
 182 Potion          ; ?
@@ -402,7 +402,7 @@ ff  Potion           ; ?
 191 Potion          ; ?
 192 Potion          ; ?
 193 Flare-G	    ; Clock Tower ; Green Trinity
-194 Paper-G         ; Ship: Hold ; Glide OR Green Trinity
+194 Paper-G         ; Ship: Hold ; Glide ; Green Trinity
 195 Dalmatians 29   ; Ship: Hold ; Yellow Trinity
 196 Dalmatians 30   ; Captain's Cabin ; Green Trinity
 197 Life-G          ; Rising Falls
@@ -411,33 +411,33 @@ ff  Potion           ; ?
 19a Dalmatians 31   ; Rising Falls ; Blizzard Magic
 19b Reward 79       ; Rising Falls ; Blizzard Magic
 19c Megalixir       ; Rising Falls
-19d Dalmatians 32   ; Castle Gates ; High Jumpra OR Dumbo ; Gravity Magic
-19e Reward 59       ; Castle Gates ; High Jumpra OR Dumbo
-19f Haste2-G        ; Castle Gates ; High Jumpra OR Dumbo
+19d Dalmatians 32   ; Castle Gates ; Dumbo ; Gravity Magic
+19e Reward 59       ; Castle Gates ; Dumbo
+19f Haste2-G        ; Castle Gates ; Dumbo
 1a0 Orichalcum      ; Great Crest ; HB1 ; Library
 1a1 Thundaga-G      ; Great Crest ; HB1 ; Library
 1a2 Osmose-G        ; High Tower ; HB1 ; Library ; Gravity Magic
 1a3 Reward 5a       ; High Tower ; HB1 ; Library ; Gravity Magic
 1a4 Megalixir       ; High Tower ; HB1 ; Library
-1a5 Reward 5b       ; Entrance Hall ; HB1 ; High Jump
-1a6 Ultima-G        ; Library ; Khama ; HB1
+1a5 Reward 5b       ; Entrance Hall ; Dumbo ; High Jump
+1a6 Ultima-G        ; Library ; Dumbo ; Khama
 1a7 Potion          ; ?
 1a8 Mega-Potion     ; ?
 1a9 Mega-Potion     ; ?
 1aa Potion          ; ?
 1ab Reward a3       ; Lift Stop ; HB1 ; Library ; Gravity Magic
-1ac Gummi           ; Lift Stop ; HB1 ; Khama OR High Jumpra
+1ac Osmose-G        ; Lift Stop ; Dumbo ; Khama ; Gravity Magic
 1ad Reward a4       ; Lift Stop ; HB1 ; Library ; Gravity Magic
-1ae Dalmatians 33   ; Lift Stop ; HB1 ; Khama OR High Jumpra
-1af Orichalcum      ; Lift Stop ; High Jumpra OR Dumbo
+1ae Dalmatians 33   ; Lift Stop ; Dumbo ; Khama ; Gravity Magic
+1af Orichalcum      ; Lift Stop ; Dumbo
 1b0 Mythril         ; Base Level
 1b1 Paper-G         ; Base Level
 1b2 Thundara-G      ; Base Level
 1b3 Reward 7a       ; Waterway
 1b4 Reward a5       ; Waterway ; High Jump ; Blizzard Magic
 1b5 Thundaga-G      ; Waterway ; HB1
-1b6 Ultima-G        ; Dungeon ; High Jumpra OR Dumbo
-1b7 Thundaga-G      ; Dungeon ; High Jumpra OR Dumbo
+1b6 Ultima-G        ; Dungeon ; Dumbo
+1b7 Thundaga-G      ; Dungeon ; Dumbo
 1b8 Potion          ; ?
 1b9 Potion          ; ?
 1ba Potion          ; ?

@@ -45,6 +45,7 @@ local chestsOpened = 0x2DE5E00 - offset
 
 local inventory = 0x2DE5E6A - offset
 local tornPageCount = 0x2DE6DD0 - offset
+local emblemCount = 0x2DE787D - offset
 local minigameStatus = 0x2DE73A5 - offset
 local gummiInventory = 0x2DF1848 - offset
 local reports = 0x2DE7390 - offset
@@ -60,6 +61,7 @@ local battleLevel = 0x2DE7394 - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
+local libraryFlag = 0x2DE7AF3 - offset
 local CutsceneWarpPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
 local cupCurrentSeed = 0x2389480 - offset
@@ -549,6 +551,7 @@ function IsAccessible(t, i)
 				ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1) and MagicAccessible("Fire Magic"))
 			elseif string.find(t[i][k], "Dumbo") then
 				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and MagicAccessible("Fire Magic"))
+										or AbilityAccessible(1, 2)
 			end
 			if string.find(t[i][k], "Trinity") then
 				thisAccess = thisAccess or TrinityAccessible(t[i][k])
@@ -1587,6 +1590,20 @@ function UpdateInventory(HUDNow)
 		else
 			WriteByte(tornPageCount, pages > 1 and 5 or gamesUnlocked)
 		end
+	end
+	
+	-- Prevent issues in early HB exploration
+	if ReadByte(cutsceneFlags+0xB0E) <= 1 then
+		WriteByte(cutsceneFlags+0xB0E, 0x7A)
+		WriteByte(libraryFlag, 2)
+	end
+	
+	if ReadByte(world) == 0xF then
+		local embCount = 0
+		for i=0xBB, 0xBE do
+			embCount = embCount + ReadByte(inventory+i)
+		end
+		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) <= 0x32 and embCount or 0)
 	end
 	
 	for i=1,0x40 do
