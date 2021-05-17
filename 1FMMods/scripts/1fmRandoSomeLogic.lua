@@ -548,7 +548,7 @@ function IsAccessible(t, i)
 			end
 			if string.find(t[i][k], "All Summons") then
 				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
-				ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1) and MagicAccessible("Fire Magic"))
+				ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1))
 			elseif string.find(t[i][k], "Dumbo") then
 				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and MagicAccessible("Fire Magic"))
 										or AbilityAccessible(1, 2)
@@ -1857,7 +1857,7 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(cutsceneFlags+0xB0E) >= 0x32 then
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
-	if ReadByte(OCTrinityFlag) == 0 and ReadByte(world) == 11 and ReadByte(room) == 1 then
+	if ReadByte(worldFlagBase+0x94) < 4 and ReadByte(world) == 11 and ReadByte(room) == 1 then
 		WriteByte(trinityUnlock, 0)
 	else
 		WriteByte(trinityUnlock, unlock)
