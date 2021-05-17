@@ -75,10 +75,7 @@ local minigameTimer = 0x232A684 - offset
 local collectedFruits = minigameTimer + 4
 local unequipBlacklist = 0x541FA0 - offset
 
-local soraStory = 0x2DE7367 - offset
-local OCFlag = 0x2DE75EA - offset
-local DJFlag = 0x2DE7373 - offset
-local AGFlag = 0x2DE7377 - offset
+local chronicles = 0x2DE7367 - offset
 local OCTrinityFlag = 0x2DE68FC - offset
 local Riku1Flag = 0x2DE79D0+0x6C+0xB6 - offset
 
@@ -1312,8 +1309,10 @@ function ApplyRandomization()
 
 	for i=0,7 do
 		local shopItem = 0
-		while shops[i*0x100+shopItem+1] do
-			WriteInt(shopTableBase+(i*0xD4)+(shopItem*4), shops[i*0x100+shopItem+1])
+		local maxtier = math.max(i <= 3 and 3 or 6, i)
+		
+		while shops[maxtier*0x100+shopItem+1] do
+			WriteInt(shopTableBase+(i*0xD4)+(shopItem*4), shops[maxtier*0x100+shopItem+1])
 			shopItem = shopItem + 1
 		end
 	end
@@ -1829,10 +1828,10 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(magicFlags) > 0 then
 		unlock = unlock + (2^(trinityTable[1]-1))
 	end
-	if ReadByte(DJFlag) == 0x20 then
+	if ReadByte(chronicles+0xC) == 0x20 then
 		unlock = unlock + (2^(trinityTable[2]-1))
 	end
-	if ReadByte(AGFlag) == 0x20 then
+	if ReadByte(chronicles+0x10) == 0x20 then
 		unlock = unlock + (2^(trinityTable[3]-1))
 	end
 	if ReadByte(OCTrinityFlag) > 0 then
@@ -2004,6 +2003,10 @@ function FlagFixes()
 		end
 	end
 	
+	for i=0,3 do
+		WriteByte(unequipBlacklist + (i*4), 0)
+	end
+	
 	if ReadByte(inGummi) > 0 then
 		if ReadByte(gummiselect) == 3 and ReadByte(cutsceneFlags+0xB04) < 0x31 then
 			WriteByte(party1, 0xFF)
@@ -2014,11 +2017,7 @@ function FlagFixes()
 				WriteByte(party2+i, i+1)
 			end
 		end
-		
-		for i=0,3 do
-			WriteByte(unequipBlacklist + (i*4), 0)
-		end
-		
+
 		if ReadByte(lockMenu) > 0 then
 			WriteByte(lockMenu, 0) -- Unlock menu
 		end
@@ -2030,6 +2029,21 @@ function FlagFixes()
 		if ReadByte(reports+4) == 0 then
 			WriteByte(reports+4, 0xE)
 		end
+	end
+	
+	-- Shop upgrades
+	local clearedWorlds = 0
+	for i=1, 9 do
+		if ReadByte(chronicles+(i*4)) == 0x20 then
+			clearedWorlds = clearedWorlds + 1
+		end
+	end
+	for i=0,6 do
+		local baseCount = i <= 3 and 8 or 6
+		if clearedWorlds >= 4 then
+			baseCount = math.max(baseCount, 7)
+		end
+		WriteInt(shopTableBase+(i*0xD4)-4, baseCount+(math.min(clearedWorlds, 4)*3))
 	end
 	
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
