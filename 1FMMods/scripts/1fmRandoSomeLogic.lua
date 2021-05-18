@@ -2007,8 +2007,10 @@ function FlagFixes()
 			WriteInt(minigameTimer, 0)
 		end
 
-		if ReadByte(OCCupUnlock+3) == 0 then
-			WriteInt(OCCupUnlock, 0x0A0A0A0A)	-- Unlock cups
+		for i=0,3 do
+			if ReadByte(OCCupUnlock+i) == 0 then
+				WriteByte(OCCupUnlock, 0x0A) -- Unlock cups
+			end
 		end
 	end
 
