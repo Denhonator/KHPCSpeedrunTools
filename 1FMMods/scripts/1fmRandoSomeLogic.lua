@@ -78,6 +78,7 @@ local collectedFruits = minigameTimer + 4
 local unequipBlacklist = 0x541FA0 - offset
 
 local chronicles = 0x2DE7367 - offset
+local journalCharacters = 0x2DE70B3 - offset
 local OCTrinityFlag = 0x2DE68FC - offset
 local Riku1Flag = 0x2DE79D0+0x6C+0xB6 - offset
 
@@ -1854,7 +1855,7 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(OCTrinityFlag) > 0 then
 		unlock = unlock + (2^(trinityTable[4]-1))
 	end
-	if ReadByte(cutsceneFlags+0xB0E) >= 0x32 then
+	if (ReadByte(journalCharacters+1) // 8) % 2 == 1 then
 		unlock = unlock + (2^(trinityTable[5]-1))
 	end
 	if ReadByte(worldFlagBase+0x94) < 4 and ReadByte(world) == 11 and ReadByte(room) == 1 then
