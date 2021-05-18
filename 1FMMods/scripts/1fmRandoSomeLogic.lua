@@ -1604,7 +1604,9 @@ function UpdateInventory(HUDNow)
 			embCount = embCount + ReadByte(inventory+i)
 		end
 		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) <= 0x32 and embCount or 0)
-		WriteByte(libraryFlag, 2)
+		if ReadByte(libraryFlag) == 0 then
+			WriteByte(libraryFlag, 2)
+		end
 	end
 	
 	for i=1,0x40 do
