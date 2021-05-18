@@ -1995,12 +1995,7 @@ function FlagFixes()
 	end
 	
 	for i=0,3 do
-		if ReadByte(OCCupUnlock+i) ~= 0x0A and ReadByte(OCCupUnlock+i) ~= 1 then
-			if ReadByte(OCCupUnlock+i) > 0 then
-				print(string.format("Changed OC cup status from %x to %x", ReadByte(OCCupUnlock+i), 0x0A))
-			end
-			WriteByte(OCCupUnlock+i, 0x0A)	-- Unlock cups
-		end
+		WriteByte(OCCupUnlock+i, 1)	-- Unlock cups
 	end
 
 	if (ReadByte(waterwayGate) // 0x80) % 2 == 0 then
