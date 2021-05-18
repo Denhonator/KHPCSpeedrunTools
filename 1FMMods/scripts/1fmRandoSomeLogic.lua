@@ -1852,7 +1852,7 @@ function ReplaceTrinity(HUDNow)
 	if ReadByte(chronicles+0x10) == 0x20 then
 		unlock = unlock + (2^(trinityTable[3]-1))
 	end
-	if ReadByte(OCTrinityFlag) > 0 then
+	if ReadByte(OCCupUnlock+2) == 1 then
 		unlock = unlock + (2^(trinityTable[4]-1))
 	end
 	if (ReadByte(journalCharacters+1) // 8) % 2 == 1 then
@@ -1869,7 +1869,7 @@ function ReplaceTrinity(HUDNow)
 			i = 2
 		elseif ReadByte(cutsceneFlags+0xB08) == 0x6E then
 			i = 3
-		elseif ReadByte(OCTrinityFlag) > 0 and ReadByte(world) == 11 and ReadByte(room) == 1 then
+		elseif ReadByte(OCCupUnlock+2) == 1 and ReadByte(world) == 11 and ReadByte(room) == 1 then
 			i = 4
 		elseif ReadByte(cutsceneFlags+0xB0E) == 0x28 then
 			i = 5
@@ -1994,9 +1994,9 @@ function FlagFixes()
 		elseif ReadByte(world) == 0xB and ReadByte(room) == 1 then
 			WriteInt(minigameTimer, 0)
 		end
-		
-		if ReadByte(OCCupUnlock+2) == 0 then
-			WriteInt(OCCupUnlock, 0x010A0101)	-- Unlock cups
+
+		if ReadByte(OCCupUnlock) == 0 then
+			WriteInt(OCCupUnlock, 0x0A0A0A0A)	-- Unlock cups
 		end
 	end
 
