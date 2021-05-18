@@ -2009,7 +2009,7 @@ function FlagFixes()
 
 		for i=0,3 do
 			if ReadByte(OCCupUnlock+i) ~= 0xA and ReadByte(OCCupUnlock+i) ~= 1 then
-				WriteByte(OCCupUnlock, 0x0A) -- Unlock cups
+				WriteByte(OCCupUnlock+i, 0x0A) -- Unlock cups
 			end
 		end
 	end
