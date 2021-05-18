@@ -1987,15 +1987,17 @@ function FlagFixes()
 	-- end
 	
 	-- Shorten solo and time trial
-	if ReadByte(world) == 0xB and (ReadShort(cupCurrentSeed) == 0x0101 or ReadShort(cupCurrentSeed) == 0x0B0B)
-	and ReadFloat(soraHUD) > 0 and (ReadByte(party1) == 0xFF or ReadInt(minigameTimer) > 0) then
-		WriteShort(cupCurrentSeed, ReadShort(cupCurrentSeed) == 0x0101 and 0x0909 or 0x1212)
-	elseif ReadByte(world) == 0xB and ReadByte(room) == 1 then
-		WriteInt(minigameTimer, 0)
-	end
-	
-	for i=0,3 do
-		WriteByte(OCCupUnlock+i, 1)	-- Unlock cups
+	if ReadByte(world) == 0xB then
+		if (ReadShort(cupCurrentSeed) == 0x0101 or ReadShort(cupCurrentSeed) == 0x0B0B)
+		and ReadFloat(soraHUD) > 0 and (ReadByte(party1) == 0xFF or ReadInt(minigameTimer) > 0) then
+			WriteShort(cupCurrentSeed, ReadShort(cupCurrentSeed) == 0x0101 and 0x0909 or 0x1212)
+		elseif ReadByte(world) == 0xB and ReadByte(room) == 1 then
+			WriteInt(minigameTimer, 0)
+		end
+		
+		for i=0,3 do
+			WriteByte(OCCupUnlock+i, 1)	-- Unlock cups
+		end
 	end
 
 	if (ReadByte(waterwayGate) // 0x80) % 2 == 0 then

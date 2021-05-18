@@ -143,9 +143,9 @@
 8E  Elixir ; Chest
 8F  Elixir ; 10 Fruits Jungle Slider
 90  AP Up ; 20 Fruits Jungle Slider
-91  Dark Matter ; 30 fruits in Jungle Slider
-92  Defense Up ; 40 Jungle Slider
-93  Power Up ; 50 Jungle Slider
+91  Dark Matter ; 30 Fruits in Jungle Slider
+92  Defense Up ; 40 Fruits Jungle Slider
+93  Power Up ; 50 Fruits Jungle Slider
 94  Diamond Dust ; Ice Titan
 95  One-Winged Angel ; Sephiroth ; HB1 ; Library ; HB2 ; EotW
 96  Zantetsuken ; Kurt Zisa ; HB1 ; Library ; HB2 ; EotW
