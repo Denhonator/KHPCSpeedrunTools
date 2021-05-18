@@ -1595,7 +1595,6 @@ function UpdateInventory(HUDNow)
 	-- Prevent issues in early HB exploration
 	if ReadByte(cutsceneFlags+0xB0E) <= 1 then
 		WriteByte(cutsceneFlags+0xB0E, 0x7A)
-		WriteByte(libraryFlag, 2)
 	end
 	
 	if ReadByte(world) == 0xF then
@@ -1604,6 +1603,7 @@ function UpdateInventory(HUDNow)
 			embCount = embCount + ReadByte(inventory+i)
 		end
 		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) <= 0x32 and embCount or 0)
+		WriteByte(libraryFlag, 2)
 	end
 	
 	for i=1,0x40 do
