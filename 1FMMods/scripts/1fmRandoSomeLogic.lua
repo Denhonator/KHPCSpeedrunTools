@@ -361,6 +361,10 @@ function ItemCompatibility(i, r)
 	return true
 end
 
+function Salable(i)
+	return i < 0xB2 or (i>=0xCF and i<=0xD2) or (i>=0xD9 and i<=0xE1) or i==0xE3 or i>=0xE5
+end
+
 -- simple string hashing algorithm designed by Daniel J. Bernstein
 function Djb2(str)
 	hash = 5381
@@ -703,10 +707,16 @@ function Randomize()
 	
 	for i=1, 0xFF do
 		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
+		local price = 0
 		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
-			local price = (math.random(9)+1)*250
+			price = (math.random(9)+1)*250
 			itemData[i][9] = price % 0x100
 			itemData[i][10] = price // 0x100
+		end
+		if ReadShort(itemTable+((i-1)*20)+10) == 0 and Salable(i) then
+			price = price > 0 and (price // 10) or ReadShort(itemTable+((i-1)*20)+8)
+			itemData[i][11] = price % 0x100
+			itemData[i][12] = price // 0x100
 		end
 		
 		if ((string.find(ItemType(i), "Weapon")
@@ -1997,7 +2007,7 @@ function FlagFixes()
 			WriteInt(minigameTimer, 0)
 		end
 
-		if ReadByte(OCCupUnlock) == 0 then
+		if ReadByte(OCCupUnlock+3) == 0 then
 			WriteInt(OCCupUnlock, 0x0A0A0A0A)	-- Unlock cups
 		end
 	end
