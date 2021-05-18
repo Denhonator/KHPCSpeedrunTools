@@ -1,6 +1,7 @@
 local lastCutscene = 0
 local lastSkippable = 0
 local canExecute = false
+local world = 0x233CADC - 0x3A0606
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
@@ -20,7 +21,7 @@ function _OnFrame()
 	local skippableStatus = ReadByte(0x23944E4-0x3A0606)
 	local HUD = ReadFloat(0x280EB1C-0x3A0606)
 	local blackFade = ReadByte(0x4D93B8-0x3A0606)
-	if cutsceneNow > 0 then
+	if cutsceneNow > 0 and (ReadByte(world) == 4 or ReadByte(world) >= 0xF) then
 		WriteByte(0x23944E4-0x3A0606, 1) --make skippable
 	end
 	
