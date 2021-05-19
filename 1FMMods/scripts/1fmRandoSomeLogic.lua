@@ -2163,9 +2163,11 @@ function FlagFixes()
 			WriteByte(collectedFruits, 0)
 			WriteByte(savedFruits, 0)
 			local warpsAddr = ReadLong(warpDefinitions)
-			for i=0, 4 do
-				if ReadByte(sliderProgress+i) == 1 and ReadByte(warpsAddr+0x9C0) < 0x10+i then
-					WriteArrayA(warpsAddr+0x9C0, ReadArrayA(warpsAddr+0x9C0+(0x40*(i+1)), 0x40))
+			if ReadByteA(warpsAddr)==0 and ReadByteA(warpsAddr+0x40)==1 then
+				for i=0, 4 do
+					if ReadByte(sliderProgress+i) == 1 and ReadByte(warpsAddr+0x9C0) < 0x10+i then
+						WriteArrayA(warpsAddr+0x9C0, ReadArrayA(warpsAddr+0x9C0+(0x40*(i+1)), 0x40))
+					end
 				end
 			end
 		end
