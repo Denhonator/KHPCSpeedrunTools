@@ -66,6 +66,8 @@ local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local libraryFlag = 0x2DE7AF3 - offset
 local scriptPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
+local OCCupDialog = 0x23966B0 - offset
+local textBox = 0x23D09E4 - offset
 local cupCurrentSeed = 0x2389480 - offset
 local waterwayGate = 0x2DE763D - offset
 local waterwayTrinity = 0x2DE7681 - offset
@@ -157,6 +159,7 @@ local removeBlackTimer = 0
 local prevBlack = 128
 local prevWorld = 0
 local prevRoom = 0
+local OCTextFix = 0
 local introJump = true
 
 local important = {0xB2, 0xB7, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCB, 0xCC, 0xCD}
@@ -2037,6 +2040,15 @@ function FlagFixes()
 			if ReadByte(OCCupUnlock+i) ~= 0xA and ReadByte(OCCupUnlock+i) ~= 1 then
 				WriteByte(OCCupUnlock+i, 0x0A) -- Unlock cups
 			end
+		end
+		
+		if ReadInt(OCCupDialog) == 0xF9 and ReadByte(room) == 1 then
+			WriteInt(OCCupDialog, 0x290)
+			OCTextFix = 60
+		elseif OCTextFix > 0 and ReadInt(OCCupDialog) > 0x290 then
+			WriteFloat(textBox, 155)
+			WriteFloat(textBox+0x50, 160)
+			OCTextFix = 0
 		end
 	end
 
