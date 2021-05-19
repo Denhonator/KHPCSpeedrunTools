@@ -728,7 +728,7 @@ function Randomize()
 		end
 	end
 	
-	local extraAbilities = {1,2,3,4,0x15,0x16}
+	local extraAbilities = {1,1,2,4,0x15,0x16}
 	local order = GetRandomOrder(0xA9)
 
 	for r=1, 0xA9 do
@@ -982,7 +982,7 @@ function Randomize()
 	synthCommon = {0x9C, 0xFE, 0xFF}
 	synthUnique = {}
 	for i=10, 0x86 do
-		if string.find(ItemType(i), "Accessory") or string.find(ItemType(i), "Weapon") then
+		if string.find(ItemType(i), "Weapon") then
 			synthUnique[(#synthUnique)+1] = i
 		end
 	end
