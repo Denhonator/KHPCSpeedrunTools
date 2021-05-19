@@ -41,8 +41,10 @@ local chestTable = 0x5259E0 - offset
 local shopTableBase = 0x4FB374 - offset
 local synthRequirements = 0x544320 - offset
 local synthItems = synthRequirements + 0x1E0
-local chestsOpened = 0x2DE5E00 - offset
 
+local chestsOpened = 0x2DE5E00 - offset
+local summonsReturned = 0x2DE66FC - offset
+local summons = 0x2DE61A0 - offset
 local inventory = 0x2DE5E6A - offset
 local tornPageCount = 0x2DE6DD0 - offset
 local emblemCount = 0x2DE787D - offset
@@ -62,7 +64,7 @@ local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local libraryFlag = 0x2DE7AF3 - offset
-local CutsceneWarpPointer = 0x23944B8 - offset
+local scriptPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
 local cupCurrentSeed = 0x2389480 - offset
 local waterwayGate = 0x2DE763D - offset
@@ -79,8 +81,6 @@ local unequipBlacklist = 0x541FA0 - offset
 
 local chronicles = 0x2DE7367 - offset
 local journalCharacters = 0x2DE70B3 - offset
-local OCTrinityFlag = 0x2DE68FC - offset
-local Riku1Flag = 0x2DE79D0+0x6C+0xB6 - offset
 
 local infoBoxNotVisible = 0x23D0890 - offset
 local preventMenu = 0x232A60C - offset
@@ -553,7 +553,7 @@ function IsAccessible(t, i)
 			end
 			if string.find(t[i][k], "All Summons") then
 				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
-				ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1))
+				ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1) and ItemAccessible(0xD1, 1))
 			elseif string.find(t[i][k], "Dumbo") then
 				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and MagicAccessible("Fire Magic"))
 										or AbilityAccessible(1, 2)
@@ -1985,6 +1985,32 @@ function FlagFixes()
 	else
 		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
 	end
+	
+	if ReadByte(world) == 3 and ReadByte(room) == 0x13 then
+		local simbaAddr = ReadLong(scriptPointer) + 0x131C8
+		if ReadByteA(simbaAddr)==5 then
+			local naturesparkAddr = simbaAddr - 0x423B
+			local hasSummons = {}
+			for i=0,6 do
+				hasSummons[ReadByte(summons+i)] = true
+			end
+			
+			WriteByte(summonsReturned, hasSummons[1] and 1 or 0)
+			WriteByte(summonsReturned+1, hasSummons[0] and 1 or 0)
+			WriteByte(summonsReturned+2, hasSummons[4] and 1 or 0)
+			WriteByte(summonsReturned-1, hasSummons[5] and 1 or 0)
+			
+			local c = ReadByte(inventory+0xD0) > 0
+			if hasSummons[5] then
+				WriteByte(inventory+0xD0, 0)
+			end
+			WriteIntA(simbaAddr+4, c and 0x18000238 or 0x18000004)
+			WriteIntA(simbaAddr+12, c and 0x18000233 or 0x18000004)
+			WriteByteA(naturesparkAddr, c and 0xD1 or 0xCF)
+			WriteByteA(simbaAddr+0x164B, c and 5 or 1)
+			WriteByteA(simbaAddr+0x164B+8, c and 5 or 1)
+		end
+	end
 
 	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
 		--WriteByte(worldFlagBase+0x1C, 5) -- Cid outside
@@ -2076,7 +2102,7 @@ function FlagFixes()
 	end
 	
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
-		local warpAddr = ReadLong(CutsceneWarpPointer)+0x6F9D
+		local warpAddr = ReadLong(scriptPointer)+0x6F9D
 		if ReadByteA(warpAddr)==2 and ReadByteA(warpAddr+4)==1 then
 			print("DI to EotW warp")
 			WriteByteA(warpAddr,0x10)
@@ -2085,7 +2111,7 @@ function FlagFixes()
 	end
 	
 	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
-		local warpAddr = ReadLong(CutsceneWarpPointer)+0x677D
+		local warpAddr = ReadLong(scriptPointer)+0x677D
 		if ReadByteA(warpAddr)==0xF and ReadByteA(warpAddr+4)==0xB and ReadByte(blackfade)>0 then
 			print("Skipping HB cutscenes to avoid story flag conflicts")
 			WriteByte(cutsceneFlags+0xB0D, 0x6A)
