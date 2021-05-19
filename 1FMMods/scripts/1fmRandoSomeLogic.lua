@@ -2182,8 +2182,7 @@ function FlagFixes()
 	
 	--Early EotW, blocked until HB2
 	if ReadByte(cutsceneFlags+0xB0E) < 0xC3 and ReadByte(world) == 0x10 then
-		WriteByte(currentTerminus, math.min(ReadByte(currentTerminus), 9)) --Max 100 acre portal accessible
-		if ReadByte(currentTerminus) == 9 then								--Hide teleporter to HB portal
+		if ReadByte(currentTerminus) == 9 then		--Hide teleporter to HB portal
 			WriteInt(terminusTeleUsable, 0xFFFFD8F0)
 			WriteInt(terminusTeleVisible, 0xC61C4000)
 		end
