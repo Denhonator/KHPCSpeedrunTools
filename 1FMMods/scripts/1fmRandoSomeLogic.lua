@@ -2046,7 +2046,7 @@ function FlagFixes()
 			WriteInt(OCCupDialog, 0x290)
 			OCTextFix = 60
 		elseif OCTextFix > 0 and ReadInt(OCCupDialog) > 0x290 then
-			WriteFloat(textBox, 155)
+			WriteFloat(textBox, ReadFloat(textBox) > 0 and 155 or -110)
 			WriteFloat(textBox+0x50, 160)
 			OCTextFix = 0
 		end
