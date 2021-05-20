@@ -328,7 +328,7 @@ function ItemType(i)
 	if (i == 0xC8 or i == 0xC9) or (i >= 0xD4 and i<= 0xDE) 
 								or (i >= 0xE3 and i <= 0xE6) or i==0xD2 or i==0xA8
 								or i==0xAA or i==0xAE or i==0xB0 then
-		attributes = attributes .. "Important"
+		attributes = attributes .. "NonImportant"
 	end
 
 	for j=1,#important do
@@ -1448,7 +1448,8 @@ function UpdateInventory(HUDNow)
 				else
 					inventoryUpdater[i] = itemCount
 				end
-			elseif string.find(ItemType(itemids[i]), "Important") and itemCount>0 and HUDNow>0 then
+			elseif string.find(ItemType(itemids[i]), "Important") and itemCount>0 and HUDNow>0
+			and ItemType(i) == "" then
 				WriteByte(inventory+(itemids[i]-1), itemCount + ReadByte(inventory+(itemids[i]-1)))
 				WriteByte(inventory+(i-1), 0)
 				inventoryUpdater[i] = 0
@@ -1551,7 +1552,7 @@ end
 function GenerateSpoilers()
 	local spoilers = {}
 	for i=1, 0xFF do
-		if string.find(ItemType(itemids[i]), "Important") then
+		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" then
 			spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
 		end
 	end
@@ -1574,7 +1575,7 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Chest at\n%s\nhas %s\n\n", 
 					chestDetails[c][2], abilityNames[ab])
-			elseif string.find(itype, "Important") then
+			elseif itype == "Important" then
 				spoilers[(#spoilers)+1] = string.format(
 					"Chest at\n%s\nhas %s\n\n", 
 					chestDetails[c][2], itemNames[it][1])
@@ -1592,7 +1593,7 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], abilityNames[ab])
-			elseif string.find(itype, "Important") and rewardDetails[r][2]~="Chest" then
+			elseif itype == "Important" and rewardDetails[r][2]~="Chest" then
 				spoilers[(#spoilers)+1] = string.format(
 					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
