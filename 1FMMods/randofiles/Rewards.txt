@@ -15,26 +15,26 @@
 0E  Mermaid Kick ; Ursula 1
 0F  Glide ; Neverland ; Green Trinity
 10  Superglide ; Chernabog ; EotW
-11  Fireglow ; Dragon Maleficent ; HB1 ; Library
+11  Fireglow ; Dragon Maleficent ; HB1
 12  Earthshine ; Secret Waterway
 13  Jungle King ; Deep Jungle
 14  Three Wishes ; Agrabah
 15  Fairy Harp ; Neverland ; Green Trinity
 16  Pumpinhead ; Halloween Town ; Jack-In-The-Box
 17  Crabclaw ; Atlantica ; Mermaid Kick
-18  Divine Rose ; Belle in HB2 ; HB1 ; Library ; HB2
+18  Divine Rose ; Belle in HB2 ; HB1 ; HB2
 19  Lionheart ; Leon & Cloud Hades Cup
 1A  Metal Chocobo ; Cloud Hercules Cup
-1B  Oathkeeper ; Kairi TT4 ; HB1 ; Library
+1B  Oathkeeper ; Kairi TT4 ; HB1
 1C  Genji Shield ; Yuffie Hades Cup
 1D  Herc's Shield ; Hercules Cup
 1E  Sonic Blade ; Olympus Coliseum
 1F  Raven's Claw ; Anti-Sora ; Green Trinity
 20  Strike Raid ; Pegasus Cup
-21  Ragnarok ; Riku 2 ; HB1 ; Library
+21  Ragnarok ; Riku 2 ; HB1
 22  Trinity Limit ; Hades Cup
 23  Ars Arcanum ; Capt. Hook ; Green Trinity
-24  Cheer (Donald) ; Maleficent ; Library
+24  Cheer (Donald) ; Maleficent ; HB1
 25  Cheer (Goofy); Parasite Cage; High Jump OR Glide
 26  Lord Fortune ; Fairy Godmother ; All Summons ; Fire Magic
 27  High Jump ; Chest
@@ -52,15 +52,15 @@
 33  Wishing Star ; Chest
 34  Mythril Shard ; Dalmatians' House ; 42 Puppies
 35  Megaelixir ; Dalmatians' House ; 60 Puppies
-36  Orichalcum ; Dalmatians' House ; 72 Puppies ; HB1 ; Library
-37  Tech Boost ; Dalmatians' House ; 90 Puppies ; HB1 ; Library
+36  Orichalcum ; Dalmatians' House ; 72 Puppies ; HB1
+37  Tech Boost ; Dalmatians' House ; 90 Puppies ; HB1
 38  Brave Warrior ; Guard Armor
 39  Ifrit's Horn ; Trickmaster
 3A  Inferno Band ; Cerberus
 3B  White Fang ; Sabor 2
 3C  Ray of Light ; Pot Centipede
 3D  Holy Circlet ; Oogie Boogie ; Jack-In-The-Box
-3E  Omega Arts ; Behemoth ; HB1 ; Library ; HB2
+3E  Omega Arts ; Behemoth ; HB1 ; HB2
 3F  Defense Up ; Chest
 40  Elixir ; Chest
 41  AP Up ; Chest
@@ -147,9 +147,9 @@
 92  Defense Up ; 40 Fruits Jungle Slider
 93  Power Up ; 50 Fruits Jungle Slider
 94  Diamond Dust ; Ice Titan
-95  One-Winged Angel ; Sephiroth ; HB1 ; Library ; HB2 ; EotW
-96  Zantetsuken ; Kurt Zisa ; HB1 ; Library ; HB2 ; EotW
-97  EXP Necklace ; Unknown ; HB1 ; Library ; HB2 ; EotW
+95  One-Winged Angel ; Sephiroth ; HB1 ; HB2 ; EotW
+96  Zantetsuken ; Kurt Zisa ; HB1 ; HB2 ; EotW
+97  EXP Necklace ; Unknown ; HB1 ; HB2 ; EotW
 98  Firagun Band ; ?
 99  Dark Matter ; Chest
 9A  Shiva Belt ; Chest
