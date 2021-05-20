@@ -20,7 +20,7 @@
 13  Jungle King ; Deep Jungle
 14  Three Wishes ; Agrabah
 15  Fairy Harp ; Neverland ; Green Trinity
-16  Pumpinhead ; Halloween Town ; Jack-In-The-Box
+16  Pumpkinhead ; Halloween Town ; Jack-In-The-Box
 17  Crabclaw ; Atlantica ; Mermaid Kick
 18  Divine Rose ; Belle in HB2 ; HB1 ; HB2
 19  Lionheart ; Leon & Cloud Hades Cup

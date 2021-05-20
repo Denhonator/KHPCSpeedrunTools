@@ -162,7 +162,7 @@ local prevRoom = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD}
+local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCB, 0xCC, 0xCD}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -478,68 +478,57 @@ function IsAccessible(t, i)
 end
 
 function GetAvailability()
-	itemsAvailable = {}
-	abilitiesAvailable = {}
-	dalmatiansAvailable = 0
+	local abAv = {}
+	local itAv = {}
+	local rewAv = {}
+	local dalmAv = 0
 	
 	for i=1,0xFF do
-		itemsAvailable[i] = 0
-		abilitiesAvailable[i] = 0
+		abAv[i] = 0
+		itAv[i] = 0
 	end
-
-	for j=1, 10 do
-		local abAv = {}
-		local itAv = {}
-		local rewAv = {}
-		local dalmAv = 0
-		
-		for i=1,0xFF do
-			abAv[i] = 0
-			itAv[i] = 0
+	
+	for i=1, 0x1FF do
+		if chests[i] and chests[i] % 0x10 == 0xE and not rewAv[(chests[i]//0x10)+1] then
+			rewAv[(chests[i]//0x10)+1] = 0
 		end
-		
-		for i=1, 0x1FF do
-			if chests[i] and chests[i] % 0x10 == 0xE and not rewAv[(chests[i]//0x10)+1] then
-				rewAv[(chests[i]//0x10)+1] = 0
+		if chestDetails[i] and IsAccessible(chestDetails, i) then
+			if chests[i] % 0x10 == 0 then
+				local it = itemids[chests[i]//0x10]
+				itAv[it] = itAv[it] + 1
+			elseif chests[i] % 0x10 == 4 then
+				dalmAv = dalmAv + 3
+			elseif chests[i] % 0x10 == 0xE then
+				rewAv[(chests[i]//0x10)+1] = rewAv[(chests[i]//0x10)+1] + 1
 			end
-			if chestDetails[i] and IsAccessible(chestDetails, i) then
-				if chests[i] % 0x10 == 0 then
-					local it = itemids[chests[i]//0x10]
+		end
+	end
+	
+	for i=1, 0xA9 do
+		if rewardDetails[i] then
+			if (rewAv[i] and rewAv[i] > 0) or (not rewAv[i] and IsAccessible(rewardDetails, i)) then
+				if rewards[i] % 0x100 == 0xF0 then
+					local it = itemids[rewards[i]//0x100]
 					itAv[it] = itAv[it] + 1
-				elseif chests[i] % 0x10 == 4 then
-					dalmAv = dalmAv + 3
-				elseif chests[i] % 0x10 == 0xE then
-					rewAv[(chests[i]//0x10)+1] = rewAv[(chests[i]//0x10)+1] + 1
+				elseif rewards[i] % 0x100 == 0xB1 then
+					abAv[rewards[i]//0x100] = abAv[rewards[i]//0x100] + 1
 				end
 			end
 		end
-		
-		for i=1, 0xA9 do
-			if rewardDetails[i] then
-				if (rewAv[i] and rewAv[i] > 0) or (not rewAv[i] and IsAccessible(rewardDetails, i)) then
-					if rewards[i] % 0x100 == 0xF0 then
-						local it = itemids[rewards[i]//0x100]
-						itAv[it] = itAv[it] + 1
-					elseif rewards[i] % 0x100 == 0xB1 then
-						abAv[rewards[i]//0x100] = abAv[rewards[i]//0x100] + 1
-					end
-				end
+	end
+	
+	for i=0x95, 0xE6 do
+		if itemNames[i] then
+			if not itemNames[i][3] or IsAccessible(itemNames, i) then
+				itAv[itemids[i]] = itAv[itemids[i]] + 1
 			end
 		end
-		
-		for i=0x95, 0xE6 do
-			if itemNames[i] then
-				if not itemNames[i][3] or IsAccessible(itemNames, i) then
-					itAv[itemids[i]] = itAv[itemids[i]] + 1
-				end
-			end
-		end
-		
-		for i=1,0x1FF do
-			itemsAvailable[i] = itAv[i]
-			abilitiesAvailable[i] = abAv[i]
-			dalmatiansAvailable = dalmAv
-		end
+	end
+	
+	for i=1,0x1FF do
+		itemsAvailable[i] = itAv[i]
+		abilitiesAvailable[i] = abAv[i]
+		dalmatiansAvailable = dalmAv
 	end
 end
 
@@ -590,8 +579,6 @@ function Randomize()
 			accessoryPool[(#accessoryPool)+1] = i
 		end
 	end
-	
-	print("Item randomization...")
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
@@ -614,10 +601,7 @@ function Randomize()
 			itemids[i] = table.remove(accessoryPool, r)
 		end
 	end
-	
-	print("Item randomization pool prepared")
 
-	-- Get rid of normal key items, replace with random good stuff
 	for i=0x9B, 0xFF do
 		if string.find(ItemType(i), "Important") then
 			itemids[i] = table.remove(randomGets, math.random(#randomGets))
@@ -935,27 +919,39 @@ function Randomize()
 end
 
 function ValidSeed()
-	GetAvailability()
-	local HBWin = ItemAccessible(0xCD, 1)
-	for i=0xBC, 0xBF do
-		print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
-		HBWin = HBWin and ItemAccessible(i, 1)
+	itemsAvailable = {}
+	abilitiesAvailable = {}
+	dalmatiansAvailable = 0
+	
+	for i=1,0xFF do
+		itemsAvailable[i] = 0
+		abilitiesAvailable[i] = 0
 	end
 	
-	local DIWin = true
-	for i=0xC0, 0xC7 do
-		print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
-		DIWin = DIWin and ItemAccessible(i, 1)
-	end
-	
-	if HBWin then
-		print("HBWin")
-		-- return true
-	end
-	if DIWin then
-		print("DI Win")
-		SaveRando()
-		return true
+	for j=1, 10 do
+		GetAvailability()
+		local HBWin = ItemAccessible(0xCD, 1)
+		for i=0xBC, 0xBF do
+			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			HBWin = HBWin and ItemAccessible(i, 1)
+		end
+		
+		local DIWin = true
+		for i=0xC0, 0xC7 do
+			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			DIWin = DIWin and ItemAccessible(i, 1)
+		end
+		
+		print(string.format("Complexity %d", j))
+		if HBWin then
+			print("HBWin")
+			-- return true
+		end
+		if DIWin then
+			print("DI Win")
+			SaveRando()
+			return true
+		end
 	end
 	print("Unwinnable, rerolling")
 	return false
@@ -1555,7 +1551,7 @@ end
 function GenerateSpoilers()
 	local spoilers = {}
 	for i=1, 0xFF do
-		if string.find(ItemType(itemids[i]), "Important") and string.find(ItemType(i), "Important") then
+		if string.find(ItemType(itemids[i]), "Important") then
 			spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
 		end
 	end
