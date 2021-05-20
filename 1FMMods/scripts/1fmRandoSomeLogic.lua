@@ -804,8 +804,8 @@ function Randomize()
 				r = math.random(95)+4
 			end
 			local ab = soraAbilities[r]
+			replaced = {false,false,false}
 			for l=1,99 do
-				replaced = {false,false,false}
 				if soraAbilities[l] == ab and not replaced[1] then
 					soraAbilities[l] = (rewards[i] // 0x100) + 0x80
 					replaced[1] = true
