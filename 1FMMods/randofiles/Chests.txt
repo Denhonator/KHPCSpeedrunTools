@@ -94,7 +94,7 @@ f   Ether            ; ?
 5d  Reward 43        ; Rabbit hole
 5e  Reward 44        ; Rabbit hole
 5f  Reward 45        ; Rabbit hole
-60  Reward 46        ; Wonderland ; Green Trinity
+60  Reward 46        ; Bizarre Room ; Green Trinity
 61  Mega-Potion      ; ?
 62  Mega-Potion      ; ?
 63  Mega-Potion      ; ?

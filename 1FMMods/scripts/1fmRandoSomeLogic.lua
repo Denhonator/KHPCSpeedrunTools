@@ -1819,7 +1819,7 @@ end
 
 function FlagFixes()
 	-- Remove party in DI
-	if ReadByte(world) == 1 then
+	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadByte(inGummi) == 0 then
 		WriteByte(party1, 0xFF)
 		WriteByte(party1+1, 0xFF)
 	end
