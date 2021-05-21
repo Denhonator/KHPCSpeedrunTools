@@ -1824,7 +1824,7 @@ function FlagFixes()
 	end
 
 	-- Reset TT to avoid softlocks
-	if ReadByte(cutsceneFlags+0xB04) < 0x14 and ReadByte(world) ~= 3 then
+	if ReadByte(cutsceneFlags+0xB04) < 0x14 and ReadByte(world) > 3 then
 		WriteByte(cutsceneFlags+0xB04, 0)
 		WriteByte(worldFlagBase+0x1C, 2)
 	end
