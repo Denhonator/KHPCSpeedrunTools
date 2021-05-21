@@ -52,8 +52,8 @@
 33  Wishing Star ; Chest
 34  Mythril Shard ; Dalmatians' House ; 42 Puppies
 35  Megaelixir ; Dalmatians' House ; 60 Puppies
-36  Orichalcum ; Dalmatians' House ; 72 Puppies ; HB1
-37  Tech Boost ; Dalmatians' House ; 90 Puppies ; HB1
+36  Orichalcum ; Dalmatians' House ; 72 Puppies
+37  Tech Boost ; Dalmatians' House ; 90 Puppies
 38  Brave Warrior ; Guard Armor
 39  Ifrit's Horn ; Trickmaster
 3A  Inferno Band ; Cerberus

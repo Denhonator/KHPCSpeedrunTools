@@ -445,6 +445,10 @@ function IsAccessible(t, i)
 		if string.find(t[i][k], "Postcard") then
 			thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9))-5)
 		end
+		if string.find(t[i][k], "Puppies") then
+			local pupCount = tonumber(string.sub(t[i][k], 1,3))
+			thisAccess = thisAccess or (pupCount and dalmatiansAvailable >= pupCount)
+		end
 		if string.find(t[i][k], "Page") then
 			local accessiblePages = 0
 			for p=0xD4,0xD8 do
