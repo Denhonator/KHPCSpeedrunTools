@@ -1838,7 +1838,7 @@ function FlagFixes()
 	
 	-- Ensure correct vacant house state
 	if ReadByte(cutsceneFlags+0xB04) == 0x4A then
-		Write(worldFlagBase+0x35, 2)
+		WriteByte(worldFlagBase+0x35, 2)
 	end
 	
 	if (ReadByte(cutsceneFlags+0xB04) > 0x80 and ReadByte(worldFlagBase+0x1C) ~= 5)
