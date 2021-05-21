@@ -637,11 +637,11 @@ function Randomize()
 			itemData[i][12] = price // 0x100
 		end
 		
-		if ((string.find(ItemType(i), "Weapon")
+		if (((string.find(ItemType(i), "Weapon")
 				or string.find(ItemType(i), "Important")
 				or string.find(ItemType(itemids[i]), "Accessory"))
-				and i~=itemids[i])
-				or i==itemids[i] and ItemType(i) ~= "" then
+				and i~=itemids[i]) or i==itemids[i]) 
+				and ItemType(i) ~= "" and i~=0xCB and i~=0xCC then
 			shopPool[(#shopPool)+1] = i
 		end
 	end
@@ -1512,6 +1512,9 @@ function UpdateInventory(HUDNow)
 			gummiUpdater[i] = itemCount
 		end
 	end
+	
+	WriteByte(inventory+0xCA, 0)
+	WriteByte(inventory+0xCB, 0)
 	
 	-- if ReadByte(inventory+0xCD-1) > 0 and ReadByte(closeMenu) == 0 then
 		-- if ReadByte(inventory+0xCB-1) > 0 then
