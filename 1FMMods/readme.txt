@@ -8,6 +8,7 @@ SaveAnywhere:
 - You can use this to essentially soft reset by going to title screen
 - You can use this to save anywhere. Saving during cutscenes or combat may have unexpected consequences.
 - You can also instantly die with R1+R2+L2+Select
+- You can also instantly load continue state with R1+R2+L1+L2+D-pad left
 
 InstantGummi:
 - Instantly arrive at any selected world

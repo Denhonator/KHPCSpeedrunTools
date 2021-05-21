@@ -16,6 +16,9 @@ local blackFade = 0x4D93B8 - offset
 local closeMenu = 0x2E90820 - offset
 local deathPointer = 0x23944B8 - offset
 local closeMenu = 0x2E90820 - offset
+local warpTrigger = 0x22E86DC - offset
+local warpType1 = 0x233C240 - offset
+local warpType2 = 0x22E86E0 - offset
 
 local canExecute = false
 
@@ -38,6 +41,15 @@ function _OnInit()
 	lastDeathPointer = ReadLong(deathPointer)
 end
 
+function InstantContinue()
+	if ReadByte(warpTrigger) == 0 then
+		print("Instant continue trigger")
+		WriteByte(warpType1, 5)
+		WriteByte(warpType2, 12)
+		WriteByte(warpTrigger, 2)
+	end
+end
+
 function _OnFrame()
 	if not canExecute then
 		goto done
@@ -51,6 +63,10 @@ function _OnFrame()
 		addgummi = 5
 	elseif input == 1793 and lastInput ~= 1793 then
 		WriteLong(closeMenu, 0)
+	end
+	
+	if input == 3968 and lastInput ~= 3968 and ReadLong(closeMenu) == 0 then
+		InstantContinue()
 	end
 	
 	-- Remove white screen on death (it bugs out this way normally)
