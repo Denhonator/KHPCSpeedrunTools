@@ -1810,6 +1810,12 @@ function InstantGummi()
 end
 
 function FlagFixes()
+	-- Remove party in DI
+	if ReadByte(world) == 1 then
+		WriteByte(party1, 0xFF)
+		WriteByte(party1+1, 0xFF)
+	end
+
 	-- Reset TT to avoid softlocks
 	if ReadByte(cutsceneFlags+0xB04) < 0x14 and ReadByte(world) ~= 3 then
 		WriteByte(cutsceneFlags+0xB04, 0)
