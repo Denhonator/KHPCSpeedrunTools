@@ -616,9 +616,11 @@ function Randomize()
 	for i=1, #importantPool do
 		if #randomGets > 0 then
 			itemids[importantPool[i]] = table.remove(randomGets, math.random(#randomGets))
+		else
+			importantPool[i] = nil
 		end
 	end
-	
+
 	shopPool = {}
 	
 	for i=1, 0xFF do
