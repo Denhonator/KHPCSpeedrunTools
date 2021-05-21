@@ -1560,7 +1560,7 @@ end
 function GenerateSpoilers()
 	local spoilers = {}
 	for i=1, 0xFF do
-		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" then
+		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" and i~=0xD5 and i~=0xD6 then
 			spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
 		end
 	end
@@ -1841,6 +1841,9 @@ function FlagFixes()
 		WriteByte(worldFlagBase+0x35, 2)
 	end
 	
+	if ReadByte(cutsceneFlags+0xB04) ~= prevTTFlag then
+		print(string.format("%x, %x", prevTTFlag, ReadByte(cutsceneFlags+0xB04)))
+	end
 	-- Revert HB1 effect on TT story
 	if (ReadByte(cutsceneFlags+0xB04) == 0x6E and ReadByte(worldFlagBase+0x1C) ~= 5)
 											or ReadByte(cutsceneFlags+0xB04) == 0x96 then
@@ -1851,6 +1854,7 @@ function FlagFixes()
 											and ReadByte(cutsceneFlags+0xB04) < 0x6E then
 		WriteByte(cutsceneFlags+0xB04, 0x6E)
 		WriteByte(cutsceneFlags+0xB00, 0xDC)
+		print("Post HB TT")
 	end
 
 	prevTTFlag = ReadByte(cutsceneFlags+0xB04)
