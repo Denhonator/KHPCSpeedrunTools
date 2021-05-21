@@ -1841,7 +1841,8 @@ function FlagFixes()
 		WriteByte(worldFlagBase+0x35, 2)
 	end
 	
-	if (ReadByte(cutsceneFlags+0xB04) > 0x80 and ReadByte(worldFlagBase+0x1C) ~= 5)
+	-- Revert HB1 effect on TT story
+	if (ReadByte(cutsceneFlags+0xB04) == 0x6E and ReadByte(worldFlagBase+0x1C) ~= 5)
 											or ReadByte(cutsceneFlags+0xB04) == 0x96 then
 		WriteByte(cutsceneFlags+0xB04, prevTTFlag)
 	end

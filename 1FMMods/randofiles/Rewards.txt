@@ -111,7 +111,7 @@
 6E  Orichalcum ; Postcard 8
 6F  AP Up ; Postcard 9
 70  Defense Up ; Postcard 10
-71  Mythril ; ?
+71  Mythril ; Dalmatians' House ; 51 Puppies
 72  Mega-Potion ; Chest
 73  Mythril Shard ; Chest
 74  Elixir ; Chest
