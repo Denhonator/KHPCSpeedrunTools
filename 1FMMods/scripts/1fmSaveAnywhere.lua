@@ -15,6 +15,7 @@ local whiteFade = 0x233C49C - offset
 local blackFade = 0x4D93B8 - offset
 local closeMenu = 0x2E90820 - offset
 local deathPointer = 0x23944B8 - offset
+local closeMenu = 0x2E90820 - offset
 
 local canExecute = false
 
@@ -45,9 +46,11 @@ function _OnFrame()
 	local input = ReadInt(0x233D034-offset)
 	local savemenuopen = ReadByte(0x232A604-offset)
 	
-	if input == 1793 and savemenuopen~=4 then 
+	if input == 1793 and lastInput ~= 1793 and savemenuopen~=4 and ReadByte(0x2350CD4-offset) == 0 then 
 		WriteByte(0x2350CD4-offset, 0x1)
 		addgummi = 5
+	elseif input == 1793 and lastInput ~= 1793 then
+		WriteLong(closeMenu, 0)
 	end
 	
 	-- Remove white screen on death (it bugs out this way normally)
