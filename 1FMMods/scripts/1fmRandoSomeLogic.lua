@@ -1646,7 +1646,9 @@ function UpdateReports(HUDNow)
 			for i=1, 13 do
 				local hintText = ""
 				for i=1, 2 do
-					hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
+					if #spoilers > 0 then
+						hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
+					end
 				end
 				mempos = StringToKHText(hintText, mempos)
 			end
