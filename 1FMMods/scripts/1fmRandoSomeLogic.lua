@@ -1847,7 +1847,7 @@ function FlagFixes()
 	if ReadByte(cutsceneFlags+0xB0E) >= 0xA0 and ReadByte(worldFlagBase+0x1C) == 5
 											and ReadByte(cutsceneFlags+0xB04) < 0x6E then
 		WriteByte(cutsceneFlags+0xB04, 0x6E)
-		WriteByte(cutsceneFlags+0xB00, 0xDC)
+		WriteByte(cutsceneFlags+0xB00, math.max(0xBE, ReadByte(cutsceneFlags+0xB00)))
 		print("Post HB TT")
 	end
 
