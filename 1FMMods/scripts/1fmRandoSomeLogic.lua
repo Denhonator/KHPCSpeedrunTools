@@ -159,10 +159,11 @@ local removeBlackTimer = 0
 local prevBlack = 128
 local prevWorld = 0
 local prevRoom = 0
+local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xB2, 0xB7, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCB, 0xCC, 0xCD}
+local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCB, 0xCC, 0xCD}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -184,9 +185,9 @@ local itemData = {}
 local shops = {}
 local synths = {}
 local chests = {}
-local chestAccessCheck = {}
-local rewardAccessCheck = {}
-local itemAccessCheck = {}
+local itemsAvailable = {}
+local abilitiesAvailable = {}
+local dalmatiansAvailable = 0
 local seedstring = ""
 local randomized = false
 local successfulRando = true
@@ -209,7 +210,7 @@ function WArray(off, l, c)
 	end
 end
 
-function LoadRewards(fs)
+function LoadRewards(fs, offs)
 	f = io.open(fs)
 	local detailsTable = {}
 	while true do
@@ -219,7 +220,7 @@ function LoadRewards(fs)
 		elseif not string.find(line, "?") then
 			local chestID = tonumber(string.sub(line, 1, 3), 16)
 			if chestID then
-				chestID = chestID + 1
+				chestID = chestID + offs
 				line = string.sub(line, 5)
 				local details = {}
 				local loop = 1
@@ -244,24 +245,18 @@ function _OnInit()
 	end
 
 	if canExecute then
-		local f = io.open("randofiles/items.txt")
 		local f2 = io.open("randofiles/gummis.txt")
-		if not f then
-			print("items.txt missing!")
-		elseif not f2 then
+		if not f2 then
 			print("gummis.txt missing!")
 		else
-			for i=1,0xFF do
-				itemNames[i] = f:read("*l")
-			end
 			for i=1,0x40 do
 				gummiNames[i] = f2:read("*l")
 			end
-			chestDetails = LoadRewards("randofiles/Chests.txt")
-			rewardDetails = LoadRewards("randofiles/Rewards.txt")
-			print(rewardDetails[1][1])
-			f:close()
 			f2:close()
+			chestDetails = LoadRewards("randofiles/Chests.txt", 1)
+			rewardDetails = LoadRewards("randofiles/Rewards.txt", 1)
+			itemNames = LoadRewards("randofiles/items.txt", 0)
+			print(rewardDetails[1][1])
 		end
 		for i=1,0xFF do
 			itemids[i] = i
@@ -334,7 +329,7 @@ function ItemType(i)
 	if (i == 0xC8 or i == 0xC9) or (i >= 0xD4 and i<= 0xDE) 
 								or (i >= 0xE3 and i <= 0xE6) or i==0xD2 or i==0xA8
 								or i==0xAA or i==0xAE or i==0xB0 then
-		attributes = attributes .. "Shuffle"
+		attributes = attributes .. "NonImportant"
 	end
 
 	for j=1,#important do
@@ -380,103 +375,22 @@ function Djb2(str)
 end
 
 function ItemAccessible(i, c)
-	infiniteDetection = infiniteDetection + 1
-	local accessibleCount = 0
-	local oi = i
-	
-	if infiniteDetection >= 1000 then
-		print("Infinite")
-		return false
-	end
-
-	for j=1,0xFF do
-		if i == itemids[j] then
-			i = j
-			break
-		end
-	end
-	
-	local inChestReward = false
-
-	for c=1,0x1FE do
-		if chests[c] and chests[c] % 0x10 == 0 and chests[c] // 0x10 == i
-						and not chestAccessCheck[c] then
-			chestAccessCheck[c] = true
-			inChestReward = true
-			if IsAccessible(chestDetails, c) then
-				accessibleCount = accessibleCount+1
-				chestAccessCheck[c] = false
-			end
-		end
-	end
-
-	for r=1,0xA9 do
-		if rewards[r] and rewards[r] % 0x100 == 0xF0 and rewards[r] // 0x100 == i
-						and not rewardAccessCheck[r] then
-			rewardAccessCheck[r] = true
-			inChestReward = true
-			if IsAccessible(rewardDetails, r) then
-				accessibleCount = accessibleCount+1
-				rewardAccessCheck[r] = false
-			end
-		end
-	end
-	
-	if not inChestReward then
-		if i==0xA8 or i==0xC8 or i==0xC9 or i==0xD2 or (i>=0xD9 and i<=0xDE) or (i>=0xE3 and i<=0xE6) then
-			accessibleCount = accessibleCount+1
-		elseif i==0xCB and not itemAccessCheck[oi] then
-			itemAccessCheck[0xC8] = true
-			itemAccessCheck[0xC9] = true
-			if ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and TrinityAccessible("Red Trinity") then
-				accessibleCount = accessibleCount+1
-				itemAccessCheck[0xC8] = false
-				itemAccessCheck[0xC9] = false
-			end
-		elseif (i==0xCC or i==0xB0) and TrinityAccessible("Green Trinity") then
-			if i==0xB0 or AbilityAccessible(3, 1) or AbilityAccessible(4, 1) then
-				accessibleCount = accessibleCount+1
-			end
-		elseif i==0xAA and AbilityAccessible(2, 1) then
-			accessibleCount = accessibleCount+1
-		elseif i==0xAE and not itemAccessCheck[oi] then
-			itemAccessCheck[0xE4] = true
-			if ItemAccessible(0xE4, 1) then
-				accessibleCount = accessibleCount+1
-				itemAccessCheck[0xE4] = false
-			end
-		end
-	end
-
-	return accessibleCount >= c
+	return itemsAvailable[i] and itemsAvailable[i] >= c
 end
 
 function AbilityAccessible(a, c)
-	local accessibleCount = 0
-	for r=1,0xA9 do
-		if rewards[r] and rewards[r] % 0x100 ~= 0xF0 and rewards[r] // 0x100 == a and not rewardAccessCheck[r] then
-			rewardAccessCheck[r] = true
-			if IsAccessible(rewardDetails, r) then
-				accessibleCount = accessibleCount+1
-				if accessibleCount == c then
-					return true
-				end
-			end
-		end
-	end
-	
-	return false
+	return abilitiesAvailable[a] and abilitiesAvailable[a] >= c
 end
 
 function TrinityAccessible(s)
-	for i=1,5 do
-		if trinityTexts[i] == s then
-			if trinityTable[5] == i then
-				return ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1)
-					and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
-			end
-		end
-	end
+	-- for i=1,5 do
+		-- if trinityTexts[i] == s then
+			-- if trinityTable[5] == i then
+				-- return ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1)
+					-- and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
+			-- end
+		-- end
+	-- end
 	return true
 end
 
@@ -492,102 +406,131 @@ function MagicAccessible(s)
 end
 
 function IsAccessible(t, i)
-	if t==chestDetails then
-		if chests[i] % 0x10 == 0 then
-			print(string.format("%s chest at %s has %s", t[i][1], t[i][2], itemNames[itemids[chests[i]//0x10]]))
-		elseif chests[i] % 0x10 == 0xE then
-			print(string.format("%s chest at %s has reward %x", t[i][1], t[i][2], chests[i]//0x10))
+	local canAccess = true
+	for k=3,6 do
+		if not t[i][k] then
+			break
 		end
-	elseif t==rewardDetails then
-		if rewards[i] % 0x100 == 0xF0 then
-			print(string.format("%s reward %x at %s has %s", t[i][1], i-1, t[i][2], itemNames[itemids[rewards[i]//0x100]]))
-		else
-			print(string.format("%s reward %x at %s has ability %x", t[i][1], i-1, t[i][2], rewards[i]//0x100))
+		local thisAccess = false
+		if string.find(t[i][k], "Day1") then
+			thisAccess = thisAccess or (ItemAccessible(0xC0, 1) and ItemAccessible(0xC1, 1) and ItemAccessible(0xC2, 1))
 		end
-	end
-	
-	if t[i][3] then
-		local canAccess = true
-		for k=3,6 do
-			if not t[i][k] then
-				break
-			end
-			local thisAccess = false
-			if string.find(t[i][k], "Day1") then
-				thisAccess = thisAccess or (ItemAccessible(0xC0, 1) and ItemAccessible(0xC1, 1) and ItemAccessible(0xC2, 1))
-			end
-			if string.find(t[i][k], "High Jumpra") then
-				thisAccess = thisAccess or AbilityAccessible(1, 2)
-			elseif string.find(t[i][k], "High Jump") then
-				thisAccess = thisAccess or AbilityAccessible(1, 1)
-			end
-			if string.find(t[i][k], "Glide") then
-				thisAccess = thisAccess or AbilityAccessible(3, 1) or AbilityAccessible(4, 1)
-			end
-			if string.find(t[i][k], "Mermaid Kick") then
-				thisAccess = thisAccess or AbilityAccessible(2, 1)
-			end
-			if string.find(t[i][k], "HB1") then
-				thisAccess = thisAccess or 
-				(ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1) and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1))
-			end
-			if string.find(t[i][k], "Library") then
-				thisAccess = thisAccess or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1))
-							or AbilityAccessible(1, 2)
-			elseif string.find(t[i][k], "Khama") then
-				thisAccess = thisAccess or ItemAccessible(0xB2, 1) or AbilityAccessible(1, 2)
-			end
-			if string.find(t[i][k], "Jack-In-The-Box") then
-				thisAccess = thisAccess or ItemAccessible(0xE4, 1)
-			end
-			if string.find(t[i][k], "Postcard") then
-				thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9))-5)
-			end
-			if string.find(t[i][k], "Page") then
-				local accessiblePages = 0
-				for p=0xD4,0xD8 do
-					itemAccessCheck[p] = true
-					if ItemAccessible(p, 1) then
-						accessiblePages = accessiblePages + 1
-						itemAccessCheck[p] = false
-					end
+		if string.find(t[i][k], "High Jumpra") then
+			thisAccess = thisAccess or AbilityAccessible(1, 2)
+		elseif string.find(t[i][k], "High Jump") then
+			thisAccess = thisAccess or AbilityAccessible(1, 1)
+		end
+		if string.find(t[i][k], "Glide") then
+			thisAccess = thisAccess or AbilityAccessible(3, 1) or AbilityAccessible(4, 1)
+		end
+		if string.find(t[i][k], "Mermaid Kick") then
+			thisAccess = thisAccess or AbilityAccessible(2, 1)
+		end
+		if string.find(t[i][k], "HB1") then
+			thisAccess = thisAccess or (ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1)
+									and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1))
+		end
+		if string.find(t[i][k], "NaviG") then
+			thisAccess = thisAccess or (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
+		end
+		if string.find(t[i][k], "Khama") then
+			thisAccess = thisAccess or ItemAccessible(0xB2, 1) or AbilityAccessible(1, 2)
+		end
+		if string.find(t[i][k], "Theon") then
+			thisAccess = thisAccess or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1)) or AbilityAccessible(1, 2)
+		end
+		if string.find(t[i][k], "Jack-In-The-Box") then
+			thisAccess = thisAccess or ItemAccessible(0xE4, 1)
+		end
+		if string.find(t[i][k], "Postcard") then
+			thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9))-5)
+		end
+		if string.find(t[i][k], "Page") then
+			local accessiblePages = 0
+			for p=0xD4,0xD8 do
+				if ItemAccessible(p, 1) then
+					accessiblePages = accessiblePages + 1
 				end
-				thisAccess = thisAccess or tonumber(string.sub(t[i][k], 5)) <= accessiblePages
 			end
-			if string.find(t[i][k], "All Summons") then
-				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
-				ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1) and ItemAccessible(0xD1, 1))
-			elseif string.find(t[i][k], "Dumbo") then
-				thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and MagicAccessible("Fire Magic"))
-										or AbilityAccessible(1, 2)
-			end
-			if string.find(t[i][k], "Trinity") then
-				thisAccess = thisAccess or TrinityAccessible(t[i][k])
-			end
-			if string.find(t[i][k], "Magic") then
-				thisAccess = thisAccess or MagicAccessible(t[i][k])
-			end
-			if string.find(t[i][k], "HB2") then
-				thisAccess = thisAccess or ItemAccessible(0xCD, 1)
-			end
-			if string.find(t[i][k], "EotW") then
-				thisAccess = thisAccess or (ItemAccessible(0xCD, 1) and ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
-			end
-			canAccess = canAccess and thisAccess
+			thisAccess = thisAccess or tonumber(string.sub(t[i][k], 5)) <= accessiblePages
 		end
-		return canAccess
-		
-	elseif t[i][2] == "Chest" then
-		for c=1,0x1FE do
-			if chests[c] and chests[c] % 0x10 == 0xE and chests[c] // 0x10 == i-1 then
-				return IsAccessible(chestDetails, c)
-			end
+		if string.find(t[i][k], "All Summons") then
+			thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
+			ItemAccessible(0xCF, 1) and ItemAccessible(0xD0, 1) and ItemAccessible(0xD1, 1))
+		elseif string.find(t[i][k], "Dumbo") then
+			thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and MagicAccessible("Fire Magic"))
+									or AbilityAccessible(1, 2)
 		end
-	else
-		return true
+		if string.find(t[i][k], "Trinity") then
+			thisAccess = thisAccess or TrinityAccessible(t[i][k])
+		end
+		if string.find(t[i][k], "Magic") then
+			thisAccess = thisAccess or MagicAccessible(t[i][k])
+		end
+		if string.find(t[i][k], "HB2") then
+			thisAccess = thisAccess or true
+		end
+		if string.find(t[i][k], "EotW") then
+			thisAccess = thisAccess or (ItemAccessible(0xCD, 1) and ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
+		end
+		canAccess = canAccess and thisAccess
+	end
+	return canAccess
+end
+
+function GetAvailability()
+	local abAv = {}
+	local itAv = {}
+	local rewAv = {}
+	local dalmAv = 0
+	
+	for i=1,0xFF do
+		abAv[i] = 0
+		itAv[i] = 0
 	end
 	
-	return false
+	for i=1, 0x1FF do
+		if chests[i] and chests[i] % 0x10 == 0xE and not rewAv[(chests[i]//0x10)+1] then
+			rewAv[(chests[i]//0x10)+1] = 0
+		end
+		if chestDetails[i] and IsAccessible(chestDetails, i) then
+			if chests[i] % 0x10 == 0 then
+				local it = itemids[chests[i]//0x10]
+				itAv[it] = itAv[it] + 1
+			elseif chests[i] % 0x10 == 4 then
+				dalmAv = dalmAv + 3
+			elseif chests[i] % 0x10 == 0xE then
+				rewAv[(chests[i]//0x10)+1] = rewAv[(chests[i]//0x10)+1] + 1
+			end
+		end
+	end
+	
+	for i=1, 0xA9 do
+		if rewardDetails[i] then
+			if (rewAv[i] and rewAv[i] > 0) or (not rewAv[i] and IsAccessible(rewardDetails, i)) then
+				if rewards[i] % 0x100 == 0xF0 then
+					local it = itemids[rewards[i]//0x100]
+					itAv[it] = itAv[it] + 1
+				elseif rewards[i] % 0x100 == 0xB1 then
+					abAv[rewards[i]//0x100] = abAv[rewards[i]//0x100] + 1
+				end
+			end
+		end
+	end
+	
+	for i=0x95, 0xE6 do
+		if itemNames[i] then
+			if not itemNames[i][3] or IsAccessible(itemNames, i) then
+				itAv[itemids[i]] = itAv[itemids[i]] + 1
+			end
+		end
+	end
+	
+	for i=1,0x1FF do
+		itemsAvailable[i] = itAv[i]
+		abilitiesAvailable[i] = abAv[i]
+		dalmatiansAvailable = dalmAv
+	end
 end
 
 function Randomize()
@@ -600,7 +543,7 @@ function Randomize()
 
 	local missableRewards = {0, 2}
 	local addItems = {0x95,0x96,0x97,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1}
-	local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4D, 0x50, 0x91, 0x94, 0x92, 0x93, 0xE8}
+	local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x92, 0x93, 0x94, 0xE8}
 	local rewardPool = {}
 	local randomGets = {}
 	
@@ -641,9 +584,8 @@ function Randomize()
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
 		local itype = ItemType(i)
-		if string.find(itype, "Use") then
-			local rl = #randomGets+1
-			randomGets[rl] = i
+		if (string.find(itype, "Use") or string.find(itype, "Important")) and i~=0xCB and i~=0xCC then
+			randomGets[(#randomGets)+1] = i
 		end
 		if string.find(itype, "Weapon") then
 			local r = math.random(#weaponPool)
@@ -661,50 +603,17 @@ function Randomize()
 		end
 	end
 
-	-- Get rid of normal key items, replace with random good stuff
 	for i=0x9B, 0xFF do
 		if string.find(ItemType(i), "Important") then
-			itemids[i] = randomGets[math.random(#randomGets)]
+			itemids[i] = table.remove(randomGets, math.random(#randomGets))
 		end
 	end
 	
-	local toShuffle = {}
-	local c = 1
-	for i=0xA8, 0xFF do
-		if string.find(ItemType(i), "Shuffle") then
-			toShuffle[c] = i
-			c = c + 1
+	for i=1, #importantPool do
+		if #randomGets > 0 then
+			itemids[importantPool[i]] = table.remove(randomGets, math.random(#randomGets))
 		end
 	end
-	
-	for i=0xA8, 0xFF do
-		if string.find(ItemType(i), "Shuffle") then
-			local r = math.random(#toShuffle)
-			while ((i==0xCB or i==0xAA) and (r==0xC8 or r==0xC9)) or
-					(i==0xAE and r==0xE4) do
-				r = math.random(#toShuffle)
-			end
-			itemids[i] = table.remove(toShuffle, r)
-		end
-	end
-	print("Shuffled some items")
-	
-	-- Need one of:
-	itemids[0x48] = 0xB2
-	itemids[0x49] = 0xCD
-	itemids[0x4A] = 0xCB
-	itemids[0x4B] = 0xCC
-	itemids[0x4D] = 0xB7
-	itemids[0x50] = 0xC1
-	itemids[0x39] = 0xC2
-	itemids[0x5] = 0xC3
-	itemids[0xE8] = 0xC7
-	-- Need two of:
-	itemids[0x91] = 0xC0
-	itemids[0x94] = 0xC6
-	-- Need three of:
-	itemids[0x92] = 0xC4
-	itemids[0x93] = 0xC5
 	
 	shopPool = {}
 	
@@ -1011,70 +920,39 @@ function Randomize()
 end
 
 function ValidSeed()
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {[0xC8]=true}
-	local g1 = ItemAccessible(0xC8, 1)
-	print(g1)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {[0xC9]=true}
-	local g2 = ItemAccessible(0xC9, 1)
-	print(g2)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {[0xCB]=true}
-	local g3 = ItemAccessible(0xCB, 1)
-	print(g3)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {[0xCC]=true}
-	local g4 = ItemAccessible(0xCC, 1)
-	print(g4)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {}
-	local f1 = MagicAccessible("Fire Magic")
-	print(f1)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {}
-	local tr = TrinityAccessible("Red Trinity")
-	print(tr)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {}
-	local hj2 = AbilityAccessible(1, 2)
-	print(hj2)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {[0xB2]=true}
-	local khama = ItemAccessible(0xB2, 1)
-	print(khama)
-	chestAccessCheck = {}
-	rewardAccessCheck = {}
-	itemAccessCheck = {[0xB7]=true}
-	local theon = ItemAccessible(0xB7, 1)
-	print(theon)
+	itemsAvailable = {}
+	abilitiesAvailable = {}
+	dalmatiansAvailable = 0
 	
-	local DIWin = true
-	for i=0xC0,0xC7 do
-		chestAccessCheck = {}
-		rewardAccessCheck = {}
-		itemAccessCheck = {[i]=true}
-		local thisDI = ItemAccessible(i, 1)
-		DIWin = DIWin and thisDI
-		print(string.format("%x %x", i, thisDI and 1 or 0))
+	for i=1,0xFF do
+		itemsAvailable[i] = 0
+		abilitiesAvailable[i] = 0
 	end
 	
-	if g1 and g2 and g3 and g4 and f1 and tr and (hj2 or (khama and theon)) then
-		print("HBWin")
-		-- return true
-	end
-	if DIWin then
-		print("DI Win")
-		SaveRando()
-		return true
+	for j=1, 10 do
+		GetAvailability()
+		local HBWin = ItemAccessible(0xCD, 1)
+		for i=0xBC, 0xBF do
+			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			HBWin = HBWin and ItemAccessible(i, 1)
+		end
+		
+		local DIWin = true
+		for i=0xC0, 0xC7 do
+			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			DIWin = DIWin and ItemAccessible(i, 1)
+		end
+		
+		print(string.format("Complexity %d", j))
+		if HBWin then
+			print("HBWin")
+			-- return true
+		end
+		if DIWin then
+			print("DI Win")
+			SaveRando()
+			return true
+		end
 	end
 	print("Unwinnable, rerolling")
 	return false
@@ -1319,8 +1197,9 @@ function ApplyRandomization()
 		if string.find(ItemType(itemids[i]), "Important") then
 			WriteArray(itemTable+((i-1)*20), itemData[i])
 		end
-		WriteByte(itemTable+((i-1)*20)+8, itemData[i][9])
-		WriteByte(itemTable+((i-1)*20)+9, itemData[i][10])
+		for j=8, 11 do
+			WriteByte(itemTable+((i-1)*20)+j, itemData[i][j+1])
+		end
 	end
 	print("Applied item manipulation")
 
@@ -1375,6 +1254,8 @@ function ApplyRandomization()
 		end
 	end
 	print("Accessory randomization applied")
+	
+	GenerateSpoilers()
 	
 	print(string.rep("\nHiding spoilers\n", 30))
 	for i=0x51, 0x60 do
@@ -1510,9 +1391,8 @@ end
 
 function MenuNameSwap(menuNow)
 	for i=1, 0xFF do
-		if (string.find(ItemType(i), "Important") or 
-			string.find(ItemType(itemids[i]), "Important") or 
-			string.find(ItemType(i), "Shuffle")) and i~=itemids[i] then
+		if (string.find(ItemType(i), "Important") or ItemType(i) == "" or
+			string.find(ItemType(itemids[i]), "Important")) and i~=itemids[i] then
 			
 			if menuNow > 0 then
 				WriteArray(itemTable+((i-1)*20), itemData[i])
@@ -1544,13 +1424,9 @@ function UpdateInventory(HUDNow)
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
-				print(string.format("%d %s", dif, itemNames[i]))
+				print(string.format("%d %s", dif, itemNames[i][1]))
 				if dif > 0 and ReadByte(closeMenu) == 0 then
 					local curid = itemids[i]
-					-- if string.find(ItemType(curid), "Shuffle") or string.find(ItemType(i), "Important") then 
-						-- textFind = "btained"
-						-- textReplace = "btained " .. itemNames[curid] .. ".   "
-					-- end
 					idFind = i
 					idReplace = curid
 					print(string.format("Replacing %x with %x", i, curid))
@@ -1574,12 +1450,13 @@ function UpdateInventory(HUDNow)
 				else
 					inventoryUpdater[i] = itemCount
 				end
-			elseif string.find(ItemType(itemids[i]), "Important") and itemCount>0 and HUDNow>0 then
+			elseif string.find(ItemType(itemids[i]), "Important") and itemCount>0 and HUDNow>0
+			and ItemType(i) == "" then
 				WriteByte(inventory+(itemids[i]-1), itemCount + ReadByte(inventory+(itemids[i]-1)))
 				WriteByte(inventory+(i-1), 0)
 				inventoryUpdater[i] = 0
 				inventoryUpdater[itemids[i]] = itemCount
-				print(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]]))
+				print(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]][1]))
 			end
 		end
 		if i >= 0xCE and i <= 0xD1 and ReadByte(inventory+(i-1)) > 1 then
@@ -1605,23 +1482,7 @@ function UpdateInventory(HUDNow)
 			WriteByte(tornPageCount, pages > 1 and 5 or gamesUnlocked)
 		end
 	end
-	
-	-- Prevent issues in early HB exploration
-	if ReadByte(cutsceneFlags+0xB0E) <= 1 then
-		WriteByte(cutsceneFlags+0xB0E, 0x7A)
-	end
-	
-	if ReadByte(world) == 0xF then
-		local embCount = 0
-		for i=0xBB, 0xBE do
-			embCount = embCount + ReadByte(inventory+i)
-		end
-		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) <= 0x32 and embCount or 0)
-		if ReadByte(libraryFlag) == 0 then
-			WriteByte(libraryFlag, 2)
-		end
-	end
-	
+
 	for i=1,0x40 do
 		local itemCount = ReadByte(gummiInventory+(i-1))
 		if itemCount > gummiUpdater[i] then
@@ -1646,28 +1507,24 @@ function UpdateInventory(HUDNow)
 		end
 	end
 	
-	if ReadByte(inventory+0xCA-1) > 0 then
-		WriteByte(inventory+0xC8-1, 0)
-		WriteByte(inventory+0xC9-1, 0)
-	end
-	if ReadByte(inventory+0xCD-1) > 0 and ReadByte(closeMenu) == 0 then
-		if ReadByte(inventory+0xCB-1) > 0 then
-			WriteByte(gummiInventory+0x70, 1)
-			WriteByte(inventory+0xCB-1, 0)
-		end
-		if ReadByte(inventory+0xCC-1) > 0 then
-			WriteByte(gummiInventory+0x71, 1)
-			WriteByte(inventory+0xCC-1, 0)
-		end
-	elseif ReadByte(gummiInventory+0x70) > 0 then
-		WriteByte(gummiInventory+0x70, 0)
-		WriteByte(inventory+0xCB-1, 1)
-		inventoryUpdater[0xCB] = 1
-	elseif ReadByte(gummiInventory+0x71) > 0 then
-		WriteByte(gummiInventory+0x71, 0)
-		WriteByte(inventory+0xCC-1, 1)
-		inventoryUpdater[0xCC] = 1
-	end
+	-- if ReadByte(inventory+0xCD-1) > 0 and ReadByte(closeMenu) == 0 then
+		-- if ReadByte(inventory+0xCB-1) > 0 then
+			-- WriteByte(gummiInventory+0x70, 1)
+			-- WriteByte(inventory+0xCB-1, 0)
+		-- end
+		-- if ReadByte(inventory+0xCC-1) > 0 then
+			-- WriteByte(gummiInventory+0x71, 1)
+			-- WriteByte(inventory+0xCC-1, 0)
+		-- end
+	-- elseif ReadByte(gummiInventory+0x70) > 0 then
+		-- WriteByte(gummiInventory+0x70, 0)
+		-- WriteByte(inventory+0xCB-1, 1)
+		-- inventoryUpdater[0xCB] = 1
+	-- elseif ReadByte(gummiInventory+0x71) > 0 then
+		-- WriteByte(gummiInventory+0x71, 0)
+		-- WriteByte(inventory+0xCC-1, 1)
+		-- inventoryUpdater[0xCC] = 1
+	-- end
 end
 
 function StringToKHText(s, mempos)
@@ -1692,6 +1549,67 @@ function StringToKHText(s, mempos)
 	end
 	WriteByte(mempos, 0)
 	return mempos+1
+end
+
+function GenerateSpoilers()
+	local spoilers = {}
+	for i=1, 0xFF do
+		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" then
+			spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
+		end
+	end
+	
+	for c=1, 0x1FF do
+		if chests[c] then
+			local it = 1
+			local ab = 0
+			if chests[c]%0x10==0 then
+				it = itemids[chests[c]//0x10]
+			elseif chests[c]%0x10==0xE and rewards[(chests[c]//0x10)+1] then
+				if rewards[(chests[c]//0x10)+1]%0x100 == 0xF0 then
+					it = itemids[rewards[(chests[c]//0x10)+1] // 0x100]
+				elseif rewards[(chests[c]//0x10)+1]%0x100 == 0xB1 then
+					ab = rewards[(chests[c]//0x10)+1] // 0x100
+				end
+			end
+			local itype = ItemType(it)
+			if ab > 0 then
+				spoilers[(#spoilers)+1] = string.format(
+					"Chest at\n%s\nhas %s\n\n", 
+					chestDetails[c][2], abilityNames[ab])
+			elseif itype == "Important" then
+				spoilers[(#spoilers)+1] = string.format(
+					"Chest at\n%s\nhas %s\n\n", 
+					chestDetails[c][2], itemNames[it][1])
+			end
+		end
+	end
+	
+	for r=1, 0xA9 do
+		if rewards[r] then
+			local it = rewards[r] % 0x100 == 0xF0 and itemids[rewards[r]//0x100] or 1
+			local itype = ItemType(it)
+			local ab = 0
+			if rewards[r] % 0x100 == 0xB1 and rewardDetails[r][2]~="Chest" then
+				ab = rewards[r]//0x100
+				spoilers[(#spoilers)+1] = string.format(
+					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+					rewardDetails[r][2], abilityNames[ab])
+			elseif itype == "Important" and rewardDetails[r][2]~="Chest" then
+				spoilers[(#spoilers)+1] = string.format(
+					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+					rewardDetails[r][2], itemNames[it][1])
+			end
+		end
+	end
+	
+	f = io.open("randofiles/spoilers.txt", "w")
+	for i=1, #spoilers do
+		f:write(spoilers[i] .. "\n")
+	end
+	f:close()
+	
+	return spoilers
 end
 
 function UpdateReports(HUDNow)
@@ -1719,101 +1637,14 @@ function UpdateReports(HUDNow)
 		WriteShort(reports, reportStatus)
 		if ReadByte(report1) == 0x37 then
 			local mempos = report1
-			local chestProg = 1
-			local rewardProg = 1
-			local itemhint = {[1]=0xC8, [3]=0xC9}
+			local spoilers = GenerateSpoilers()
+			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
-				if itemhint[i] then
-					for it=1, 0xFF do
-						j = itemids[it]
-						if j==itemhint[i] then
-							local inchest = false
-							for c=1, 0x1FF do
-								if chests[c] and chests[c] == it*0x10 then
-									mempos = StringToKHText(string.format(
-										"Chest at\n%s\nhas %s", 
-										chestDetails[c][2], itemNames[j]), mempos)
-									inchest = true
-									break
-								end
-							end
-							if not inchest then
-								mempos = StringToKHText(string.format("%s\nbecame\n%s", 
-													itemNames[it], itemNames[j]), mempos)
-							end
-						end
-					end
-				else
-					local putHint = 0
-					local hintText = ""
-					math.randomseed(0)
-					local hintCount = 2
-					order = GetRandomOrder(0x1FF)
-					for ch=chestProg, 0x1FF do
-						local c = order[ch]
-						if chests[c] then
-							local it = 1
-							local ab = 0
-							if chests[c]%0x10==0 then
-								it = itemids[chests[c]//0x10]
-							elseif chests[c]%0x10==0xE and rewards[(chests[c]//0x10)+1] then
-								if rewards[(chests[c]//0x10)+1]%0x100 == 0xF0 then
-									it = itemids[rewards[(chests[c]//0x10)+1] // 0x100]
-								elseif rewards[(chests[c]//0x10)+1]%0x100 == 0xB1 then
-									ab = rewards[(chests[c]//0x10)+1] // 0x100
-								end
-							end
-							local itype = ItemType(it)
-							if ab > 0 then
-								hintText = hintText .. string.format(
-									"Chest at\n%s\nhas %s\n\n", 
-									chestDetails[c][2], abilityNames[ab])
-								putHint = putHint + 1
-								chestProg = ch+1
-							elseif string.find(itype, "Important") then
-								hintText = hintText .. string.format(
-									"Chest at\n%s\nhas %s\n\n", 
-									chestDetails[c][2], itemNames[it])
-								putHint = putHint + 1
-								chestProg = ch+1
-							end
-							if putHint == hintCount then
-								break
-							end
-						end
-					end
-					math.randomseed(0)
-					order = GetRandomOrder(0xA9)
-					for re=rewardProg+(putHint*999), 0xA9 do
-						local r = order[re]
-						if rewards[r] then
-							local it = rewards[r] % 0x100 == 0xF0 and itemids[rewards[r]//0x100] or 1
-							local itype = ItemType(it)
-							local ab = 0
-							if rewards[r] % 0x100 == 0xB1 and rewardDetails[r][2]~="Chest" then
-								ab = rewards[r]//0x100
-								hintText = hintText .. string.format(
-									"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
-									rewardDetails[r][2], abilityNames[ab])
-								putHint = putHint + 1
-								rewardProg = re+1
-							elseif string.find(itype, "Important") and rewardDetails[r][2]~="Chest" then
-								hintText = hintText .. string.format(
-									"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
-									rewardDetails[r][2], itemNames[it])
-								putHint = putHint + 1
-								rewardProg = re+1
-							end
-							if putHint == hintCount then
-								break
-							end
-						end
-					end
-					if putHint == 0 and hintText == "" then
-						hintText = "Nothing here\nlol"
-					end
-					mempos = StringToKHText(hintText, mempos)
+				local hintText = ""
+				for i=1, 2 do
+					hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
 				end
+				mempos = StringToKHText(hintText, mempos)
 			end
 			print("Wrote hints")
 		end
@@ -1979,15 +1810,41 @@ function InstantGummi()
 end
 
 function FlagFixes()
-	if ReadByte(gummiselect)==3 then
-		WriteShort(worldWarps+0x18, 1) -- Add DI warp
-		if (ReadByte(unlockedWarps-7) // 8) % 2 == 0 then
-			WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7)+8, 9))
-		end
-		WriteByte(warpCount+4*3, 4)
-	else
-		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
+	-- Remove party in DI
+	if ReadByte(world) == 1 then
+		WriteByte(party1, 0xFF)
+		WriteByte(party1+1, 0xFF)
 	end
+
+	-- Reset TT to avoid softlocks
+	if ReadByte(cutsceneFlags+0xB04) < 0x14 and ReadByte(world) ~= 3 then
+		WriteByte(cutsceneFlags+0xB04, 0)
+		WriteByte(worldFlagBase+0x1C, 2)
+	end
+
+	-- Secret waterway Leon unmissable
+	if ReadByte(cutsceneFlags+0x312) == 0 and ReadByte(cutsceneFlags+0xB04) >= 0x31 then
+		WriteByte(cutsceneFlags+0xB04, 0x31)
+		WriteByte(worldFlagBase+0x32, 2)
+	end
+	
+	-- Ensure correct vacant house state
+	if ReadByte(cutsceneFlags+0xB04) == 0x4A then
+		Write(worldFlagBase+0x35, 2)
+	end
+	
+	if (ReadByte(cutsceneFlags+0xB04) > 0x80 and ReadByte(worldFlagBase+0x1C) ~= 5)
+											or ReadByte(cutsceneFlags+0xB04) == 0x96 then
+		WriteByte(cutsceneFlags+0xB04, prevTTFlag)
+	end
+	
+	if ReadByte(cutsceneFlags+0xB0E) >= 0xA0 and ReadByte(worldFlagBase+0x1C) == 5
+											and ReadByte(cutsceneFlags+0xB04) < 0x6E then
+		WriteByte(cutsceneFlags+0xB04, 0x6E)
+		WriteByte(cutsceneFlags+0xB00, 0xDC)
+	end
+
+	prevTTFlag = ReadByte(cutsceneFlags+0xB04)
 	
 	if ReadByte(world) == 3 and ReadByte(room) == 0x13 then
 		local simbaAddr = ReadLong(scriptPointer) + 0x131C8
@@ -2022,11 +1879,7 @@ function FlagFixes()
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
-	
-	-- if ReadByte(cutsceneFlags+0xB0E) == 1 then
-		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
-	-- end
-	
+
 	-- Shorten solo and time trial
 	if ReadByte(world) == 0xB then
 		if (ReadShort(cupCurrentSeed) == 0x0101 or ReadShort(cupCurrentSeed) == 0x0B0B)
@@ -2075,6 +1928,16 @@ function FlagFixes()
 	end
 	
 	if ReadByte(inGummi) > 0 then
+		if ReadByte(gummiselect)==3 then
+			WriteShort(worldWarps+0x18, 1) -- Add DI warp
+			if (ReadByte(unlockedWarps-7) // 8) % 2 == 0 then
+				WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7)+8, 9))
+			end
+			WriteByte(warpCount+4*3, 4)
+		else
+			WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
+		end
+	
 		if ReadByte(gummiselect) == 3 and ReadByte(cutsceneFlags+0xB04) < 0x31 then
 			WriteByte(party1, 0xFF)
 			WriteByte(party1+1, 0xFF)
@@ -2192,6 +2055,22 @@ function FlagFixes()
 	
 	if ReadByte(battleLevel) % 2 == 1 and ReadByte(cutsceneFlags+0xB0E) < 0x8C then
 		WriteByte(battleLevel, ReadByte(battleLevel)-1)
+	end
+	
+	-- Prevent issues in early HB exploration
+	if ReadByte(cutsceneFlags+0xB0E) <= 1 then
+		WriteByte(cutsceneFlags+0xB0E, 0xA)
+	end
+	
+	if ReadByte(world) == 0xF then
+		local embCount = 0
+		for i=0xBB, 0xBE do
+			embCount = embCount + ReadByte(inventory+i)
+		end
+		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) <= 0x32 and embCount or 0)
+		if ReadByte(libraryFlag) == 0 then
+			WriteByte(libraryFlag, 2)
+		end
 	end
 	
 	-- Navi Gummi delivery
