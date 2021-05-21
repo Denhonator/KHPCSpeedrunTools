@@ -159,6 +159,7 @@ local removeBlackTimer = 0
 local prevBlack = 128
 local prevWorld = 0
 local prevRoom = 0
+local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
@@ -1196,8 +1197,9 @@ function ApplyRandomization()
 		if string.find(ItemType(itemids[i]), "Important") then
 			WriteArray(itemTable+((i-1)*20), itemData[i])
 		end
-		WriteByte(itemTable+((i-1)*20)+8, itemData[i][9])
-		WriteByte(itemTable+((i-1)*20)+9, itemData[i][10])
+		for j=8, 11 do
+			WriteByte(itemTable+((i-1)*20)+j, itemData[i][j+1])
+		end
 	end
 	print("Applied item manipulation")
 
@@ -1389,7 +1391,7 @@ end
 
 function MenuNameSwap(menuNow)
 	for i=1, 0xFF do
-		if (string.find(ItemType(i), "Important") or 
+		if (string.find(ItemType(i), "Important") or ItemType(i) == "" or
 			string.find(ItemType(itemids[i]), "Important")) and i~=itemids[i] then
 			
 			if menuNow > 0 then
@@ -1808,15 +1810,35 @@ function InstantGummi()
 end
 
 function FlagFixes()
-	if ReadByte(gummiselect)==3 then
-		WriteShort(worldWarps+0x18, 1) -- Add DI warp
-		if (ReadByte(unlockedWarps-7) // 8) % 2 == 0 then
-			WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7)+8, 9))
-		end
-		WriteByte(warpCount+4*3, 4)
-	else
-		WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
+	-- Reset TT to avoid softlocks
+	if ReadByte(cutsceneFlags+0xB04) < 0x14 and ReadByte(world) ~= 3 then
+		WriteByte(cutsceneFlags+0xB04, 0)
+		WriteByte(worldFlagBase+0x1C, 2)
 	end
+
+	-- Secret waterway Leon unmissable
+	if ReadByte(cutsceneFlags+0x312) == 0 and ReadByte(cutsceneFlags+0xB04) >= 0x31 then
+		WriteByte(cutsceneFlags+0xB04, 0x31)
+		WriteByte(worldFlagBase+0x32, 2)
+	end
+	
+	-- Ensure correct vacant house state
+	if ReadByte(cutsceneFlags+0xB04) == 0x4A then
+		Write(worldFlagBase+0x35, 2)
+	end
+	
+	if (ReadByte(cutsceneFlags+0xB04) > 0x80 and ReadByte(worldFlagBase+0x1C) ~= 5)
+											or ReadByte(cutsceneFlags+0xB04) == 0x96 then
+		WriteByte(cutsceneFlags+0xB04, prevTTFlag)
+	end
+	
+	if ReadByte(cutsceneFlags+0xB0E) >= 0xA0 and ReadByte(worldFlagBase+0x1C) == 5
+											and ReadByte(cutsceneFlags+0xB04) < 0x6E then
+		WriteByte(cutsceneFlags+0xB04, 0x6E)
+		WriteByte(cutsceneFlags+0xB00, 0xDC)
+	end
+
+	prevTTFlag = ReadByte(cutsceneFlags+0xB04)
 	
 	if ReadByte(world) == 3 and ReadByte(room) == 0x13 then
 		local simbaAddr = ReadLong(scriptPointer) + 0x131C8
@@ -1851,11 +1873,7 @@ function FlagFixes()
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
 	end
-	
-	-- if ReadByte(cutsceneFlags+0xB0E) == 1 then
-		-- WriteByte(cutsceneFlags+0xB0E, 0xA)
-	-- end
-	
+
 	-- Shorten solo and time trial
 	if ReadByte(world) == 0xB then
 		if (ReadShort(cupCurrentSeed) == 0x0101 or ReadShort(cupCurrentSeed) == 0x0B0B)
@@ -1904,6 +1922,16 @@ function FlagFixes()
 	end
 	
 	if ReadByte(inGummi) > 0 then
+		if ReadByte(gummiselect)==3 then
+			WriteShort(worldWarps+0x18, 1) -- Add DI warp
+			if (ReadByte(unlockedWarps-7) // 8) % 2 == 0 then
+				WriteByte(unlockedWarps-7, math.max(ReadByte(unlockedWarps-7)+8, 9))
+			end
+			WriteByte(warpCount+4*3, 4)
+		else
+			WriteShort(worldWarps+0x18, 4) -- Revert to Wonderland
+		end
+	
 		if ReadByte(gummiselect) == 3 and ReadByte(cutsceneFlags+0xB04) < 0x31 then
 			WriteByte(party1, 0xFF)
 			WriteByte(party1+1, 0xFF)
