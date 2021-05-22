@@ -1636,7 +1636,7 @@ function UpdateReports(HUDNow)
 			elseif curid == 0xC4 or curid == 0xC5 then
 				addc = 3
 			end
-			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+c)
+			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+addc)
 			inventoryUpdater[i] = ReadByte(inventory+(i-1))
 			print(string.format("Gave %x instead of report", i))
 		end
