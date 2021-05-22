@@ -1651,7 +1651,7 @@ function UpdateReports(HUDNow)
 			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
 				local hintText = ""
-				for i=1, 2 do
+				for j=1, (#spoilers > 13-i) and 2 or 1 do
 					if #spoilers > 0 then
 						hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
 					end
@@ -2084,6 +2084,7 @@ function FlagFixes()
 		local embCount = 0
 		for i=0xBB, 0xBE do
 			embCount = embCount + ReadByte(inventory+i)
+			WriteByte(inventory+i, math.min(1, ReadByte(inventory+i)))
 		end
 		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) > 0x32 and 4 or embCount)
 		if ReadByte(libraryFlag) == 0 then
