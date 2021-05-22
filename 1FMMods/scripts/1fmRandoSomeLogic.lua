@@ -2091,13 +2091,16 @@ function FlagFixes()
 			WriteByte(inventory+i, math.min(1, ReadByte(inventory+i)))
 		end
 
-		embCount = (embCount >= 4-ReadByte(emblemDoor)) and 4 or 0
-		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) > 0x32 and 4 or embCount)
-		if ReadByte(libraryFlag) == 0 then
-			WriteByte(libraryFlag, 2)
-		end
+		local canPlace = embCount == 4 or ReadByte(emblemDoor) > 0
+		
+		WriteByte(emblemCount, canPlace and 4 or 0)
 		if (ReadByte(emblemDoor+3) // 4) % 2 == 1 then
 			WriteInt(emblemDoor, 0x01040003)
+			WriteByte(cutsceneFlags+0xB0E, math.max(0x46, ReadByte(cutsceneFlags+0xB0E)))
+		end
+		
+		if ReadByte(libraryFlag) == 0 then
+			WriteByte(libraryFlag, 2)
 		end
 	end
 	
