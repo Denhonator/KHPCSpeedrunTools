@@ -48,6 +48,7 @@ local summons = 0x2DE61A0 - offset
 local inventory = 0x2DE5E6A - offset
 local tornPageCount = 0x2DE6DD0 - offset
 local emblemCount = 0x2DE787D - offset
+local emblemDoor = 0x2DE788C - offset
 local minigameStatus = 0x2DE73A5 - offset
 local gummiInventory = 0x2DF1848 - offset
 local reports = 0x2DE7390 - offset
@@ -2084,9 +2085,12 @@ function FlagFixes()
 		for i=0xBB, 0xBE do
 			embCount = embCount + ReadByte(inventory+i)
 		end
-		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) <= 0x32 and embCount or 0)
+		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) > 0x32 and 4 or embCount)
 		if ReadByte(libraryFlag) == 0 then
 			WriteByte(libraryFlag, 2)
+		end
+		if (ReadByte(emblemDoor+3) // 4) % 2 == 1 then
+			WriteInt(emblemDoor, 0x01040003)
 		end
 	end
 	
