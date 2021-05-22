@@ -1630,7 +1630,13 @@ function UpdateReports(HUDNow)
 		local receivedReport = reportTable[ReadShort(reports)]
 		if receivedReport and HUDWas == HUDNow then
 			local i = itemids[0xA7 + receivedReport]
-			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+1)
+			local addc = 1
+			if curid == 0xC0 or curid == 0xC6 then
+				addc = 2
+			elseif curid == 0xC4 or curid == 0xC5 then
+				addc = 3
+			end
+			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+c)
 			inventoryUpdater[i] = ReadByte(inventory+(i-1))
 			print(string.format("Gave %x instead of report", i))
 		end
