@@ -638,11 +638,7 @@ function Randomize()
 			itemData[i][12] = price // 0x100
 		end
 		
-		if (((string.find(ItemType(i), "Weapon")
-				or string.find(ItemType(i), "Important")
-				or string.find(ItemType(itemids[i]), "Accessory"))
-				and i~=itemids[i]) or i==itemids[i]) 
-				and ItemType(i) ~= "" and i~=0xCB and i~=0xCC then
+		if ItemType(i) ~= "" and i~=0xCB and i~=0xCC then
 			shopPool[(#shopPool)+1] = i
 		end
 	end
@@ -2083,9 +2079,11 @@ function FlagFixes()
 	if ReadByte(world) == 0xF then
 		local embCount = 0
 		for i=0xBB, 0xBE do
-			embCount = embCount + ReadByte(inventory+i)
+			embCount = embCount + math.min(ReadByte(inventory+i), 1)
 			WriteByte(inventory+i, math.min(1, ReadByte(inventory+i)))
 		end
+
+		embCount = (embCount >= 4-ReadByte(emblemDoor)) and 4 or 0
 		WriteByte(emblemCount, ReadByte(cutsceneFlags+0xB0E) > 0x32 and 4 or embCount)
 		if ReadByte(libraryFlag) == 0 then
 			WriteByte(libraryFlag, 2)
