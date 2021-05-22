@@ -361,7 +361,7 @@ function ItemCompatibility(i, r)
 end
 
 function Salable(i)
-	return i < 0xB2 or (i>=0xCF and i<=0xD2) or (i>=0xD9 and i<=0xE1) or i==0xE3 or i>=0xE5
+	return i < 0xB2 or i==0xD2 or (i>=0xD9 and i<=0xE1) or i==0xE3 or i>=0xE5
 end
 
 -- simple string hashing algorithm designed by Daniel J. Bernstein
@@ -935,6 +935,10 @@ function ValidSeed()
 	for j=1, 10 do
 		GetAvailability()
 		local HBWin = ItemAccessible(0xCD, 1)
+		for i=0xC7, 0xC8 do
+			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			HBWin = HBWin and ItemAccessible(i, 1)
+		end
 		for i=0xBC, 0xBF do
 			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			HBWin = HBWin and ItemAccessible(i, 1)
@@ -949,10 +953,11 @@ function ValidSeed()
 		print(string.format("Complexity %d", j))
 		if HBWin then
 			print("HBWin")
-			-- return true
 		end
 		if DIWin then
 			print("DI Win")
+		end
+		if HBWin and DIWin then
 			SaveRando()
 			return true
 		end
@@ -1981,11 +1986,8 @@ function FlagFixes()
 		end
 	end
 	for i=0,6 do
-		local baseCount = i <= 3 and 8 or 6
-		if clearedWorlds >= 4 then
-			baseCount = math.max(baseCount, 7)
-		end
-		WriteInt(shopTableBase+(i*0xD4)-4, baseCount+(math.min(clearedWorlds, 4)*3))
+		local baseCount = i <= 3 and 6 or 4
+		WriteInt(shopTableBase+(i*0xD4)-4, baseCount+(math.min(clearedWorlds, 6)*2))
 	end
 	
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
