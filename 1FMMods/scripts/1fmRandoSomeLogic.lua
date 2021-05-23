@@ -552,6 +552,7 @@ function Randomize()
 	local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x92, 0x93, 0x94, 0xE8}
 	local rewardPool = {}
 	local randomGets = {}
+	local randomUse = {}
 	
 	for i=1, 0xA9 do
 		if rewardDetails[i] then
@@ -586,12 +587,20 @@ function Randomize()
 			accessoryPool[(#accessoryPool)+1] = i
 		end
 	end
+	
+	local filler = 5
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
 		local itype = ItemType(i)
-		if (string.find(itype, "Use") or string.find(itype, "Important")) and i~=0xCB and i~=0xCC then
+		if string.find(itype, "Important") and i~=0xCB and i~=0xCC then
 			randomGets[(#randomGets)+1] = i
+		end
+		if string.find(itype, "Use") then
+			randomUse[(#randomUse)+1] = i
+		elseif string.find(itype, "Accessory") and filler > 0 then
+			randomUse[(#randomUse)+1] = i
+			filler = filler - 1
 		end
 		if string.find(itype, "Weapon") then
 			local r = math.random(#weaponPool)
@@ -609,9 +618,15 @@ function Randomize()
 		end
 	end
 
-	for i=0x9B, 0xFF do
+	local order = GetRandomOrder(0xFF)
+	for j=0x1, 0xFF do
+		local i = order[j]
 		if string.find(ItemType(i), "Important") then
-			itemids[i] = table.remove(randomGets, math.random(#randomGets))
+			if #randomUse > 0 then
+				itemids[i] = table.remove(randomUse, math.random(#randomUse))
+			else
+				itemids[i] = table.remove(randomGets, math.random(#randomGets))
+			end
 		end
 	end
 	
