@@ -2095,7 +2095,7 @@ function FlagFixes()
 		local canPlace = embCount == 4 or ReadByte(emblemDoor) > 0
 		
 		WriteByte(emblemCount, canPlace and 4 or 0)
-		if ReadByte(cutsceneFlags+0xB0E) > 0x32 then
+		if ReadByte(cutsceneFlags+0xB0E) > 0x32 and ReadByte(room) ~= 4 then
 			WriteInt(emblemDoor,  (ReadByte(roomWarpRead) >= 0x10 and ReadByte(roomWarp) <= 0x13) and 0x01040003 or 0x05040004)
 			--WriteByte(cutsceneFlags+0xB0E, math.max(0x46, ReadByte(cutsceneFlags+0xB0E)))
 		end
