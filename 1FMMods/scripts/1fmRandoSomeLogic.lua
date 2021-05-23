@@ -123,6 +123,7 @@ local menuState = 0x2E8F268 - offset
 local report1 = 0x1D03586 - offset
 local worldWarp = 0x233CB70 - offset
 local roomWarp = worldWarp + 4
+local roomWarpRead = 0x232A588 - offset
 local warpTrigger = 0x22E86DC - offset
 local warpType1 = 0x233C240 - offset
 local warpType2 = 0x22E86E0 - offset
@@ -2094,8 +2095,8 @@ function FlagFixes()
 		local canPlace = embCount == 4 or ReadByte(emblemDoor) > 0
 		
 		WriteByte(emblemCount, canPlace and 4 or 0)
-		if (ReadByte(emblemDoor+3) // 4) % 2 == 1 and ReadByte(cutsceneFlags+0xB0E) > 0x32 then
-			WriteInt(emblemDoor, 0x01040003)
+		if ReadByte(cutsceneFlags+0xB0E) > 0x32 then
+			WriteInt(emblemDoor,  (ReadByte(roomWarpRead) >= 0x10 and ReadByte(roomWarp) <= 0x13) and 0x01040003 or 0x05040004)
 			--WriteByte(cutsceneFlags+0xB0E, math.max(0x46, ReadByte(cutsceneFlags+0xB0E)))
 		end
 		
