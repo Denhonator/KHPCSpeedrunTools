@@ -19,7 +19,7 @@ local weaponStatRando = 3
 -- This will determine if having multiple equipped is beneficial
 -- 0 = No stacking. Vanilla. You just have excess abilities in the menu.
 -- 1 = High Jump stacks: Jump higher the more you have.
--- 2 = High Jump and Glides. First glide/superglide turns into glide, next into superglide and past that it gets faster.
+-- 2 = High Jump, Glides, Mermaid Kick, Dodge Roll. First glide/superglide turns into glide, next into superglide and past that it gets faster.
 -- 3 = Glide is also required for flight.
 
 local stackAbilities = 2
@@ -101,6 +101,7 @@ local shortcuts = 0x2DE6214 - offset
 local trinityUnlock = magicUnlock + 0x1BA7
 local world = 0x233CADC - offset
 local room = world + 0x68
+local soraCurAbilities = 0x2DE5A14 - offset
 local sharedAbilities = 0x2DE5F69 - offset
 local soraPointer = 0x2534680 - offset
 local soraJumpHeight = 0x2D592A0 - offset
@@ -153,6 +154,7 @@ local magicUpdater = {}
 local inventoryUpdater = {}
 local gummiUpdater = {}
 local sliderSavedProg = {0,0,0,0,0}
+local dodgeDataAddr = 0
 local reportUpdater = 0
 local bufferRemove = 0
 local bufferRemoveTimer = 10
@@ -1783,6 +1785,21 @@ function CountSharedAbilities()
 	return shared
 end
 
+function CountSoraAbilities()
+	local abils = {}
+	for i=0, 40 do
+		local ab = ReadByte(soraCurAbilities+i)
+		if ab==0 then
+			break
+		elseif not abils[ab] then
+			abils[ab] = 1
+		else
+			abils[ab] = abils[ab]+1
+		end
+	end
+	return abils
+end
+
 function StackAbilities()
 	local countedAbilities = CountSharedAbilities()
 	local jumpHeight = math.max(290, 190+(countedAbilities[1]*100))
@@ -1820,14 +1837,42 @@ function StackAbilities()
 				end
 			end
 		end
-	end
-	
-	-- Allow early flight in Neverland if glide equipped
-	if countedAbilities[3] > 0 and ReadByte(world) == 0xD then
-		if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
-			WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
+		
+		-- Allow early flight in Neverland if glide equipped
+		if countedAbilities[3] > 0 and ReadByte(world) == 0xD then
+			if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
+				WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
+			end
+		end
+		
+		if not DodgeDataValid(dodgeDataAddr) then
+			dodgeDataAddr = GetDodgeDataAddr()
+		end
+		
+		if DodgeDataValid(dodgeDataAddr) then
+			local abils = CountSoraAbilities()
+			WriteShortA(dodgeDataAddr+4, math.max(50-(12*abils[0x16]), 22))
 		end
 	end
+end
+
+function DodgeDataValid(a)
+	return ReadShortA(a+0x18) == 0xEF and ReadShortA(a+0x34) == 0x94
+end
+
+function GetDodgeDataAddr()
+	local halfPointers = 0x2EE03B0 - offset
+	local animHalfPointers = ReadLong(0x2866498 - offset) + 0xC0
+	local ind = 0
+	while ReadIntA(animHalfPointers+ind) > 0 do
+		local dodgePointer = ReadLong(halfPointers+8) + ReadIntA(animHalfPointers+ind) % 0x100000
+		if DodgeDataValid(dodgePointer) then
+			print(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByteA(dodgePointer+4)))
+			return dodgePointer
+		end
+		ind = ind+4
+	end
+	return 0
 end
 
 function InstantGummi()
