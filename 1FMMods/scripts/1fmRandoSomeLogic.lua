@@ -165,7 +165,7 @@ local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCB, 0xCC, 0xCD}
+local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCD, 0xE4}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -328,8 +328,8 @@ function ItemType(i)
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
-	if (i >= 0xD4 and i<= 0xDE) or (i >= 0xE3 and i <= 0xE6) or i==0xD2 or i==0xA8
-								or i==0xAA or i==0xAE or i==0xB0 then
+	if (i >= 0xD4 and i<= 0xDE) or (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8
+	or i==0xAA or i==0xAE or i==0xB0 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
 
@@ -444,7 +444,11 @@ function IsAccessible(t, i)
 			thisAccess = thisAccess or ItemAccessible(0xE4, 1)
 		end
 		if string.find(t[i][k], "Postcard") then
-			thisAccess = thisAccess or ItemAccessible(0xD3, tonumber(string.sub(t[i][k], 9))-5)
+			local cards = 6 + (AbilityAccessible(1, 1) and 1 or 0)
+			if itemsAvailable[0xD3] then
+				cards = cards + itemsAvailable[0xD3]
+			end
+			thisAccess = thisAccess or cards >= tonumber(string.sub(t[i][k], 9))
 		end
 		if string.find(t[i][k], "Puppies") then
 			local pupCount = tonumber(string.sub(t[i][k], 1,3))
@@ -465,6 +469,9 @@ function IsAccessible(t, i)
 		elseif string.find(t[i][k], "Dumbo") then
 			thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and MagicAccessible("Fire Magic"))
 									or AbilityAccessible(1, 2)
+		end
+		if string.find(t[i][k], "All Spells") or string.find(t[i][k], "Arts") then
+			thisAccess = thisAccess or true
 		end
 		if string.find(t[i][k], "Trinity") then
 			thisAccess = thisAccess or TrinityAccessible(t[i][k])
@@ -551,7 +558,7 @@ function Randomize()
 	local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x92, 0x93, 0x94, 0xE8}
 	local rewardPool = {}
 	local randomGets = {}
-	local randomUse = {}
+	local randomFiller = {}
 	
 	for i=1, 0xA9 do
 		if rewardDetails[i] then
@@ -587,18 +594,17 @@ function Randomize()
 		end
 	end
 	
-	local filler = 5
+	local filler = 3
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
 		local itype = ItemType(i)
-		if string.find(itype, "Important") and i~=0xCB and i~=0xCC then
+		if itype == "Important" then
 			randomGets[(#randomGets)+1] = i
-		end
-		if string.find(itype, "Use") then
-			randomUse[(#randomUse)+1] = i
+		elseif string.find(itype, "Use") or string.find(itype, "Important") then
+			randomFiller[(#randomFiller)+1] = i
 		elseif string.find(itype, "Accessory") and filler > 0 then
-			randomUse[(#randomUse)+1] = i
+			randomFiller[(#randomFiller)+1] = i
 			filler = filler - 1
 		end
 		if string.find(itype, "Weapon") then
@@ -621,8 +627,8 @@ function Randomize()
 	for j=0x1, 0xFF do
 		local i = order[j]
 		if string.find(ItemType(i), "Important") then
-			if #randomUse > 0 then
-				itemids[i] = table.remove(randomUse, math.random(#randomUse))
+			if #randomFiller > 0 then
+				itemids[i] = table.remove(randomFiller, math.random(#randomFiller))
 			else
 				itemids[i] = table.remove(randomGets, math.random(#randomGets))
 			end
@@ -636,6 +642,8 @@ function Randomize()
 			importantPool[i] = nil
 		end
 	end
+	
+	print(#randomGets)
 
 	shopPool = {}
 	
