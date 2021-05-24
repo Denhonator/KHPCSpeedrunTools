@@ -597,14 +597,14 @@ function Randomize()
 		end
 	end
 	
-	local filler = 3
+	local filler = 5
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
 		local itype = ItemType(i)
 		if itype == "Important" then
 			randomGets[(#randomGets)+1] = i
-		elseif string.find(itype, "Use") or string.find(itype, "Important") then
+		elseif string.find(itype, "Use") or string.find(itype, "Important") and i~=0xCB and i~=0xCC then
 			randomFiller[(#randomFiller)+1] = i
 		elseif string.find(itype, "Accessory") and filler > 0 then
 			randomFiller[(#randomFiller)+1] = i
