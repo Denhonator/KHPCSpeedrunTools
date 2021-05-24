@@ -105,6 +105,7 @@ local sharedAbilities = 0x2DE5F69 - offset
 local soraPointer = 0x2534680 - offset
 local soraJumpHeight = 0x2D592A0 - offset
 local jumpHeights = 0x2D1F46C - offset
+local mermaidKickSpeed = 0x3ED5FC - offset
 local soraHP = 0x2D592CC - offset
 local superglideSpeedHack = 0x2AE104 - offset
 
@@ -1769,64 +1770,47 @@ function ReplaceTrinity(HUDNow)
 	end
 end
 
-function EquippedGlides()
-	local equippedGlides = 0
+function CountSharedAbilities()
+	local shared = {0,0,0}
 	for i=0,9 do
 		local ab = ReadByte(sharedAbilities+i)
 		if ab == 3 or ab == 4 then
-			equippedGlides = equippedGlides+1
+			shared[3] = shared[3]+1
+		elseif ab > 0 and ab <= 4 then
+			shared[ab] = shared[ab]+1
 		end
 	end
-	return equippedGlides
-end
-
-function EquippedJumps()
-	local EquippedJumps = 0
-	for i=0,9 do
-		local ab = ReadByte(sharedAbilities+i)
-		if ab == 1 then
-			EquippedJumps = EquippedJumps+1
-		end
-	end
-	return EquippedJumps
+	return shared
 end
 
 function StackAbilities()
-	local equippedGlides = EquippedGlides()
-	local equippedJumps = EquippedJumps()
-	local jumpHeight = math.max(290, 190+(equippedJumps*100))
+	local countedAbilities = CountSharedAbilities()
+	local jumpHeight = math.max(290, 190+(countedAbilities[1]*100))
 
 	WriteShort(jumpHeights+2, jumpHeight)
-	if ReadByte(world) == 0x10 and equippedGlides == 0 and stackAbilities == 3 and (ReadByte(room) == 0x21 or 
+	if ReadByte(world) == 0x10 and countedAbilities[3] == 0 and stackAbilities == 3 and (ReadByte(room) == 0x21 or 
 			(ReadByte(cutsceneFlags+0xB0F) >= 0x6E) and ReadFloat(soraHUD) > 0) then
 		WriteShort(jumpHeights, 390)
 		WriteShort(jumpHeights+2, math.max(390, jumpHeight))
 	end
 
 	if stackAbilities > 1 then
-		local glides = 0
-		local superglides = 0
-		for i=0,9 do
-			if ReadByte(sharedAbilities+i) % 0x80 == 3 then
-				glides = glides + 1
-			elseif ReadByte(sharedAbilities+i) % 0x80 == 4 then
-				superglides = superglides + 1
-			end
-		end
+		local glides = false
 		for i=0,9 do
 			local ab = ReadByte(sharedAbilities+i)
-			if ab % 0x80 == 3 and glides > 1 then
+			if ab % 0x80 >= 3 and not glides then
+				WriteByte(sharedAbilities+i, (ab % 0x80 == 4) and ab-1 or ab)
+				glides = true
+			elseif ab % 0x80 == 3 and glides then
 				WriteByte(sharedAbilities+i, ab+1)
-				glides = glides - 1
-			end
-			if ab % 0x80 == 4 and glides == 0 then
-				WriteByte(sharedAbilities+i, ab-1)
 			end
 		end
-		WriteInt(superglideSpeedHack, 0x17F50C + math.max(equippedGlides-2, 0)*4)
+		WriteInt(superglideSpeedHack, 0x17F50C + math.max(countedAbilities[3]-2, 0)*4)
+		
+		WriteFloat(mermaidKickSpeed, 10+(8*countedAbilities[2]))
 		
 		if stackAbilities == 3 then
-			if equippedGlides == 0 and ReadLong(soraPointer) then
+			if countedAbilities[3] == 0 and ReadLong(soraPointer) then
 				if (ReadByte(stateFlag) // 0x20) % 2 == 1 then
 					WriteByte(stateFlag, ReadByte(stateFlag) - 0x20)
 				end
@@ -1839,7 +1823,7 @@ function StackAbilities()
 	end
 	
 	-- Allow early flight in Neverland if glide equipped
-	if equippedGlides > 0 and ReadByte(world) == 0xD then
+	if countedAbilities[3] > 0 and ReadByte(world) == 0xD then
 		if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
 			WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
 		end
