@@ -962,7 +962,7 @@ function ValidSeed()
 	for j=1, 10 do
 		GetAvailability()
 		local HBWin = ItemAccessible(0xCD, 1)
-		for i=0xC7, 0xC8 do
+		for i=0xC8, 0xC9 do
 			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			HBWin = HBWin and ItemAccessible(i, 1)
 		end
