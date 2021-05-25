@@ -465,7 +465,8 @@ function IsAccessible(t, i)
 					accessiblePages = accessiblePages + 1
 				end
 			end
-			thisAccess = thisAccess or tonumber(string.sub(t[i][k], 5)) <= accessiblePages
+			thisAccess = thisAccess or (tonumber(string.sub(t[i][k], 5)) <= accessiblePages 
+									and ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
 		end
 		if string.find(t[i][k], "All Summons") then
 			thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
