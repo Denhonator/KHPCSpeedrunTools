@@ -81,6 +81,7 @@ local savedFruits = 0x2DE770E - offset
 local minigameTimer = 0x232A684 - offset
 local collectedFruits = minigameTimer + 4
 local unequipBlacklist = 0x541FA0 - offset
+local tutorialFlag = 0x2DE7394 - offset
 
 local chronicles = 0x2DE7367 - offset
 local journalCharacters = 0x2DE70B3 - offset
@@ -2033,6 +2034,10 @@ function FlagFixes()
 		
 		if ReadByte(reports+4) == 0 then
 			WriteByte(reports+4, 0xE)
+		end
+		
+		if (ReadByte(tutorialFlag) // 0x10) % 2 == 0 then
+			WriteByte(tutorialFlag, ReadByte(tutorialFlag)+0x10)
 		end
 	end
 	
