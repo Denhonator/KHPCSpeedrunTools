@@ -1657,9 +1657,9 @@ function UpdateReports(HUDNow)
 		if receivedReport and HUDWas == HUDNow then
 			local i = itemids[0xA7 + receivedReport]
 			local addc = 1
-			if curid == 0xC0 or curid == 0xC6 then
+			if i == 0xC0 or i == 0xC6 then
 				addc = 2
-			elseif curid == 0xC4 or curid == 0xC5 then
+			elseif i == 0xC4 or i == 0xC5 then
 				addc = 3
 			end
 			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+addc)
