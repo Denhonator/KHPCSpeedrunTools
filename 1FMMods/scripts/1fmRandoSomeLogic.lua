@@ -2122,6 +2122,11 @@ function FlagFixes()
 		if ReadByte(room) > 0xF then
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
 		end
+		
+		if ReadByte(cutsceneFlags+0xB05) >= 0x6E and (ReadByte(chestsOpened+0x218) // 8) % 2 == 0
+		and ReadByte(room) ~= 2 and ReadByte(blackfade) == 128 then
+			WriteByte(worldFlagBase+0x42, 12)
+		end
 	end
 	
 	if ReadByte(world) == 6 then

@@ -86,10 +86,10 @@ f   Ether            ; ?
 55  Potion           ; ?
 56  Potion           ; ?
 57  Potion           ; ?
-58  Dalmatians 1     ; Traverse Town ; Glide ; Fire Magic
-59  Dalmatians 2     ; Traverse Town ; Red Trinity
-5a  Dalmatians 3     ; Traverse Town ; Green Trinity
-5b  Dalmatians 4     ; Traverse Town ; Red Trinity
+58  Dalmatians 1     ; Mystical House ; Glide ; Fire Magic
+59  Dalmatians 2     ; Alleyway ; Red Trinity
+5a  Dalmatians 3     ; Item Workshop ; Green Trinity
+5b  Dalmatians 4     ; Secret Waterway
 5c  Reward 74        ; Rabbit hole ; Green Trinity
 5d  Reward 43        ; Rabbit hole
 5e  Reward 44        ; Rabbit hole
@@ -125,7 +125,7 @@ f   Ether            ; ?
 7c  Dalmatians 9     ; Hippos' Lagoon
 7d  Mega-Potion      ; Hippos' Lagoon
 7e  Meteor-G         ; Hippos' Lagoon
-7f  Ether            ; ?
+7f  Ether            ; Bamboo Thicket
 80  Mythril          ; Jungle: Vines
 81  Dalmatians 10    ; Jungle: Vines 2
 82  Thundara-G       ; Climbing Trees ; Blue Trinity
@@ -331,12 +331,12 @@ ff  Potion           ; ?
 14a Thundara-G      ; Guillotine Square
 14b Dalmatians 24   ; Guillotine Square ; Glide
 14c Potion          ; ?
-14d Mega-Potion     ; Olympus Coliseum
-14e Dalmatians 8    ; Olympus Coliseum ; Blue Trinity
-14f Reward 55       ; Olympus Coliseum ; Blue Trinity
-150 Reward 56       ; Olympus Coliseum ; White Trinity
-151 Gummi           ; Olympus Coliseum ; Blizzara Magic
-152 Reward 9a       ; Olympus Coliseum ; Blizzaga Magic
+14d Mega-Potion     ; Coliseum Gates
+14e Dalmatians 8    ; Coliseum Gates ; Blue Trinity
+14f Reward 55       ; Coliseum Gates ; Blue Trinity
+150 Reward 56       ; Coliseum Gates ; White Trinity
+151 Gummi           ; Coliseum Gates ; Blizzara Magic
+152 Reward 9a       ; Coliseum Gates ; Blizzaga Magic
 153 Potion          ; ?
 154 Potion          ; ?
 155 Potion          ; ?
