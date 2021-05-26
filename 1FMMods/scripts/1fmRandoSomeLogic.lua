@@ -1728,8 +1728,9 @@ function ReplaceMagic(HUDNow)
 	end
 	WriteByte(magicUnlock, unlock)
 	for j=0,2 do
-		if not isUnlocked[ReadByte(shortcuts+j)+1] then
-			WriteByte(0xFF)
+		local s = ReadByte(shortcuts+j)+1
+		if not isUnlocked[s] and s < 10 then
+			WriteByte(shortcuts+j, isUnlocked[perMagicShuffle[s]] and perMagicShuffle[s]-1 or 0xFF)
 		end
 	end
 end
