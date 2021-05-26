@@ -2001,8 +2001,12 @@ function FlagFixes()
 		end
 	end
 	
-	for i=0,3 do
-		WriteByte(unequipBlacklist + (i*4), 0)
+	if ReadByte(world) == 3 and ReadByte(room) == 2 and ReadByte(cutsceneFlags+0xB04) == 0x23 then
+		WriteByte(unequipBlacklist, ReadByte(soraStats+0x36))
+	else
+		for i=0,3 do
+			WriteByte(unequipBlacklist + (i*4), 0)
+		end
 	end
 	
 	if ReadByte(inGummi) > 0 then
