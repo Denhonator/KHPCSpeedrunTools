@@ -125,7 +125,7 @@ f   Ether            ; ?
 7c  Dalmatians 9     ; Hippos' Lagoon
 7d  Mega-Potion      ; Hippos' Lagoon
 7e  Meteor-G         ; Hippos' Lagoon
-7f  Ether            ; Bamboo Thicket
+7f  Ether            ; ?
 80  Mythril          ; Jungle: Vines
 81  Dalmatians 10    ; Jungle: Vines 2
 82  Thundara-G       ; Climbing Trees ; Blue Trinity

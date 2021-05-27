@@ -1118,6 +1118,7 @@ function LoadRando()
 		return false
 	end
 	
+	local freshboot = false
 	for i=1, 0xFF do
 		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
 	end
@@ -1135,6 +1136,9 @@ function LoadRando()
 			local i = tonumber(string.sub(line, 1, 3), 16)
 			local v = tonumber(string.sub(line, 5, 8), 16)
 			rewards[i] = v
+			if v ~= ReadShort(rewardTable+((i-1)*2)) then
+				freshboot = true
+			end
 		elseif string.find(loadstate, "hests") then
 			local i = tonumber(string.sub(line, 1, 3), 16)
 			local v = tonumber(string.sub(line, 5, 8), 16)
@@ -1143,6 +1147,7 @@ function LoadRando()
 			local i = tonumber(string.sub(line, 1, 2), 16)
 			local v = tonumber(string.sub(line, 4, 5), 16)
 			itemids[i] = v
+			--itemData[i] = ReadArray(itemTable+((v-1)*20), 20)
 		elseif string.find(loadstate, "hops") then
 			local i = tonumber(string.sub(line, 1, 3), 16)
 			local v = tonumber(string.sub(line, 5, 6), 16)
@@ -1200,9 +1205,9 @@ function LoadRando()
 			local mag = tonumber(string.sub(line, 7, 8), 16)
 			weaponStr[i] = str
 			weaponMag[i] = mag
-		elseif string.find(loadstate, "tem data") then
+		elseif string.find(loadstate, "tem data") and not freshboot then
 			local i = tonumber(string.sub(line, 1, 2), 16)
-			for j=1, 12 do
+			for j=1, 20 do
 				local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
 				itemData[i][j] = v
 			end
@@ -1230,12 +1235,10 @@ function ApplyRandomization()
 	print("Chest randomization applied")
 	
 	for i=1, 0xFF do
-		if string.find(ItemType(itemids[i]), "Important") then
-			WriteArray(itemTable+((i-1)*20), itemData[i])
-		end
-		for j=8, 11 do
-			WriteByte(itemTable+((i-1)*20)+j, itemData[i][j+1])
-		end
+		WriteArray(itemTable+((i-1)*20), itemData[i])
+		-- for j=8, 11 do
+			-- WriteByte(itemTable+((i-1)*20)+j, itemData[i][j+1])
+		-- end
 	end
 	print("Applied item manipulation")
 
@@ -1854,7 +1857,9 @@ function StackAbilities()
 		
 		if DodgeDataValid(dodgeDataAddr) then
 			local abils = CountSoraAbilities()
-			WriteShortA(dodgeDataAddr+4, math.max(50-(12*abils[0x16]), 22))
+			if abils[0x16] then
+				WriteShortA(dodgeDataAddr+4, math.max(50-(12*abils[0x16]), 22))
+			end
 		end
 	end
 end
@@ -2123,10 +2128,10 @@ function FlagFixes()
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
 		end
 		
-		if ReadByte(cutsceneFlags+0xB05) >= 0x6E and (ReadByte(chestsOpened+0x218) // 8) % 2 == 0
-		and ReadByte(room) ~= 2 and ReadByte(blackfade) == 128 then
-			WriteByte(worldFlagBase+0x42, 12)
-		end
+		-- if ReadByte(cutsceneFlags+0xB05) >= 0x6E and (ReadByte(chestsOpened+0x218) // 8) % 2 == 0
+		-- and ReadByte(room) ~= 2 and ReadByte(blackfade) == 128 then
+			-- WriteByte(worldFlagBase+0x42, 12)
+		-- end
 	end
 	
 	if ReadByte(world) == 6 then
