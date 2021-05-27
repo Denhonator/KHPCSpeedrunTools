@@ -609,7 +609,7 @@ function Randomize()
 		elseif string.find(itype, "Use") or string.find(itype, "Important") and i~=0xCB and i~=0xCC then
 			randomFiller[(#randomFiller)+1] = i
 		elseif string.find(itype, "Accessory") and filler > 0 then
-			randomFiller[(#randomFiller)+1] = i
+			randomFiller[(#randomFiller)+1] = 1
 			filler = filler - 1
 		end
 		if string.find(itype, "Weapon") then
