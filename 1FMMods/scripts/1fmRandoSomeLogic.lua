@@ -1205,11 +1205,13 @@ function LoadRando()
 			local mag = tonumber(string.sub(line, 7, 8), 16)
 			weaponStr[i] = str
 			weaponMag[i] = mag
-		elseif string.find(loadstate, "tem data") and not freshboot then
+		elseif string.find(loadstate, "tem data") then
 			local i = tonumber(string.sub(line, 1, 2), 16)
 			for j=1, 20 do
-				local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
-				itemData[i][j] = v
+				if not freshboot or (j>=9 and j<=12) then
+					local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
+					itemData[i][j] = v
+				end
 			end
 		end
 	end
