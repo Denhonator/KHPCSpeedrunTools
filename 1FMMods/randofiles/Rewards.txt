@@ -14,7 +14,7 @@
 0D  Potion ; ?
 0E  Mermaid Kick ; Ursula 1
 0F  Glide ; Neverland ; Green Trinity
-10  Superglide ; Chernabog ; EotW
+10  Superglide ; Chernabog ; EotW ; HB1 ; HB2
 11  Fireglow ; Dragon Maleficent ; HB1
 12  Earthshine ; Secret Waterway
 13  Jungle King ; Deep Jungle
