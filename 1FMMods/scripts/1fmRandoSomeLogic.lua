@@ -1875,7 +1875,7 @@ function GetDodgeDataAddr()
 	local animHalfPointers = ReadLong(0x2866498 - offset) + 0xC0
 	local ind = 0
 	while ReadIntA(animHalfPointers+ind) > 0 do
-		local dodgePointer = ReadLong(halfPointers+8) + ReadIntA(animHalfPointers+ind) % 0x100000
+		local dodgePointer = ReadLong(halfPointers+8) + ReadIntA(animHalfPointers+ind) % 0x1000000
 		if DodgeDataValid(dodgePointer) then
 			print(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByteA(dodgePointer+4)))
 			return dodgePointer
