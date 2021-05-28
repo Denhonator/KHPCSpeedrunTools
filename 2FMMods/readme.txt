@@ -9,5 +9,8 @@ SoftReset:
 - Also resets RNG
 - Sound effects may get muffled over time. This is a known bug in the game unrelated to this script. Hard reset when that happens.
 
+NoGummi:
+- As worlds get unlocked, you can enter them without having to do gummi missions
+
 AutoAttack:
 - Allows physically attacking continuously by holding attack button.
