@@ -3,6 +3,8 @@ local anims = 0x2D29DB0 - offset
 local attackElement = 0x2D23F38 - offset
 local soraResist = 0x2D59308 - offset
 local soraPointer = 0x2534680 - offset
+local donaldPointer = 0x2D33908 - offset
+local goofyPointer = donaldPointer + 8
 local soraHUD = 0x280EB1C - offset
 local jumpHeight = 0x2D592A0 - offset
 local weaponSize = 0xD2ACA0 - offset
@@ -132,6 +134,22 @@ function _OnFrame()
 				end
 				for i=0, 2 do
 					WriteFloat(weaponSize+(i*4), r)
+				end
+				
+				local r = math.random(60)*0.1
+				if r > 5 or r < 0.5 then
+					r = 1
+				end
+				for i=0, 2 do
+					WriteFloatA(ReadLong(goofyPointer)+0x40+(i*4), r)
+				end
+				
+				local r = math.random(60)*0.1
+				if r > 5 or r < 0.5 then
+					r = 1
+				end
+				for i=0, 2 do
+					WriteFloatA(ReadLong(donladPointer)+0x40+(i*4), r)
 				end
 				
 				local soraAnimSpeedA = ReadLong(soraPointer) + 0x284
