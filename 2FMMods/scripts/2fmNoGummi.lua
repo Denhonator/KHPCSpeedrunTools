@@ -20,9 +20,9 @@ end
 
 function _OnFrame()
 	if canExecute then
-		for i=0, 10 do
+		for i=0, 0x10 do
 			if ReadByte(TT+(i*4)+3) == 2 then
-				WriteByte(TT+(i*4)+3, 1)
+				WriteByte(TT+(i*4)+3, 0)
 			end
 		end
 	end
