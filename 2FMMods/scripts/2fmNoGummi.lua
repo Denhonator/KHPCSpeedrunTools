@@ -1,4 +1,5 @@
 local offset = 0x56450E
+local TT = 0x9AB064 - offset
 
 local canExecute = false
 
@@ -19,10 +20,10 @@ end
 
 function _OnFrame()
 	if canExecute then
-		local input = ReadInt(0x29F89B0-offset)
-		if (input == 247042) then 
-			WriteByte(0xAB841A-offset, 0x1)
-			WriteInt(0x751310-offset, 0x00000001)
+		for i=0, 10 do
+			if ReadByte(TT+(i*4)+3) == 2 then
+				WriteByte(TT+(i*4)+3, 1)
+			end
 		end
 	end
 end
