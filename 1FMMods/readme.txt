@@ -46,6 +46,10 @@ RandoSomeLogic:
 - If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
+Chaos:
+- Randomizes many things in wild, chaotic ways, including attack animations
+- Use for silly times
+
 ConsistentFinishers:
 - Makes Zantetsuken, Gravity Break and Stun Impact trigger 100% of the time
 - Priority: Stun Impact -> Gravity Break -> Zantetsuken
