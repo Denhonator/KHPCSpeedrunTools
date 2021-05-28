@@ -169,7 +169,7 @@ local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCD, 0xE4}
+local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE4}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -201,6 +201,9 @@ local isValidSeed = false
 local initDone = false
 local infiniteDetection = 0
 local canExecute = false
+
+local checksDebug = {}
+local checksDebug2 = {}
 
 function RArray(off, c)
 	local l = {}
@@ -333,7 +336,7 @@ function ItemType(i)
 		attributes = attributes .. "Summon"
 	end
 	if (i >= 0xD4 and i<= 0xDE) or (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8
-	or i==0xAA or i==0xAE or i==0xB0 or i==0xCB or i==0xCC then
+	or i==0xAA or i==0xAE or i==0xB0 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
 
@@ -404,7 +407,7 @@ function MagicAccessible(s)
 	--for i=1,#magicRef do
 	--	
 	--end
-	if string.find(s, "ga") or string.find(s, "ra") then
+	if string.find(s, "lizzaga") then
 		return false
 	end
 	return true
@@ -444,7 +447,7 @@ function IsAccessible(t, i)
 		if string.find(t[i][k], "Theon") then
 			thisAccess = thisAccess or (ItemAccessible(0xB2, 1) and ItemAccessible(0xB7, 1)) or AbilityAccessible(1, 2)
 		end
-		if string.find(t[i][k], "Jack-In-The-Box") then
+		if string.find(t[i][k], "Jack") then
 			thisAccess = thisAccess or ItemAccessible(0xE4, 1)
 		end
 		if string.find(t[i][k], "Postcard") then
@@ -465,8 +468,7 @@ function IsAccessible(t, i)
 					accessiblePages = accessiblePages + 1
 				end
 			end
-			thisAccess = thisAccess or (tonumber(string.sub(t[i][k], 5)) <= accessiblePages 
-									and ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
+			thisAccess = thisAccess or tonumber(string.sub(t[i][k], 5)) <= accessiblePages
 		end
 		if string.find(t[i][k], "All Summons") then
 			thisAccess = thisAccess or (ItemAccessible(0xCE, 1) and 
@@ -488,8 +490,14 @@ function IsAccessible(t, i)
 			thisAccess = thisAccess or true
 		end
 		if string.find(t[i][k], "EotW") then
-			thisAccess = thisAccess or (ItemAccessible(0xCD, 1) and ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
+			thisAccess = thisAccess or ItemAccessible(0xCD, 1)
 		end
+		
+		checksDebug[t[i][k]] = true
+		if thisAccess then
+			checksDebug2[t[i][k]] = true
+		end
+
 		canAccess = canAccess and thisAccess
 	end
 	return canAccess
@@ -599,14 +607,14 @@ function Randomize()
 		end
 	end
 	
-	local filler = 5
+	local filler = 4 + math.random(3)
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
 		local itype = ItemType(i)
 		if itype == "Important" then
 			randomGets[(#randomGets)+1] = i
-		elseif string.find(itype, "Use") or string.find(itype, "Important") and i~=0xCB and i~=0xCC then
+		elseif string.find(itype, "Use") or string.find(itype, "Important") and not (i>=0xC8 and i<=0xCC) then
 			randomFiller[(#randomFiller)+1] = i
 		elseif string.find(itype, "Accessory") and filler > 0 then
 			randomFiller[(#randomFiller)+1] = 1
@@ -656,7 +664,7 @@ function Randomize()
 		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
 		local price = 0
 		if ReadShort(itemTable+((i-1)*20)+8) == 0 then
-			price = (math.random(9)+1)*250
+			price = (math.random(9)+1)*500
 			itemData[i][9] = price % 0x100
 			itemData[i][10] = price // 0x100
 		end
@@ -666,7 +674,7 @@ function Randomize()
 			itemData[i][12] = price // 0x100
 		end
 		
-		if ItemType(i) ~= "" and i~=0xCB and i~=0xCC then
+		if ItemType(i) ~= "" and not (i>=0xC8 and i<=0xCC) then
 			shopPool[(#shopPool)+1] = i
 		end
 	end
@@ -679,7 +687,7 @@ function Randomize()
 		if rewardDetails[i] then
 			rewards[i] = table.remove(rewardPool, math.random(#rewardPool))
 			if rewards[i] % 0x100 == 0xF0 and ItemType(rewards[i] // 0x100)=="Synth" then
-				if #importantPool > 4 then
+				if #importantPool > 5 then
 					rewards[i] = table.remove(importantPool, math.random(#importantPool)) * 0x100 + 0xF0
 				elseif #extraAbilities > 0 then
 					rewards[i] = table.remove(extraAbilities, math.random(#extraAbilities)) * 0x100
@@ -963,10 +971,6 @@ function ValidSeed()
 	for j=1, 10 do
 		GetAvailability()
 		local HBWin = ItemAccessible(0xCD, 1)
-		for i=0xC8, 0xC9 do
-			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
-			HBWin = HBWin and ItemAccessible(i, 1)
-		end
 		for i=0xBC, 0xBF do
 			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			HBWin = HBWin and ItemAccessible(i, 1)
@@ -978,6 +982,8 @@ function ValidSeed()
 			DIWin = DIWin and ItemAccessible(i, 1)
 		end
 		
+		local misc = dalmatiansAvailable == 99 and ItemAccessible(0xE4, 1) and ItemAccessible(0xD3, 3)
+		
 		print(string.format("Complexity %d", j))
 		if HBWin then
 			print("HBWin")
@@ -985,11 +991,24 @@ function ValidSeed()
 		if DIWin then
 			print("DI Win")
 		end
-		if HBWin and DIWin then
+		if misc then
+			print("All checks possible")
+		else
+			print(string.format("Dalm: %d Jack: %s Postcards: %s", 
+			dalmatiansAvailable, tostring(ItemAccessible(0xE4, 1)), tostring(ItemAccessible(0xD3, 3))))
+		end
+		if HBWin and DIWin and misc then
 			SaveRando()
 			return true
 		end
 	end
+	
+	for i,v in pairs(checksDebug) do
+		if not checksDebug2[i] then
+			print(i)
+		end
+	end
+	
 	print("Unwinnable, rerolling")
 	return false
 end
@@ -1548,6 +1567,8 @@ function UpdateInventory(HUDNow)
 		end
 	end
 	
+	WriteByte(inventory+0xC7, 0)
+	WriteByte(inventory+0xC8, 0)
 	WriteByte(inventory+0xCA, 0)
 	WriteByte(inventory+0xCB, 0)
 	
@@ -1691,7 +1712,7 @@ function UpdateReports(HUDNow)
 			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
 				local hintText = ""
-				for j=1, (#spoilers > 13-i) and 2 or 1 do
+				for j=1, (#spoilers > 14-i) and 2 or 1 do
 					if #spoilers > 0 then
 						hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
 					end
@@ -1908,9 +1929,10 @@ function FlagFixes()
 		WriteByte(worldFlagBase+0x32, 2)
 	end
 	
-	-- Ensure correct vacant house state
-	if ReadByte(cutsceneFlags+0xB04) == 0x4A then
-		WriteByte(worldFlagBase+0x35, 2)
+	-- Skip TT2
+	if ReadByte(cutsceneFlags+0xB04) == 0x3E then
+		WriteByte(cutsceneFlags+0xB04, 0x4E)
+		WriteByte(worldFlagBase+0x1C, 5)
 	end
 	
 	if ReadByte(cutsceneFlags+0xB04) ~= prevTTFlag then
@@ -1958,7 +1980,6 @@ function FlagFixes()
 	end
 
 	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
-		--WriteByte(worldFlagBase+0x1C, 5) -- Cid outside
 		WriteByte(worldFlagBase+0x26, 2) -- Cid in accessory shop
 	end
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock

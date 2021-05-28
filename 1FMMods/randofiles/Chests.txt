@@ -18,7 +18,7 @@ f   Ether            ; ?
 11  Potion           ; ?
 12  Potion           ; ?
 13  Potion           ; ?
-14  Reward 3f        ; 1st District ; Blizzard
+14  Reward 3f        ; 1st District ; Blizzard Magic
 15  Postcard         ; 1st District
 16  Postcard         ; 2nd District
 17  Mythril Shard    ; 2nd District

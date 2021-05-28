@@ -200,7 +200,7 @@ C7  Drinking Water ; Destiny Islands ; Day1
 C8  Navi-G Piece 1  ; -
 C9  Navi-G Piece 2  ; -
 CA  Navi-Gummi Unused ; -
-CB  Navi-G Piece 3 ; Traverse Town ; NaviG
+CB  Navi-G Piece 3 ; Traverse Town
 CC  Navi-G Piece 4 ; Neverland ; Green Trinity
 CD  Navi-Gummi ; Traverse Town ; HB1
 CE  Watergleam      ; -
@@ -209,7 +209,7 @@ D0  Fireglow        ; -
 D1  Earthshine      ; -
 D2  Crystal Trident ; -
 D3  Postcard        ; -
-D4  Torn Page 1     ; -
+D4  Torn Page 1     ; Dalmatians' House ; 51 Puppies
 D5  Torn Page 2     ; -
 D6  Torn Page 3     ; -
 D7  Torn Page 4     ; -
