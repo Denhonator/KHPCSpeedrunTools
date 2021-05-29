@@ -182,9 +182,14 @@ function _OnFrame()
 					WriteFloatA(ReadLong(goofyPointer)+0x40+(i*4), r)
 				end
 				
-				r = math.random(60)*0.1
+				r = math.random(10)*0.1 + 0.4
 				for i=0, 2 do
-					WriteFloatA(ReadLong(donladPointer)+0x40+(i*4), r)
+					WriteFloatA(ReadLong(donaldPointer)+0x40+(i*4), r)
+				end
+				
+				r = math.random(10)*0.1 + 0.4
+				for i=0, 2 do
+					WriteFloatA(ReadLong(soraPointer)+0x40+(i*4), r)
 				end
 				
 				local soraAnimSpeedA = ReadLong(soraPointer) + 0x284
