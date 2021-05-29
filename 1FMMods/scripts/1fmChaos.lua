@@ -3,6 +3,7 @@ local anims = 0x2D29DB0 - offset
 local attackElement = 0x2D23F38 - offset
 local soraResist = 0x2D59308 - offset
 local soraPointer = 0x2534680 - offset
+local soraStats = 0x2DE59D0 - offset
 local donaldPointer = 0x2D33908 - offset
 local goofyPointer = donaldPointer + 8
 local soraHUD = 0x280EB1C - offset
@@ -90,7 +91,7 @@ end
 function _OnFrame()
 	if canExecute then
 		local nowRoom = ReadByte(room)
-		math.randomseed(baseSeed+nowRoom+ReadByte(world)*0x100)
+		math.randomseed(baseSeed+nowRoom+ReadByte(world)*0x100+ReadByte(soraStats+0x36)*0x10000)
 		if nowRoom ~= lastRoom then
 			Randomize()
 			print("Chaos! Randomized animations among other things")
@@ -98,32 +99,32 @@ function _OnFrame()
 		lastRoom = nowRoom
 
 		if ReadFloat(soraHUD) > 0 then
-			-- local musicA = ReadLong(musicP)+8
-			-- for i=1, 30 do
-				-- if musicExists[ReadByteA(musicA)] then
-					-- WriteByteA(musicA, musics[math.random(#musics)])
-				-- end
-				-- if musicExists[ReadByteA(musicA+4)] then
-					-- WriteByteA(musicA+4, musics[math.random(#musics)])
-				-- end
-				-- musicA = musicA + 0x20
-			-- end
-
-			-- if ReadByte(musicSpeedHack) == 0xF3 then
-				-- local r=math.random(10)
-				-- if r==10 then
-					-- WriteByte(musicSpeedHack+4, 0x3D+0xC)
-				-- elseif r==1 then
-					-- WriteByte(musicSpeedHack+4, 0x3D-0x20)
-				-- else
-					-- WriteByte(musicSpeedHack+4, 0x3D)
-				-- end
-			-- end
-			
-			-- Movement speed
-			WriteFloat(jumpHeight-8, math.random(11)+5)
-
 			if ReadFloat(soraResist) == 1.0 then
+				local musicA = ReadLong(musicP)+8
+				for i=1, 40 do
+					if musicExists[ReadIntA(musicA)] then
+						WriteByteA(musicA, musics[math.random(#musics)])
+					end
+					if musicExists[ReadIntA(musicA+4)] then
+						WriteByteA(musicA+4, musics[math.random(#musics)])
+					end
+					musicA = musicA + 0x20
+				end
+
+				if ReadByte(musicSpeedHack) == 0xF3 then
+					local r=math.random(10)
+					if r==10 then
+						WriteByte(musicSpeedHack+4, 0x3D+0xC)
+					elseif r==1 then
+						WriteByte(musicSpeedHack+4, 0x3D-0x20)
+					else
+						WriteByte(musicSpeedHack+4, 0x3D)
+					end
+				end
+			
+				-- Movement speed
+				WriteFloat(jumpHeight-8, math.random(11)+5)
+			
 				for i=0, 5 do
 					WriteFloat(soraResist+i*4, ReadFloat(soraResist+i*4) + (math.random(20)*0.1) - 1.0)
 				end
@@ -136,24 +137,18 @@ function _OnFrame()
 					WriteFloat(weaponSize+(i*4), r)
 				end
 				
-				local r = math.random(60)*0.1
-				if r > 5 or r < 0.5 then
-					r = 1
-				end
+				r = math.random(10)*0.1 + 0.4
 				for i=0, 2 do
 					WriteFloatA(ReadLong(goofyPointer)+0x40+(i*4), r)
 				end
 				
-				local r = math.random(60)*0.1
-				if r > 5 or r < 0.5 then
-					r = 1
-				end
+				r = math.random(60)*0.1
 				for i=0, 2 do
 					WriteFloatA(ReadLong(donladPointer)+0x40+(i*4), r)
 				end
 				
 				local soraAnimSpeedA = ReadLong(soraPointer) + 0x284
-				WriteFloatA(soraAnimSpeedA, 0.7+math.random(5)*0.1)
+				WriteFloatA(soraAnimSpeedA, 0.7+math.random(6)*0.1)
 				
 				local soraAirA = ReadLong(soraPointer) + 0x70
 				local soraAir = ReadByteA(soraAirA)
