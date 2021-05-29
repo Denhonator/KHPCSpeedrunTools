@@ -1763,7 +1763,7 @@ end
 
 function ReplaceTrinity(HUDNow)
 	local unlock = 0
-	if ReadByte(magicFlags) > 0 then
+	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
 		unlock = unlock + (2^(trinityTable[1]-1))
 	end
 	if ReadByte(chronicles+0xC) == 0x20 then
