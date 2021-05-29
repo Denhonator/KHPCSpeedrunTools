@@ -10,6 +10,8 @@ local soraHUD = 0x280EB1C - offset
 local jumpHeight = 0x2D592A0 - offset
 local weaponSize = 0xD2ACA0 - offset
 
+local commandMenuP = 0x2D333D0 - offset
+
 local music = 0x2329B80 - offset
 local musicP = 0x232A590 - offset
 
@@ -20,9 +22,12 @@ local room = 0x233CB44 - offset
 local world = 0x233CADC - offset
 
 local airStatuses = {0, 8, 0x18}
+local validCommands = {[0x4B]=true,[0x57]=true,[0x58]=true,[0x5A]=true,
+						[0x62]=true,[0x63]=true}
 local musics = {0xB8}
 local musicExists = {[0xB8] = true}
 local animsData = {}
+local commandData = {}
 local lastRoom = 99
 local baseSeed = 0
 
@@ -38,6 +43,25 @@ function _OnInit()
 				animsData[off+1] = anim
 			end
 		end
+		
+		for i=7, 0x1B do
+			validCommands[i] = true
+		end
+		for i=0x1F, 0x26 do
+			validCommands[i] = true
+		end
+		for i=0x2F, 0x34 do
+			validCommands[i] = true
+		end
+		
+		local commsA = ReadLong(commandMenuP)
+		for i=0, 0x63 do
+			if validCommands[i] then
+				local command = ReadArrayA(commsA+(i*0x10), 0x10)
+				commandData[i+1] = command
+			end
+		end
+		
 		for i=0x64, 0x9D do
 			if not ((i>=0x6A and i<=0x6D) or (i>=0x71 and i<=0x73) or (i>=0x84 and i<=0x8B)
 			or i==0x91 or i==0x96 or i==0x97 or i==0x9C) then
@@ -85,6 +109,22 @@ function Randomize()
 	
 	for i=0, 9 do
 		WriteByte(attackElement+4+(i*112), math.random(5))
+	end
+	
+	local commsA = ReadLong(commandMenuP)
+	pool = {}
+	
+	for i=0, 0x63 do
+		if commandData[i+1] then
+			pool[(#pool)+1] = commandData[i+1]
+		end
+	end
+	
+	for i=0, 0x63 do
+		if commandData[i+1] then
+			local command = table.remove(pool, math.random(#pool))
+			WriteArrayA(commsA+(i*0x10), command)
+		end
 	end
 end
 
