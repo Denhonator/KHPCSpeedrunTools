@@ -37,7 +37,7 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		print("KH1 detected, running script")
 		canExecute = true
-		for off=0,0x6FF do
+		for off=0,0x1FF do
 			local anim = ReadArray(anims+(off*20), 20)
 			if anim[1] >= 0xC8 and anim[1] < 0xDD and anim[1] ~= 0xDB then
 				animsData[off+1] = anim
@@ -97,11 +97,11 @@ end
 
 function Randomize()
 	pool = {}
-	for i=1, 0x7FF do
+	for i=1, 0x200 do
 		pool[(#pool)+1] = animsData[i]
 	end
 	
-	for i=0, 0x7FF do
+	for i=0, 0x1FF do
 		if animsData[i+1] and #pool > 0 then
 			WriteByte(anims+(i*20), table.remove(pool, math.random(#pool))[1])
 		end
