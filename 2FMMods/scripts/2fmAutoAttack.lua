@@ -19,10 +19,12 @@ end
 
 function _OnFrame()
 	if canExecute then
-		local input = ReadByte(0x71148B-offset) == 64
+		local attackButton = ReadByte(0x7804C1-offset)
+		local input = ReadByte(0x71148B-offset) == attackButton
 		local command = ReadByte(0x2A0DD7C-offset) == 0
 		local dialog = ReadByte(0x2A139D0-offset) == 0
-		if (input and command and dialog) then 
+		local inCombat = ReadByte(0x2A0EAC4-offset) & 1 == 1
+		if (input and command and dialog and inCombat) then 
 			WriteByte(0x2A5A056-offset, 0x1)
 		else
 			WriteByte(0x2A5A056-offset, 0)
