@@ -67,7 +67,7 @@ function _OnInit()
 		
 		for i=0x64, 0x9D do
 			if not ((i>=0x6A and i<=0x6D) or (i>=0x71 and i<=0x73) or (i>=0x84 and i<=0x8B)
-			or i==0x91 or i==0x96 or i==0x97 or i==0x9C) then
+			or i==0x91 or i==0x96 or i==0x97 or i==0x9C or i==0x7E or i==0x8E) then
 				musics[(#musics)+1] = i
 				musicExists[i] = true
 			end
@@ -156,12 +156,14 @@ function Randomize()
 	
 	math.randomseed(baseSeed+ReadByte(world))
 	local musicA = ReadLong(musicP)+8
+	local music1 = musics[math.random(#musics)]
+	local music2 = musics[math.random(#musics)]
 	for i=1, 40 do
 		if musicExists[ReadIntA(musicA)] then
-			WriteByteA(musicA, musics[math.random(#musics)])
+			WriteByteA(musicA, music1)
 		end
 		if musicExists[ReadIntA(musicA+4)] then
-			WriteByteA(musicA+4, musics[math.random(#musics)])
+			WriteByteA(musicA+4, music2)
 		end
 		musicA = musicA + 0x20
 	end
