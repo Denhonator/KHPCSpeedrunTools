@@ -10,6 +10,8 @@ local soraHUD = 0x280EB1C - offset
 local jumpHeight = 0x2D592A0 - offset
 local weaponSize = 0xD2ACA0 - offset
 
+local blackfade = 0x4D93B8 - offset
+
 local commandMenuP = 0x2D333D0 - offset
 
 local music = 0x2329B80 - offset
@@ -21,6 +23,7 @@ local musicSpeedHack = 0xA778B - offset
 local room = 0x233CB44 - offset
 local world = 0x233CADC - offset
 
+local lastBlack = 0
 local airStatuses = {0, 8, 0x18}
 local validCommands = {[0x4B]=true,[0x57]=true,[0x58]=true,[0x5A]=true,
 						[0x62]=true,[0x63]=true}
@@ -69,7 +72,8 @@ function _OnInit()
 				musicExists[i] = true
 			end
 		end
-		print(#musics)
+		
+		lastBlack = ReadByte(blackfade)
 	else
 		print("KH1 not detected, not running script")
 	end
@@ -150,6 +154,7 @@ function Randomize()
 		WriteFloatA(ReadLong(soraPointer)+0x40+(i*4), r)
 	end
 	
+	math.randomseed(baseSeed+ReadByte(world))
 	local musicA = ReadLong(musicP)+8
 	for i=1, 40 do
 		if musicExists[ReadIntA(musicA)] then
@@ -160,7 +165,8 @@ function Randomize()
 		end
 		musicA = musicA + 0x20
 	end
-
+	
+	math.randomseed(baseSeed+ReadByte(room)+ReadByte(world)*0x100+ReadByte(soraStats+0x36)*0x10000)
 	if ReadByte(musicSpeedHack) == 0xF3 then
 		local r=math.random(10)
 		if r==10 then
@@ -189,6 +195,47 @@ function Randomize()
 	end
 end
 
+function Revert()
+	for i=0, 0x1FF do
+		if animsData[i+1] then
+			WriteByte(anims+(i*20), animsData[i+1])
+		end
+	end
+	
+	for i=0, 9 do
+		WriteByte(attackElement+4+(i*112), math.random(5))
+	end
+	
+	local commsA = ReadLong(commandMenuP)
+
+	for i=0, 0x63 do
+		if commandData[i+1] then
+			WriteArrayA(commsA+(i*0x10), commandData[i+1])
+		end
+	end
+
+	for i=0, 2 do
+		WriteFloatA(ReadLong(goofyPointer)+0x40+(i*4), 1)
+		WriteFloatA(ReadLong(donaldPointer)+0x40+(i*4), 1)
+		WriteFloatA(ReadLong(soraPointer)+0x40+(i*4), 1)
+		WriteFloat(weaponSize+(i*4), 1)
+	end
+	
+	if ReadByte(musicSpeedHack) == 0xF3 then
+		WriteByte(musicSpeedHack+4, 0x3D)
+	end
+
+	-- Movement speed
+	WriteFloat(jumpHeight-8, 8)
+
+	for i=0, 5 do
+		WriteFloat(soraResist+i*4, 1)
+	end
+	
+	local soraAnimSpeedA = ReadLong(soraPointer) + 0x284
+	WriteFloatA(soraAnimSpeedA, 1.0)
+end
+
 function _OnFrame()
 	if canExecute then
 		local nowRoom = ReadByte(room)
@@ -201,5 +248,12 @@ function _OnFrame()
 				print("Chaos! Randomized animations among other things")
 			end
 		end
+		
+		-- if ReadByte(blackfade) < 128 and lastBlack == 128 then
+			-- Revert()
+			-- print("Reverted chaos to avoid crashes")
+		-- end
+		
+		lastBlack = ReadByte(blackfade)
 	end
 end
