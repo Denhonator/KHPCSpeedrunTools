@@ -1982,6 +1982,7 @@ function FlagFixes()
 
 	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
 		WriteByte(worldFlagBase+0x26, 2) -- Cid in accessory shop
+		WriteByte(worldFlagBase+0x1D, 3)
 	end
 	if ReadByte(cutsceneFlags+0xB09) < 0x14 then -- Fix monstro DI cutscene softlock
 		WriteByte(cutsceneFlags+0xB09, 0x14)
