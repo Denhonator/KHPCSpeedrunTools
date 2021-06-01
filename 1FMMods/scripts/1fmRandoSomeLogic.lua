@@ -1968,12 +1968,13 @@ function FlagFixes()
 			WriteByte(summonsReturned-1, hasSummons[5] and 1 or 0)
 			
 			local c = ReadByte(inventory+0xD0) > 0
-			if hasSummons[5] then
-				WriteByte(inventory+0xD0, 0)
-			end
+			-- if hasSummons[5] then
+				-- WriteByte(inventory+0xD0, 0)
+			-- end
 			WriteIntA(simbaAddr+4, c and 0x18000238 or 0x18000004)
 			WriteIntA(simbaAddr+12, c and 0x18000233 or 0x18000004)
 			WriteByteA(naturesparkAddr, c and 0xD1 or 0xCF)
+			WriteByteA(simbaAddr+0x16FB, c and 0xD1 or 0xCF)
 			WriteByteA(simbaAddr+0x164B, c and 5 or 1)
 			WriteByteA(simbaAddr+0x164B+8, c and 5 or 1)
 		end
