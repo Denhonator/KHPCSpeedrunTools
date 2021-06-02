@@ -26,7 +26,7 @@ local world = 0x233CADC - offset
 local lastBlack = 0
 local airStatuses = {0, 8, 0x18}
 local validCommands = {[0x4B]=true,[0x57]=true,[0x58]=true,[0x5A]=true,
-						[0x62]=true,[0x63]=true}
+						[0x5E]=true,[0x62]=true,[0x63]=true}
 local musics = {0xB8}
 local musicExists = {[0xB8] = true}
 local animsData = {}
