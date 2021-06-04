@@ -1,6 +1,7 @@
 local offset = 0x3A0606
 local gravBreak = 0x3EA148 - offset
-local zantek = 0x42D478 - offset
+local zantekHack = 0x2A2654 - offset
+
 local canExecute = false
 
 function _OnInit()
@@ -15,6 +16,8 @@ end
 function _OnFrame()
 	if canExecute then
 		WriteFloat(gravBreak, -1.0)
-		WriteFloat(zantek, 1.0)
+		if ReadByte(zantekHack+4) == 0x1C then
+			WriteByte(zantekHack+4, 0x74)
+		end
 	end
 end
