@@ -2208,14 +2208,9 @@ function FlagFixes()
 			WriteByte(libraryFlag, 2)
 		end
 	end
-	
-	-- Navi Gummi delivery
-	if (ReadByte(worldMapTriggerFlag) == 0xDC and ReadByte(worldMapTriggerFlag+4) == 0x96) then
-		WriteByte(gummiFlagBase+0xE, 4)
-	end
-	
+
 	WriteInt(worldMapLines, 0xFFFFFFFF)
-	WriteByte(worldMapLines+4, ReadByte(gummiFlagBase+0xE) == 4 and 0xFF or 0)
+	WriteByte(worldMapLines+4, ReadByte(cutsceneFlags+0xB00) >= 0xDC and 0xFF or 0)
 	
 	if ReadByte(gummiFlagBase+9)==0 then
 		OpenGummi()
