@@ -134,10 +134,10 @@
 86  Unused (Goofy)  ; -
 87  Spear           ; -
 88  No Weapon       ; -
-89  Scimitar        ; -
+89  Genie           ; -
 8A  No Weapon       ; -
 8B  No Weapon       ; -
-8C  Dagger          ; -
+8C  Tinker Bell     ; -
 8D  Claws           ; -
 8E  Tent            ; -
 8F  Camping Set     ; -
@@ -180,15 +180,15 @@ B3  Salegg Vol. 6   ; -
 B4  Azal Vol. 3     ; -
 B5  Mava Vol. 3     ; -
 B6  Mava Vol. 6     ; -
-B7  Theon Vol. 6 ; Library ; Khama
+B7  Theon Vol. 6    ; Library ; Khama
 B8  Nahara Vol. 5   ; -
 B9  Hafet Vol. 4    ; -
 BA  Empty Bottle    ; -
 BB  Old Book        ; -
-BC  Emblem Piece 1 ; Entrance Hall ; Red Trinity ; Theon OR High Jumpra
-BD  Emblem Piece 2 ; Entrance Hall ; Red Trinity ; Theon OR High Jumpra
-BE  Emblem Piece 3 ; Entrance Hall ; Red Trinity ; Theon OR High Jumpra
-BF  Emblem Piece 4 ; Entrance Hall ; Red Trinity ; Theon OR High Jumpra
+BC  Emblem Piece (Flame) ; Entrance Hall ; Fire Magic ; Theon OR High Jumpra
+BD  Emblem Piece (Chest) ; Entrance Hall ; Theon OR High Jumpra
+BE  Emblem Piece (Statue) ; Entrance Hall ; Red Trinity ; Theon OR High Jumpra
+BF  Emblem Piece (Fountain) ; Entrance Hall ; Theon OR High Jumpra
 C0  Log             ; -
 C1  Cloth           ; -
 C2  Rope            ; -
@@ -202,7 +202,7 @@ C9  Navi-G Piece 2  ; -
 CA  Navi-Gummi Unused ; -
 CB  Navi-G Piece 3 ; Traverse Town
 CC  Navi-G Piece 4 ; Neverland ; Green Trinity
-CD  Navi-Gummi ; Traverse Town ; HB1
+CD  Navi-Gummi     ; Traverse Town ; HB1
 CE  Watergleam      ; -
 CF  Naturespark     ; -
 D0  Fireglow        ; -

@@ -125,7 +125,7 @@ local closeMenu = 0x2E90820 - offset
 local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
-local report1 = 0x1D03586 - offset
+local report1 = 0x1D03584 - offset
 local worldWarp = 0x233CB70 - offset
 local roomWarp = worldWarp + 4
 local roomWarpRead = 0x232A588 - offset
@@ -171,7 +171,7 @@ local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xB2, 0xB7, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE4}
+local important = {0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE4}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -195,6 +195,7 @@ local synths = {}
 local chests = {}
 local itemsAvailable = {}
 local abilitiesAvailable = {}
+local magicAvailable = {}
 local dalmatiansAvailable = 0
 local seedstring = ""
 local randomized = false
@@ -338,7 +339,7 @@ function ItemType(i)
 		attributes = attributes .. "Summon"
 	end
 	if (i >= 0xD4 and i<= 0xDE) or (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8
-	or i==0xAA or i==0xAE or i==0xB0 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
+	or i==0xAA or i==0xAE or i==0xB0 or i==0xB2 or i==0xB7 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
 
@@ -405,14 +406,25 @@ function TrinityAccessible(s)
 end
 
 function MagicAccessible(s)
-	--magicRef = {"Fir","Blizzar","Thund","Cur","Gravi","Stop","Aero"}
-	--for i=1,#magicRef do
-	--	
-	--end
-	if string.find(s, "lizzaga") then
+	if not magicAvailable[1] then
 		return false
 	end
-	return true
+
+	magicRef = {"Fire","Blizzard","Thunder","Cure","Gravity","Stop","Aero"}
+	magicRef2 = {"Fira","Blizzara","Thundera","Cura","Gravira","Stopra","Aerora"}
+	magicRef3 = {"Firaga","Blizzaga","Thundaga","Curaga","Graviga","Stopga","Aeroga"}
+	
+	local a = true
+	for i=1,#magicRef do
+		if string.find(s, magicRef3[i]) or s == "Max" then
+			a = a and magicAvailable[i] > 2
+		elseif string.find(s, magicRef2[i]) then
+			a = a and magicAvailable[i] > 1
+		elseif string.find(s, magicRef[i]) or s == "All" then
+			a = a and magicAvailable[i] > 0
+		end
+	end
+	return a
 end
 
 function IsAccessible(t, i)
@@ -480,7 +492,7 @@ function IsAccessible(t, i)
 									or AbilityAccessible(1, 2)
 		end
 		if string.find(t[i][k], "All Spells") or string.find(t[i][k], "Arts") then
-			thisAccess = thisAccess or true
+			thisAccess = thisAccess or MagicAccessible("All")
 		end
 		if string.find(t[i][k], "Trinity") then
 			thisAccess = thisAccess or TrinityAccessible(t[i][k])
@@ -558,6 +570,52 @@ function GetAvailability()
 		abilitiesAvailable[i] = abAv[i]
 		dalmatiansAvailable = dalmAv
 	end
+	
+	for i=1, 7 do
+		local m = perMagicShuffle[i]
+		if i==1 or i==4 then
+			magicAvailable[m] = 2
+			if ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1) 
+			and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1) then
+				magicAvailable[m] = 3
+			end
+		elseif i==2 then
+			magicAvailable[m] = 3
+		elseif i==3 then
+			magicAvailable[m] = 2
+			if AbilityAccessible(2, 1) then
+				magicAvailable[m] = 3
+			end
+		elseif i==5 then
+			magicAvailable[m] = 2
+			if ItemAccessible(0xE4, 1) then
+				magicAvailable[m] = 3
+			end
+		elseif i==6 then
+			local accessiblePages = 0
+			for p=0xD4,0xD8 do
+				if ItemAccessible(p, 1) then
+					accessiblePages = accessiblePages + 1
+				end
+			end
+			magicAvailable[m] = 0
+			if AbilityAccessible(1, 1) or AbilityAccessible(3, 1) or AbilityAccessible(4, 1) then
+				magicAvailable[m] = 1
+			end
+			if accessiblePages >= 3 then
+				magicAvailable[m] = magicAvailable[m] + 1
+			end
+			if ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1) 
+			and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1) and ItemAccessible(0xCD, 1) then
+				magicAvailable[m] = magicAvailable[m] + 1
+			end
+		else
+			magicAvailable[m] = 2
+			if dalmatiansAvailable == 99 then
+				magicAvailable[m] = 3
+			end
+		end
+	end
 end
 
 function Randomize()
@@ -569,7 +627,7 @@ function Randomize()
 	end
 
 	local missableRewards = {0, 2}
-	local addItems = {0x95,0x96,0x97,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1}
+	local addItems = {0xA9,0xAB,0xAC,0xAD,0xAF,0xB1,0x89,0x8C}
 	local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x92, 0x93, 0x94, 0xE8}
 	local rewardPool = {}
 	local randomGets = {}
@@ -609,7 +667,7 @@ function Randomize()
 		end
 	end
 	
-	local filler = 4 + math.random(3)
+	local filler = 2 + math.random(3)
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
@@ -698,6 +756,8 @@ function Randomize()
 					else
 						rewards[i] = rewards[i] + 1
 					end
+				elseif #addItems > 5 then
+					rewards[i] = table.remove(addItems, math.random(#addItems)) * 0x100 + 0xF0
 				end
 			end
 		end
@@ -724,7 +784,7 @@ function Randomize()
 					print("Added missable reward to chest")
 				elseif #addItems > 0 then
 					chests[i] = table.remove(addItems, 1) * 0x10
-					print("Added additional reports to chest")
+					print("Added additional items to chest")
 				else
 					chests[i] = chests[i] + 4
 				end
@@ -1528,6 +1588,24 @@ function UpdateInventory(HUDNow)
 		if i >= 0xD4 and i <= 0xD8 and ReadByte(inventory+(i-1)) > 0 then
 			pages = pages+1
 		end
+
+		if (i == 0x89 or i == 0x8C) then
+			if ReadByte(inventory+(i-1)) > 1 and inventoryUpdater[i] < 2 then
+				local hasSummons = {}
+				local giveSummon = (i == 0x89) and 2 or 3
+				print(giveSummon)
+				for j=0,5 do
+					if ReadByte(summons+j) == 0xFF and not hasSummons[giveSummon] then
+						WriteByte(summons+j, giveSummon)
+						textFind = "Obtained"
+						textReplace = "Obtained " .. ((i == 0x89) and "Genie  " or "Tinker Bell")
+						print(textReplace)
+					end
+					hasSummons[ReadByte(summons+j)] = true
+				end
+			end
+			inventoryUpdater[i] = ReadByte(inventory+(i-1))
+		end
 	end
 	
 	if ReadByte(world) == 6 and ReadByte(room) == 10 and prevRoom ~= 10 then
@@ -1549,21 +1627,22 @@ function UpdateInventory(HUDNow)
 		local itemCount = ReadByte(gummiInventory+(i-1))
 		if itemCount > gummiUpdater[i] then
 			if ReadByte(closeMenu) == 0 and ReadByte(world)==3 then
-				local magicUp = -1
+				local report = -1
 				if i==2 then
-					magicUp = 4
+					report = 0x95
 				elseif i==7 then
-					magicUp = 6
+					report = 0x96
 				elseif i==60 then
-					magicUp = 5
+					report = 0x97
 				end
-				if magicUp > 0 then
-					WriteByte(magicFlags+magicUp, math.min(ReadByte(magicFlags+magicUp)+1, 3))
-					textFind = "Obtained " .. gummiNames[i]
-					textReplace = "Power of " .. magicTexts[perMagicShuffle[magicUp+1]] .. "         "
+				if report > 0 then
+					WriteByte(inventory+(report-1), 1)
+					inventoryUpdater[report] = 1
+					textFind = "Obtained"
+					textReplace = "Obtained " .. itemNames[report][1]
 					print(string.format("Replacing %s with %s", textFind, textReplace))
 				end
-				magicUp = -1
+				report = -1
 			end
 			gummiUpdater[i] = itemCount
 		end
@@ -1573,29 +1652,10 @@ function UpdateInventory(HUDNow)
 	WriteByte(inventory+0xC8, 0)
 	WriteByte(inventory+0xCA, 0)
 	WriteByte(inventory+0xCB, 0)
-	
-	-- if ReadByte(inventory+0xCD-1) > 0 and ReadByte(closeMenu) == 0 then
-		-- if ReadByte(inventory+0xCB-1) > 0 then
-			-- WriteByte(gummiInventory+0x70, 1)
-			-- WriteByte(inventory+0xCB-1, 0)
-		-- end
-		-- if ReadByte(inventory+0xCC-1) > 0 then
-			-- WriteByte(gummiInventory+0x71, 1)
-			-- WriteByte(inventory+0xCC-1, 0)
-		-- end
-	-- elseif ReadByte(gummiInventory+0x70) > 0 then
-		-- WriteByte(gummiInventory+0x70, 0)
-		-- WriteByte(inventory+0xCB-1, 1)
-		-- inventoryUpdater[0xCB] = 1
-	-- elseif ReadByte(gummiInventory+0x71) > 0 then
-		-- WriteByte(gummiInventory+0x71, 0)
-		-- WriteByte(inventory+0xCC-1, 1)
-		-- inventoryUpdater[0xCC] = 1
-	-- end
 end
 
 function StringToKHText(s, mempos)
-	reftable = {[58]=0x6B, [39]=0x71, [45]=0x6E, [46]=0x68, [10]=2}
+	reftable = {[58]=0x6B, [38]=0x61, [40]=0x74, [41]=0x75, [39]=0x71, [45]=0x6E, [46]=0x68, [10]=2, [12]=0xF, [58]=0x6B}
 	for i=1,#s do
 		local c = string.byte(s, i)
 		if c >= 97 then
@@ -1604,8 +1664,6 @@ function StringToKHText(s, mempos)
 			c = c - 65 + 0x2B
 		elseif c >= 48 and c <=57 then
 			c = c - 48 + 0x21
-		elseif c == 58 then
-			c = 0x6B
 		elseif reftable[c] then
 			c = reftable[c]
 		else
@@ -1613,6 +1671,10 @@ function StringToKHText(s, mempos)
 		end
 		WriteByte(mempos, c)
 		mempos = mempos + 1
+		if c==0xF then
+			WriteByte(mempos, 1)
+			mempos = mempos + 1
+		end
 	end
 	WriteByte(mempos, 0)
 	return mempos+1
@@ -1620,11 +1682,16 @@ end
 
 function GenerateSpoilers()
 	local spoilers = {}
+	local miscSpoilers = {}
 	for i=1, 0xFF do
 		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" and i~=0xD5 and i~=0xD6 then
 			spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
+		elseif itemids[i] == 0xB2 or itemids[i] == 0xB7 or itemids[i] == 0xD4 or itemids[i] == 0xD7 or itemids[i] == 0xD8 then
+			miscSpoilers[(#miscSpoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
 		end
 	end
+	
+	abilityNames[0x16] = "Dodge Roll"
 	
 	for c=1, 0x1FF do
 		if chests[c] then
@@ -1635,7 +1702,8 @@ function GenerateSpoilers()
 			elseif chests[c]%0x10==0xE and rewards[(chests[c]//0x10)+1] then
 				if rewards[(chests[c]//0x10)+1]%0x100 == 0xF0 then
 					it = itemids[rewards[(chests[c]//0x10)+1] // 0x100]
-				elseif rewards[(chests[c]//0x10)+1]%0x100 == 0xB1 then
+				elseif rewards[(chests[c]//0x10)+1]%0x100 == 0xB1
+				or rewards[(chests[c]//0x10)+1]//0x100 == 0x16 then
 					ab = rewards[(chests[c]//0x10)+1] // 0x100
 				end
 			end
@@ -1648,6 +1716,10 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Chest at\n%s\nhas %s\n\n", 
 					chestDetails[c][2], itemNames[it][1])
+			elseif itype == "Summon" or it == 0xD3 or it==0x89 or it==0x8C then
+				miscSpoilers[(#miscSpoilers)+1] = string.format(
+					"Chest at\n%s\nhas %s\n\n", 
+					chestDetails[c][2], itemNames[it][1])
 			end
 		end
 	end
@@ -1657,13 +1729,17 @@ function GenerateSpoilers()
 			local it = rewards[r] % 0x100 == 0xF0 and itemids[rewards[r]//0x100] or 1
 			local itype = ItemType(it)
 			local ab = 0
-			if rewards[r] % 0x100 == 0xB1 and rewardDetails[r][2]~="Chest" then
+			if (rewards[r] % 0x100 == 0xB1 or rewards[r]//0x100) == 0x16 and rewardDetails[r][2]~="Chest" then
 				ab = rewards[r]//0x100
 				spoilers[(#spoilers)+1] = string.format(
 					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], abilityNames[ab])
 			elseif itype == "Important" and rewardDetails[r][2]~="Chest" then
 				spoilers[(#spoilers)+1] = string.format(
+					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+					rewardDetails[r][2], itemNames[it][1])
+			elseif (itype == "Summon" or it == 0xD3 or it==0x89 or it==0x8C) and rewardDetails[r][2]~="Chest" then
+				miscSpoilers[(#miscSpoilers)+1] = string.format(
 					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
 			end
@@ -1674,9 +1750,12 @@ function GenerateSpoilers()
 	for i=1, #spoilers do
 		f:write(spoilers[i] .. "\n")
 	end
+	for i=1, #miscSpoilers do
+		f:write(miscSpoilers[i] .. "\n")
+	end
 	f:close()
 	
-	return spoilers
+	return {spoilers, miscSpoilers}
 end
 
 function UpdateReports(HUDNow)
@@ -1708,15 +1787,25 @@ function UpdateReports(HUDNow)
 			end
 		end
 		WriteShort(reports, reportStatus)
-		if ReadByte(report1) == 0x37 then
+		if ReadByte(report1+2) == 0x37 then
 			local mempos = report1
-			local spoilers = GenerateSpoilers()
+			local spoilersT = GenerateSpoilers()
+			local spoilers = spoilersT[1]
+			local miscSpoilers = spoilersT[2]
 			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
 				local hintText = ""
-				for j=1, (#spoilers > 14-i) and 2 or 1 do
+				local hintRatio = math.floor(#spoilers / (14-i) + 0.99)
+				local mhintRatio = math.floor(#miscSpoilers / (14-i) + 0.99)
+				for j=1, hintRatio do
 					if #spoilers > 0 then
 						hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
+					end
+				end
+				hintText = hintText .. "\f"
+				for j=1, mhintRatio do
+					if #miscSpoilers > 0 then
+						hintText = hintText .. table.remove(miscSpoilers, math.random(#miscSpoilers))
 					end
 				end
 				mempos = StringToKHText(hintText, mempos)
@@ -1959,13 +2048,15 @@ function FlagFixes()
 		WriteByte(oppositeTrigger, 0)
 	end
 	
+	local simbaAddr = ReadLong(scriptPointer) + 0x131C8
+	
 	if ReadByte(world) == 3 and ReadByte(room) == 0x13 then
-		local simbaAddr = ReadLong(scriptPointer) + 0x131C8
 		if ReadByteA(simbaAddr)==5 then
-			local naturesparkAddr = simbaAddr - 0x423B
 			local hasSummons = {}
-			for i=0,6 do
+			local hasAll = true
+			for i=0,5 do
 				hasSummons[ReadByte(summons+i)] = true
+				hasAll = hasAll and ReadByte(summons+i) < 0xFF
 			end
 			
 			WriteByte(summonsReturned, hasSummons[1] and 1 or 0)
@@ -1974,16 +2065,42 @@ function FlagFixes()
 			WriteByte(summonsReturned-1, hasSummons[5] and 1 or 0)
 			
 			local c = ReadByte(inventory+0xD0) > 0
-			-- if hasSummons[5] then
-				-- WriteByte(inventory+0xD0, 0)
-			-- end
+			local genie = ReadByte(inventory+0x88) > 0
+			local tbell = ReadByte(inventory+0x8B) > 0
+
+			-- Nullify normal simba acqusition
 			WriteIntA(simbaAddr+4, c and 0x18000238 or 0x18000004)
 			WriteIntA(simbaAddr+12, c and 0x18000233 or 0x18000004)
-			WriteByteA(naturesparkAddr, c and 0xD1 or 0xCF)
+			
+			WriteByteA(simbaAddr-0x423B, c and 0xD1 or 0xCF)
 			WriteByteA(simbaAddr+0x16FB, c and 0xD1 or 0xCF)
 			WriteByteA(simbaAddr+0x164B, c and 5 or 1)
 			WriteByteA(simbaAddr+0x164B+8, c and 5 or 1)
+			
+			-- WriteByteA(simbaAddr-0x423B+0xC, genie and 0x89 or 0xCE)
+			-- WriteByteA(simbaAddr+0x16FB-0x12C, genie and 0x89 or 0xCE)
+			-- WriteByteA(simbaAddr+0x151F, genie and 2 or 0)
+			-- WriteByteA(simbaAddr+0x151F+8, genie and 2 or 0)
+			
+			-- WriteByteA(simbaAddr-0x423B+0x18, tbell and 0x8C or 0xD0)
+			-- WriteByteA(simbaAddr+0x16FB+0x12C, tbell and 0x8C or 0xD0)
+			-- WriteByteA(simbaAddr+0x1777, tbell and 3 or 4)
+			-- WriteByteA(simbaAddr+0x1777+8, tbell and 3 or 4)
 		end
+	end
+	
+	if ReadByte(world) == 8 and ReadIntA(simbaAddr-0x103fb) == 0x18000238 then
+		for i=0, 40 do
+			WriteIntA(simbaAddr-0x103fb+i*4-0x20, 0x00000009)
+		end
+		print("Removed normal genie")
+	end
+	
+	if ReadByte(world) == 0xD and ReadIntA(simbaAddr-0xd653) == 0x18000238 then
+		for i=0, 40 do
+			WriteIntA(simbaAddr-0xd653+i*4-0x20, 0x00000009)
+		end
+		print("Removed normal tinker bell")
 	end
 
 	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
@@ -2097,8 +2214,8 @@ function FlagFixes()
 		end
 	end
 	for i=0,6 do
-		local baseCount = i <= 3 and 6 or 4
-		WriteInt(shopTableBase+(i*0xD4)-4, baseCount+(math.min(clearedWorlds, 6)*2))
+		local baseCount = i <= 3 and 4 or 2
+		WriteInt(shopTableBase+(i*0xD4)-4, baseCount+(clearedWorlds*2))
 	end
 	
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
