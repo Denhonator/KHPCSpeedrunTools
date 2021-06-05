@@ -1547,7 +1547,7 @@ function UpdateInventory(HUDNow)
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
 				print(string.format("%d %s", dif, itemNames[i][1]))
-				if dif > 0 and ReadByte(closeMenu) == 0 then
+				if dif > 0 and ReadInt(closeMenu) == 0 then
 					local curid = itemids[i]
 					idFind = i
 					idReplace = curid
@@ -1626,7 +1626,7 @@ function UpdateInventory(HUDNow)
 	for i=1,0x40 do
 		local itemCount = ReadByte(gummiInventory+(i-1))
 		if itemCount > gummiUpdater[i] then
-			if ReadByte(closeMenu) == 0 and ReadByte(world)==3 then
+			if ReadInt(closeMenu) == 0 and ReadByte(world)==3 then
 				local report = -1
 				if i==2 then
 					report = 0x95
@@ -1652,6 +1652,7 @@ function UpdateInventory(HUDNow)
 	WriteByte(inventory+0xC8, 0)
 	WriteByte(inventory+0xCA, 0)
 	WriteByte(inventory+0xCB, 0)
+	WriteByte(inventory+0xE3, math.min(1, ReadByte(inventory+0xE3)))
 end
 
 function StringToKHText(s, mempos)
