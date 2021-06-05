@@ -171,7 +171,7 @@ local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE4}
+local important = {0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -1713,7 +1713,7 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Chest at\n%s\nhas %s\n\n", 
 					chestDetails[c][2], abilityNames[ab])
-			elseif itype == "Important" then
+			elseif itype == "Important" or it == 0xE4 then
 				spoilers[(#spoilers)+1] = string.format(
 					"Chest at\n%s\nhas %s\n\n", 
 					chestDetails[c][2], itemNames[it][1])
@@ -1735,7 +1735,7 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], abilityNames[ab])
-			elseif itype == "Important" and rewardDetails[r][2]~="Chest" then
+			elseif (itype == "Important" or it == 0xE4) and rewardDetails[r][2]~="Chest" then
 				spoilers[(#spoilers)+1] = string.format(
 					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
