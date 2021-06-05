@@ -82,6 +82,8 @@ local minigameTimer = 0x232A684 - offset
 local collectedFruits = minigameTimer + 4
 local unequipBlacklist = 0x541FA0 - offset
 local tutorialFlag = 0x2DE7394 - offset
+local oppositeState = 0x2DE7688 - offset
+local oppositeTrigger = 0x2DE66ED - offset
 
 local chronicles = 0x2DE7367 - offset
 local journalCharacters = 0x2DE70B3 - offset
@@ -1952,6 +1954,10 @@ function FlagFixes()
 	end
 
 	prevTTFlag = ReadByte(cutsceneFlags+0xB04)
+	
+	if ReadByte(oppositeState) >= 5 then
+		WriteByte(oppositeTrigger, 0)
+	end
 	
 	if ReadByte(world) == 3 and ReadByte(room) == 0x13 then
 		local simbaAddr = ReadLong(scriptPointer) + 0x131C8
