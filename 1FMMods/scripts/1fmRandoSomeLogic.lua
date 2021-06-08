@@ -2333,7 +2333,7 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(cutsceneFlags+0xB00) >= 0xDC then
+	if ReadByte(cutsceneFlags+0xB00) == 0xDC then
 		WriteByte(gummiFlagBase+11, 3)
 	end
 
