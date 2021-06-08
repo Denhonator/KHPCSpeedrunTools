@@ -23,7 +23,7 @@
 16  Pumpkinhead ; Halloween Town ; Jack-In-The-Box
 17  Crabclaw ; Atlantica ; Mermaid Kick
 18  Divine Rose ; Belle in HB2 ; HB1 ; HB2
-19  Lionheart ; Leon & Cloud Hades Cup
+19  Lionheart ; Leon & Cloud Hades Cup ; HB1
 1A  Metal Chocobo ; Cloud Hercules Cup
 1B  Oathkeeper ; Kairi TT4 ; HB1
 1C  Genji Shield ; Yuffie Hades Cup
@@ -95,11 +95,11 @@
 5E  Combo Plus ; Phil Cup Solo
 5F  Orichalcum ; Pegasus Cup Solo
 60  Critical Plus ; Hercules Cup Solo
-61  Save the Queen ; Hades Cup Solo
+61  Save the Queen ; Hades Cup Solo ; HB1
 62  Tech Boost ; Phil Cup Time Trial
 63  Dark Matter ; Pegasus Cup Time Trial
 64  Gravity Break ; Hercules Cup Time Trial
-65  Save the King ; Hades Cup Time Trial
+65  Save the King ; Hades Cup Time Trial ; HB1
 66  Protect Chain ; Chest
 67  Cottage ; Postcard 1
 68  Mythril Shard ; Postcard 2
