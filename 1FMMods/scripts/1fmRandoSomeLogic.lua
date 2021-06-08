@@ -756,8 +756,8 @@ function Randomize()
 					else
 						rewards[i] = rewards[i] + 1
 					end
-				elseif #addItems > 5 then
-					rewards[i] = table.remove(addItems, math.random(#addItems)) * 0x100 + 0xF0
+				-- elseif #addItems > 5 then
+					-- rewards[i] = table.remove(addItems, math.random(#addItems)) * 0x100 + 0xF0
 				end
 			end
 		end
@@ -784,7 +784,6 @@ function Randomize()
 					print("Added missable reward to chest")
 				elseif #addItems > 0 then
 					chests[i] = table.remove(addItems, 1) * 0x10
-					print("Added additional items to chest")
 				else
 					chests[i] = chests[i] + 4
 				end
