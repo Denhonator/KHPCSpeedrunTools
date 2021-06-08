@@ -19,9 +19,10 @@ function _OnFrame()
 	
 	local cutsceneNow = ReadInt(0x233AE74-0x3A0606)
 	local skippableStatus = ReadByte(0x23944E4-0x3A0606)
+	local summoning = ReadInt(0x2D5D62C-offset)
 	local HUD = ReadFloat(0x280EB1C-0x3A0606)
 	local blackFade = ReadByte(0x4D93B8-0x3A0606)
-	if cutsceneNow > 0 and (ReadByte(world) == 4 or ReadByte(world) >= 0xF) then
+	if cutsceneNow > 0 and (ReadByte(world) == 4 or ReadByte(world) >= 0xF) and summoning == 0 then
 		WriteByte(0x23944E4-0x3A0606, 1) --make skippable
 	end
 	
