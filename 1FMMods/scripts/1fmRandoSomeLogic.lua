@@ -2332,9 +2332,13 @@ function FlagFixes()
 			WriteByte(libraryFlag, 2)
 		end
 	end
+	
+	if ReadByte(cutsceneFlags+0xB00) >= 0xDC then
+		WriteByte(gummiFlagBase+11, 3)
+	end
 
 	WriteInt(worldMapLines, 0xFFFFFFFF)
-	WriteByte(worldMapLines+4, ReadByte(cutsceneFlags+0xB00) >= 0xDC and 0xFF or 0)
+	WriteByte(worldMapLines+4, ReadByte(gummiFlagBase+11) >= 3 and 0xFF or 0)
 	
 	if ReadByte(gummiFlagBase+9)==0 then
 		OpenGummi()
@@ -2360,7 +2364,9 @@ end
 
 function OpenGummi()
 	for i=0,14 do
-		WriteByte(gummiFlagBase+i, 3)
+		if i~=11 then
+			WriteByte(gummiFlagBase+i, 3)
+		end
 	end
 end
 
