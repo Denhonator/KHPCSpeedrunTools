@@ -32,7 +32,7 @@
 1F  Raven's Claw ; Anti-Sora ; Green Trinity
 20  Strike Raid ; Pegasus Cup
 21  Ragnarok ; Riku 2 ; HB1
-22  Trinity Limit ; Hades Cup
+22  Trinity Limit ; Hades Cup ; HB1
 23  Ars Arcanum ; Capt. Hook ; Green Trinity
 24  Cheer (Donald) ; Maleficent ; HB1
 25  Cheer (Goofy); Parasite Cage; High Jump OR Glide
