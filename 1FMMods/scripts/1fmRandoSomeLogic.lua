@@ -338,7 +338,7 @@ function ItemType(i)
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
-	if (i >= 0xD4 and i<= 0xDE) or (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8
+	if (i >= 0xD9 and i<= 0xDE) or (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8
 	or i==0xAA or i==0xAE or i==0xB0 or i==0xB2 or i==0xB7 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
@@ -1536,8 +1536,6 @@ function UpdateInventory(HUDNow)
 			print("Late item rando to prevent softlock")
 		end
 	end
-	
-	local pages = 0
 
 	for i=0x1,0xFF do
 		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and
@@ -1584,9 +1582,6 @@ function UpdateInventory(HUDNow)
 			WriteByte(inventory+(i-1), 1)
 			print("Removed duplicate summon gem")
 		end
-		if i >= 0xD4 and i <= 0xD8 and ReadByte(inventory+(i-1)) > 0 then
-			pages = pages+1
-		end
 
 		if (i == 0x89 or i == 0x8C) then
 			if ReadByte(inventory+(i-1)) > 1 and inventoryUpdater[i] < 2 then
@@ -1604,21 +1599,6 @@ function UpdateInventory(HUDNow)
 				end
 			end
 			inventoryUpdater[i] = ReadByte(inventory+(i-1))
-		end
-	end
-	
-	if ReadByte(world) == 6 and ReadByte(room) == 10 and prevRoom ~= 10 then
-		local poohGames = ReadByte(minigameStatus+2)
-		local gamesUnlocked = 0
-		for i=1, 5 do
-			if (poohGames // 2^i) % 2 == 1 then
-				gamesUnlocked = gamesUnlocked + 1
-			end
-		end
-		if prevWorld == 3 then
-			WriteByte(tornPageCount, pages > 0 and 5 or gamesUnlocked)
-		else
-			WriteByte(tornPageCount, pages > 1 and 5 or gamesUnlocked)
 		end
 	end
 
@@ -1684,9 +1664,9 @@ function GenerateSpoilers()
 	local spoilers = {}
 	local miscSpoilers = {}
 	for i=1, 0xFF do
-		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" and i~=0xD5 and i~=0xD6 then
+		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" then
 			spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
-		elseif itemids[i] == 0xB2 or itemids[i] == 0xB7 or itemids[i] == 0xD4 or itemids[i] == 0xD7 or itemids[i] == 0xD8 then
+		elseif itemids[i] == 0xB2 or itemids[i] == 0xB7 then
 			miscSpoilers[(#miscSpoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
 		end
 	end
@@ -1716,7 +1696,7 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Chest at\n%s\nhas %s\n\n", 
 					chestDetails[c][2], itemNames[it][1])
-			elseif itype == "Summon" or it == 0xD3 or it==0x89 or it==0x8C then
+			elseif itype == "Summon" or it == 0xD3 or it == 0xD5 or it==0xD6 or it==0x89 or it==0x8C then
 				miscSpoilers[(#miscSpoilers)+1] = string.format(
 					"Chest at\n%s\nhas %s\n\n", 
 					chestDetails[c][2], itemNames[it][1])
