@@ -559,7 +559,7 @@ function GetAvailability()
 	
 	for i=0x95, 0xE6 do
 		if itemNames[i] then
-			if not itemNames[i][3] or IsAccessible(itemNames, i) then
+			if itemNames[i][3] and IsAccessible(itemNames, i) then
 				itAv[itemids[i]] = itAv[itemids[i]] + 1
 			end
 		end
