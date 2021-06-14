@@ -38,7 +38,7 @@ local canExecute = false
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		print("KH1 detected, running script")
+		ConsolePrint("KH1 detected, running script")
 		canExecute = true
 		for off=0,0x1FF do
 			local anim = ReadArray(anims+(off*20), 20)
@@ -75,7 +75,7 @@ function _OnInit()
 		
 		lastBlack = ReadByte(blackfade)
 	else
-		print("KH1 not detected, not running script")
+		ConsolePrint("KH1 not detected, not running script")
 	end
 end
 
@@ -88,13 +88,13 @@ function SetSeed()
 			seed = Djb2(text)
 		end
 		baseSeed = seed
-		print("Found existing seed")
+		ConsolePrint("Found existing seed")
 	else
 		seedfile = io.open("seed.txt", "w")
 		local newseed = os.time()
 		baseSeed = newseed
 		seedfile:write(newseed)
-		print("Wrote new seed")
+		ConsolePrint("Wrote new seed")
 	end
 	seedfile:close()
 end
@@ -247,13 +247,13 @@ function _OnFrame()
 			if nowRoom ~= lastRoom then
 				Randomize()
 				lastRoom = nowRoom
-				print("Chaos! Randomized animations among other things")
+				ConsolePrint("Chaos! Randomized animations among other things")
 			end
 		end
 		
 		-- if ReadByte(blackfade) < 128 and lastBlack == 128 then
 			-- Revert()
-			-- print("Reverted chaos to avoid crashes")
+			-- ConsolePrint("Reverted chaos to avoid crashes")
 		-- end
 		
 		lastBlack = ReadByte(blackfade)

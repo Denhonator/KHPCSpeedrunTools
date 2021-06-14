@@ -251,15 +251,15 @@ end
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
-		print("KH1 detected, running script")
+		ConsolePrint("KH1 detected, running script")
 	else
-		print("KH1 not detected, not running script")
+		ConsolePrint("KH1 not detected, not running script")
 	end
 
 	if canExecute then
 		local f2 = io.open("randofiles/gummis.txt")
 		if not f2 then
-			print("gummis.txt missing!")
+			ConsolePrint("gummis.txt missing!")
 		else
 			for i=1,0x40 do
 				gummiNames[i] = f2:read("*l")
@@ -268,7 +268,7 @@ function _OnInit()
 			chestDetails = LoadRewards("randofiles/Chests.txt", 1)
 			rewardDetails = LoadRewards("randofiles/Rewards.txt", 1)
 			itemNames = LoadRewards("randofiles/items.txt", 0)
-			print(rewardDetails[1][1])
+			ConsolePrint(rewardDetails[1][1])
 		end
 		for i=1,0xFF do
 			itemids[i] = i
@@ -291,7 +291,7 @@ function _OnInit()
 			text = seedfile:read()
 			seedstring = text
 			if text == "Disabled" then
-				print("Disabling rando because of seed Disabled")
+				ConsolePrint("Disabling rando because of seed Disabled")
 				randomized = true
 			end
 			seed = tonumber(text)
@@ -299,19 +299,19 @@ function _OnInit()
 				seed = Djb2(text)
 			end
 			math.randomseed(seed)
-			print("Found existing seed")
+			ConsolePrint("Found existing seed")
 		else
 			seedfile = io.open("randofiles/seed.txt", "w")
 			local newseed = os.time()
 			math.randomseed(newseed)
 			seedstring = string.format("%d", newseed)
 			seedfile:write(newseed)
-			print("Wrote new seed")
+			ConsolePrint("Wrote new seed")
 		end
 		seedfile:close()
 		
 		initDone = true
-		print("Init done.	")
+		ConsolePrint("Init done.	")
 	end
 end
 
@@ -716,7 +716,7 @@ function Randomize()
 		end
 	end
 	
-	print(#randomGets)
+	ConsolePrint(#randomGets)
 
 	shopPool = {}
 	
@@ -763,7 +763,7 @@ function Randomize()
 		end
 	end
 
-	print("Randomized reward pool")
+	ConsolePrint("Randomized reward pool")
 	
 	order = GetRandomOrder(0x1FF)
 	
@@ -781,7 +781,7 @@ function Randomize()
 					chests[i] = table.remove(importantPool, math.random(#importantPool)) * 0x10
 				elseif #missableRewards > 0 then
 					chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
-					print("Added missable reward to chest")
+					ConsolePrint("Added missable reward to chest")
 				elseif #addItems > 0 then
 					chests[i] = table.remove(addItems, 1) * 0x10
 				else
@@ -802,7 +802,7 @@ function Randomize()
 			end
 		end
 	end
-	print("Randomized chests")
+	ConsolePrint("Randomized chests")
 	
 	local order = GetRandomOrder(0xA9)
 	for j=1, 0x49 do
@@ -847,7 +847,7 @@ function Randomize()
 			rewards[i] = ((ab-0x80) * 0x100) + 0x21
 		end
 	end
-	print("Mixed level up abilities with reward abilities")
+	ConsolePrint("Mixed level up abilities with reward abilities")
 	
 	for i=1, 99 do
 		local r = math.random(99)
@@ -929,7 +929,7 @@ function Randomize()
 			donaldAbilities[r] = orig
 		end
 	end
-	print("Randomized level ups")
+	ConsolePrint("Randomized level ups")
 	
 	local magicPool = {1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7}
 	local magicPool2 = {1,2,3,4,5,6,7}
@@ -939,19 +939,19 @@ function Randomize()
 			perMagicShuffle[i] = table.remove(magicPool2, math.random(#magicPool2))
 		end
 	end
-	print("Randomized magic")
+	ConsolePrint("Randomized magic")
 
 	local trinityPool = {1,2,3,4,5}
 	for i=1,5 do
 		trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 	end
-	print("Randomized trinities")
+	ConsolePrint("Randomized trinities")
 	
 	for i=1,5 do
-		print(string.format("trinity %x became %x", i, trinityTable[i]))
+		ConsolePrint(string.format("trinity %x became %x", i, trinityTable[i]))
 	end
 	for i=1, 0xFF do
-		print(string.format("%x became %x", i, itemids[i]))
+		ConsolePrint(string.format("%x became %x", i, itemids[i]))
 	end
 	
 	for i=0x51,0x85 do
@@ -971,7 +971,7 @@ function Randomize()
 			end
 		end
 	end
-	print("Randomized equipment")
+	ConsolePrint("Randomized equipment")
 	
 	local shopMap = {}
 	for i=0,7 do
@@ -989,7 +989,7 @@ function Randomize()
 			shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
 		end
 	end
-	print("Randomized shops")
+	ConsolePrint("Randomized shops")
 	
 	synthCommon = {0x9C, 0xFE, 0xFF}
 	synthUnique = {}
@@ -1013,7 +1013,7 @@ function Randomize()
 		end
 		shopItemID = ReadByte(synthItems+(shopItem*10))
 	end
-	print("Randomized synth")
+	ConsolePrint("Randomized synth")
 
 	successfulRando = true
 	::loaded::
@@ -1033,29 +1033,29 @@ function ValidSeed()
 		GetAvailability()
 		local HBWin = ItemAccessible(0xCD, 1)
 		for i=0xBC, 0xBF do
-			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			ConsolePrint(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			HBWin = HBWin and ItemAccessible(i, 1)
 		end
 		
 		local DIWin = true
 		for i=0xC0, 0xC7 do
-			print(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			ConsolePrint(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			DIWin = DIWin and ItemAccessible(i, 1)
 		end
 		
 		local misc = dalmatiansAvailable == 99 and ItemAccessible(0xE4, 1) and ItemAccessible(0xD3, 3)
 		
-		print(string.format("Complexity %d", j))
+		ConsolePrint(string.format("Complexity %d", j))
 		if HBWin then
-			print("HBWin")
+			ConsolePrint("HBWin")
 		end
 		if DIWin then
-			print("DI Win")
+			ConsolePrint("DI Win")
 		end
 		if misc then
-			print("All checks possible")
+			ConsolePrint("All checks possible")
 		else
-			print(string.format("Dalm: %d Jack: %s Postcards: %s", 
+			ConsolePrint(string.format("Dalm: %d Jack: %s Postcards: %s", 
 			dalmatiansAvailable, tostring(ItemAccessible(0xE4, 1)), tostring(ItemAccessible(0xD3, 3))))
 		end
 		if HBWin and DIWin and misc then
@@ -1066,11 +1066,11 @@ function ValidSeed()
 	
 	for i,v in pairs(checksDebug) do
 		if not checksDebug2[i] then
-			print(i)
+			ConsolePrint(i)
 		end
 	end
 	
-	print("Unwinnable, rerolling")
+	ConsolePrint("Unwinnable, rerolling")
 	return false
 end
 
@@ -1189,7 +1189,7 @@ function SaveRando()
 		randosave:write("\n")
 	end
 	randosave:close()
-	print("Saved rando")
+	ConsolePrint("Saved rando")
 end
 
 function LoadRando()
@@ -1296,7 +1296,7 @@ function LoadRando()
 		end
 	end
 	randosave:close()
-	print("Loaded saved rando")
+	ConsolePrint("Loaded saved rando")
 	isValidSeed = true
 	return true
 end
@@ -1307,14 +1307,14 @@ function ApplyRandomization()
 			WriteShort(rewardTable+((i-1)*2), rewards[i])
 		end
 	end
-	print("Reward randomization applied")
+	ConsolePrint("Reward randomization applied")
 	
 	for i=1, 0x1FF do
 		if chests[i] then
 			WriteShort(chestTable+((i-1)*2), chests[i])
 		end
 	end
-	print("Chest randomization applied")
+	ConsolePrint("Chest randomization applied")
 	
 	for i=1, 0xFF do
 		WriteArray(itemTable+((i-1)*20), itemData[i])
@@ -1322,7 +1322,7 @@ function ApplyRandomization()
 			-- WriteByte(itemTable+((i-1)*20)+j, itemData[i][j+1])
 		-- end
 	end
-	print("Applied item manipulation")
+	ConsolePrint("Applied item manipulation")
 
 	for i=0,7 do
 		local shopItem = 0
@@ -1333,7 +1333,7 @@ function ApplyRandomization()
 			shopItem = shopItem + 1
 		end
 	end
-	print("Shop randomization applied")
+	ConsolePrint("Shop randomization applied")
 	
 	local reqOff = 0
 	for i=0, (#synths)-1 do
@@ -1357,7 +1357,7 @@ function ApplyRandomization()
 		WriteByte(donaldStatTable+(i-1), donaldLevels[i])
 		WriteByte(donaldAbilityTable+(i-1), donaldAbilities[i])
 	end
-	print("Level randomization applied")
+	ConsolePrint("Level randomization applied")
 	
 	for i=0x51, 0x85 do
 		if weaponStr[i] then
@@ -1367,25 +1367,25 @@ function ApplyRandomization()
 			WriteArray(itemTable+((i-1)*20), itemData[itemids[i]])
 		end
 	end
-	print("Weapon randomization applied")
+	ConsolePrint("Weapon randomization applied")
 	
 	for i=0x11, 0x47 do
 		if i~=itemids[i] and string.find(ItemType(i), "Accessory") then
 			WriteArray(itemTable+((i-1)*20), itemData[itemids[i]])
 		end
 	end
-	print("Accessory randomization applied")
+	ConsolePrint("Accessory randomization applied")
 	
 	GenerateSpoilers()
 	
-	print(string.rep("\nHiding spoilers\n", 30))
+	ConsolePrint(string.rep("\nHiding spoilers\n", 30))
 	for i=0x51, 0x60 do
-		print(string.format("%x became %x", i, itemids[i]))
+		ConsolePrint(string.format("%x became %x", i, itemids[i]))
 	end
-	print("You can verify you have the same seed by referring to above")
+	ConsolePrint("You can verify you have the same seed by referring to above")
 	
 	randomized = true
-	print("Applied randomization")
+	ConsolePrint("Applied randomization")
 	successfulRando = true
 end
 
@@ -1443,7 +1443,7 @@ function StringToMem(off, text, l, base)
 			size = #textReplace+1
 			garbageCount = 0
 		end
-		print(garbageCount)
+		ConsolePrint(garbageCount)
 		WriteShortA(base+2, size+garbageCount-1)
 	end
 end
@@ -1468,7 +1468,7 @@ function MemStringSearch(c, re)
 					textMatch = textMatch + 1
 					if textMatch >= 4 then
 						local start = address+((i-textMatch+2)*20)
-						print(string.format("match at %x", ppos))
+						ConsolePrint(string.format("match at %x", ppos))
 						StringToMem(start, textReplace, #textFind, address)
 						textMatch = 1
 						success = true
@@ -1492,7 +1492,7 @@ function ReplaceTexts()
 		WriteByte(itemDropID, idReplace)
 		idFind = 0
 		textFind = ""
-		print("Replaced item drop")
+		ConsolePrint("Replaced item drop")
 	end
 	
 	if textFind ~= "" and (infoBoxWas==0) then
@@ -1533,7 +1533,7 @@ function UpdateInventory(HUDNow)
 			local itemCount = ReadByte(inventory+(bufferRemove-1))
 			WriteByte(inventory+(bufferRemove-1), itemCount-1)
 			bufferRemove = 0
-			print("Late item rando to prevent softlock")
+			ConsolePrint("Late item rando to prevent softlock")
 		end
 	end
 
@@ -1543,13 +1543,13 @@ function UpdateInventory(HUDNow)
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
-				print(string.format("%d %s", dif, itemNames[i][1]))
+				ConsolePrint(string.format("%d %s", dif, itemNames[i][1]))
 				if dif > 0 and ReadInt(closeMenu) == 0 then
 					local curid = itemids[i]
 					idFind = i
 					idReplace = curid
-					print(string.format("Replacing %x with %x", i, curid))
-					-- print(string.format("Replacing %s with %s", textFind, textReplace))
+					ConsolePrint(string.format("Replacing %x with %x", i, curid))
+					-- ConsolePrint(string.format("Replacing %s with %s", textFind, textReplace))
 
 					local otherCount = ReadByte(inventory+(curid-1))
 					if (i==0xE0) then
@@ -1575,25 +1575,25 @@ function UpdateInventory(HUDNow)
 				WriteByte(inventory+(i-1), 0)
 				inventoryUpdater[i] = 0
 				inventoryUpdater[itemids[i]] = itemCount
-				print(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]][1]))
+				ConsolePrint(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]][1]))
 			end
 		end
 		if i >= 0xCE and i <= 0xD1 and ReadByte(inventory+(i-1)) > 1 then
 			WriteByte(inventory+(i-1), 1)
-			print("Removed duplicate summon gem")
+			ConsolePrint("Removed duplicate summon gem")
 		end
 
 		if (i == 0x89 or i == 0x8C) then
 			if ReadByte(inventory+(i-1)) > 1 and inventoryUpdater[i] < 2 then
 				local hasSummons = {}
 				local giveSummon = (i == 0x89) and 2 or 3
-				print(giveSummon)
+				ConsolePrint(giveSummon)
 				for j=0,5 do
 					if ReadByte(summons+j) == 0xFF and not hasSummons[giveSummon] then
 						WriteByte(summons+j, giveSummon)
 						textFind = "Obtained"
 						textReplace = "Obtained " .. ((i == 0x89) and "Genie  " or "Tinker Bell")
-						print(textReplace)
+						ConsolePrint(textReplace)
 					end
 					hasSummons[ReadByte(summons+j)] = true
 				end
@@ -1619,7 +1619,7 @@ function UpdateInventory(HUDNow)
 					inventoryUpdater[report] = 1
 					textFind = "Obtained"
 					textReplace = "Obtained " .. itemNames[report][1]
-					print(string.format("Replacing %s with %s", textFind, textReplace))
+					ConsolePrint(string.format("Replacing %s with %s", textFind, textReplace))
 				end
 				report = -1
 			end
@@ -1753,7 +1753,7 @@ function UpdateReports(HUDNow)
 			end
 			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+addc)
 			inventoryUpdater[i] = ReadByte(inventory+(i-1))
-			print(string.format("Gave %x instead of report", i))
+			ConsolePrint(string.format("Gave %x instead of report", i))
 		end
 		WriteShort(reports, 0)
 	else
@@ -1790,7 +1790,7 @@ function UpdateReports(HUDNow)
 				end
 				mempos = StringToKHText(hintText, mempos)
 			end
-			print("Wrote hints")
+			ConsolePrint("Wrote hints")
 		end
 	end
 end
@@ -1812,7 +1812,7 @@ function ReplaceMagic(HUDNow)
 		if l > magicUpdater[i] then
 			magicUpdater[i] = l
 			if not string.find(textFind, "-G") then
-				print("Replacing magic text")
+				ConsolePrint("Replacing magic text")
 				textFind = magicTexts[i]
 				textReplace = magicTexts[r]
 				nextTextFind = magicTexts2[i]
@@ -1969,7 +1969,7 @@ function GetDodgeDataAddr()
 	while ReadIntA(animHalfPointers+ind) > 0 do
 		local dodgePointer = ReadLong(halfPointers+8) + ReadIntA(animHalfPointers+ind) % 0x1000000
 		if DodgeDataValid(dodgePointer) then
-			print(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByteA(dodgePointer+4)))
+			ConsolePrint(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByteA(dodgePointer+4)))
 			return dodgePointer
 		end
 		ind = ind+4
@@ -2007,7 +2007,7 @@ function FlagFixes()
 	end
 	
 	if ReadByte(cutsceneFlags+0xB04) ~= prevTTFlag then
-		print(string.format("%x, %x", prevTTFlag, ReadByte(cutsceneFlags+0xB04)))
+		ConsolePrint(string.format("%x, %x", prevTTFlag, ReadByte(cutsceneFlags+0xB04)))
 	end
 	-- Revert HB1 effect on TT story
 	if (ReadByte(cutsceneFlags+0xB04) == 0x6E and ReadByte(worldFlagBase+0x1C) ~= 5)
@@ -2019,7 +2019,7 @@ function FlagFixes()
 											and ReadByte(cutsceneFlags+0xB04) < 0x6E then
 		WriteByte(cutsceneFlags+0xB04, 0x6E)
 		WriteByte(cutsceneFlags+0xB00, math.max(0xBE, ReadByte(cutsceneFlags+0xB00)))
-		print("Post HB TT")
+		ConsolePrint("Post HB TT")
 	end
 
 	prevTTFlag = ReadByte(cutsceneFlags+0xB04)
@@ -2073,14 +2073,14 @@ function FlagFixes()
 		for i=0, 40 do
 			WriteIntA(simbaAddr-0x103fb+i*4-0x20, 0x00000009)
 		end
-		print("Removed normal genie")
+		ConsolePrint("Removed normal genie")
 	end
 	
 	if ReadByte(world) == 0xD and ReadIntA(simbaAddr-0xd653) == 0x18000238 then
 		for i=0, 40 do
 			WriteIntA(simbaAddr-0xd653+i*4-0x20, 0x00000009)
 		end
-		print("Removed normal tinker bell")
+		ConsolePrint("Removed normal tinker bell")
 	end
 
 	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
@@ -2201,7 +2201,7 @@ function FlagFixes()
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
 		local warpAddr = ReadLong(scriptPointer)+0x6F9D
 		if ReadByteA(warpAddr)==2 and ReadByteA(warpAddr+4)==1 then
-			print("DI to EotW warp")
+			ConsolePrint("DI to EotW warp")
 			WriteByteA(warpAddr,0x10)
 			WriteByteA(warpAddr+4,0x1E)
 			WriteByte(party1, 1)
@@ -2212,7 +2212,7 @@ function FlagFixes()
 	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
 		local warpAddr = ReadLong(scriptPointer)+0x677D
 		if ReadByteA(warpAddr)==0xF and ReadByteA(warpAddr+4)==0xB and ReadByte(blackfade)>0 then
-			print("Skipping HB cutscenes to avoid story flag conflicts")
+			ConsolePrint("Skipping HB cutscenes to avoid story flag conflicts")
 			WriteByte(cutsceneFlags+0xB0D, 0x6A)
 			WriteByteA(warpAddr,0xD)
 			WriteByteA(warpAddr+4,0x9)
@@ -2351,7 +2351,7 @@ end
 
 function InstantContinue()
 	if ReadByte(warpTrigger) == 0 then
-		print("Instant continue trigger")
+		ConsolePrint("Instant continue trigger")
 		WriteByte(warpType1, 5)
 		WriteByte(warpType2, 12)
 		WriteByte(warpTrigger, 2)
@@ -2386,10 +2386,10 @@ function _OnFrame()
 			randomized = true
 			ApplyRandomization()
 			if #itemNames==0 or #gummiNames==0 then
-				print("items.txt or gummis.txt missing! Get them from the Github")
+				ConsolePrint("items.txt or gummis.txt missing! Get them from the Github")
 			end
 		elseif not successfulRando then
-			print("Rando unsuccesful! Try restarting and rolling a new seed")
+			ConsolePrint("Rando unsuccesful! Try restarting and rolling a new seed")
 		end
 	elseif randomized then
 		local menuNow = ReadByte(menuCheck)
@@ -2432,7 +2432,7 @@ function _OnFrame()
 		WriteInt(0x233C458-offset, 128)
 		WriteInt(0x233C45C-offset, 128)
 		if removeBlackTimer > 300 then
-			print("Removed black screen")
+			ConsolePrint("Removed black screen")
 			removeBlackTimer = 0
 		end
 	end

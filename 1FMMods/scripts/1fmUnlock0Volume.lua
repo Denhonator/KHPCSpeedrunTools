@@ -10,17 +10,17 @@ local minSaveVolume = 0x14E50D - offset
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		print("KH1 detected, running script")
-		print("Requires LuaBackend 1.0 or higher")
+		ConsolePrint("KH1 detected, running script")
+		ConsolePrint("Requires LuaBackend 1.0 or higher")
 		if math.abs(ReadFloat(BGM) - 0.1) < 0.01 then
 			WriteFloat(BGM, 0)
-			print(string.format("Set BGM setting 1 to %.1f", ReadFloat(BGM)))
+			ConsolePrint(string.format("Set BGM setting 1 to %.1f", ReadFloat(BGM)))
 		elseif math.abs(ReadFloat(BGMJP) - 0.1) < 0.01 then
 			WriteFloat(BGMJP, 0)
-			print(string.format("Set BGM setting 1 to %.1f", ReadFloat(BGMJP)))
+			ConsolePrint(string.format("Set BGM setting 1 to %.1f", ReadFloat(BGMJP)))
 		end
 	else
-		print("KH1 not detected, not running script")
+		ConsolePrint("KH1 not detected, not running script")
 	end
 end
 

@@ -6,10 +6,10 @@ local canExecute = false
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		print("KH1 detected, running script")
+		ConsolePrint("KH1 detected, running script")
 		canExecute = true
 	else
-		print("KH1 not detected, not running script")
+		ConsolePrint("KH1 not detected, not running script")
 	end
 end
 

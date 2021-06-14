@@ -25,17 +25,17 @@ local canExecute = false
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		if ReadShort(deathCheck) == 0x2E74 then
-			print("Global version detected")
+			ConsolePrint("Global version detected")
 			canExecute = true
 		elseif ReadShort(deathCheck-0x1C0) == 0x2E74 then
 			deathCheck = deathCheck-0x1C0
 			safetyMeasure = safetyMeasure-0x1C0
 			extraSafety = false
-			print("JP detected")
+			ConsolePrint("JP detected")
 			canExecute = true
 		end
 	else
-		print("KH1 not detected, not running script")
+		ConsolePrint("KH1 not detected, not running script")
 	end
 
 	lastDeathPointer = ReadLong(deathPointer)
@@ -43,7 +43,7 @@ end
 
 function InstantContinue()
 	if ReadByte(warpTrigger) == 0 then
-		print("Instant continue trigger")
+		ConsolePrint("Instant continue trigger")
 		WriteByte(warpType1, 5)
 		WriteByte(warpType2, 12)
 		WriteByte(warpTrigger, 2)
@@ -116,7 +116,7 @@ function _OnFrame()
 	
 	local titletest = ReadInt(0x7A8EE8-offset)
 	if titletest == 0 and lasttitle ~= 0 then 
-		print("Remember to type 'reload' after restarting or going to title screen")
+		ConsolePrint("Remember to type 'reload' after restarting or going to title screen")
 	end
 	lasttitle = titletest
 	lastInput = input
