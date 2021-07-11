@@ -2412,7 +2412,7 @@ function _OnFrame()
 		menuWas = menuNow
 	end
 
-	if stackAbilities > 0 then
+	if stackAbilities > 0 and ReadLong(closeMenu) == 0x00 then
 		StackAbilities()
 	end
 	
