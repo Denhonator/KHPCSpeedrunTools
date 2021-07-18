@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmFasterAnims"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Speeds up animations during which you can't play"
+
 local summonSpeedup = true
 local speedMult = 2.0
 local offset = 0x3A0606

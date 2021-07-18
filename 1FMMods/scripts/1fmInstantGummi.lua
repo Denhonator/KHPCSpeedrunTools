@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmInstantGummi"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Instantly arrive at gummi destination"
+
 local offset = 0x3A0606
 local worldWarpBase = 0x50B940
 local cutsceneFlagBase = 0x2DE65D0-0x200 - offset

@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fm4By3"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Changes aspect ratio. Visit display settings to apply"
+
 local offset = 0x3A0606
 local height = 0x3B1534 - offset
 

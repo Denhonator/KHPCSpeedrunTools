@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmChaos"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Randomizes many things in a chaotic way"
+
 local offset = 0x3A0606
 local anims = 0x2D29DB0 - offset
 local attackElement = 0x2D23F38 - offset

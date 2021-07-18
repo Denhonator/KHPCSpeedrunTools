@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmEarlySkip"
+LUAGUI_AUTH = "denhonator/TopazTK"
+LUAGUI_DESC = "Allows skipping cutscenes faster"
+
 local canExecute = false
 
 function _OnInit()

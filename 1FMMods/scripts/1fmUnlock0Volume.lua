@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fm0Volume"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Volume 1 mutes the audio channel"
+
 local offset = 0x3A0606
 local BGM = 0x3D6ABC - offset
 local BGMJP = 0x3D6A9C - offset

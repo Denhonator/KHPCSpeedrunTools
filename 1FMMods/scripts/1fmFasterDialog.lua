@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmFasterDialog"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Speeds up text boxes"
+
 local lastProg = 0
 local textSpeedup = false
 local turbo = false

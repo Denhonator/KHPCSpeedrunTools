@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmRandomizer"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Use with InstantGummi"
+
 -- If you want guaranteed abilities on first level ups, put the hex codes for unequipped abilities here.
 -- Maximum 4 or they will replace other abilities.
 -- Find ability codes here https://pastebin.com/ZH0L3XXi

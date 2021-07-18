@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmAutoattack"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Hold attack to combo"
+
 local cooldown = 0
 
 local canExecute = false

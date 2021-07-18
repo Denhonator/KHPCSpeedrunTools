@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmUnskippable"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Makes unskippable cutscenes skippable"
+
 local lastCutscene = 0
 local lastSkippable = 0
 local canExecute = false

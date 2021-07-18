@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmFastCamera"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Speeds up camera movement, instant R3"
+
 local offset = 0x3A0606
 -- For some reason can't write to these addresses
 local accel = 0x3E7F58 - offset

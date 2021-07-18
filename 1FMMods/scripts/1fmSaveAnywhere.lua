@@ -1,3 +1,7 @@
+LUAGUI_NAME = "1fmSaveAnywhere"
+LUAGUI_AUTH = "denhonator"
+LUAGUI_DESC = "Read readme for button combinations"
+
 local extraSafety = false
 local offset = 0x3A0606
 local lasttitle = 0
