@@ -469,6 +469,7 @@ function IsAccessible(t, i)
 			if itemsAvailable[0xD3] then
 				cards = cards + itemsAvailable[0xD3]
 			end
+			--ConsolePrint(string.format("Postcards %d Required: %s", cards, string.sub(t[i][k], 9)))
 			thisAccess = thisAccess or cards >= tonumber(string.sub(t[i][k], 9))
 		end
 		if string.find(t[i][k], "Puppies") then
@@ -950,9 +951,9 @@ function Randomize()
 	for i=1,5 do
 		ConsolePrint(string.format("trinity %x became %x", i, trinityTable[i]))
 	end
-	for i=1, 0xFF do
-		ConsolePrint(string.format("%x became %x", i, itemids[i]))
-	end
+	--for i=1, 0xFF do
+	--	ConsolePrint(string.format("%x became %x", i, itemids[i]))
+	--end
 	
 	for i=0x51,0x85 do
 		if string.find(ItemType(i), "Weapon") then
@@ -1032,6 +1033,7 @@ function ValidSeed()
 	for j=1, 10 do
 		GetAvailability()
 		local HBWin = ItemAccessible(0xCD, 1)
+		ConsolePrint(string.format("cd %s", tostring(ItemAccessible(0xCD, 1))))
 		for i=0xBC, 0xBF do
 			ConsolePrint(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			HBWin = HBWin and ItemAccessible(i, 1)
@@ -1055,8 +1057,8 @@ function ValidSeed()
 		if misc then
 			ConsolePrint("All checks possible")
 		else
-			ConsolePrint(string.format("Dalm: %d Jack: %s Postcards: %s", 
-			dalmatiansAvailable, tostring(ItemAccessible(0xE4, 1)), tostring(ItemAccessible(0xD3, 3))))
+			ConsolePrint(string.format("Dalm: %d Jack: %s Postcards: %d", 
+			dalmatiansAvailable, tostring(ItemAccessible(0xE4, 1)), itemsAvailable[0xD3]))
 		end
 		if HBWin and DIWin and misc then
 			SaveRando()
