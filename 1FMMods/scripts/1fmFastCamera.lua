@@ -7,7 +7,7 @@ local offset = 0x3A0606
 local accel = 0x3E7F58 - offset
 local deaccel = 0x3E7F5C - offset
 -----
-local snap = 0x1DD0E9 - offset
+local snap = 0x1DD295 - offset
 local accelHack = 0x1E2924 - offset
 local deaccelHack = 0x1E291B - offset
 local speed = 0x503A1C - offset
@@ -26,10 +26,10 @@ function _OnInit()
 
 	if canExecute then
 		-- Enables instant camera centering
-		WriteInt(snap, 0x02357637)
+		WriteInt(snap, 0x02357487)
 		-- Changes it to read acceleration values from elsewhere
-		WriteInt(accelHack, 0x0020563C)
-		WriteInt(deaccelHack, 0x00205645)
+		--WriteInt(accelHack, 0x0020563C)
+		--WriteInt(deaccelHack, 0x00205645)
 	end
 end
 

@@ -4,7 +4,7 @@ LUAGUI_DESC = "30% chance finishers are now 100%"
 
 local offset = 0x3A0606
 local gravBreak = 0x3EA148 - offset
-local zantekHack = 0x2A2654 - offset
+local zantekHack = 0x2A2804 - offset
 
 local canExecute = false
 
@@ -20,8 +20,8 @@ end
 function _OnFrame()
 	if canExecute then
 		WriteFloat(gravBreak, -1.0)
-		if ReadByte(zantekHack+4) == 0x1C then
-			WriteByte(zantekHack+4, 0x74)
+		if ReadByte(zantekHack+4) == 0x6C then
+			WriteByte(zantekHack+4, 0xC4)
 		end
 	end
 end
