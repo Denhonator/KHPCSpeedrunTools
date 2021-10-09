@@ -7,7 +7,7 @@ local offset = 0x3A0606
 local accel = 0x3E7F58 - offset
 local deaccel = 0x3E7F5C - offset
 -----
-local snap = 0x1DD295 - offset
+local snap = 0x1DD299 - offset
 local accelHack = 0x1E2924 - offset
 local deaccelHack = 0x1E291B - offset
 local speed = 0x503A1C - offset

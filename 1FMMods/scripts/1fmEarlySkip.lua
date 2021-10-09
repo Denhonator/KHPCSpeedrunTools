@@ -2,6 +2,8 @@ LUAGUI_NAME = "1fmEarlySkip"
 LUAGUI_AUTH = "denhonator/TopazTK"
 LUAGUI_DESC = "Allows skipping cutscenes faster"
 
+local lastInput = 0
+local bufferPause = 0
 local canExecute = false
 
 function _OnInit()
@@ -14,8 +16,27 @@ function _OnInit()
 end
 
 function _OnFrame()
-	if canExecute == true then
-		WriteArray(0x7FF77252ACF3, { 0xEB, 0x10 }, true)
-		WriteArray(0x7FF772525EAC, { 0x0F, 0x96, 0xC0 }, true)
+	nowInput = ReadInt(0x233D034-0x3A0606)
+	if canExecute and ReadInt(0x233AE74-0x3A0606)==1 then
+		if bufferPause == 2 then
+			WriteInt(0x22E86C8-0x3A0606, 0) --pause
+			bufferPause = 0
+		elseif bufferPause == 1 then
+			--WriteInt(0x232A670-0x3A0606, 1787424224) --skip
+			WriteInt(0x22E86C8-0x3A0606, 1) --pause
+			bufferPause = 2
+		elseif nowInput == 8 and lastInput == 0 and bufferPause == 0 then
+			WriteInt(0x233C49C-0x3A0606, 0) --white screen off
+			WriteInt(0x233C450-0x3A0606, 128) --canskip
+			WriteInt(0x233C454-0x3A0606, 128) --canskip
+			WriteInt(0x233C458-0x3A0606, 128) --canskip
+			WriteInt(0x233C45C-0x3A0606, 128) --canskip
+			WriteInt(0x233C5B8-0x3A0606, 0) --canskip
+			WriteInt(0x233CAA0-0x3A0606, 0) --canskip
+			WriteInt(0x233CAA4-0x3A0606, 0) --canskip
+			bufferPause = 1
+		end
 	end
+	
+	lastInput = nowInput
 end
