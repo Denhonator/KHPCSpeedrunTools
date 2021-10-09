@@ -44,6 +44,7 @@ Autoattack:
 RandoSomeLogic:
 - Randomizes items, level ups, rewards, magic, trinities and chests
 - If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
+- randofiles folder should be placed in the same folder as DINPUT8.dll when using Luabackend Hook by Sirius
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
 Chaos:
