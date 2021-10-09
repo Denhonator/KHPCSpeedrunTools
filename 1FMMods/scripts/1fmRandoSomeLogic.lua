@@ -115,7 +115,7 @@ local soraJumpHeight = 0x2D592A0 - offset
 local jumpHeights = 0x2D1F46C - offset
 local mermaidKickSpeed = 0x3ED5FC - offset
 local soraHP = 0x2D592CC - offset
-local superglideSpeedHack = 0x2AE104 - offset
+local superglideSpeedHack = 0x2AE2B4 - offset
 
 local soraStats = 0x2DE59D0 - offset
 local donaldStats = soraStats + 0x74
@@ -1928,7 +1928,7 @@ function StackAbilities()
 				WriteByte(sharedAbilities+i, ab+1)
 			end
 		end
-		WriteInt(superglideSpeedHack, 0x17F50C + math.max(countedAbilities[3]-2, 0)*4)
+		WriteInt(superglideSpeedHack, 0x17F35C + math.max(countedAbilities[3]-2, 0)*4)
 		
 		WriteFloat(mermaidKickSpeed, 10+(8*countedAbilities[2]))
 		
