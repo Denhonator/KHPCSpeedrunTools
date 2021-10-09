@@ -1429,28 +1429,28 @@ function StringToMem(off, text, l, base)
 		local d = CharToMem(c)
 		local addr = off+((i-1)*20)
 		if i > l then
-			local sample = ReadArrayA(addr-20, 20)
+			local sample = ReadArray(addr-20, 20, true)
 			sample[5] = sample[5] + 10
-			if ReadShortA(addr) == 0 or ReadShortA(addr) > 0x270F or ReadShortA(addr+4)==0 then
+			if ReadShort(addr, true) == 0 or ReadShort(addr, true) > 0x270F or ReadShort(addr+4, true)==0 then
 				garbageCount = garbageCount + 1
 			end
-			WriteArrayA(addr, sample)
+			WriteArray(addr, sample, true)
 		end
-		WriteShortA(addr, d)
+		WriteShort(addr, d, true)
 		if i > 1 then
 			local newPos = nextPos
-			WriteShortA(addr+4, newPos)
+			WriteShort(addr+4, newPos, true)
 		end
-		nextPos = ReadShortA(addr+4) + CharSpacing(d)
+		nextPos = ReadShort(addr+4, true) + CharSpacing(d)
 	end
 	if textlen > l and garbageCount > 0 then
-		local size = ReadShortA(base+2)
+		local size = ReadShort(base+2, true)
 		if string.find(textFind, "btained") then
 			size = #textReplace+1
 			garbageCount = 0
 		end
 		ConsolePrint(garbageCount)
-		WriteShortA(base+2, size+garbageCount-1)
+		WriteShort(base+2, size+garbageCount-1, true)
 	end
 end
 
@@ -1466,7 +1466,7 @@ function MemStringSearch(c, re)
 		
 		if address > 0xFFFFFFF then
 			for i=1,50 do
-				local letter = ReadShortA(address+(i*20))
+				local letter = ReadShort(address+(i*20), true)
 				if letter > 0x27F0 or letter == 0 then
 					break
 				end
@@ -1740,7 +1740,7 @@ function GenerateSpoilers()
 		f:write(miscSpoilers[i] .. "\n")
 	end
 	f:close()
-	
+
 	return {spoilers, miscSpoilers}
 end
 
@@ -1939,7 +1939,7 @@ function StackAbilities()
 				end
 				local airGround = ReadLong(soraPointer)+0x70
 				if ReadInt(ReadLong(soraPointer)+0xB0) > 0 then
-					WriteByteA(airGround, 2)
+					WriteByte(airGround, 2, true)
 				end
 			end
 		end
@@ -1958,24 +1958,24 @@ function StackAbilities()
 		if DodgeDataValid(dodgeDataAddr) then
 			local abils = CountSoraAbilities()
 			if abils[0x16] then
-				WriteShortA(dodgeDataAddr+4, math.max(50-(12*abils[0x16]), 22))
+				WriteShort(dodgeDataAddr+4, math.max(50-(12*abils[0x16]), 22), true)
 			end
 		end
 	end
 end
 
 function DodgeDataValid(a)
-	return ReadShortA(a+0x18) == 0xEF and ReadShortA(a+0x34) == 0x94
+	return ReadShort(a+0x18, true) == 0xEF and ReadShort(a+0x34, true) == 0x94
 end
 
 function GetDodgeDataAddr()
 	local halfPointers = 0x2EE03B0 - offset
 	local animHalfPointers = ReadLong(0x2866498 - offset) + 0xC0
 	local ind = 0
-	while ReadIntA(animHalfPointers+ind) > 0 do
-		local dodgePointer = ReadLong(halfPointers+8) + ReadIntA(animHalfPointers+ind) % 0x1000000
+	while ReadInt(animHalfPointers+ind, true) > 0 do
+		local dodgePointer = ReadLong(halfPointers+8) + ReadInt(animHalfPointers+ind, true) % 0x1000000
 		if DodgeDataValid(dodgePointer) then
-			ConsolePrint(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByteA(dodgePointer+4)))
+			ConsolePrint(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByte(dodgePointer+4, true)))
 			return dodgePointer
 		end
 		ind = ind+4
@@ -2037,7 +2037,7 @@ function FlagFixes()
 	local simbaAddr = ReadLong(scriptPointer) + 0x131C8
 	
 	if ReadByte(world) == 3 and ReadByte(room) == 0x13 then
-		if ReadByteA(simbaAddr)==5 then
+		if ReadByte(simbaAddr, true)==5 then
 			local hasSummons = {}
 			local hasAll = true
 			for i=0,5 do
@@ -2055,13 +2055,13 @@ function FlagFixes()
 			local tbell = ReadByte(inventory+0x8B) > 0
 
 			-- Nullify normal simba acqusition
-			WriteIntA(simbaAddr+4, c and 0x18000238 or 0x18000004)
-			WriteIntA(simbaAddr+12, c and 0x18000233 or 0x18000004)
+			WriteInt(simbaAddr+4, c and 0x18000238 or 0x18000004, true)
+			WriteInt(simbaAddr+12, c and 0x18000233 or 0x18000004, true)
 			
-			WriteByteA(simbaAddr-0x423B, c and 0xD1 or 0xCF)
-			WriteByteA(simbaAddr+0x16FB, c and 0xD1 or 0xCF)
-			WriteByteA(simbaAddr+0x164B, c and 5 or 1)
-			WriteByteA(simbaAddr+0x164B+8, c and 5 or 1)
+			WriteByte(simbaAddr-0x423B, c and 0xD1 or 0xCF, true)
+			WriteByte(simbaAddr+0x16FB, c and 0xD1 or 0xCF, true)
+			WriteByte(simbaAddr+0x164B, c and 5 or 1, true)
+			WriteByte(simbaAddr+0x164B+8, c and 5 or 1, true)
 			
 			-- WriteByteA(simbaAddr-0x423B+0xC, genie and 0x89 or 0xCE)
 			-- WriteByteA(simbaAddr+0x16FB-0x12C, genie and 0x89 or 0xCE)
@@ -2075,16 +2075,16 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(world) == 8 and ReadIntA(simbaAddr-0x103fb) == 0x18000238 then
+	if ReadByte(world) == 8 and ReadInt(simbaAddr-0x103fb, true) == 0x18000238 then
 		for i=0, 40 do
-			WriteIntA(simbaAddr-0x103fb+i*4-0x20, 0x00000009)
+			WriteInt(simbaAddr-0x103fb+i*4-0x20, 0x00000009, true)
 		end
 		ConsolePrint("Removed normal genie")
 	end
 	
-	if ReadByte(world) == 0xD and ReadIntA(simbaAddr-0xd653) == 0x18000238 then
+	if ReadByte(world) == 0xD and ReadInt(simbaAddr-0xd653, true) == 0x18000238 then
 		for i=0, 40 do
-			WriteIntA(simbaAddr-0xd653+i*4-0x20, 0x00000009)
+			WriteInt(simbaAddr-0xd653+i*4-0x20, 0x00000009, true)
 		end
 		ConsolePrint("Removed normal tinker bell")
 	end
@@ -2206,10 +2206,10 @@ function FlagFixes()
 	
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
 		local warpAddr = ReadLong(scriptPointer)+0x6F9D
-		if ReadByteA(warpAddr)==2 and ReadByteA(warpAddr+4)==1 then
+		if ReadByte(warpAddr, true)==2 and ReadByte(warpAddr+4, true)==1 then
 			ConsolePrint("DI to EotW warp")
-			WriteByteA(warpAddr,0x10)
-			WriteByteA(warpAddr+4,0x1E)
+			WriteByte(warpAddr,0x10, true)
+			WriteByte(warpAddr+4,0x1E, true)
 			WriteByte(party1, 1)
 			WriteByte(party1+1, 2)
 		end
@@ -2217,17 +2217,17 @@ function FlagFixes()
 	
 	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
 		local warpAddr = ReadLong(scriptPointer)+0x677D
-		if ReadByteA(warpAddr)==0xF and ReadByteA(warpAddr+4)==0xB and ReadByte(blackfade)>0 then
+		if ReadByte(warpAddr, true)==0xF and ReadByte(warpAddr+4, true)==0xB and ReadByte(blackfade)>0 then
 			ConsolePrint("Skipping HB cutscenes to avoid story flag conflicts")
 			WriteByte(cutsceneFlags+0xB0D, 0x6A)
-			WriteByteA(warpAddr,0xD)
-			WriteByteA(warpAddr+4,0x9)
+			WriteByte(warpAddr,0xD, true)
+			WriteByte(warpAddr+4,0x9, true)
 		end
 	end
 	
 	-- Fall in flight sections without glide
 	if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
-		local soraYPos = ReadFloatA(ReadLong(soraPointer)+0x14)
+		local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
 		if ReadByte(world) == 0xD then
 			if ReadByte(room) == 8 and soraYPos > 600 then
 				InstantContinue()
@@ -2240,7 +2240,7 @@ function FlagFixes()
 			if ReadByte(room) == 0x1A and soraYPos > -400 then
 				InstantContinue()
 			elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
-				WriteFloatA(ReadLong(soraPointer)+0x14, -7000)
+				WriteFloat(ReadLong(soraPointer)+0x14, -7000, true)
 			end
 		end
 	end
@@ -2256,10 +2256,10 @@ function FlagFixes()
 			WriteByte(collectedFruits, 0)
 			WriteByte(savedFruits, 0)
 			local warpsAddr = ReadLong(warpDefinitions)
-			if ReadByteA(warpsAddr)==0 and ReadByteA(warpsAddr+0x40)==1 then
+			if ReadByte(warpsAddr, true)==0 and ReadByte(warpsAddr+0x40, true)==1 then
 				for i=0, 4 do
 					if ReadByte(sliderProgress+i) == 1 and ReadByte(warpsAddr+0x9C0) < 0x10+i then
-						WriteArrayA(warpsAddr+0x9C0, ReadArrayA(warpsAddr+0x9C0+(0x40*(i+1)), 0x40))
+						WriteArray(warpsAddr+0x9C0, ReadArray(warpsAddr+0x9C0+(0x40*(i+1)), 0x40, true), true)
 					end
 				end
 			end
