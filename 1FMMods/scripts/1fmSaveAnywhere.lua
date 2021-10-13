@@ -29,15 +29,16 @@ local canExecute = false
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		if ReadShort(deathCheck) == 0x2E74 then
-			ConsolePrint("Global version detected")
-			canExecute = true
+			ConsolePrint("Global version detected")	
 		elseif ReadShort(deathCheck-0x1C0) == 0x2E74 then
 			deathCheck = deathCheck-0x1C0
 			safetyMeasure = safetyMeasure-0x1C0
 			extraSafety = false
 			ConsolePrint("JP detected")
-			canExecute = true
+		else
+			ConsolePrint("Unrecognized game version, instant death will not work")
 		end
+		canExecute = true
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
@@ -96,7 +97,8 @@ function _OnFrame()
 	-- Sora HP to 0 (not necessary)
 	-- State to combat
 	-- Death condition check disable
-	if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0 and ReadByte(blackFade)==128 then
+	if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0 and ReadByte(blackFade)==128
+												and ReadShort(deathCheck) == 0x2E74 then
 		WriteByte(soraHP, 0)
 		WriteByte(stateFlag, 1)
 		WriteShort(deathCheck, 0x9090)
