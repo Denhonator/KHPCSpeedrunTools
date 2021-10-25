@@ -22,7 +22,7 @@ function _OnFrame()
 		local input = ReadInt(0x29F89B0-offset)
 		if (input == 247042) then 
 			WriteByte(0xAB841A-offset, 0x1)
-			WriteInt(0x751310-offset, 0x00000001)
+			WriteInt(0x751310-offset-0x40, 0x00000001)
 		end
 	end
 end
