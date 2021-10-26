@@ -1,21 +1,21 @@
 state("KINGDOM HEARTS II FINAL MIX", "GLOBAL")
 {
-	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8E9D93;
-	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xAB8B87;
-	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBCF4;
-	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD6B80;
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8E9DA3;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xAB8BC7;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBD34;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD6BC0;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x711438;
-	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A20C58;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A20C98;
 }
 
 state("KINGDOM HEARTS II FINAL MIX", "JP")
 {
-	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8E8D93;
-	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xAB7B87;
-	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEACF4;
-	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD5B80;
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8E8DA3;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xAB7BC7;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEAD34;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD5BC0;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x710438;
-	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A1FC58;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A1FC98;
 }
 
 init
