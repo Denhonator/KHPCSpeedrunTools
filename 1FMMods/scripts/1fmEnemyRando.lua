@@ -3,13 +3,12 @@ LUAGUI_AUTH = "denhonator"
 LUAGUI_DESC = "Randomizes enemies"
 
 local offset = 0x3A0606
-local cpointer = 0x2534638 - offset
 local world = 0x233CADC - offset
 local room = world + 0x68
+local blackfade = 0x4D93B8 - offset
+local hasChanged = false
 
 local addrs = {0x617DFA}
-
-local lastroom = 0
 
 local repl = {}
 
@@ -27,35 +26,37 @@ end
 
 function WriteString(addr, s)
 	for i=0,#s-1 do
-		WriteByte(addr+i, string.byte(s, i+1), true)
-		WriteByte(addr+i+0x20, string.byte(s, i+1), true)
+		WriteByte(addr+i, string.byte(s, i+1))
+		WriteByte(addr+i+0x20, string.byte(s, i+1))
 	end
 	ConsolePrint("Replaced")
 end
 
 function _OnFrame()
-	local nowroom = ReadByte(world)*100 + ReadByte(room)
-	if canExecute and nowroom ~= lastroom then
-		local addr = ReadLong(cpointer)+0x60
+	if canExecute and ReadInt(blackfade) == 0 and not hasChanged then
+		local addr = addrs[1]
 		local loopcount = 0
-		while addr > 0x60 and loopcount < 60 do
+		while loopcount < 60 do
 			local r = {}
-			local empty = ReadByte(addr, true) < 97 or ReadByte(addr, true) > 122
+			local empty = ReadByte(addr) < 97 or ReadByte(addr) > 122
 			for i=0,9 do
-				r[i+1] = string.char(ReadByte(addr+i, true))
+				r[i+1] = string.char(ReadByte(addr+i))
 			end
 			local s = table.concat(r)
 			if not empty then
-				lastroom = nowroom
 				if repl[s] ~= nil then
 					WriteString(addr, repl[s])
 				end
+				hasChanged = true
 				ConsolePrint(s)
-			elseif lastroom == nowroom then
+			elseif loopcount > 0 then
 				break
 			end
 			loopcount = loopcount + 1
 			addr = addr + 0x40
 		end
+	end
+	if ReadByte(blackfade) == 128 then
+		hasChanged = false
 	end
 end
