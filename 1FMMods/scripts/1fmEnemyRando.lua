@@ -9,6 +9,8 @@ local blackfade = 0x4D93B8 - offset
 local monitor = 0
 local lastMonitor = 0
 local hasChanged = false
+local lastAddr = 0
+local replaced = false
 
 local addrs = {0x617DFA, 0x603F7A, 0x72F8FA}
 local cpointer = 0x2967CD0 - offset
@@ -38,12 +40,18 @@ end
 
 function _OnFrame()
 	local input = ReadInt(0x233D034-offset)
+	if lastAddr > 0 and lastAddr < 0x86F9FA and replaced then
+		WriteByte(lastAddr, 0)
+		lastAddr = 0
+		replaced = false
+	end
 
 	if canExecute and ReadInt(blackfade) == 0 and not hasChanged and input~=8 then
 		local addr = 0x46F9FA
 		while addr < 0x86F9FA and ReadShort(addr) ~= 0x6178 do
 			addr = addr + 0x80
 		end
+		lastAddr = addr
 		local loopcount = 0
 		while loopcount < 60 and addr < 0x86F9FA do
 			local r = {}
@@ -57,6 +65,7 @@ function _OnFrame()
 					WriteString(addr, repl[s])
 					monitor = addr
 					lastMonitor = ReadLong(monitor)
+					replaced = true
 				end
 				hasChanged = true
 				ConsolePrint(s)
