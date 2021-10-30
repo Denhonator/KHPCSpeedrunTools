@@ -35,8 +35,6 @@ function _OnInit()
 			safetyMeasure = safetyMeasure-0x1C0
 			extraSafety = false
 			ConsolePrint("JP detected")
-		else
-			ConsolePrint("Unrecognized game version, instant death will not work")
 		end
 		canExecute = true
 	else
@@ -53,6 +51,13 @@ function InstantContinue()
 		WriteByte(warpType2, 12)
 		WriteByte(warpTrigger, 2)
 	end
+end
+
+function SoftReset()
+	ConsolePrint("Soft reset")
+	WriteByte(warpType1, 3)
+	WriteByte(warpType2, 1)
+	WriteByte(warpTrigger, 2)
 end
 
 function _OnFrame()
@@ -72,6 +77,10 @@ function _OnFrame()
 	
 	if input == 3968 and lastInput ~= 3968 and ReadLong(closeMenu) == 0 then
 		InstantContinue()
+	end
+	
+	if input == 3848 and lastInput ~= 3848 then
+		SoftReset()
 	end
 	
 	-- Remove white screen on death (it bugs out this way normally)
