@@ -1,7 +1,6 @@
 How to use:
-- Get LuaBackend https://github.com/Topaz-Reality/LuaBackend/releases/
-- Place LuaBackend.exe into this folder and run it while 1FM is running
-- Command line program should open, stating that it initialized script successfully.
+- Get LuaBackend https://github.com/Sirius902/LuaBackend
+- Follow its instructions on how to setup scripts and they will run automatically with the game
 
 SaveAnywhere:
 - In-game, press L1+L2+R2+Select (or equivalent on your input device)
@@ -9,6 +8,7 @@ SaveAnywhere:
 - You can use this to save anywhere. Saving during cutscenes or combat may have unexpected consequences.
 - You can also instantly die with R1+R2+L2+Select
 - You can also instantly load continue state with R1+R2+L1+L2+D-pad left
+- You can also soft reset with R1+R2+L1+L2+Start
 
 InstantGummi:
 - Instantly arrive at any selected world

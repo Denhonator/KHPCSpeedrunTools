@@ -2377,9 +2377,9 @@ function _OnFrame()
 		goto done
 	end
 
-	if ReadInt(input) == 3848 then
-		InstantGummi()
-	end
+	-- if ReadInt(input) == 3848 then
+		-- InstantGummi()
+	-- end
 
 	local HUDNow = ReadFloat(soraHUD)
 	if not randomized and initDone then
