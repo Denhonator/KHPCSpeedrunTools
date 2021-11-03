@@ -12,8 +12,19 @@ local hasChanged = false
 local lastAddr = 0
 local replaced = false
 
-local addrs = {0x617DFA, 0x603F7A, 0x72F8FA}
-local cpointer = 0x2967CD0 - offset
+local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2040", "xa_ew_2050",
+				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
+				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
+				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
+				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
+				"xa_ex_2190", "xa_ex_2200", "xa_ex_2210",
+				"xa_ex_2220", "xa_ex_2230", "xa_ex_2240",
+				"xa_ex_2250", "xa_ex_2260", "xa_ex_2270", "xa_ex_2280",
+				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
+				"xa_ex_2340", "xa_ex_2350", "xa_ex_2380",
+				"xa_ex_2390", "xa_pp_3020"}
+				
+local bosses = {}
 
 local repl = {}
 
@@ -23,15 +34,15 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("KH1 detected, running script")
 		canExecute = true
-		--repl["xa_ex_2060"] = "xa_ex_1040"
-		--repl["xa_ex_2010"] = "xa_ex_2230"
-		--repl["xa_ex_2130"] = "xa_pi_3000"
-		--repl["xa_pp_3030"] = "xa_pi_3000"
-		--repl["xa_tw_3000"] = "xa_pi_3000"
-		repl["xa_ex_1030"] = "xa_ex_1040"
-		repl["xa_ex_1630"] = "xa_pp_3000"
-		repl["xa_di_3000"] = "xa_pi_3000"
-		
+		local pool = {}
+		for i=1,#normal do
+			pool[i] = normal[i]
+		end
+		for i=1,#normal do
+			local r = math.random(#pool)
+			repl[normal[i]] = table.remove(pool, r)
+			ConsolePrint(string.format("Replacing %s with %s", normal[i], repl[normal[i]]))
+		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
@@ -41,13 +52,12 @@ function WriteString(addr, s)
 	for i=0,#s-1 do
 		WriteByte(addr+i, string.byte(s, i+1), false)
 	end
-	ConsolePrint(string.format("Replaced: %s", s))
 end
 
 function _OnFrame()
 	local input = ReadInt(0x233D034-offset)
 	
-	if canExecute and ReadInt(blackfade) == 0 and not hasChanged and input~=8 then
+	if canExecute and ReadInt(blackfade) == 0 and not hasChanged then
 		local addr = 0x46F9FA
 		while addr < 0x86F9FA do
 			while addr < 0x86F9FA and ReadShort(addr) ~= 0x6178 or ReadShort(addr-0x20) ~= 0 do
@@ -67,19 +77,23 @@ function _OnFrame()
 				local s = table.concat(r)
 				if not empty then
 					if repl[s] ~= nil and ReadByte(addr+10) == 0x2E then
-						WriteString(addr, repl[s])
+						if input~=8 then
+							WriteString(addr, repl[s])
+						end
+						ConsolePrint(string.format("Replaced %s with %s", s, repl[s]))
 						monitor = addr+2
 						lastMonitor = ReadLong(monitor)
 						replaced = true
 					end
 					hasChanged = true
-					ConsolePrint(s)
+					--ConsolePrint(s)
 				elseif loopcount > 0 then
 					break
 				end
 				loopcount = loopcount + 1
 				addr = addr + 0x20
 			end
+			addr = addr - (addr%0x100) + 0xFA
 		end
 	end
 	if ReadByte(blackfade) == 128 or ReadLong(monitor) ~= lastMonitor then
