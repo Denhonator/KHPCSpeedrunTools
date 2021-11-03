@@ -68,3 +68,7 @@ FastCamera:
 - You can set the resolution via display settings or by resizing the window directly. That height will be applied and width cut to match 4:3
 - Visit display settings to get rid of black bars
 - Menus appear slightly cut-off since they were made for 16:9
+
+1HP:
+- Forces Sora's max HP to 1 at all times
+- Removes beeping noise.

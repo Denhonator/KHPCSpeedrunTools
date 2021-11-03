@@ -1,4 +1,4 @@
-local offset = 0x56454E
+local offset = 0x56450E
 local TT = 0x9AB064 - offset
 
 local canExecute = false
