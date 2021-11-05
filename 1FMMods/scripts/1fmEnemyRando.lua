@@ -12,6 +12,7 @@ local lastMonitor = 0
 local hasChanged = false
 local lastAddr = 0
 local replaced = false
+local lastBlack = 0
 
 local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -33,10 +34,6 @@ local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010",
 local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000"}
 				
 local addrs = {}
-				
-local bosses = {}
-
-local repl = {}
 
 local canExecute = false
 
@@ -96,6 +93,7 @@ function _OnFrame()
 	local w = ReadByte(world)
 	
 	if canExecute and ReadInt(blackfade) == 0 and w > 0 then
+		local logfile = io.open("enemyrandolog.txt", "w+")
 		for addr, v in pairs(addrs[w]) do
 			if not Exceptions(addr) then
 				WriteString(addr, v)
@@ -105,7 +103,10 @@ function _OnFrame()
 					WriteString(addr+0x20, v)
 				end
 				ConsolePrint(string.format("Replaced with %s at %x", v, addr+offset))
+				logfile:write(string.format("Replaced with %s at %x\n", v, addr+offset))
 			end
 		end
+		logfile:close()
+		lastBlack = ReadInt(blackfade)
 	end
 end
