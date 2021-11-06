@@ -7,6 +7,7 @@ local world = 0x233CADC - offset
 local room = world + 0x68
 local blackfade = 0x4D93B8 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
+local hercBossY = 0x2D34BF4 - offset
 local monitor = 0
 local lastMonitor = 0
 local hasChanged = false
@@ -20,18 +21,32 @@ local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
 				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
 				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
 				"xa_ex_2190", "xa_ex_2200", "xa_ex_2210",
+				"xa_ex_2220", "xa_ex_2230",
+				"xa_ex_2250", "xa_ex_2270", "xa_ex_2280",
+				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
+				"xa_ex_2340", "xa_ex_2380",
+				"xa_ex_2390", "xa_pp_3020"}
+				
+local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
+				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
+				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
+				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
+				"xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
+				"xa_ex_2190", "xa_ex_2200", "xa_ex_2210",
 				"xa_ex_2220", "xa_ex_2230", "xa_ex_2240",
 				"xa_ex_2250", "xa_ex_2270", "xa_ex_2280",
 				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
 				"xa_ex_2340", "xa_ex_2350", "xa_ex_2380",
 				"xa_ex_2390", "xa_pp_3020"}
 				
-local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010",
-			  "xa_al_3020", "xa_al_3050", "xa_ex_1090", "xa_ex_1160", "xa_ex_1580",
+local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_3000",
+			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
 			  "xa_ex_1630", "xa_ex_2310", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
-			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_tz_3000", "xa_tz_3010"}
-			  
-local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000"}
+			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_tz_3010", "xa_ex_1040",
+			  "xa_ex_3000", "xa_pc_3020", "xa_tz_3020"}
+  
+local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000", "xa_nm_3000"}
+local test = {}
 				
 local addrs = {}
 
@@ -61,18 +76,28 @@ function AddAddrs()
 	addrs[3][0xB16D80-offset] = normal[math.random(#normal)] --1st district shadow
 	addrs[3][0xB0AC00-offset] = normal[math.random(#normal)] --3rd district shadow
 	addrs[3][0xB0ABC0-offset] = normal[math.random(#normal)] --3rd district soldier
+	--addrs[3][0xB0ACA0-offset] = test[math.random(#test)] --guard armor
 	--addrs[5][0xA20480-offset] = boss[math.random(#boss)] --treehouse sabor
 	addrs[5][0x9F4600-offset] = normal[math.random(#normal)] --camp powerwild
 	addrs[5][0x9E3820-offset] = normal[math.random(#normal)] --climbing trees powerwild
 	addrs[5][0xA20400-offset] = normal[math.random(#normal)] --treehouse powerwild
 	addrs[5][0x992F00-offset] = normal[math.random(#normal)] --cliffs powerwild
-	addrs[5][0xA8CF80-offset] = normal[math.random(#normal)] --bamboo powerwild
+	addrs[5][0xA8CF80-offset] = lite[math.random(#lite)] --bamboo powerwild
 	--addrs[5][0xA8D0C0-offset] = boss[math.random(#boss)] --bamboo sabor
 	--addrs[5][0x992F40-offset] = boss[math.random(#boss)] --cliff clayton
-	--addrs[5][0x992F80-offset] = boss[math.random(#boss)] --cliff clayton & stealth sneak
+	--addrs[5][0x992F80-offset] = test[math.random(#test)] --cliff clayton & stealth sneak
 	--addrs[4][0x851EC0-offset] = normal[math.random(#normal)] --rabbithole shadow
 	--addrs[4][0x8E0E40-offset] = normal[math.random(#normal)] --lotus forest soldier
 	addrs[4][0x9F8100-offset] = trick[math.random(#trick)] --trickmaster
+	--addrs[11][0xAD05C0-offset] = normal[math.random(#normal)] --oc shadow
+	addrs[11][0xAD0540-offset] = boss[math.random(#boss)] --oc cloud
+	addrs[11][0xAD0800-offset] = test[math.random(#test)] --oc herc
+	--addrs[11][0xAD08A0-offset] = cerb[math.random(#cerb)] --oc cerb
+	addrs[11][0xAD0580-offset] = normal[math.random(#normal)] --oc soldier
+	--addrs[11][0xAD0600-offset] = normal[math.random(#normal)] --oc large body
+	--addrs[11][0xAD0640-offset] = normal[math.random(#normal)] --oc red
+	--addrs[11][0xAD0680-offset] = normal[math.random(#normal)] --oc blue
+	--addrs[11][0xAD06C0-offset] = normal[math.random(#normal)] --oc blue
 end
 
 function WriteString(addr, s)
@@ -86,6 +111,21 @@ function Exceptions(addr)
 		return true
 	end
 	return ReadByte(addr) ~= 120 or ReadByte(addr+1) ~= 97 or input == 8
+end
+
+function Fixes()
+	local addr = 0xAD0800-offset
+	--ConsolePrint(string.format("%x", ReadLong(addr)))
+	if ReadByte(addr) == 120 and ReadByte(addr+1) == 97
+	and ReadByte(addr+4) == 0x77 and ReadByte(addr+6) == 51
+	and ReadByte(addr+8) == 50 and ReadFloat(hercBossY) == -20 then
+		WriteFloat(hercBossY, 1200)
+	end
+	if ReadByte(addr) == 120 and ReadByte(addr+1) == 97
+	and ReadByte(addr+4) == 99 and ReadByte(addr+6) == 51
+	and ReadByte(addr+8) == 50 and ReadFloat(hercBossY) == -20 then
+		WriteFloat(hercBossY, 900)
+	end
 end
 
 function _OnFrame()
@@ -109,4 +149,5 @@ function _OnFrame()
 		logfile:close()
 		lastBlack = ReadInt(blackfade)
 	end
+	Fixes()
 end
