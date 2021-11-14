@@ -8,14 +8,18 @@ local room = world + 0x68
 local blackfade = 0x4D93B8 - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local hercBossY = 0x2D34BF4 - offset
+local ardOff = 0x2394BB0 - offset
+local bossHP = 0x2D595CC - offset
+local state = 0x2863958 - offset
 local monitor = 0
 local lastMonitor = 0
 local hasChanged = false
 local lastAddr = 0
 local replaced = false
 local lastBlack = 0
+local endfightTimer = 0
 
-local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
+local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
 				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
 				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
@@ -39,14 +43,30 @@ local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
 				"xa_ex_2340", "xa_ex_2350", "xa_ex_2380",
 				"xa_ex_2390", "xa_pp_3020"}
 				
+local bandit = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
+				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
+				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
+				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
+				"xa_ex_2190", "xa_ex_2200", "xa_ex_2210",
+				"xa_ex_2220", "xa_ex_2230",
+				"xa_ex_2250", "xa_ex_2270", "xa_ex_2280",
+				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
+				"xa_ex_2340", "xa_ex_2380",
+				"xa_ex_2390", "xa_pp_3020"}
+				
 local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_3000",
 			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
 			  "xa_ex_1630", "xa_ex_2310", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
 			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_tz_3010", "xa_ex_1040",
 			  "xa_ex_3000", "xa_pc_3020", "xa_tz_3020"}
+			  
+local jafar = {"xa_di_3000", "xa_nm_3000",
+			  "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
+			  "xa_ex_1630", "xa_pc_3000", "xa_he_1030",
+			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_ex_1040"}
   
 local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000", "xa_nm_3000"}
-local test = {}
+local test = {"xa_nm_3000"}
 				
 local addrs = {}
 
@@ -98,6 +118,20 @@ function AddAddrs()
 	--addrs[11][0xAD0640-offset] = normal[math.random(#normal)] --oc red
 	--addrs[11][0xAD0680-offset] = normal[math.random(#normal)] --oc blue
 	--addrs[11][0xAD06C0-offset] = normal[math.random(#normal)] --oc blue
+	addrs[8][0x95C2C0-offset] = normal[math.random(#normal)] --alley bandit
+	addrs[8][0x953940-offset] = normal[math.random(#normal)] --mainstreet bandit
+	addrs[8][0xA826C0-offset] = normal[math.random(#normal)] --plaza bandit
+	addrs[8][0x9E0180-offset] = normal[math.random(#normal)] --desert: cave bandit
+	addrs[8][0x91ABC0-offset] = normal[math.random(#normal)] --bazaar bandit
+	--addrs[8][0x9C4440-offset] = test[math.random(#test)] --pot cent 1
+	--addrs[8][0x9C4480-offset] = test[math.random(#test)] --pot cent 2
+	--addrs[8][0x9C43C0-offset] = test[math.random(#test)] --pot cent pot spider
+	--addrs[8][0x9C44C0-offset] = test[math.random(#test)] --pot cent pot spider
+	--addrs[8][0x9E0240-offset] = test[math.random(#test)] --tiger head
+	addrs[8][0x9B32C0-offset] = normal[math.random(#normal)] --cave entrance bandit
+	addrs[8][0x9ACC40-offset] = bandit[math.random(#bandit)] --cave hall air soldier
+	addrs[8][0x972C40-offset] = normal[math.random(#normal)] --bottomless shadow
+	addrs[8][0x97BBC0-offset] = jafar[math.random(#jafar)] --jafar
 end
 
 function WriteString(addr, s)
@@ -107,10 +141,14 @@ function WriteString(addr, s)
 end
 
 function Exceptions(addr)
+	local input = ReadInt(0x233D034-offset)
+	if input == 8 then
+		return true
+	end
 	if ReadByte(cutsceneFlags+0xB05) >= 0x49 and addr == 0x992F00-offset then
 		return true
 	end
-	return ReadByte(addr) ~= 120 or ReadByte(addr+1) ~= 97 or input == 8
+	return ReadByte(addr) ~= 120 or ReadByte(addr+1) ~= 97
 end
 
 function Fixes()
@@ -126,10 +164,25 @@ function Fixes()
 	and ReadByte(addr+8) == 50 and ReadFloat(hercBossY) == -20 then
 		WriteFloat(hercBossY, 900)
 	end
+	
+	if ReadByte(world) == 8 and ReadByte(room) == 0x10 then
+		if ReadByte(cutsceneFlags+0xB08) == 0x46 and ReadByte(ardOff) < 0xC8 and
+			ReadInt(bossHP) == 0 and ReadByte(state) & 1 == 1 then
+			endfightTimer = endfightTimer + 1
+		else
+			endfightTimer = 0
+		end
+		if endfightTimer > 300 then
+			WriteByte(ardOff, 0xC8)
+			ConsolePrint("Cutscene started")
+		elseif ReadByte(ardOff) == 0xF2 then
+			WriteByte(ardOff, 0xF3)
+			ConsolePrint("Give magic")
+		end
+	end
 end
 
 function _OnFrame()
-	local input = ReadInt(0x233D034-offset)
 	local w = ReadByte(world)
 	
 	if canExecute and ReadInt(blackfade) == 0 and w > 0 then
