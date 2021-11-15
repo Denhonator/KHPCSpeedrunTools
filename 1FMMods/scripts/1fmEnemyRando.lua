@@ -6,6 +6,7 @@ local offset = 0x3A0606
 local world = 0x233CADC - offset
 local room = world + 0x68
 local blackfade = 0x4D93B8 - offset
+local whitefade = 0x233C49C - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local hercBossY = 0x2D34BF4 - offset
 local ardOff = 0x2394BB0 - offset
@@ -62,8 +63,8 @@ local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_300
 			  
 local jafar = {"xa_di_3000", "xa_nm_3000",
 			  "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_ex_1630", "xa_pc_3000", "xa_he_1030",
-			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_ex_1040"}
+			  "xa_pc_3000", "xa_he_1030",
+			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040"}
   
 local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000", "xa_nm_3000"}
 local test = {"xa_nm_3000"}
