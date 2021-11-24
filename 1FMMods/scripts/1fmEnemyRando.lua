@@ -8,9 +8,9 @@ local room = world + 0x68
 local blackfade = 0x4D93B8 - offset
 local whitefade = 0x233C49C - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
+local worldFlagBase = 0x2DE79D0+0x6C - offset
 local hercBossY = 0x2D34BF4 - offset
 local ardOff = 0x2394BB0 - offset
-local bossHP = 0x2D595CC - offset
 local state = 0x2863958 - offset
 local monitor = 0
 local lastMonitor = 0
@@ -19,6 +19,7 @@ local lastAddr = 0
 local replaced = false
 local lastBlack = 0
 local endfightTimer = 0
+local antisorabeaten = false
 
 local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -41,8 +42,7 @@ local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
 				"xa_ex_2220", "xa_ex_2230", "xa_ex_2240",
 				"xa_ex_2250", "xa_ex_2270", "xa_ex_2280",
 				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
-				"xa_ex_2340", "xa_ex_2350", "xa_ex_2380",
-				"xa_ex_2390", "xa_pp_3020"}
+				"xa_ex_2340", "xa_ex_2350", "xa_ex_2380", "xa_pp_3020"}
 				
 local bandit = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -61,13 +61,28 @@ local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_300
 			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_tz_3010", "xa_ex_1040",
 			  "xa_ex_3000", "xa_pc_3020", "xa_tz_3020"}
 			  
+local parasite = {"xa_he_1000"}
+local pc1riku = {"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010", 
+				"xa_ex_1030", "xa_ex_1040"}
+			  
 local jafar = {"xa_di_3000", "xa_nm_3000",
 			  "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
 			  "xa_pc_3000", "xa_he_1030",
 			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040"}
+			  
+local genie = {"xa_ex_1150", "xa_ex_1030", "xa_tz_3010", "xa_tz_3000",
+			  "xa_he_1030", "xa_pi_3000", "xa_ex_1040", "xa_ex_4010",
+			  "xa_ex_2310", "xa_ex_1010", "xa_di_1030", "xa_di_1020",
+			  "xa_di_1010", "xa_aw_1030"}
   
 local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000", "xa_nm_3000"}
-local test = {"xa_nm_3000"}
+local antisora = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
+					"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
+					"xa_ex_1030", "xa_ex_1040", "xa_pp_3000", "xa_ew_2040",
+					"xa_al_3010"}
+local lsb = {"xa_ex_2010", "xa_ex_2030", "xa_ex_2070", "xa_ex_2090", "xa_ex_2100"}
+
+local test = {"xa_ex_2400"}
 				
 local addrs = {}
 
@@ -133,6 +148,30 @@ function AddAddrs()
 	addrs[8][0x9ACC40-offset] = bandit[math.random(#bandit)] --cave hall air soldier
 	addrs[8][0x972C40-offset] = normal[math.random(#normal)] --bottomless shadow
 	addrs[8][0x97BBC0-offset] = jafar[math.random(#jafar)] --jafar
+	addrs[8][0x97BC00-offset] = genie[math.random(#genie)] --genie
+	addrs[8][0x99C3C0-offset] = test[math.random(#test)] --genie jafar
+	addrs[12][0x9800C0-offset] = normal[math.random(#normal)] --chamber 1 ghost
+	addrs[12][0x9D2BC0-offset] = normal[math.random(#normal)] --chamber 2 airsoldier
+	addrs[12][0x9D78C0-offset] = normal[math.random(#normal)] --chamber 5 ghost
+	addrs[12][0x9CF300-offset] = parasite[math.random(#parasite)] --pc1
+	addrs[12][0x9CF440-offset] = pc1riku[math.random(#pc1riku)] --pc1 riku
+	addrs[12][0x9CB700-offset] = test[math.random(#test)] --pc2
+	addrs[10][0xA62BC0-offset] = normal[math.random(#normal)] --square ghost
+	addrs[10][0xA01FC0-offset] = normal[math.random(#normal)] --graveyard ghost
+	addrs[10][0xA22500-offset] = normal[math.random(#normal)] --moonlight hill whight
+	addrs[10][0x9A8440-offset] = normal[math.random(#normal)] --bridge whight
+	addrs[10][0xB195C0-offset] = lite[math.random(#lite)] --manor whight
+	--addrs[10][0x8A4D80-offset] = test[math.random(#test)] --lock
+	--addrs[10][0x8A4E40-offset] = test[math.random(#test)] --lock
+	--addrs[10][0x8A4E80-offset] = test[math.random(#test)] --shock
+	--addrs[10][0x8A4EC0-offset] = test[math.random(#test)] --barrel
+	--addrs[10][0x9A5280-offset] = test[math.random(#test)] --oogie
+	addrs[10][0x9A5200-offset] = test[math.random(#test)] --oogie gargoyles
+	addrs[13][0x993B00-offset] = normal[math.random(#normal)] --ship hold anti sora
+	addrs[13][0x959A40-offset] = normal[math.random(#normal)] --ship hold anti sora
+	addrs[13][0x959C40-offset] = normal[math.random(#normal)] --ship hold anti sora
+	addrs[13][0x9C0900-offset] = normal[math.random(#normal)] --ship galley anti sora
+	addrs[13][0x9A4B20-offset] = antisora[math.random(#antisora)] --anti sora
 end
 
 function WriteString(addr, s)
@@ -166,6 +205,11 @@ function Fixes()
 		WriteFloat(hercBossY, 900)
 	end
 	
+	local bossHP = 0x2D595CC - offset
+	if ReadByte(0x2DE5E5F - offset) == 0xFF and ReadByte(0x2DE5E60 - offset) == 0xFF then
+		bossHP = bossHP - 0x200
+	end
+	
 	if ReadByte(world) == 8 and ReadByte(room) == 0x10 then
 		if ReadByte(cutsceneFlags+0xB08) == 0x46 and ReadByte(ardOff) < 0xC8 and
 			ReadInt(bossHP) == 0 and ReadByte(state) & 1 == 1 then
@@ -175,10 +219,46 @@ function Fixes()
 		end
 		if endfightTimer > 300 then
 			WriteByte(ardOff, 0xC8)
+			endfightTimer = 0
 			ConsolePrint("Cutscene started")
 		elseif ReadByte(ardOff) == 0xF2 then
 			WriteByte(ardOff, 0xF3)
 			ConsolePrint("Give magic")
+		end
+	end
+	
+	if ReadByte(world) == 0xC and ReadByte(room) == 4 then
+		if ReadByte(cutsceneFlags+0xB09) == 0x2B and ReadByte(ardOff) == 0x4A and
+			ReadInt(bossHP) == 0 and ReadByte(state) & 1 == 1 then
+			endfightTimer = endfightTimer + 1
+		else
+			endfightTimer = 0
+		end
+		if endfightTimer > 100 then
+			WriteByte(ardOff, 0x54)
+			endfightTimer = 0
+			ConsolePrint("Fight end")
+		end
+	end
+	
+	if ReadByte(world) == 0xD and ReadByte(room) == 6 then
+		if ReadByte(cutsceneFlags+0xB0D) == 0x32 and ReadByte(ardOff) < 0xC2 and
+			ReadInt(bossHP) == 0 and ReadByte(state) & 1 == 1 then
+			endfightTimer = endfightTimer + 1
+		else
+			endfightTimer = 0
+		end
+		if endfightTimer > 300 then
+			WriteByte(cutsceneFlags+0xB0D, 0x28)
+			WriteByte(ardOff, 0x42)
+			antisorabeaten = true
+			endfightTimer = 0
+			ConsolePrint("Fight end")
+		end
+		if antisorabeaten and ReadByte(ardOff) == 0x8C then
+			WriteByte(ardOff, 0xC3)
+			ConsolePrint("Cutscene start")
+			antisorabeaten = false
 		end
 	end
 end
