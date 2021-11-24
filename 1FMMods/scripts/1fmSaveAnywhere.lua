@@ -4,7 +4,6 @@ LUAGUI_DESC = "Read readme for button combinations"
 
 local extraSafety = false
 local offset = 0x3A0606
-local lasttitle = 0
 local addgummi = 0
 local lastInput = 0
 local revertCode = false
@@ -23,6 +22,7 @@ local closeMenu = 0x2E90820 - offset
 local warpTrigger = 0x22E86DC - offset
 local warpType1 = 0x233C240 - offset
 local warpType2 = 0x22E86E0 - offset
+local title = 0x233CAB8 - offset
 
 local canExecute = false
 
@@ -57,6 +57,9 @@ function SoftReset()
 	ConsolePrint("Soft reset")
 	WriteByte(warpType1, 3)
 	WriteByte(warpType2, 1)
+	if ReadByte(title) == 0 then
+		WriteByte(title, 1)
+	end
 	WriteByte(warpTrigger, 2)
 end
 
@@ -129,11 +132,6 @@ function _OnFrame()
 	
 	addgummi = addgummi > 0 and addgummi-1 or addgummi
 	
-	local titletest = ReadInt(0x7A8EE8-offset)
-	if titletest == 0 and lasttitle ~= 0 then 
-		ConsolePrint("Remember to type 'reload' after restarting or going to title screen")
-	end
-	lasttitle = titletest
 	lastInput = input
 	lastDeathPointer = ReadLong(deathPointer)
 	
