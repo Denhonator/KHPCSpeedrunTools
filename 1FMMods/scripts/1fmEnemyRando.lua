@@ -11,16 +11,22 @@ local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local worldFlagBase = 0x2DE79D0+0x6C - offset
 local hercBossY = 0x2D34BF4 - offset
 local ardOff = 0x2394BB0 - offset
+local OCard = 0x23A23B0 - offset
+local OCseed = 0x2389480 - offset
 local state = 0x2863958 - offset
+local combo = 0x2DE24B4 - offset
 local soraPointer = 0x2534680 - offset
+local bossPointer = 0x2D338D0 - offset
 local monitor = 0
 local lastMonitor = 0
 local hasChanged = false
 local lastAddr = 0
 local replaced = false
 local lastBlack = 0
+local bossLastHP = 0
 local endfightTimer = 0
 local antisorabeaten = false
+local addBreakout = false
 
 local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -58,7 +64,7 @@ local bandit = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
 				
 local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_3000",
 			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_ex_1630", "xa_ex_2310", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
+			  "xa_ex_1630", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
 			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_tz_3010", "xa_ex_1040",
 			  "xa_ex_3000", "xa_pc_3020", "xa_tz_3020"}
 			  
@@ -77,7 +83,7 @@ local genie = {"xa_ex_1150", "xa_ex_1030", "xa_tz_3010", "xa_tz_3000",
 			  "xa_di_1010", "xa_aw_1030"}
   
 local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000", "xa_nm_3000",
-				"xa_ew_2040", "xa_di_1010", "xa_di_1020", "xa_di_1030"}
+				"xa_ew_2040", "xa_di_1010", "xa_di_1020", "xa_di_1030", "xa_al_3020"}
 				
 local antisora = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
 					"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
@@ -97,9 +103,8 @@ local riku1 = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
 				"xa_ex_1030", "xa_ex_1040", "xa_ex_1150", "xa_pi_3000",
 				"xa_pp_3000", "xa_ew_2040", "xa_ew_2050", "xa_he_3000",
 				"xa_tz_3000"}
-riku1 = {"xa_tz_3000"}
 
---antisora = {"xa_lm_3030"}
+local test = {"pc_6730.moa"}
 				
 local addrs = {}
 
@@ -120,8 +125,8 @@ function AddAddrs()
 		addrs[i] = {}
 	end
 	--addrs[3][0xAC0980-offset] = normal[math.random(#normal)] --2nd district yellow
-	addrs[3][0xAC0940-offset] = normal[math.random(#normal)] --2nd district blue
-	addrs[3][0xAC0900-offset] = normal[math.random(#normal)] --2nd district red
+	--addrs[3][0xAC0940-offset] = normal[math.random(#normal)] --2nd district blue
+	--addrs[3][0xAC0900-offset] = normal[math.random(#normal)] --2nd district red
 	addrs[3][0xAC0800-offset] = normal[math.random(#normal)] --2nd district shadow
 	--addrs[3][0xAC0840-offset] = normal[math.random(#normal)] --2nd district soldier
 	addrs[3][0xA97840-offset] = normal[math.random(#normal)] --alleyway shadow
@@ -129,6 +134,7 @@ function AddAddrs()
 	addrs[3][0xB16D80-offset] = normal[math.random(#normal)] --1st district shadow
 	addrs[3][0xB0AC00-offset] = normal[math.random(#normal)] --3rd district shadow
 	addrs[3][0xB0ABC0-offset] = normal[math.random(#normal)] --3rd district soldier
+	addrs[3][0x9CAB80-offset] = normal[math.random(#normal)] --gizmo shadow
 	--addrs[3][0xB0ACA0-offset] = test[math.random(#test)] --guard armor
 	--addrs[5][0xA20480-offset] = boss[math.random(#boss)] --treehouse sabor
 	addrs[5][0x9F4600-offset] = normal[math.random(#normal)] --camp powerwild
@@ -192,6 +198,12 @@ function AddAddrs()
 	addrs[13][0x9D1580-offset] = normal[math.random(#normal)] --ship pirate
 	addrs[13][0x9D18E0-offset] = hook[math.random(#hook)] --hook
 	addrs[15][0x9F33C0-offset] = riku1[math.random(#riku1)] --riku1
+	addrs[15][0x9DE6A0-offset] = normal[math.random(#normal)] --tower wyvern
+	addrs[15][0x950640-offset] = normal[math.random(#normal)] --gates wyvern
+	addrs[15][0x94DD00-offset] = normal[math.random(#normal)] --base level darkball
+	addrs[15][0xB5AAC0-offset] = normal[math.random(#normal)] --waterway defender
+	addrs[15][0x9B8AC0-offset] = normal[math.random(#normal)] --lift stop defender
+	--addrs[15][0xA2A800-offset] = test[math.random(#test)]
 end
 
 function WriteString(addr, s)
@@ -213,7 +225,7 @@ function Exceptions(addr)
 	if ReadByte(cutsceneFlags+0xB05) >= 0x49 and addr == 0x992F00-offset then
 		return true
 	end
-	return ReadByte(addr) ~= 120 or ReadByte(addr+1) ~= 97
+	return not (ReadByte(addr) == 120 and ReadByte(addr+1) == 97)
 end
 
 function Fixes()
@@ -391,6 +403,25 @@ function Fixes()
 			-- end
 		-- end
 	-- end
+	
+	--herc scaling
+	if ReadByte(world) == 0xB and ReadByte(room) == 2 
+	and ReadByte(OCard) == 0x24 and ReadShort(OCseed) == 0x0909 then
+		WriteShort(bossHP, 750)
+		WriteShort(bossHP+4, 750)
+		WriteShort(bossHP+0x10, 0x23) --str
+		WriteShort(bossHP+0x14, 0x1B) --def
+	end
+	
+	if addBreakout then
+		local bossAddr = ReadLong(bossPointer)
+		if bossAddr and ReadByte(combo) > 4 and ReadShort(bossHP) < bossLastHP then
+			WriteFloat(bossAddr+0x28C, 0, true)
+			ConsolePrint("Breakout")
+		end
+	end
+	
+	bossLastHP = ReadShort(bossHP)
 end
 
 function _OnFrame()
@@ -412,6 +443,7 @@ function _OnFrame()
 			end
 		end
 		if s~="" then
+			addBreakout = string.find(s, "xa_di_") ~= nil
 			local logfile = io.open("enemyrandolog.txt", "w+")
 			logfile:write(s)
 			ConsolePrint(s)
