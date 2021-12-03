@@ -17,6 +17,13 @@ local state = 0x2863958 - offset
 local combo = 0x2DE24B4 - offset
 local soraPointer = 0x2534680 - offset
 local bossPointer = 0x2D338D0 - offset
+local malPointer = 0x2D338A8 - offset
+local warpTrigger = 0x22E86DC - offset
+local warpType1 = 0x233C240 - offset
+local warpType2 = 0x22E86E0 - offset
+local worldWarp = 0x233CB70 - offset
+local roomWarp = worldWarp + 4
+local counter = 0
 local monitor = 0
 local lastMonitor = 0
 local hasChanged = false
@@ -27,6 +34,7 @@ local bossLastHP = 0
 local endfightTimer = 0
 local antisorabeaten = false
 local addBreakout = false
+local hpScale = 1
 
 local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -35,12 +43,12 @@ local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
 				"xa_ex_2190", "xa_ex_2200", "xa_ex_2210",
 				"xa_ex_2220", "xa_ex_2230",
-				"xa_ex_2250", "xa_ex_2270", "xa_ex_2280",
+				"xa_ex_2250", "xa_ex_2270",
 				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
 				"xa_ex_2340", "xa_ex_2380",
 				"xa_ex_2390", "xa_pp_3020"}
 				
-local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
+local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
 				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
 				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
@@ -51,7 +59,7 @@ local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
 				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
 				"xa_ex_2340", "xa_ex_2350", "xa_ex_2380", "xa_pp_3020"}
 				
-local bandit = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030", "xa_ew_2050",
+local bandit = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
 				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
 				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
@@ -96,6 +104,15 @@ local hook = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020",
 				"xa_al_3010", "xa_pc_3000", "xa_di_3000", "xa_al_3020",
 				"xa_ew_2050", "xa_he_1010", "xa_pc_3020", "xa_tz_3000",
 				"xa_pp_3010", "xa_lm_3030"}
+				
+local mal = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
+				"xa_di_1030", "xa_ex_1010", "xa_ex_1160",
+				"xa_ex_1030", "xa_ex_1040", "xa_ew_2040",
+				"xa_pc_3000", "xa_di_3000", "xa_he_3000",
+				"xa_ew_2050", "xa_pc_3020", "xa_tz_3000",
+				"xa_pp_3010", "xa_lm_3030", "xa_ex_1010"}
+				
+local dragmal = {"xa_ex_3010"}
 					
 local lsb = {"xa_ex_2010", "xa_ex_2030", "xa_ex_2070", "xa_ex_2090", "xa_ex_2100"}
 
@@ -103,6 +120,11 @@ local riku1 = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
 				"xa_ex_1030", "xa_ex_1040", "xa_ex_1150", "xa_pi_3000",
 				"xa_pp_3000", "xa_ew_2040", "xa_ew_2050", "xa_he_3000",
 				"xa_tz_3000"}
+				
+local leon = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
+				"xa_ex_1160", "xa_ex_1040", "xa_pi_3000",
+				"xa_pp_3000", "xa_ew_2040", "xa_ew_2050", "xa_he_3000",
+				"xa_tz_3000", "xa_he_3020", "xa_lm_3030"}
 
 local test = {"pc_6730.moa"}
 				
@@ -120,6 +142,14 @@ function _OnInit()
 	end
 end
 
+function RoomWarp(w, r)
+	WriteByte(warpType1, 5)
+	WriteByte(warpType2, 10)
+	WriteByte(worldWarp, w)
+	WriteByte(roomWarp, r)
+	WriteByte(warpTrigger, 2)
+end
+
 function AddAddrs()
 	for i=1,0x10 do
 		addrs[i] = {}
@@ -128,6 +158,7 @@ function AddAddrs()
 	--addrs[3][0xAC0940-offset] = normal[math.random(#normal)] --2nd district blue
 	--addrs[3][0xAC0900-offset] = normal[math.random(#normal)] --2nd district red
 	addrs[3][0xAC0800-offset] = normal[math.random(#normal)] --2nd district shadow
+	addrs[3][0xB17240-offset] = leon[math.random(#leon)] --tt leon
 	--addrs[3][0xAC0840-offset] = normal[math.random(#normal)] --2nd district soldier
 	addrs[3][0xA97840-offset] = normal[math.random(#normal)] --alleyway shadow
 	addrs[3][0xA97800-offset] = normal[math.random(#normal)] --alleyway soldier
@@ -184,7 +215,6 @@ function AddAddrs()
 	addrs[10][0xA22500-offset] = normal[math.random(#normal)] --moonlight hill whight
 	addrs[10][0x9A8440-offset] = normal[math.random(#normal)] --bridge whight
 	addrs[10][0xB195C0-offset] = lite[math.random(#lite)] --manor whight
-	--addrs[10][0x8A4D80-offset] = test[math.random(#test)] --lock
 	--addrs[10][0x8A4E40-offset] = test[math.random(#test)] --lock
 	--addrs[10][0x8A4E80-offset] = test[math.random(#test)] --shock
 	--addrs[10][0x8A4EC0-offset] = test[math.random(#test)] --barrel
@@ -202,7 +232,9 @@ function AddAddrs()
 	addrs[15][0x950640-offset] = normal[math.random(#normal)] --gates wyvern
 	addrs[15][0x94DD00-offset] = normal[math.random(#normal)] --base level darkball
 	addrs[15][0xB5AAC0-offset] = normal[math.random(#normal)] --waterway defender
-	addrs[15][0x9B8AC0-offset] = normal[math.random(#normal)] --lift stop defender
+	--addrs[15][0x9B8AC0-offset] = normal[math.random(#normal)] --lift stop defender
+	addrs[15][0xA2AAC0-offset] = mal[math.random(#mal)] --maleficent
+	addrs[15][0xA07040-offset] = dragmal[math.random(#dragmal)] --dragon maleficent
 	--addrs[15][0xA2A800-offset] = test[math.random(#test)]
 end
 
@@ -250,10 +282,31 @@ function Fixes()
 		bossHP = 0x2D596CC - offset
 	end
 	
+	if ReadByte(world) == 3 and ReadByte(room) == 0 then
+		if ReadShort(bossHP+4) ~= 120*hpScale then
+			WriteShort(bossHP, 120*hpScale)
+			WriteShort(bossHP+4, 120*hpScale)
+			WriteShort(bossHP+0x10, 8) --str
+			WriteShort(bossHP+0x14, 8) --def
+		end
+		if ReadByte(cutsceneFlags+0xB04) == 0x17 and ReadByte(ardOff) == 0x60 and
+			ReadInt(bossHP) == 0 and ReadByte(state) & 1 == 1 then
+			endfightTimer = endfightTimer + 1
+		else
+			endfightTimer = 0
+		end
+		if endfightTimer > 300 then
+			WriteByte(cutsceneFlags+0xB04, 0x1A)
+			endfightTimer = 0
+			ConsolePrint("Fight end")
+			RoomWarp(3, 0x21)
+		end
+	end
+	
 	if ReadByte(world) == 4 and ReadByte(room) == 1 then
-		if ReadShort(bossHP+4) ~= 600 then
-			WriteShort(bossHP, 600)
-			WriteShort(bossHP+4, 600)
+		if ReadShort(bossHP+4) ~= 600*hpScale then
+			WriteShort(bossHP, 600*hpScale)
+			WriteShort(bossHP+4, 600*hpScale)
 			WriteShort(bossHP+0x10, 9) --str
 			WriteShort(bossHP+0x14, 9) --def
 		end
@@ -271,15 +324,15 @@ function Fixes()
 	end
 	
 	if ReadByte(world) == 8 and ReadByte(room) == 0x10 then
-		if ReadShort(bossHP+4) ~= 500 then
-			WriteShort(bossHP, 500)
-			WriteShort(bossHP+4, 500)
+		if ReadShort(bossHP+4) ~= 500*hpScale then
+			WriteShort(bossHP, 500*hpScale)
+			WriteShort(bossHP+4, 500*hpScale)
 			WriteShort(bossHP+0x10, 0x11) --str
 			WriteShort(bossHP+0x14, 0xF) --def
 		end
-		if ReadShort(bossHP+0x104) ~= 500 then
-			WriteShort(bossHP+0x100, 500)
-			WriteShort(bossHP+0x104, 500)
+		if ReadShort(bossHP+0x104) ~= 500*hpScale then
+			WriteShort(bossHP+0x100, 500*hpScale)
+			WriteShort(bossHP+0x104, 500*hpScale)
 			WriteShort(bossHP+0x110, 0x11) --str
 			WriteShort(bossHP+0x114, 0xF) --def
 		end
@@ -301,9 +354,9 @@ function Fixes()
 	end
 	
 	if ReadByte(world) == 0xC and ReadByte(room) == 4 then
-		if ReadShort(bossHP+4) ~= 450 then
-			WriteShort(bossHP, 450)
-			WriteShort(bossHP+4, 450)
+		if ReadShort(bossHP+4) ~= 450*hpScale then
+			WriteShort(bossHP, 450*hpScale)
+			WriteShort(bossHP+4, 450*hpScale)
 			WriteShort(bossHP+0x10, 0x14) --str
 			WriteShort(bossHP+0x14, 0x11) --def
 		end
@@ -321,9 +374,9 @@ function Fixes()
 	end
 	
 	if ReadByte(world) == 0xD and ReadByte(room) == 6 then
-		if ReadShort(bossHP+4) ~= 750 then
-			WriteShort(bossHP, 750)
-			WriteShort(bossHP+4, 750)
+		if ReadShort(bossHP+4) ~= 750*hpScale then
+			WriteShort(bossHP, 750*hpScale)
+			WriteShort(bossHP+4, 750*hpScale)
 			WriteShort(bossHP+0x10, 0x1B) --str
 			WriteShort(bossHP+0x14, 0x15) --def
 		end
@@ -348,9 +401,9 @@ function Fixes()
 	end
 	
 	if ReadByte(world) == 0xD and ReadByte(room) == 8 then
-		if ReadShort(bossHP+4) ~= 900 then
-			WriteShort(bossHP, 900)
-			WriteShort(bossHP+4, 900)
+		if ReadShort(bossHP+4) ~= 900*hpScale then
+			WriteShort(bossHP, 900*hpScale)
+			WriteShort(bossHP+4, 900*hpScale)
 			WriteShort(bossHP+0x10, 0x1B) --str
 			WriteShort(bossHP+0x14, 0x15) --def
 		end
@@ -372,9 +425,9 @@ function Fixes()
 	end
 	
 	if ReadByte(world) == 0xF and ReadByte(room) == 4 then
-		if ReadShort(bossHP+4) ~= 500 then
-			WriteShort(bossHP, 500)
-			WriteShort(bossHP+4, 500)
+		if ReadShort(bossHP+4) ~= 500*hpScale then
+			WriteShort(bossHP, 500*hpScale)
+			WriteShort(bossHP+4, 500*hpScale)
 			WriteShort(bossHP+0x10, 0x1F) --str
 			WriteShort(bossHP+0x14, 0x18) --def
 		end
@@ -391,6 +444,53 @@ function Fixes()
 		end
 	end
 	
+	if ReadByte(world) == 0xF and ReadByte(room) == 0xB then
+		if ReadShort(bossHP+4) ~= 900*hpScale then
+			WriteShort(bossHP, 900*hpScale)
+			WriteShort(bossHP+4, 900*hpScale)
+			WriteShort(bossHP+0x10, 0x1F) --str
+			WriteShort(bossHP+0x14, 0x18) --def
+		end
+		if ReadByte(cutsceneFlags+0xB0E) == 0x50 and ReadShort(ardOff) == 0x54 and
+			ReadInt(bossHP) == 0 and ReadByte(state) & 1 == 1 then
+			endfightTimer = endfightTimer + 1
+		else
+			endfightTimer = 0
+		end
+		if endfightTimer > 300 then
+			WriteShort(ardOff, 0x55)
+			endfightTimer = 0
+			ConsolePrint("Fight end")
+		end
+	end
+	
+	if ReadByte(world) == 0xF and ReadByte(room) == 0xC then
+		if ReadShort(bossHP+4) ~= 1200*hpScale then
+			WriteShort(bossHP, 1200*hpScale)
+			WriteShort(bossHP+4, 1200*hpScale)
+			WriteShort(bossHP+0x10, 0x1F) --str
+			WriteShort(bossHP+0x14, 0x18) --def
+		end
+		local dragonmal = 0x2D35540 - offset
+		if ReadShort(dragonmal+0x4B0) == 32768 then
+			ConsolePrint("Disabling collision")
+			for i=1,45 do --disable collision
+				WriteShort(dragonmal+0x4B0*i, 0)
+			end
+		end
+		if ReadByte(cutsceneFlags+0xB0E) == 0x5A and ReadShort(ardOff) == 0x4F and
+			ReadInt(bossHP) == 0 and ReadByte(state) & 1 == 1 then
+			endfightTimer = endfightTimer + 1
+		else
+			endfightTimer = 0
+		end
+		if endfightTimer > 200 then
+			WriteShort(ardOff, 0x50)
+			endfightTimer = 0
+			ConsolePrint("Fight end")
+		end
+	end
+
 	-- if ReadByte(world) == 0xD and ReadByte(room) == 8 and ReadLong(soraPointer) then
 		-- local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
 		-- if soraYPos == 0 then
@@ -407,20 +507,23 @@ function Fixes()
 	--herc scaling
 	if ReadByte(world) == 0xB and ReadByte(room) == 2 
 	and ReadByte(OCard) == 0x24 and ReadShort(OCseed) == 0x0909 then
-		WriteShort(bossHP, 750)
-		WriteShort(bossHP+4, 750)
+		WriteShort(bossHP, 750*hpScale)
+		WriteShort(bossHP+4, 750*hpScale)
 		WriteShort(bossHP+0x10, 0x23) --str
 		WriteShort(bossHP+0x14, 0x1B) --def
 	end
 	
 	if addBreakout then
 		local bossAddr = ReadLong(bossPointer)
+		if bossAddr == 0 then
+			bossAddr = ReadLong(malPointer)
+		end
 		if bossAddr and ReadByte(combo) > 4 and ReadShort(bossHP) < bossLastHP then
 			WriteFloat(bossAddr+0x28C, 0, true)
 			ConsolePrint("Breakout")
 		end
 	end
-	
+
 	bossLastHP = ReadShort(bossHP)
 end
 
@@ -444,6 +547,7 @@ function _OnFrame()
 		end
 		if s~="" then
 			addBreakout = string.find(s, "xa_di_") ~= nil
+			hpScale = string.find(s, "xa_pp_3010") ~= nil and 0.4 or 1
 			local logfile = io.open("enemyrandolog.txt", "w+")
 			logfile:write(s)
 			ConsolePrint(s)
