@@ -9,7 +9,6 @@ local blackfade = 0x4D93B8 - offset
 local whitefade = 0x233C49C - offset
 local cutsceneFlags = 0x2DE65D0-0x200 - offset
 local worldFlagBase = 0x2DE79D0+0x6C - offset
-local hercBossY = 0x2D34BF4 - offset
 local ardOff = 0x2394BB0 - offset
 local OCard = 0x23A23B0 - offset
 local OCseed = 0x2389480 - offset
@@ -36,6 +35,8 @@ local bossLastHP = 0
 local endfightTimer = 0
 local antisorabeaten = false
 local addBreakout = false
+local heightAdjust = 0
+local adjustAddr = 0
 local hpScale = 1
 
 local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
@@ -75,7 +76,9 @@ local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_300
 			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
 			  "xa_ex_1630", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
 			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_tz_3010", "xa_ex_1040",
-			  "xa_ex_3000", "xa_pc_3020", "xa_tz_3020"}
+			  "xa_ex_3000", "xa_ex_3010", "xa_pc_3020", "xa_tz_3020"}
+	  
+local duo = {"xa_ex_1150", "xa_ex_1030", "xa_ex_1040", "xa_tz_3020"}
 			  
 local parasite = {"xa_he_1000"}
 local pc1riku = {"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010", 
@@ -201,6 +204,8 @@ function AddAddrs()
 	--addrs[11][0xAD05C0-offset] = normal[math.random(#normal)] --oc shadow
 	addrs[11][0xAD0540-offset] = boss[math.random(#boss)] --oc cloud
 	addrs[11][0xAD0800-offset] = boss[math.random(#boss)] --oc herc
+	addrs[11][0x95CDC0-offset] = duo[math.random(#duo)] --oc leon
+	addrs[11][0x95CE80-offset] = duo[math.random(#duo)] --oc yuffie
 	--addrs[11][0xAD08A0-offset] = cerb[math.random(#cerb)] --oc cerb
 	addrs[11][0xAD0580-offset] = normal[math.random(#normal)] --oc soldier
 	--addrs[11][0xAD0600-offset] = normal[math.random(#normal)] --oc large body
@@ -295,16 +300,13 @@ end
 
 function Fixes()
 	local addr = 0xAD0800-offset
-	--ConsolePrint(string.format("%x", ReadLong(addr)))
-	if ReadByte(addr) == 120 and ReadByte(addr+1) == 97
-	and ReadByte(addr+4) == 0x77 and ReadByte(addr+6) == 51
-	and ReadByte(addr+8) == 50 and ReadFloat(hercBossY) == -20 then
-		WriteFloat(hercBossY, 1200)
+	
+	adjustAddr = 0x2D34BF4 - offset
+	if ReadFloat(adjustAddr) ~= -20 then
+		adjustAddr = 0x2D35554 - offset
 	end
-	if ReadByte(addr) == 120 and ReadByte(addr+1) == 97
-	and ReadByte(addr+4) == 99 and ReadByte(addr+6) == 51
-	and ReadByte(addr+8) == 50 and ReadFloat(hercBossY) == -20 then
-		WriteFloat(hercBossY, 900)
+	if heightAdjust > 0 and ReadFloat(adjustAddr) == -20 then
+		WriteFloat(adjustAddr, heightAdjust)
 	end
 	
 	local bossHP = 0x2D595CC - offset
@@ -685,7 +687,9 @@ function _OnFrame()
 			addBreakout = string.find(s, "xa_di_") ~= nil
 			hpScale = string.find(s, "xa_pp_3010") ~= nil and 0.4 or hpScale
 			hpScale = (addBreakout or string.find(s, "xa_ex_1010")) ~= nil and 0.6 or hpScale
-			
+			heightAdjust = 0
+			heightAdjust = string.find(s, "xa_ew_3020") ~= nil and 1200 or heightAdjust
+			heightAdjust = string.find(s, "xa_pc_3020") ~= nil and 900 or heightAdjust
 			local logfile = io.open("enemyrandolog.txt", "w+")
 			logfile:write(s)
 			ConsolePrint(s)
