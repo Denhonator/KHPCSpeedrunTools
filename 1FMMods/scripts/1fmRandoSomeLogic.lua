@@ -72,6 +72,7 @@ local libraryFlag = 0x2DE7AF3 - offset
 local scriptPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
 local OCCupDialog = 0x23966B0 - offset
+local OCard = 0x23A23B0 - offset
 local textBox = 0x23D09E4 - offset
 local cupCurrentSeed = 0x2389480 - offset
 local waterwayGate = 0x2DE763D - offset
@@ -1945,10 +1946,10 @@ function StackAbilities()
 		end
 		
 		-- Allow early flight in Neverland if glide equipped
-		if countedAbilities[3] > 0 and ReadByte(world) == 0xD then
-			if (ReadByte(stateFlag) // 0x20) % 2 == 0 then
+		if countedAbilities[3] > 0 and ReadByte(world) == 0xD
+			and ReadByte(cutsceneFlags+0xB0D) < 0x50
+			and (ReadByte(stateFlag) // 0x20) % 2 == 0 then
 				WriteByte(stateFlag, ReadByte(stateFlag) + 0x20)
-			end
 		end
 		
 		if not DodgeDataValid(dodgeDataAddr) then
@@ -2105,6 +2106,11 @@ function FlagFixes()
 		elseif ReadByte(world) == 0xB and ReadByte(room) == 1 then
 			WriteInt(minigameTimer, 0)
 		end
+		-- if (ReadShort(OCard) == 0x24 or ReadShort(OCard) == 0x28) 
+		-- and (ReadByte(party1) == 0xFF or ReadInt(minigameTimer) > 0)
+		-- and (ReadShort(cupCurrentSeed) == 0x0101 or ReadShort(cupCurrentSeed) == 0x0B0B) then
+			-- WriteShort(OCard, ReadShort(OCard) == 0x24 and 0x99)
+		-- end
 
 		for i=0,3 do
 			if ReadByte(OCCupUnlock+i) ~= 0xA and ReadByte(OCCupUnlock+i) ~= 1 then
@@ -2226,24 +2232,24 @@ function FlagFixes()
 	end
 	
 	-- Fall in flight sections without glide
-	if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
-		local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
-		if ReadByte(world) == 0xD then
-			if ReadByte(room) == 8 and soraYPos > 600 then
-				InstantContinue()
-			elseif ReadByte(room) == 9 and soraYPos > 900 then
-				RoomWarp(0xD, 0x27)
-			end
-		end
+	-- if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
+		-- local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
+		-- if ReadByte(world) == 0xD then
+			-- if ReadByte(room) == 8 and soraYPos > 600 then
+				-- InstantContinue()
+			-- elseif ReadByte(room) == 9 and soraYPos > 900 then
+				-- RoomWarp(0xD, 0x27)
+			-- end
+		-- end
 		
-		if ReadByte(world) == 0x10 then
-			if ReadByte(room) == 0x1A and soraYPos > -400 then
-				InstantContinue()
-			elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
-				WriteFloat(ReadLong(soraPointer)+0x14, -7000, true)
-			end
-		end
-	end
+		-- if ReadByte(world) == 0x10 then
+			-- if ReadByte(room) == 0x1A and soraYPos > -400 then
+				-- InstantContinue()
+			-- elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
+				-- WriteFloat(ReadLong(soraPointer)+0x14, -7000, true)
+			-- end
+		-- end
+	-- end
 	
 	if ReadByte(world) == 5 then
 		-- if ReadByte(blackfade) < 128 and prevBlack == 128 then
