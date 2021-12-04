@@ -254,7 +254,7 @@ function AddAddrs()
 	addrs[13][0x959C40-offset] = normal[math.random(#normal)] --ship hold anti sora
 	addrs[13][0x9C0900-offset] = normal[math.random(#normal)] --ship galley anti sora
 	addrs[13][0x9A4B20-offset] = antisora[math.random(#antisora)] --anti sora
-	addrs[13][0x9D1580-offset] = normal[math.random(#normal)] --ship pirate
+	--addrs[13][0x9D1580-offset] = normal[math.random(#normal)] --ship pirate
 	addrs[13][0x9D18E0-offset] = hook[math.random(#hook)] --hook
 	addrs[15][0x9F33C0-offset] = riku1[math.random(#riku1)] --riku1
 	addrs[15][0x9DE6A0-offset] = normal[math.random(#normal)] --tower wyvern
@@ -393,6 +393,10 @@ function Fixes()
 			WriteByte(ardOff, 0xF3)
 			ConsolePrint("Give magic")
 		end
+	end
+	
+	if ReadByte(world) == 0xC and ReadByte(worldFlagBase+0x9E) == 2 then
+		WriteByte(worldFlagBase+0x9E, 0)
 	end
 	
 	if ReadByte(world) == 0xC and ReadByte(room) == 4 then
