@@ -45,10 +45,9 @@ local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
 				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
 				"xa_ex_2190", "xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2230",
-				"xa_ex_2250", "xa_ex_2270",
+				"xa_ex_2220", "xa_ex_2230", "xa_ex_2250", "xa_ex_2270",
 				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330", "xa_ex_2340",
-				"xa_ex_2390", "xa_pp_3020"}
+				"xa_pp_3020"}
 				
 local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -77,6 +76,12 @@ local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_300
 			  "xa_ex_1630", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
 			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_tz_3010", "xa_ex_1040",
 			  "xa_ex_3000", "xa_ex_3010", "xa_pc_3020", "xa_tz_3020"}
+			  
+local cloud = {"xa_he_3020", "xa_di_3000", "xa_al_3010", "xa_nm_3000",
+			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
+			  "xa_ex_1630", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
+			  "xa_pi_3000", "xa_pp_3000", "xa_tz_3010", "xa_ex_1040",
+			  "xa_ex_3000", "xa_ex_3010", "xa_tz_3020"}
 	  
 local duo = {"xa_ex_1150", "xa_ex_1030", "xa_ex_1040", "xa_tz_3020"}
 			  
@@ -202,12 +207,12 @@ function AddAddrs()
 	--addrs[4][0x8E0E40-offset] = normal[math.random(#normal)] --lotus forest soldier
 	addrs[4][0x9F8100-offset] = trick[math.random(#trick)] --trickmaster
 	--addrs[11][0xAD05C0-offset] = normal[math.random(#normal)] --oc shadow
-	addrs[11][0xAD0540-offset] = boss[math.random(#boss)] --oc cloud
+	addrs[11][0xAD0540-offset] = cloud[math.random(#cloud)] --oc cloud
 	addrs[11][0xAD0800-offset] = boss[math.random(#boss)] --oc herc
 	addrs[11][0x95CDC0-offset] = duo[math.random(#duo)] --oc leon
 	addrs[11][0x95CE80-offset] = duo[math.random(#duo)] --oc yuffie
 	--addrs[11][0xAD08A0-offset] = cerb[math.random(#cerb)] --oc cerb
-	addrs[11][0xAD0580-offset] = normal[math.random(#normal)] --oc soldier
+	--addrs[11][0xAD0580-offset] = normal[math.random(#normal)] --oc soldier
 	--addrs[11][0xAD0600-offset] = normal[math.random(#normal)] --oc large body
 	--addrs[11][0xAD0640-offset] = normal[math.random(#normal)] --oc red
 	--addrs[11][0xAD0680-offset] = normal[math.random(#normal)] --oc blue
@@ -228,9 +233,9 @@ function AddAddrs()
 	addrs[8][0x97BBC0-offset] = jafar[math.random(#jafar)] --jafar
 	addrs[8][0x97BC00-offset] = genie[math.random(#genie)] --genie
 	--addrs[8][0x99C3C0-offset] = test[math.random(#test)] --genie jafar
-	addrs[12][0x9800C0-offset] = normal[math.random(#normal)] --chamber 1 ghost
-	addrs[12][0x9D2BC0-offset] = normal[math.random(#normal)] --chamber 2 airsoldier
-	addrs[12][0x9D78C0-offset] = normal[math.random(#normal)] --chamber 5 ghost
+	--addrs[12][0x9800C0-offset] = normal[math.random(#normal)] --chamber 1 ghost
+	--addrs[12][0x9D2BC0-offset] = normal[math.random(#normal)] --chamber 2 airsoldier
+	--addrs[12][0x9D78C0-offset] = normal[math.random(#normal)] --chamber 5 ghost
 	addrs[12][0x9CF300-offset] = parasite[math.random(#parasite)] --pc1
 	addrs[12][0x9CF440-offset] = pc1riku[math.random(#pc1riku)] --pc1 riku
 	--addrs[12][0x9CB700-offset] = test[math.random(#test)] --pc2
@@ -299,16 +304,6 @@ function Exceptions(addr)
 end
 
 function Fixes()
-	local addr = 0xAD0800-offset
-	
-	adjustAddr = 0x2D34BF4 - offset
-	if ReadFloat(adjustAddr) ~= -20 then
-		adjustAddr = 0x2D35554 - offset
-	end
-	if heightAdjust > 0 and ReadFloat(adjustAddr) == -20 then
-		WriteFloat(adjustAddr, heightAdjust)
-	end
-	
 	local bossHP = 0x2D595CC - offset
 	if ReadByte(0x2DE5E5F - offset) == 0xFF and ReadByte(0x2DE5E60 - offset) == 0xFF then
 		bossHP = 0x2D593CC - offset
@@ -316,7 +311,19 @@ function Fixes()
 	if ReadByte(world) == 0xD and ReadByte(room) == 8 then
 		bossHP = 0x2D596CC - offset
 	end
+
+	local addr = 0xAD0800-offset
 	
+	adjustAddr = 0x2D34BF4 - offset
+	-- if ReadFloat(adjustAddr) ~= -20 then
+		-- adjustAddr = 0x2D35554 - offset
+	-- end
+	local charIDP = 0x2967CB0 - offset
+	if ReadFloat(adjustAddr) == -20 and ReadInt(bossHP) > 1000 
+	and ReadInt(OCseed) == 0x0909 and ReadInt(OCseed-8) == 0x210 then
+		WriteFloat(adjustAddr, heightAdjust)
+	end
+
 	if ReadByte(world) == 3 and ReadByte(room) == 0 then
 		if ReadShort(bossHP+4) ~= 120*hpScale then
 			WriteShort(bossHP, 120*hpScale)
@@ -685,10 +692,9 @@ function _OnFrame()
 		end
 		if s~="" then
 			addBreakout = string.find(s, "xa_di_") ~= nil
-			hpScale = string.find(s, "xa_pp_3010") ~= nil and 0.4 or hpScale
+			hpScale = string.find(s, "xa_pp_3010") ~= nil and 0.4 or 1
 			hpScale = (addBreakout or string.find(s, "xa_ex_1010")) ~= nil and 0.6 or hpScale
-			heightAdjust = 0
-			heightAdjust = string.find(s, "xa_ew_3020") ~= nil and 1200 or heightAdjust
+			heightAdjust = string.find(s, "xa_ew_3020") ~= nil and 1200 or 0
 			heightAdjust = string.find(s, "xa_pc_3020") ~= nil and 900 or heightAdjust
 			local logfile = io.open("enemyrandolog.txt", "w+")
 			logfile:write(s)
