@@ -8,11 +8,13 @@ Example:
 
 *Let's say you want to run roxas section, and need a few auto-splits for training, if your splits are:*
 
-![]("assets/splits.jpg")
+![splits](https://user-images.githubusercontent.com/48713763/146223643-c16fc4e0-733f-44d0-ad77-49e063285d77.JPG)
+
 
 *Then, your auto-splitter should be configured this way*
 
-![]("assets/example1.jpg")
+![example1](https://user-images.githubusercontent.com/48713763/146223675-74d3ff22-7109-4530-812d-fb00b63ec39b.JPG)
+
 
 ## Categories runnable at the moment:
 * Any%
