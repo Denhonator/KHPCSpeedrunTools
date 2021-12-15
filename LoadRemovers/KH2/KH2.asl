@@ -50,7 +50,6 @@ startup
 	settings.Add("hayner", true, "Hayner");
 	settings.Add("vivi", true, "Vivi");
 	settings.Add("axel1", true, "Axel I");
-	settings.Add("setzer", true, "Setzer");
 	settings.Add("balls", true, "Balls In The Wall");
 	settings.Add("shadowroxas", true, "Shadow Roxas");
 	settings.Add("bag", true, "Moving Bag");
@@ -150,7 +149,7 @@ split
 		else if(settings["axel1"] && current.worldID == 0x02 && current.roomID == 0x05 && current.eventID1 == 0x57){
 			vars.fightEnd = false;
 			return true;
-
+		}
 		//Axel II
 		else if(settings["axel2"] && current.worldID == 0x02 && current.roomID == 0x17 && current.eventID1 == 0x89){
 			vars.fightEnd = false;
