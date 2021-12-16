@@ -2,7 +2,7 @@
 
 # A word of warning
 
-Be carfeul. The auto-splitter is still in alpha tests, and currently has issues (such as splitting too early for some splits)
+Be carfeul. The auto-splitter is still in alpha, and currently has issues (such as splitting too early for some splits)
 
 If you are going for a serious run for a top time, i'd advise you to deactivate the "split" and "start" options in the scriptable ASL, or simply to use Denho's build for the time being.
 If you decide to use it anyway, have your Undo and skip split ready !
