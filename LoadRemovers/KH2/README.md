@@ -23,3 +23,7 @@ Example:
 * Adding as many fights and flags as possible
 * Add other categories
 * Create a start auto-split
+
+## Ressources
+https://github.com/1234567890num/KH2FM-Plando-Useful-Codes/wiki/World,-Room,-and-Spawn-ID
+Most flags of the game are referenced in this wiki
