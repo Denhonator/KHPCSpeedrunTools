@@ -1,4 +1,12 @@
 # KH2 Auto-splitter / Load remover
+
+# A word of warning
+
+Be carfeul. The auto-splitter is still in alpha tests, and currently has issues (such as splitting too early for some splits)
+
+If you are going for a serious run for a top time, i'd advise you to deactivate the "split" and "start" options in the scriptable ASL, or simply to use Denho's build for the time being.
+If you decide to use it anyway, have your Undo and skip split ready !
+
 ## How to use
 1. Follow the instructions on the main README file
 2. In the Scriptable Auto Splitter options, check the fights / splits you want the auto-splitter to split for you
