@@ -8,6 +8,7 @@ state("KINGDOM HEARTS II FINAL MIX", "GLOBAL")
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A20C98;
 	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB8;
 	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB9;
+	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBE08;
 	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DBC;
 	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DBE;
 	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DC0;
@@ -28,6 +29,7 @@ init
 	timer.IsGameTimePaused = false;
 	vars.splitTimer = 0;
 	vars.currentSplit = 0;
+	vars.startCounter = 0;
 	vars.fightEnd = false;
 	if(modules.First().ModuleMemorySize == 46301184){
 		version = "JP";
@@ -88,11 +90,22 @@ startup
 
 start
 {
-
+	if(vars.startCounter==0){	
+		if(current.newgame == 0 && old.newgame == 2){
+			vars.startCounter += 1;
+			return false;
+		}
+	}
+	if(vars.startCounter==1){	
+		if(current.newgame == 0 && old.newgame == 2){
+			return true;
+		}
+	}
 }
 
 split
 {	
+
 	if(vars.splitTimer <= 0){
 		if(current.fightend && !old.fightend && current.soraHP > 0){
 				print("fightend!");
