@@ -6,6 +6,8 @@ state("KINGDOM HEARTS II FINAL MIX", "GLOBAL")
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD6BC0;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x711438;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A20C98;
+	//byte impreialSquareGateHPPointer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25BD980;
+	//byte imperialSquareGateHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x25BD980;
 	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB8;
 	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB9;
 	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBE08;
@@ -30,6 +32,7 @@ init
 	vars.splitTimer = 0;
 	vars.currentSplit = 0;
 	vars.startCounter = 0;
+	vars.doubleSplitCounter = 0;
 	vars.fightEnd = false;
 	if(modules.First().ModuleMemorySize == 46301184){
 		version = "JP";
@@ -44,23 +47,33 @@ init
 startup
 {
 	vars.booting = false;
-	settings.Add("seifer2", true, "Seifer 2");
-	settings.Add("mansiondusk", true, "Mansion Dusk");
-	settings.Add("maildelivery", true, "Mail Delivery");
-	settings.Add("3dusksfight1", true, "3 Dusks fight (Heart)");
-	settings.Add("twilightthorn", true, "Twilight Thorn");
-	settings.Add("hayner", true, "Hayner");
-	settings.Add("vivi", true, "Vivi");
-	settings.Add("axel1", true, "Axel I");
-	settings.Add("balls", true, "Balls In The Wall");
-	settings.Add("shadowroxas", true, "Shadow Roxas");
-	settings.Add("bag", true, "Moving Bag");
-	settings.Add("axel2", true, "Axel II");
+	//Roxas Section
+	settings.Add("roxassection", true, "Roxas Section");
+	settings.Add("seifer2", false, "Seifer 2", "roxassection");
+	settings.Add("mansiondusk", false, "Mansion Dusk", "roxassection");
+	settings.Add("maildelivery", false, "Mail Delivery", "roxassection");
+	settings.Add("3dusksfight1", false, "3 Dusks fight (Heart)", "roxassection");
+	settings.Add("twilightthorn", false, "Twilight Thorn", "roxassection");
+	settings.Add("hayner", false, "Hayner", "roxassection");
+	settings.Add("vivi", false, "Vivi", "roxassection");
+	settings.Add("axel1", false, "Axel I", "roxassection");
+	settings.Add("balls", false, "Balls In The Wall", "roxassection");
+	settings.Add("shadowroxas", false, "Shadow Roxas", "roxassection");
+	settings.Add("bag", false, "Moving Bag", "roxassection");
+	settings.Add("axel2", true, "Axel II", "roxassection");
+
+	//station fight
 	settings.Add("station", true, "Station");
+
+	//Yen Sid's tower
 	settings.Add("tower", true, "Yen Sid's Tower second floor");
+	//settings.Add("tower", true, "Yen Sid's Tower second floor");
+	//settings.Add("tower", true, "Yen Sid's Tower second floor");
+
 	settings.Add("bailey", true, "Bailey");
 	settings.Add("shanyu", true, "Shan-Yu");
 	settings.Add("hydra", true, "Hydra");
+	settings.Add("heartlesspages", true, "Heartless steal Winnie's Pages");
 	settings.Add("darkthorn", true, "Dark Thorn");
 	settings.Add("minnieescort", true, "Minnie Escort");
 	settings.Add("trpete", true, "Timeless River Pete");
@@ -186,14 +199,27 @@ split
 		}
 		//Shan-Yu
 		else if(settings["shanyu"] && current.worldID == 0x08 && current.roomID == 0x09 && current.eventID1 == 0x4B){
-			vars.fightEnd = false;
-			return true;
+			if (vars.doubleSplitCounter == 0){
+				vars.doubleSplitCounter += 1;
+				vars.fightEnd = false;
+			}
+			else{
+				vars.doubleSplitCounter = 0;
+				vars.fightEnd = false;
+				return true;
+			}
 		}
 		//Hydra
 		else if(settings["hydra"] && current.worldID == 0x06 && current.roomID == 0x12 && current.eventID1 == 0xAB){
 			vars.fightEnd = false;
 			return true;
 		}
+		//Twilight Town 2
+		else if(settings["heartlesspages"] && current.worldID == 0x04 && current.roomID == 0x09 && current.eventID1 == 0x3A){
+			vars.fightEnd = false;
+			return true;
+		}
+
 		//Heartless steal the pages
 		else if(settings["heartlesspages"] && current.worldID == 0x04 && current.roomID == 0x09 && current.eventID1 == 0x48){
 			vars.fightEnd = false;
@@ -211,8 +237,15 @@ split
 		}
 		//TR Pete
 		else if(settings["trpete"] && current.worldID == 0x0D && current.roomID == 0x03 && current.eventID1 == 0x35){
-			vars.fightEnd = false;
-			return true;
+			if (vars.doubleSplitCounter == 0){
+				vars.doubleSplitCounter += 1;
+				vars.fightEnd = false;
+			}
+			else{
+				vars.doubleSplitCounter = 0;
+				vars.fightEnd = false;
+				return true;
+			}
 		}
 		//Barbossa
 		else if(settings["barbossa"] && current.worldID == 0x10 && current.roomID == 0x0A && current.eventID1 == 0x3C){
