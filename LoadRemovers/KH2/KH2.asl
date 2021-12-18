@@ -118,7 +118,6 @@ start
 
 split
 {	
-
 	if(vars.splitTimer <= 0){
 		if(current.fightend && !old.fightend && current.soraHP > 0){
 				print("fightend!");
@@ -171,13 +170,18 @@ split
 			vars.fightEnd = false;
 			return true;
 		}
+		//Vivi
+		else if(settings["balls"] && current.worldID == 0x02 && current.roomID == 0x0A && current.eventID1 == 0x78){
+			vars.fightEnd = false;
+			return true;
+		}
 		//Axel I
 		else if(settings["axel1"] && current.worldID == 0x02 && current.roomID == 0x05 && current.eventID1 == 0x57){
 			vars.fightEnd = false;
 			return true;
 		}
 		//Axel II
-		else if(settings["axel2"] && current.worldID == 0x02 && current.roomID == 0x17 && current.eventID1 == 0x89){
+		else if(settings["axel2"] && current.worldID == 0x02 && current.roomID == 0x14 && current.eventID1 == 0x89){
 			vars.fightEnd = false;
 			return true;
 		}
@@ -197,6 +201,7 @@ split
 			vars.fightEnd = false;
 			return true;
 		}
+		
 		//Shan-Yu
 		else if(settings["shanyu"] && current.worldID == 0x08 && current.roomID == 0x09 && current.eventID1 == 0x4B){
 			if (vars.doubleSplitCounter == 0){
@@ -333,16 +338,17 @@ split
 			return true;
 		}
 		//Final Xenmas
-		else if(settings["finalxenmas"] && current.worldID == 0x12 && current.roomID == 0x1C && current.eventID1 == 0x44){
+		else if(settings["finalxenmas"] && current.worldID == 0x12 && current.roomID == 0x14 && current.eventID1 == 0x4A){
 			vars.fightEnd = false;
 			return true;
 		}
 	}
-	
-	else{
+	else
+	{
 		return false;
 	}
 }
+
 
 exit
 {
