@@ -22,6 +22,7 @@ local warpTrigger = 0x22E86DC - offset
 local warpType1 = 0x233C240 - offset
 local warpType2 = 0x22E86E0 - offset
 local worldWarp = 0x233CB70 - offset
+local inCutscene = 0x2378B60 - offset
 local roomWarp = worldWarp + 4
 local counter = 0
 local fallcounter = 0
@@ -47,14 +48,14 @@ local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				
 local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
-				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
+				"xa_ex_2050", "xa_ex_2060", "xa_ex_2080", "xa_ex_2090",
 				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
 				"xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
 				"xa_ex_2190", "xa_ex_2200", "xa_ex_2210",
 				"xa_ex_2220", "xa_ex_2230", "xa_ex_2240",
 				"xa_ex_2250", "xa_ex_2270",
-				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
-				"xa_ex_2340", "xa_ex_2350", "xa_pp_3020"}
+				"xa_ex_2290", "xa_ex_2320",
+				"xa_ex_2340"}
 				
 local shadows = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -95,6 +96,12 @@ local ansem2 = {"xa_he_3020", "xa_nm_3000","xa_ex_1010", "xa_di_1010", "xa_pp_30
 			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
 			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
 			  "xa_ex_3000", "xa_ex_3010", "xa_pc_3020", "xa_pp_3010"}
+			  
+local ansem3 = {"xa_he_3020", "xa_nm_3000","xa_ex_1010", "xa_di_1010",
+			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
+			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
+			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
+			  "xa_ex_3000", "xa_pc_3020", "xa_pp_3010"}
 
 local cloud = {"xa_he_3020", "xa_di_3000", "xa_al_3010", "xa_nm_3000",
 			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
@@ -120,6 +127,12 @@ local genie = {"xa_ex_1150", "xa_ex_1030", "xa_tz_3010", "xa_tz_3000",
   
 local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000", "xa_nm_3000",
 				"xa_ew_2040", "xa_di_1010", "xa_di_1020", "xa_di_1030", "xa_al_3020"}
+				
+local sabor = {"xa_he_3020", "xa_he_3000", "xa_pi_3000", "xa_nm_3000", "xa_ex_1010",
+				"xa_ew_2040", "xa_di_1010", "xa_di_1020", "xa_di_1030", "xa_al_3020",
+				"xa_pc_3000", "xa_ex_1580", "xa_ex_1160", "xa_ex_1030", "xa_ex_1040"}
+				
+sabor = {"xa_tz_3000"}
 				
 local antisora = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
 					"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
@@ -202,7 +215,7 @@ function RoomWarp(w, r)
 end
 
 function AddAddrs()
-	for i=1,0x11 do
+	for i=1,0x21 do
 		addrs[i] = {}
 	end
 	--addrs[3][0xAC0980-offset] = normal[math.random(#normal)] --2nd district yellow
@@ -224,7 +237,7 @@ function AddAddrs()
 	addrs[5][0xA20400-offset] = normal[math.random(#normal)] --treehouse powerwild
 	addrs[5][0x992F00-offset] = normal[math.random(#normal)] --cliffs powerwild
 	addrs[5][0xA8CF80-offset] = lite[math.random(#lite)] --bamboo powerwild
-	--addrs[5][0xA8D0C0-offset] = boss[math.random(#boss)] --bamboo sabor
+	addrs[5][0xA8D0C0-offset] = sabor[math.random(#sabor)] --bamboo sabor
 	--addrs[5][0x992F40-offset] = boss[math.random(#boss)] --cliff clayton
 	--addrs[5][0x992F80-offset] = test[math.random(#test)] --cliff clayton & stealth sneak
 	--addrs[4][0x851EC0-offset] = normal[math.random(#normal)] --rabbithole shadow
@@ -305,6 +318,13 @@ function AddAddrs()
 	addrs[16][0xB5C240-offset] = ansem1[math.random(#ansem1)] --ansem1
 	addrs[17][0xB5C240-offset] = ansem2[math.random(#ansem2)] --ansem2
 	addrs[17][0xB5C500-offset] = dside[math.random(#dside)] --darkside
+	--addrs[17][0x988980-offset] = normal[math.random(#normal)] --artillery
+	--addrs[17][0x9889C0-offset] = normal[math.random(#normal)] --face
+	addrs[17][0x988A00-offset] = ansem3[math.random(#ansem3)] --ansem3
+	addrs[18][0x988A00-offset] = ansem3[math.random(#ansem3)] --ansem3
+	addrs[19][0x988A00-offset] = ansem3[math.random(#ansem3)] --ansem3
+	addrs[20][0x988A00-offset] = ansem3[math.random(#ansem3)] --ansem3
+	addrs[21][0x988A00-offset] = ansem3[math.random(#ansem3)] --ansem3
 end
 
 function WriteString(addr, s)
@@ -370,6 +390,18 @@ function BossAdjust(bossHP)
 		str = 9
 		def = 9
 		endArd = 0xC4
+	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags+0xB05) == 0x3F then
+		addr[1] = 0x2D35EA0 - offset
+		e[1] = addrs[5][0xA8D0C0-offset]
+		hp[1] = 180
+		str = 0xC
+		def = 0xB
+		endArd = 0x154
+		endtime = 500
+	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags+0xB05) == 0x42 
+	and ReadShort(ardOff) == 0x182 and ReadByte(inCutscene) == 3 then
+		WriteShort(ardOff, 0x183)
+		ConsolePrint("Progress cutscene")
 	elseif w == 8 and r == 0x10 and ReadByte(cutsceneFlags+0xB08) == 0x46 then
 		addr[1] = 0x2D36CB0 - offset
 		addr[2] = 0x2D37160 - offset
@@ -542,6 +574,51 @@ function BossAdjust(bossHP)
 		if ReadShort(ardOff) >= 0xFC and ReadFloat(addr[1]+0x10) > -1300 then
 			WriteFloat(addr[1]+0x10, -1400)
 		end
+	elseif w == 0x10 and r == 0x21 then
+		endtime = 100
+		if ReadByte(worldFlagBase+0xE4) == 0 then
+			addr[1] = 0x2D34280 - offset
+			e[1] = addrs[17][0x988A00-offset]
+			bossHPs[1] = 0x2D592CC - offset
+		elseif ReadByte(worldFlagBase+0xE4) == 1 then
+			addr[1] = 0x2D35EA0 - offset
+			e[1] = addrs[18][0x988A00-offset]
+			bossHPs[1] = 0x2D59ACC - offset
+		elseif ReadByte(worldFlagBase+0xE4) == 2 then
+			addr[1] = 0x2D33DD0 - offset
+			e[1] = addrs[19][0x988A00-offset]
+			bossHPs[1] = 0x2D593CC - offset
+		elseif ReadByte(worldFlagBase+0xE4) == 3 then
+			addr[1] = 0x2D33DD0 - offset
+			e[1] = addrs[20][0x988A00-offset]
+			bossHPs[1] = 0x2D593CC - offset
+		elseif ReadByte(worldFlagBase+0xE4) == 4 then
+			addr[1] = 0x2D33920 - offset
+			e[1] = addrs[21][0x988A00-offset]
+			bossHPs[1] = 0x2D592CC - offset
+		end
+		if ReadShort(addr[1]+0x4B0*4) ~= 0 then
+			ConsolePrint("Disabling collision")
+			for i=1,50 do --disable collision
+				WriteShort(addr[1]+0x4B0*(i+3), 0)
+			end
+		end
+		local floorStatus = 0x5258FC - offset
+		for i=0,3 do
+			WriteByte(floorStatus+i*12, 0)
+		end
+		if ReadByte(0x70944C-offset) == 0x10 then
+			for i=0,101 do
+				WriteByte(0x70944C+0x14*i-offset, 0x11)
+			end
+			for i=0,87 do
+				WriteByte(0x70A004+0x14*i-offset, 0x19)
+			end
+		end
+		WriteFloat(0x52591C-offset, 25000)
+		hp[1] = 1500
+		str = 0x28
+		def = 0x1E
 	end
 	
 	local kills = 0
@@ -551,7 +628,7 @@ function BossAdjust(bossHP)
 		end
 		
 		if string.find(e[i], "xa_di_") or string.find(e[i], "xa_ex_1010") then
-			hp[i] = hp[i]*0.6
+			hp[i] = hp[i]*0.5
 		elseif string.find(e[i], "xa_pp_3010") ~= nil then
 			hp[i] = hp[i]*0.3
 		end
@@ -569,7 +646,6 @@ function BossAdjust(bossHP)
 		if string.find(e[i], "xa_di_1") ~= nil 
 		and ReadByte(combo) > 4 and ReadShort(bossHPs[i]) < bossLastHP[i] then
 			WriteFloat(addr[i]+0x28C, 0)
-			ConsolePrint(ReadFloat(addr[i]+0x28C))
 		end
 		bossLastHP[i] = ReadShort(bossHPs[i])
 	end
@@ -579,6 +655,12 @@ function BossAdjust(bossHP)
 			if w == 3 and r == 0 then
 				WriteByte(cutsceneFlags+0xB04, 0x1A)
 				RoomWarp(3, 0x21)
+			elseif w == 0x10 and r == 0x21 and ReadByte(worldFlagBase+0xE4) < 3 then
+				WriteByte(worldFlagBase+0xE7+ReadByte(worldFlagBase+0xE4), 0xD)
+				RoomWarp(0x10, 0x43+ReadByte(worldFlagBase+0xE4))
+			elseif w == 0x10 and r == 0x21 and ReadByte(worldFlagBase+0xE4) == 3 then
+				WriteByte(worldFlagBase+0xE4, 4)
+				RoomWarp(0x10, 0x3F)
 			else
 				WriteByte(ardOff, endArd)
 			end
@@ -618,8 +700,16 @@ end
 function _OnFrame()
 	local w = ReadByte(world)
 	
-	if w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 then
+	if w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 0 then
 		w = 17
+	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 1 then
+		w = 18
+	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 2 then
+		w = 19
+	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 3 then
+		w = 20
+	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 4 then
+		w = 21
 	end
 	
 	if canExecute and (ReadInt(blackfade) == 0 or ReadInt(whitefade) == 0x80) and w > 0 then
