@@ -11,6 +11,7 @@ state("KINGDOM HEARTS III")
 	bool paused : "KINGDOM HEARTS III.exe", 0x0916A740, 0x110, 0x64;
 	bool menuing2 : "KINGDOM HEARTS III.exe", 0x09D2E310, 0x2B0, 0x6B4;
 	bool fightend : "KINGDOM HEARTS III.exe", 0x09D62910, 0xA18, 0x700, 0x6D0, 0x178, 0xB0;
+	bool fightend2 : "KINGDOM HEARTS III.exe", 0x092D1EE0, 0xE30, 0x268, 0xC0, 0xF8, 0xB0;
 	string2 world : "KINGDOM HEARTS III.exe", 0x9302795;
 }
 
@@ -21,6 +22,7 @@ startup
 	
 	settings.Add("WorldSplit", false, "Split on enter world");
 	settings.Add("FightSplit", false, "Split on fight end");
+	settings.Add("DataSplit", false, "Split on data org fight end");
 	settings.Add("IGT", false, "IGT Mode (don't use)");
 }
 
@@ -32,7 +34,8 @@ gameTime
 split
 {
 	return (settings["FightSplit"] && current.fightend && !old.fightend) ||
-		(current.world != old.world && settings["WorldSplit"]);
+		(current.world != old.world && settings["WorldSplit"]) ||
+		(settings["DataSplit"] && current.fightend2 && !old.fightend2);
 }
 
 exit
