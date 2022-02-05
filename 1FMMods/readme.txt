@@ -72,3 +72,8 @@ FastCamera:
 1HP:
 - Forces Sora's max HP to 1 at all times
 - Removes beeping noise.
+
+Achievements:
+- Displays in Lua console when you get achievements and overall progress, independent of EGS achievement progress
+- Saves achievements locally in achievements.txt, in game install folder or Lua .exe folder depending on Lua program
+- Delete achievements.txt to reset achievements
