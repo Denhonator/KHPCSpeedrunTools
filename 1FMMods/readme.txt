@@ -47,6 +47,13 @@ RandoSomeLogic:
 - randofiles folder should be placed in the same folder as DINPUT8.dll when using Luabackend Hook by Sirius
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
+EnemyRando:
+- Randomizes most bosses and some enemies within restraints of (hopefully) not crashing
+- If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
+- randofiles folder should be placed in the same folder as DINPUT8.dll when using Luabackend Hook by Sirius
+- Scales bosses to match the location
+- Probably has some issues. Send enemyrandolog.txt from randofiles folder and description of issue.
+
 Chaos:
 - Randomizes many things in wild, chaotic ways, including attack animations
 - Use for silly times
