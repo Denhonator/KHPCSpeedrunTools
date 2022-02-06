@@ -53,6 +53,7 @@ EnemyRando:
 - randofiles folder should be placed in the same folder as DINPUT8.dll when using Luabackend Hook by Sirius
 - Scales bosses to match the location
 - Probably has some issues. Send enemyrandolog.txt from randofiles folder and description of issue.
+- Hold start and only start during all black screens to skip randomization of that room.
 
 Chaos:
 - Randomizes many things in wild, chaotic ways, including attack animations
