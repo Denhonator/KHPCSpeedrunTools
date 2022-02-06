@@ -69,10 +69,37 @@ local achievementList = {
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("KH1 detected, running script")
+		Track(-1)
 		canExecute = true
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
+end
+
+function Track(achID)
+	local f = io.open("achievements.txt")
+	if not f then
+		local fw = io.open("achievements.txt", "w")
+		fw:close()
+		f = io.open("achievements.txt")
+	end
+	local contents = f:read("*a"):gsub("-", " ")
+	f:close()
+	local achCount = 0
+	for j=1,#achievementList do
+		if string.find(contents, achievementList[j]:gsub("-", " ")) ~= nil then
+			achCount = achCount + 1
+			--ConsolePrint(achievementList[j] .. " found")
+		elseif j == achID then
+			--ConsolePrint(achievementList[j] .. " added")
+			achCount = achCount + 1
+			ConsolePrint(string.format("%s Achievement get: %s", os.date('%Y-%m-%d %H:%M:%S'), achievementList[achID]))
+			f = io.open("achievements.txt", "a")
+			f:write(string.format("%s %s\n", os.date('%Y-%m-%d %H:%M:%S'), achievementList[achID]))
+			f:close()
+		end
+	end
+	ConsolePrint(string.format("Progress: %d/%d", achCount, #achievementList))
 end
 
 function _OnFrame()
@@ -85,28 +112,7 @@ function _OnFrame()
 			local achID = i*32
 			while dif >= 1 do
 				if dif & 1 == 1 then
-					ConsolePrint(string.format("%s Achievement get: %s", os.date('%Y-%m-%d %H:%M:%S'), achievementList[achID]))
-					
-					local f = io.open("achievements.txt")
-					if not f then
-						local fw = io.open("achievements.txt", "w")
-						fw:close()
-						f = io.open("achievements.txt")
-					end
-					local contents = f:read("*a")
-					f:close()
-					local achCount = 0
-					for j=1,#achievementList do
-						if string.find(contents, achievementList[j]) ~= nil then
-							achCount = achCount + 1
-						elseif j == achID then
-							achCount = achCount + 1
-							f = io.open("achievements.txt", "a")
-							f:write(string.format("%s %s\n", os.date('%Y-%m-%d %H:%M:%S'), achievementList[achID]))
-							f:close()
-						end
-					end
-					ConsolePrint(string.format("Progress: %d/%d", achCount, #achievementList))
+					Track(achID)
 				end
 				dif = dif >> 1
 				--ConsolePrint(string.format("%x", dif))
