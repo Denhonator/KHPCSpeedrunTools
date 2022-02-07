@@ -392,7 +392,6 @@ function AddAddrs()
 	--addrs[17][0x988980-offset] = PickRandom(normal) --artillery
 	--addrs[17][0x9889C0-offset] = PickRandom(normal) --face
 	addrs[17][0x988A00-offset] = PickRandom(ansem3) --ansem3
-	ansem4 = {"xa_he_3020"}
 	addrs[18][0x988A00-offset] = PickRandom(ansem4) --ansem3
 	addrs[19][0x988A00-offset] = PickRandom(ansem4) --ansem3
 	addrs[20][0x988A00-offset] = PickRandom(ansem4) --ansem3
