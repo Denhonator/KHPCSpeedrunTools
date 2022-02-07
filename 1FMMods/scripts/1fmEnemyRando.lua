@@ -46,16 +46,25 @@ local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330", "xa_ex_2340",
 				"xa_pp_3020"}
 				
-local lite = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
+local powerwild = {"xa_ew_2010", "xa_ew_2020",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
-				"xa_ex_2050", "xa_ex_2060", "xa_ex_2080", "xa_ex_2090",
+				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
+				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
+				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
+				"xa_ex_2200", "xa_ex_2210",
+				"xa_ex_2220", "xa_ex_2230", "xa_ex_2250", "xa_ex_2270",
+				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330", "xa_ex_2340",
+				"xa_pp_3020"}
+				
+local lite = {"xa_ew_2010", "xa_ew_2020",
+				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
+				"xa_ex_2060", "xa_ex_2080", "xa_ex_2090",
 				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
 				"xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
 				"xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2230", "xa_ex_2240",
+				"xa_ex_2220", "xa_ex_2240",
 				"xa_ex_2250", "xa_ex_2270",
-				"xa_ex_2290", "xa_ex_2320",
-				"xa_ex_2340"}
+				"xa_ex_2290", "xa_ex_2320"}
 				
 local shadows = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
@@ -124,7 +133,7 @@ local pc1riku = {"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010",
 local jafar = {"xa_di_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020",
 			  "xa_ex_1160", "xa_ex_1150", "xa_ex_1030", "xa_di_1030",
 			  "xa_pc_3000", "xa_he_1030", "xa_ex_1010",
-			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_ex_1580"}
+			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040"}
 			  
 local genie = {"xa_ex_1150", "xa_ex_1030", "xa_tz_3000",
 			  "xa_he_1030", "xa_pi_3000", "xa_ex_1040", "xa_ex_4010",
@@ -281,17 +290,17 @@ function AddAddrs()
 	addrs[3][0xB17240-offset] = PickRandom(leon) --tt leon
 	--addrs[3][0xAC0840-offset] = PickRandom(normal) --2nd district soldier
 	addrs[3][0xA97840-offset] = PickRandom(normal) --alleyway shadow
-	addrs[3][0xA97800-offset] = PickRandom(normal) --alleyway soldier
+	addrs[3][0xA97800-offset] = PickRandom(lite) --alleyway soldier
 	addrs[3][0xB16D80-offset] = PickRandom(normal) --1st district shadow
 	addrs[3][0xB0AC00-offset] = PickRandom(normal) --3rd district shadow
 	addrs[3][0xB0ABC0-offset] = PickRandom(normal) --3rd district soldier
 	addrs[3][0x9CAB80-offset] = PickRandom(normal) --gizmo shadow
 	--addrs[3][0xB0ACA0-offset] = test[math.random(#test)] --guard armor
 	--addrs[5][0xA20480-offset] = boss[math.random(#boss)] --treehouse sabor
-	addrs[5][0x9F4600-offset] = PickRandom(normal) --camp powerwild
-	addrs[5][0x9E3820-offset] = PickRandom(normal) --climbing trees powerwild
-	addrs[5][0xA20400-offset] = PickRandom(normal) --treehouse powerwild
-	addrs[5][0x992F00-offset] = PickRandom(normal) --cliffs powerwild
+	addrs[5][0x9F4600-offset] = PickRandom(powerwild) --camp powerwild
+	addrs[5][0x9E3820-offset] = PickRandom(powerwild) --climbing trees powerwild
+	addrs[5][0xA20400-offset] = PickRandom(lite) --treehouse powerwild
+	addrs[5][0x992F00-offset] = PickRandom(powerwild) --cliffs powerwild
 	addrs[5][0xA8CF80-offset] = PickRandom(lite) --bamboo powerwild
 	addrs[5][0xA8D0C0-offset] = PickRandom(sabor) --bamboo sabor
 	--addrs[5][0x992F40-offset] = boss[math.random(#boss)] --cliff clayton
@@ -320,9 +329,9 @@ function AddAddrs()
 	--addrs[8][0x9C43C0-offset] = test[math.random(#test)] --pot cent pot spider
 	--addrs[8][0x9C44C0-offset] = test[math.random(#test)] --pot cent pot spider
 	--addrs[8][0x9E0240-offset] = test[math.random(#test)] --tiger head
-	addrs[8][0x9B32C0-offset] = PickRandom(normal) --cave entrance bandit
+	addrs[8][0x9B32C0-offset] = PickRandom(lite) --cave entrance bandit
 	addrs[8][0x9ACC40-offset] = PickRandom(bandit) --cave hall air soldier
-	addrs[8][0x972C40-offset] = PickRandom(normal) --bottomless shadow
+	addrs[8][0x972C40-offset] = PickRandom(lite) --bottomless shadow
 	addrs[8][0x97BBC0-offset] = PickRandom(jafar) --jafar
 	addrs[8][0x97BC00-offset] = PickRandom(genie) --genie
 	--addrs[8][0x99C3C0-offset] = test[math.random(#test)] --genie jafar
@@ -332,8 +341,8 @@ function AddAddrs()
 	addrs[12][0x9CF300-offset] = PickRandom(parasite) --pc1
 	addrs[12][0x9CF440-offset] = PickRandom(pc1riku) --pc1 riku
 	--addrs[12][0x9CB700-offset] = test[math.random(#test)] --pc2
-	addrs[10][0xA62BC0-offset] = PickRandom(normal) --square ghost
-	addrs[10][0xA01FC0-offset] = PickRandom(normal) --graveyard ghost
+	--addrs[10][0xA62BC0-offset] = PickRandom(lite) --square ghost
+	addrs[10][0xA01FC0-offset] = PickRandom(lite) --graveyard ghost
 	addrs[10][0xA22500-offset] = PickRandom(normal) --moonlight hill whight
 	addrs[10][0x9A8440-offset] = PickRandom(normal) --bridge whight
 	addrs[10][0xB195C0-offset] = PickRandom(lite) --manor whight
