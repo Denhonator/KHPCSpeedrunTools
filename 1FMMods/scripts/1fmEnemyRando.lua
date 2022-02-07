@@ -119,7 +119,7 @@ local ansem3 = {"xa_he_3020", "xa_nm_3000","xa_ex_1010", "xa_di_1010",
 			  "xa_ex_3000", "xa_pc_3020", "xa_pp_3010"}
 			  
 local ansem4 = {"xa_nm_3000","xa_ex_1010", "xa_di_1010",
-			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
+			  "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
 			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
 			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
 			  "xa_pc_3020", "xa_pp_3010"}
