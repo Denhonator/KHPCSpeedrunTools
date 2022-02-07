@@ -107,7 +107,7 @@ local ansem1 = {"xa_he_3020", "xa_ew_3020", "xa_al_3010", "xa_nm_3000", "xa_di_1
 			  "xa_ex_3010", "xa_pc_3020"}
 			  
 local ansem2 = {"xa_he_3020", "xa_nm_3000","xa_ex_1010", "xa_di_1010", "xa_pp_3030",
-			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
+			  "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
 			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
 			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
 			  "xa_ex_3000", "xa_ex_3010", "xa_pc_3020", "xa_pp_3010"}
@@ -117,6 +117,12 @@ local ansem3 = {"xa_he_3020", "xa_nm_3000","xa_ex_1010", "xa_di_1010",
 			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
 			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
 			  "xa_ex_3000", "xa_pc_3020", "xa_pp_3010"}
+			  
+local ansem4 = {"xa_nm_3000","xa_ex_1010", "xa_di_1010",
+			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
+			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
+			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
+			  "xa_pc_3020", "xa_pp_3010"}
 
 local cloud = {"xa_he_3020", "xa_di_3000", "xa_al_3010", "xa_nm_3000",
 			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
@@ -386,10 +392,11 @@ function AddAddrs()
 	--addrs[17][0x988980-offset] = PickRandom(normal) --artillery
 	--addrs[17][0x9889C0-offset] = PickRandom(normal) --face
 	addrs[17][0x988A00-offset] = PickRandom(ansem3) --ansem3
-	addrs[18][0x988A00-offset] = PickRandom(ansem3) --ansem3
-	addrs[19][0x988A00-offset] = PickRandom(ansem3) --ansem3
-	addrs[20][0x988A00-offset] = PickRandom(ansem3) --ansem3
-	addrs[21][0x988A00-offset] = PickRandom(ansem3) --ansem3
+	ansem4 = {"xa_he_3020"}
+	addrs[18][0x988A00-offset] = PickRandom(ansem4) --ansem3
+	addrs[19][0x988A00-offset] = PickRandom(ansem4) --ansem3
+	addrs[20][0x988A00-offset] = PickRandom(ansem4) --ansem3
+	addrs[21][0x988A00-offset] = PickRandom(ansem4) --ansem3
 	
 	local logfile = io.open("randofiles/enemyrandolog.txt", "w+")
 	for i=1,0x21 do
