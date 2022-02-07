@@ -395,7 +395,7 @@ function AddAddrs()
 	addrs[18][0x988A00-offset] = PickRandom(ansem4) --ansem3
 	addrs[19][0x988A00-offset] = PickRandom(ansem4) --ansem3
 	addrs[20][0x988A00-offset] = PickRandom(ansem4) --ansem3
-	addrs[21][0x988A00-offset] = PickRandom(ansem4) --ansem3
+	addrs[21][0x988A00-offset] = PickRandom(ansem3) --ansem3
 	
 	local logfile = io.open("randofiles/enemyrandolog.txt", "w+")
 	for i=1,0x21 do
