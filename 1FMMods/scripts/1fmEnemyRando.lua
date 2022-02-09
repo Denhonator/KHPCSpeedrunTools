@@ -513,8 +513,8 @@ function BossAdjust(bossHP)
 			ConsolePrint("Cutscene start")
 			antisorabeaten = false
 		end
-	elseif w == 0xD and r == 8 and ReadByte(cutsceneFlags+0xB0D) == 0x50
-	and ReadShort(ardOff) == 0x36D then
+	elseif w == 0xD and r == 8 and (ReadByte(cutsceneFlags+0xB0D) == 0x50 or ReadByte(cutsceneFlags+0xB0D) == 0x53)
+	and (ReadShort(ardOff) == 0x36D or ReadShort(ardOff) == 0x3D3) then
 		addr[1] = 0x2D396E0 - offset
 		e[1] = addrs[13][0x9D18E0-offset]
 		hp[1] = 900
