@@ -61,9 +61,7 @@ local lite = {"xa_ew_2010", "xa_ew_2020",
 				"xa_ex_2060", "xa_ex_2080", "xa_ex_2090",
 				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
 				"xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
-				"xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2240",
-				"xa_ex_2250", "xa_ex_2270",
+				"xa_ex_2200", "xa_ex_2210", "xa_ex_2220", "xa_ex_2250",
 				"xa_ex_2290", "xa_ex_2320"}
 				
 local shadows = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
@@ -335,9 +333,9 @@ function AddAddrs()
 	--addrs[8][0x9C43C0-offset] = test[math.random(#test)] --pot cent pot spider
 	--addrs[8][0x9C44C0-offset] = test[math.random(#test)] --pot cent pot spider
 	--addrs[8][0x9E0240-offset] = test[math.random(#test)] --tiger head
-	addrs[8][0x9B32C0-offset] = PickRandom(lite) --cave entrance bandit
-	addrs[8][0x9ACC40-offset] = PickRandom(bandit) --cave hall air soldier
-	addrs[8][0x972C40-offset] = PickRandom(lite) --bottomless shadow
+	--addrs[8][0x9B32C0-offset] = PickRandom(lite) --cave entrance bandit
+	--addrs[8][0x9ACC40-offset] = PickRandom(bandit) --cave hall air soldier
+	--addrs[8][0x972C40-offset] = PickRandom(lite) --bottomless shadow
 	addrs[8][0x97BBC0-offset] = PickRandom(jafar) --jafar
 	addrs[8][0x97BC00-offset] = PickRandom(genie) --genie
 	--addrs[8][0x99C3C0-offset] = test[math.random(#test)] --genie jafar
@@ -348,10 +346,10 @@ function AddAddrs()
 	addrs[12][0x9CF440-offset] = PickRandom(pc1riku) --pc1 riku
 	--addrs[12][0x9CB700-offset] = test[math.random(#test)] --pc2
 	--addrs[10][0xA62BC0-offset] = PickRandom(lite) --square ghost
-	addrs[10][0xA01FC0-offset] = PickRandom(lite) --graveyard ghost
-	addrs[10][0xA22500-offset] = PickRandom(normal) --moonlight hill whight
-	addrs[10][0x9A8440-offset] = PickRandom(normal) --bridge whight
-	addrs[10][0xB195C0-offset] = PickRandom(lite) --manor whight
+	--addrs[10][0xA01FC0-offset] = PickRandom(lite) --graveyard ghost
+	--addrs[10][0xA22500-offset] = PickRandom(normal) --moonlight hill whight
+	--addrs[10][0x9A8440-offset] = PickRandom(normal) --bridge whight
+	--addrs[10][0xB195C0-offset] = PickRandom(lite) --manor whight
 	--addrs[10][0x8A4E40-offset] = test[math.random(#test)] --lock
 	--addrs[10][0x8A4E80-offset] = test[math.random(#test)] --shock
 	--addrs[10][0x8A4EC0-offset] = test[math.random(#test)] --barrel
