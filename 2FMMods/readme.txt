@@ -12,5 +12,9 @@ SoftReset:
 NoGummi:
 - As worlds get unlocked, you can enter them without having to do gummi missions
 
+Autosave:
+- Automatically saves the latest continue state to a local file
+- Load the autosave by holding select when loading any save
+
 AutoAttack:
 - Allows physically attacking continuously by holding attack button.
