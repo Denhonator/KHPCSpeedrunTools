@@ -83,7 +83,6 @@ startup
 	settings.Add("berserkers", true, "Berserker's fight");
 	settings.Add("hostileprogram", true, "Hostile Program");
 	settings.Add("1k", true, "1K Heartless");
-	settings.Add("rumblingrose", true, "Rumbling Rose");
 	settings.Add("grimreaper2", true, "Grim Reaper II");
 	settings.Add("experiment", true, "The Experiment");
 	settings.Add("geniejafar", true, "Genie Jafar");
@@ -259,6 +258,16 @@ split
 		}
 		//Twin Lords
 		else if(settings["twinlords"] && current.worldID == 0x07 && current.roomID == 0x03 && current.eventID1 == 0x3B){
+			vars.fightEnd = false;
+			return true;
+		}
+		//Hostile Program
+		else if(settings["hostileprogram"] && current.worldID == 0x11 && current.roomID == 0x04 && current.eventID1 == 0x37){
+			vars.fightEnd = false;
+			return true;
+		}
+		//1k heartless
+		else if(settings["1k"] && current.worldID == 0x04 && current.roomID == 0x11 && current.eventID1 == 0x42){
 			vars.fightEnd = false;
 			return true;
 		}
