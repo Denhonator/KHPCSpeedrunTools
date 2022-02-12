@@ -224,11 +224,6 @@ split
 			return true;
 		}
 
-		//Heartless steal the pages
-		else if(settings["heartlesspages"] && current.worldID == 0x04 && current.roomID == 0x09 && current.eventID1 == 0x48){
-			vars.fightEnd = false;
-			return true;
-		}
 		//Dark Thorn
 		else if(settings["darkthorn"] && current.worldID == 0x05 && current.roomID == 0x05 && current.eventID1 == 0x4F){
 			vars.fightEnd = false;
