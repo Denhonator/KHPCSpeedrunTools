@@ -28,11 +28,12 @@ end
 function _OnFrame()
 	if canExecute then
 		local input = ReadInt(0x29F89B0-offset)
-		if (input == 8192 and ReadInt(saveselect) == 0) then 
+		if (input == 8192 and ReadInt(saveselect) == 0 and ReadInt(save1+0xC) ~= prevSave) then 
 			local f = io.open("KH2autosave.dat", "rb")
 			if f ~= nil then
 				WriteString(save1, f:read("*a"))
 				f:close()
+				ConsolePrint("Loaded autosave")
 			end
 		end
 		if ReadInt(continue+0xC) ~= prevContinue and ReadByte(0x711438-offset2) == 0 then
@@ -42,6 +43,7 @@ function _OnFrame()
 			ConsolePrint("Wrote autosave")
 		end
 		prevInput = input
+		prevSave = ReadInt(save1+0xC)
 		prevContinue = ReadInt(continue+0xC)
 	end
 end
