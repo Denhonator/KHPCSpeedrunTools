@@ -6,6 +6,8 @@ state("KINGDOM HEARTS II FINAL MIX", "GLOBAL")
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD6BC0;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x711438;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A20C98;
+	//byte impreialSquareGateHPPointer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25BD980;
+	//byte imperialSquareGateHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x25BD980;
 	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB8;
 	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB9;
 	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBE08;
@@ -53,6 +55,7 @@ startup
 				settings.Add("axel1", false, "Axel I", "roxassection");
 				settings.Add("axel2", false, "Axel II", "roxassection");
 
+			settings.Add("station", false, "Station","any");
 			settings.Add("tower", false, "Yen Sid's Tower second floor","any");
 			settings.Add("bailey", false, "Bailey","any");
 			settings.Add("shanyu", false, "Shan-Yu","any");
@@ -64,7 +67,7 @@ startup
 			settings.Add("barbossa", false, "Barbossa","any");
 			settings.Add("twinlords", false, "Twin Lords","any");
 			settings.Add("oogieboogie", false, "Oogie Boogie","any");
-			settings.Add("berserkers", false, "Berserker fight","any");
+			settings.Add("berserkers", false, "Berserker's fight","any");
 			settings.Add("hostileprogram", false, "Hostile Program","any");
 			settings.Add("1k", false, "1K Heartless","any");
 			settings.Add("grimreaper2", false, "Grim Reaper II","any");
@@ -163,7 +166,11 @@ split
 			else if(settings["axel2"] && current.worldID == 0x02 && current.roomID == 0x14 && current.eventID1 == 0x89){
 				return true;
 			}
-		
+			
+			//Station Fight
+			else if(settings["station"] && current.worldID == 0x02 && current.roomID == 0x08 && current.eventID1 == 0x6C){
+				return true;
+			}
 			//Tower 2nd fight
 			else if(settings["tower"] && current.worldID == 0x02 && current.roomID == 0x1E && current.eventID1 == 0x99){
 				return true;
@@ -206,20 +213,16 @@ split
 			else if(settings["twinlords"] && current.worldID == 0x07 && current.roomID == 0x03 && current.eventID1 == 0x3B){
 				return true;
 			}
-			//Oogie Boogie
-			else if(settings["oogieboogie"] && current.worldID == 0x0E && current.roomID == 0x09 && current.eventID1 == 0x37){
-				return true;
-			}
-			//Berserkers
-			else if(settings["berserkers"] && current.worldID == 0x02 && current.roomID == 0x04 && current.eventID1 == 0x50){
-				return true;
-			}
 			//Hostile Program
 			else if(settings["hostileprogram"] && current.worldID == 0x11 && current.roomID == 0x04 && current.eventID1 == 0x37){
 				return true;
 			}
 			//1k heartless
 			else if(settings["1k"] && current.worldID == 0x04 && current.roomID == 0x11 && current.eventID1 == 0x42){
+				return true;
+			}
+			//Oogie Boogie
+			else if(settings["oogieboogie"] && current.worldID == 0x0E && current.roomID == 0x09 && current.eventID1 == 0x37){
 				return true;
 			}
 			//Grim Reaper II
