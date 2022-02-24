@@ -258,7 +258,7 @@ split
 			return true;
 		}
 		//Xigbar
-		else if(settings["xigbar"] && current.worldID == 0x12 && current.roomID == 0x0A && current.eventID1 != 0x39){
+		else if(settings["xigbar"] && current.worldID == 0x12 && current.roomID == 0x0A && current.eventID1 == 0x39){
 			return true;
 		}
 		//Luxord
