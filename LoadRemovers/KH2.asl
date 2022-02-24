@@ -82,6 +82,7 @@ startup
 			settings.Add("dragonxenmas", false, "Dragon Xenmas","any");
 			settings.Add("armorxenmas2", false, "Armored Xenmas II","any");
 			settings.Add("finalxenmas", false, "Final Xenmas","any");
+	
 	//dataorg
 		settings.Add("dataorg", false, "Data Org");
 }
