@@ -6,6 +6,7 @@ local extraSafety = false
 local offset = 0x3A0606
 local addgummi = 0
 local lastInput = 0
+local prevHUD = 0
 local revertCode = false
 local removeWhite = 0
 local lastDeathPointer = 0
@@ -23,6 +24,9 @@ local warpTrigger = 0x22E86DC - offset
 local warpType1 = 0x233C240 - offset
 local warpType2 = 0x22E86E0 - offset
 local title = 0x233CAB8 - offset
+local continue = 0x2DFC5D0 - offset
+local config = 0x2DFBDD0 - offset
+local cam = 0x503A18 - offset
 
 local canExecute = false
 
@@ -82,6 +86,18 @@ function _OnFrame()
 		InstantContinue()
 	end
 	
+	if input == 3872 and lastInput ~= 3872 and ReadLong(closeMenu) == 0 then
+		local f = io.open("autosave.dat", "rb")
+		if f ~= nil then
+			WriteString(continue, f:read("*a"))
+			f:close()
+			ConsolePrint("Loaded autosave")
+			InstantContinue()
+			WriteFloat(cam, -1.0 + ReadByte(config+0x14)*2)
+			WriteFloat(cam+4, 1.0 - ReadByte(config+0x18)*2)
+		end
+	end
+	
 	if input == 3848 and lastInput ~= 3848 then
 		SoftReset()
 	end
@@ -134,6 +150,14 @@ function _OnFrame()
 	
 	lastInput = input
 	lastDeathPointer = ReadLong(deathPointer)
+	
+	if ReadFloat(soraHUD) == 1 and prevHUD < 1 then
+		local f = io.open("autosave.dat", "wb")
+		f:write(ReadString(continue, 0x16C00))
+		f:close()
+		ConsolePrint("Wrote autosave")
+	end
+	prevHUD = ReadFloat(soraHUD)
 	
 	::done::
 end

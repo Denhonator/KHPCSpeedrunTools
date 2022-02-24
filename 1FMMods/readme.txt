@@ -4,10 +4,14 @@ How to use:
 
 SaveAnywhere:
 - In-game, press L1+L2+R2+Select (or equivalent on your input device)
-- You can use this to essentially soft reset by going to title screen
 - You can use this to save anywhere. Saving during cutscenes or combat may have unexpected consequences.
 - You can also instantly die with R1+R2+L2+Select
 - You can also instantly load continue state with R1+R2+L1+L2+D-pad left
+- You can also instantly load autosave with R1+R2+L1+L2+D-pad right
+ - Most recent continue state is written to a local file that carries between restarting the game
+ - Can be loaded straight from the title screen
+ - The save can be found in the Lua .exe/.dll folder
+ - Might have weird bugs, might save you from losing a lot of progress
 - You can also soft reset with R1+R2+L1+L2+Start
 
 InstantGummi:
@@ -44,8 +48,16 @@ Autoattack:
 RandoSomeLogic:
 - Randomizes items, level ups, rewards, magic, trinities and chests
 - If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
-- randofiles folder should be placed in the same folder as DINPUT8.dll when using Luabackend Hook by Sirius
+- randofiles folder should be placed in the same folder as the .dll when using Luabackend Hook by Sirius
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
+
+EnemyRando:
+- Randomizes most bosses and some enemies within restraints of (hopefully) not crashing
+- If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
+- randofiles folder should be placed in the same folder as the .dll when using Luabackend Hook by Sirius
+- Scales bosses to match the location
+- Probably has some issues. Send enemyrandolog.txt from randofiles folder and description of issue.
+- Hold start and only start during all black screens to skip randomization of that room.
 
 Chaos:
 - Randomizes many things in wild, chaotic ways, including attack animations
@@ -72,3 +84,8 @@ FastCamera:
 1HP:
 - Forces Sora's max HP to 1 at all times
 - Removes beeping noise.
+
+Achievements:
+- Displays in Lua console when you get achievements and overall progress, independent of EGS achievement progress
+- Saves achievements locally in achievements.txt, in game install folder or Lua .exe folder depending on Lua program
+- Delete achievements.txt to reset achievements
