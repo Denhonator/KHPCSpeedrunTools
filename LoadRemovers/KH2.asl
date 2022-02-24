@@ -64,7 +64,7 @@ startup
 			settings.Add("barbossa", false, "Barbossa","any");
 			settings.Add("twinlords", false, "Twin Lords","any");
 			settings.Add("oogieboogie", false, "Oogie Boogie","any");
-			settings.Add("berserkers", false, "Berserker fight","any");
+			settings.Add("berserkers", false, "Berserker's fight","any");
 			settings.Add("hostileprogram", false, "Hostile Program","any");
 			settings.Add("1k", false, "1K Heartless","any");
 			settings.Add("grimreaper2", false, "Grim Reaper II","any");
