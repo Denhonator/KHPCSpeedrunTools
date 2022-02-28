@@ -155,6 +155,9 @@ split
 	else if(current.fightend == false){
 		vars.splitTimer = vars.splitTimer-1;
 	}
+	else{
+		return false;
+	}
 }
 
 exit
