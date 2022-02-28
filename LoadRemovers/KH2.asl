@@ -32,7 +32,6 @@ init
 	vars.currentSplit = 0;
 	vars.startCounter = 0;
 	vars.doubleSplitCounter = 0;
-	vars.endFight = false;
 	if(modules.First().ModuleMemorySize == 46301184){
 		version = "JP";
 	}
@@ -64,14 +63,13 @@ startup
 				settings.Add("02-03-49", false, "Two Dusk, One Assasain fight", "STT");
 				settings.Add("02-13-86", false, "Basement Fight", "STT");
 				settings.Add("02-14-89", false, "Axel II", "STT");
-
 			settings.Add("02-1E-99", false, "Yen Sid's Tower Last Fight","any");
-			settings.Add("02-1B-04", false, "Leaving Yen Sid's Tower","any");
+			settings.Add("02-1B-04", false, "Leaving Yen Sid's Tower (TT1)","any");
 			settings.Add("04-08-34", false, "Bailey","any");
 			settings.Add("08-09-4B", false, "Shan-Yu","any");
 			settings.Add("06-12-AB", false, "Hydra","any");
 			settings.Add("04-09-3A", false, "Fight for Pooh's Book","any");
-			settings.Add("04-0D-65", false, "Acquire Chicken Little","any");
+			settings.Add("04-0D-65", false, "Acquire Chicken Little (HB2)","any");
 			settings.Add("05-05-4F", false, "Dark Thorn","any");
 			settings.Add("0C-00-33", false, "Minnie Escort","any");
 			settings.Add("0D-03-35", false, "Timeless River Pete","any");
@@ -83,7 +81,7 @@ startup
 			settings.Add("11-04-37", false, "Hostile Program","any");
 			settings.Add("04-11-42", false, "1K Heartless","any");
 			settings.Add("05-03-0B", false, "Rumbling Rose", "any");
-			settings.Add("05-0F-52", false, "Grim Reaper II","any");
+			settings.Add("10-01-36", false, "Grim Reaper II","any");
 			settings.Add("0E-07-40", false, "The Experiment","any");
 			settings.Add("07-05-3E", false, "Genie Jafar","any");
 			settings.Add("05-0F-52", false, "Xaldin","any");
@@ -133,40 +131,29 @@ start
 
 split
 {	
+	// Converts location IDs to string to compare against toggled splits.
+	var currentLocationSetting = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
+	
 	// Timer to prevent double splits from occuring.
 	if(vars.splitTimer == 0){
-		// Logic to split when a fight is over. 
+		// Determines if a fight is over. 
 		if(current.fightend && !old.fightend && current.soraHP > 0){
 			print("fightend!");
 			vars.splitTimer = 10;
-			vars.endFight = true;
+			if(settings["any"]){
+				return settings[currentLocationSetting];
+			}
+			else if (settings["dataorg"]) return true;
+		}
+		// For Event based splits. Rumbling Rose is excluded in the if due to a bug.
+		if (old.eventID3 != current.eventID3 && settings[currentLocationSetting] && !settings["05-03-0B"]){
+			print("Found settings at "+currentLocationSetting);
+			vars.splitTimer = 10;
+			return settings[currentLocationSetting];
 		}
 	}
 	else if(current.fightend == false){
 		vars.splitTimer = vars.splitTimer-1;
-		vars.endFight = false;
-	}
-	else{
-		vars.endFight = false;
-	}
-
-	// Checks if the fight is a currently toggled split.
-	var currentLocationSetting = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
-	// New Timer for Event based splits.
-	if (vars.splitTimer == 0 && (old.eventID1 != current.eventID1 || old.eventID2 != current.eventID2 || old.eventID3 != current.eventID3)){
-		print("Valid Room Split");
-		vars.splitTimer = 500;
-		if(settings[currentLocationSetting]
-		}
-	}
-	if(vars.endFight){
-		if(settings["any"]){
-			//If any of these configurations are true, return true.
-			return settings[currentLocationSetting];
-		}
-		else if(settings["dataorg"]){
-			return true;
-		}
 	}
 }
 
