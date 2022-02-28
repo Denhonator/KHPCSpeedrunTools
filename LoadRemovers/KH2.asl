@@ -49,55 +49,56 @@ startup
 	//any%
 		settings.Add("any", false, "Any%");
 			settings.Add("STT", false, "Roxas Section", "any");
-				settings.Add("seifer2", false, "Seifer 2", "STT");
-				settings.Add("mansiondusk", false, "Mansion Dusk", "STT");
-				settings.Add("maildelivery", false, "Mail Delivery", "STT");
-				settings.Add("3dusksfight1", false, "Three Dusks", "STT");
-				settings.Add("twilThorn", false, "Twilight Thorn", "STT");
-				settings.Add("hayner", false, "Hayner Struggle", "STT");
-				settings.Add("vivi", false, "Vivi Struggle", "STT");
-				settings.Add("axel1", false, "Axel I", "STT");
-				settings.Add("7Wall", false, "7 Wonders: Wall", "STT");
-				settings.Add("7Vivi", false, "7 Wonders: Vivi", "STT");
-				settings.Add("7Shadow", false, "7 Wonders: Shadow Roxas", "STT");
-				settings.Add("7Bag", false, "7 Wonders: Bag", "STT");
-				settings.Add("2d1a", false, "Two Dusk, One Assasain fight", "STT");
-				settings.Add("basement", false, "Basement Fight", "STT");
-				settings.Add("axel2", false, "Axel II", "STT");
-			settings.Add("tower", false, "Yen Sid's Tower Last Fight","any");
-			settings.Add("tt1", false, "Leaving Yen Sid's Tower","any");
-			settings.Add("bailey", false, "Bailey","any");
-			settings.Add("shanyu", false, "Shan-Yu","any");
-			settings.Add("hydra", false, "Hydra","any");
-			settings.Add("poohFight", false, "Fight for Pooh's Book","any");
-			settings.Add("chicken", false, "Acquire Chicken Little","any");
-			settings.Add("darkthorn", false, "Dark Thorn","any");
-			settings.Add("minnie", false, "Minnie Escort","any");
-			settings.Add("trpete", false, "Timeless River Pete","any");
-			settings.Add("barbossa", false, "Barbossa","any");
-			settings.Add("twinlords", false, "Twin Lords","any");
-			settings.Add("oogie", false, "Oogie Boogie","any");
-			settings.Add("berserkers", false, "Berserker fight","any");
-			settings.Add("limit", false, "Acquire Limit Form (TT2)","any");
-			settings.Add("hostile", false, "Hostile Program","any");
-			settings.Add("1k", false, "1K Heartless","any");
-			settings.Add("rumbling", false, "Rumbling Rose", "any");
-			settings.Add("gr2", false, "Grim Reaper II","any");
-			settings.Add("experiment", false, "The Experiment","any");
-			settings.Add("jafar", false, "Genie Jafar","any");
-			settings.Add("xaldin", false, "Xaldin","any");
-			settings.Add("stormrider", false, "Storm Rider","any");
-			settings.Add("TT3", false, "Twilight Town 3","any");
-			settings.Add("roxas", false, "Roxas","any");
-			settings.Add("xigbar", false, "Xigbar","any");
-			settings.Add("luxord", false, "Luxord","any");
-			settings.Add("saix", false, "Saix","any");
-			settings.Add("xenmas1", false, "Xenmas I","any");
-			settings.Add("core", false, "Core","any");
-			settings.Add("armored1", false, "Armored Xenmas I","any");
-			settings.Add("dragon", false, "Dragon Xenmas","any");
-			settings.Add("armored2", false, "Armored Xenmas II","any");
-			settings.Add("final", false, "Final Xenmas","any");
+				settings.Add("02-04-4E", false, "Seifer 2", "STT");
+				settings.Add("02-0E-80", false, "Mansion Dusk", "STT");
+				settings.Add("02-06-5B", false, "Mail Delivery", "STT");
+				settings.Add("02-20-9A", false, "Three Dusks", "STT");
+				settings.Add("02-22-9D", false, "Twilight Thorn", "STT");
+				settings.Add("02-05-54", false, "Hayner Struggle", "STT");
+				settings.Add("02-05-55", false, "Vivi Struggle", "STT");
+				settings.Add("02-05-57", false, "Axel I", "STT");
+				settings.Add("02-0A-78", false, "7 Wonders: Wall", "STT");
+				settings.Add("02-24-9F", false, "7 Wonders: Vivi", "STT");
+				settings.Add("02-0A-79", false, "7 Wonders: Shadow Roxas", "STT");
+				settings.Add("02-0C-7D", false, "7 Wonders: Bag", "STT");
+				settings.Add("02-03-49", false, "Two Dusk, One Assasain fight", "STT");
+				settings.Add("02-13-86", false, "Basement Fight", "STT");
+				settings.Add("02-14-89", false, "Axel II", "STT");
+
+			settings.Add("02-1E-99", false, "Yen Sid's Tower Last Fight","any");
+			settings.Add("02-1B-04", false, "Leaving Yen Sid's Tower","any");
+			settings.Add("04-08-34", false, "Bailey","any");
+			settings.Add("08-09-4B", false, "Shan-Yu","any");
+			settings.Add("06-12-AB", false, "Hydra","any");
+			settings.Add("04-09-3A", false, "Fight for Pooh's Book","any");
+			settings.Add("04-0D-65", false, "Acquire Chicken Little","any");
+			settings.Add("05-05-4F", false, "Dark Thorn","any");
+			settings.Add("0C-00-33", false, "Minnie Escort","any");
+			settings.Add("0D-03-35", false, "Timeless River Pete","any");
+			settings.Add("10-0A-3C", false, "Barbossa","any");
+			settings.Add("07-03-3B", false, "Twin Lords","any");
+			settings.Add("0E-09-37", false, "Oogie Boogie","any");
+			settings.Add("02-04-50", false, "Berserker fight","any");
+			settings.Add("02-08-74", false, "Acquire Limit Form (TT2)","any");
+			settings.Add("11-04-37", false, "Hostile Program","any");
+			settings.Add("04-11-42", false, "1K Heartless","any");
+			settings.Add("05-03-0B", false, "Rumbling Rose", "any");
+			settings.Add("05-0F-52", false, "Grim Reaper II","any");
+			settings.Add("0E-07-40", false, "The Experiment","any");
+			settings.Add("07-05-3E", false, "Genie Jafar","any");
+			settings.Add("05-0F-52", false, "Xaldin","any");
+			settings.Add("08-08-4F", false, "Storm Rider","any");
+			settings.Add("02-28-A1", false, "Twilight Town 3","any");
+			settings.Add("12-15-41", false, "Roxas","any");
+			settings.Add("12-0A-39", false, "Xigbar","any");
+			settings.Add("12-0E-3A", false, "Luxord","any");
+			settings.Add("12-0F-38", false, "Saix","any");
+			settings.Add("12-13-3B", false, "Xenmas I","any");
+			settings.Add("12-19-46", false, "Core","any");
+			settings.Add("12-18-47", false, "Armored Xenmas I","any");
+			settings.Add("12-16-48", false, "Dragon Xenmas","any");
+			settings.Add("12-17-49", false, "Armored Xenmas II","any");
+			settings.Add("12-14-4A", false, "Final Xenmas","any");
 	
 	//dataorg
 		settings.Add("dataorg", false, "Data Org");
@@ -148,105 +149,23 @@ split
 	else{
 		vars.endFight = false;
 	}
-	
+
+	// Checks if the fight is a currently toggled split.
+	var currentLocationSetting = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
 	// New Timer for Event based splits.
 	if (vars.splitTimer == 0 && (old.eventID1 != current.eventID1 || old.eventID2 != current.eventID2 || old.eventID3 != current.eventID3)){
-		//Check which splits to do
-		if (
-			settings["tt1"] && current.worldID == 0x02 && current.roomID == 0x1B && current.eventID3 == 0x04 ||
-			settings["chicken"] && current.worldID == 0x04 && current.roomID == 0x0D && current.eventID1 == 0x65 ||
-			settings["limit"] && current.worldID == 0x02 && current.roomID == 0x08 && current.eventID1 == 0x74
-		   ){
-			print("Valid Room Split");
-			vars.splitTimer = 500;
-			return true;
+		print("Valid Room Split");
+		vars.splitTimer = 500;
+		if(settings[currentLocationSetting]
 		}
 	}
-	
-	// Checks if the fight is a currently toggled split.
 	if(vars.endFight){
 		if(settings["any"]){
 			//If any of these configurations are true, return true.
-			if(
-				// STT
-				settings["seifer2"] && current.worldID == 0x02 && current.roomID == 0x04 && current.eventID1 == 0x4E||
-				settings["mansiondusk"] && current.worldID == 0x02 && current.roomID == 0x0E && current.eventID1 == 0x80||
-				settings["maildelivery"] && current.worldID == 0x02 && current.roomID == 0x06 && current.eventID1 == 0x5B||
-				settings["3dusksfight1"] && current.worldID == 0x02 && current.roomID == 0x20 && current.eventID1 == 0x9A||
-				settings["twilThorn"] && current.worldID == 0x02 && current.roomID == 0x22 && current.eventID1 == 0x9D||
-				settings["hayner"] && current.worldID == 0x02 && current.roomID == 0x05 && current.eventID1 == 0x54||
-				settings["vivi"] && current.worldID == 0x02 && current.roomID == 0x05 && current.eventID1 == 0x55||
-				settings["axel1"] && current.worldID == 0x02 && current.roomID == 0x05 && current.eventID1 == 0x57||
-				settings["7Wall"] && current.worldID == 0x02 && current.roomID == 0x0A && current.eventID1 == 0x78||
-				settings["7Vivi"] && current.worldID == 0x02 && current.roomID == 0x24 && current.eventID1 == 0x9F||
-				settings["7Shadow"] && current.worldID == 0x02 && current.roomID == 0x0A && current.eventID1 == 0x79||
-				settings["7Bag"] && current.worldID == 0x02 && current.roomID == 0x0C && current.eventID1 == 0x7D||
-				settings["2d1a"] && current.worldID == 0x02 && current.roomID == 0x03 && current.eventID1 == 0x49||
-				settings["basement"] && current.worldID == 0x02 && current.roomID == 0x13 && current.eventID1 == 0x86||
-				settings["axel2"] && current.worldID == 0x02 && current.roomID == 0x14 && current.eventID1 == 0x89||
-				// TT1
-				settings["tower"] && current.worldID == 0x02 && current.roomID == 0x1E && current.eventID1 == 0x99||
-				//HB1
-				settings["bailey"] && current.worldID == 0x04 && current.roomID == 0x08 && current.eventID1 == 0x34||
-				//LOD1
-				settings["shanyu"] && current.worldID == 0x08 && current.roomID == 0x09 && current.eventID1 == 0x4B||
-				//OC1
-				settings["hydra"] && current.worldID == 0x06 && current.roomID == 0x12 && current.eventID1 == 0xAB||
-				//HB1
-				settings["poohFight"] && current.worldID == 0x04 && current.roomID == 0x09 && current.eventID1 == 0x3A||
-				//BC1
-				settings["darkthorn"] && current.worldID == 0x05 && current.roomID == 0x05 && current.eventID1 == 0x4F||
-				//DC and TR
-				settings["minnie"] && current.worldID == 0x0C && current.roomID == 0x00 && current.eventID1 == 0x33||
-				settings["trpete"] && current.worldID == 0x0D && current.roomID == 0x03 && current.eventID1 == 0x35||
-				//PR1
-				settings["barbossa"] && current.worldID == 0x10 && current.roomID == 0x0A && current.eventID1 == 0x3C||
-				//AG1
-				settings["twinlords"] && current.worldID == 0x07 && current.roomID == 0x03 && current.eventID1 == 0x3B||
-				//HT1
-				settings["oogie"] && current.worldID == 0x0E && current.roomID == 0x09 && current.eventID1 == 0x37||
-				//TT2
-				settings["berserkers"] && current.worldID == 0x02 && current.roomID == 0x04 && current.eventID1 == 0x50||
-				//SP
-				settings["hostile"] && current.worldID == 0x11 && current.roomID == 0x04 && current.eventID1 == 0x37||
-				//HB3
-				settings["1k"] && current.worldID == 0x04 && current.roomID == 0x11 && current.eventID1 == 0x42||
-				//BC2
-				settings["rumbling"] && current.worldID == 0x05 && current.roomID == 03 && current.eventID3 == 0x0B||
-				settings["xaldin"] && current.worldID == 0x05 && current.roomID == 0x0F && current.eventID1 == 0x52||
-				//PR2
-				settings["gr2"] && current.worldID == 0x10 && current.roomID == 0x01 && current.eventID1 == 0x36||
-				//HT2
-				settings["experiment"] && current.worldID == 0x0E && current.roomID == 0x07 && current.eventID1 == 0x40||
-				//AG2
-				settings["jafar"] && current.worldID == 0x07 && current.roomID == 0x05 && current.eventID1 == 0x3E||
-				//LOD2
-				settings["stormrider"] && current.worldID == 0x08 && current.roomID == 0x08 && current.eventID1 == 0x4F||
-				//TT3
-				settings["TT3"] && current.worldID == 0x02 && current.roomID == 0x28 && current.eventID1 == 0xA1||
-				//TWTNW
-				settings["roxas"] && current.worldID == 0x12 && current.roomID == 0x15 && current.eventID1 == 0x41||
-				settings["xigbar"] && current.worldID == 0x12 && current.roomID == 0x0A && current.eventID1 == 0x39||
-				settings["luxord"] && current.worldID == 0x12 && current.roomID == 0x0E && current.eventID1 == 0x3A||
-				settings["saix"] && current.worldID == 0x12 && current.roomID == 0x0F && current.eventID1 == 0x38||
-				settings["xenmas1"] && current.worldID == 0x12 && current.roomID == 0x13 && current.eventID1 == 0x3B||
-				//Final Fights
-				settings["core"] && current.worldID == 0x12 && current.roomID == 0x19 && current.eventID1 == 0x46||
-				settings["armored1"] && current.worldID == 0x12 && current.roomID == 0x18 && current.eventID1 == 0x47||
-				settings["dragon"] && current.worldID == 0x12 && current.roomID == 0x16 && current.eventID1 == 0x48||
-				settings["armored2"] && current.worldID == 0x12 && current.roomID == 0x17 && current.eventID1 == 0x49||
-				settings["final"] && current.worldID == 0x12 && current.roomID == 0x14 && current.eventID1 == 0x4A
-				)
-			{
-				return true; 
-			}
+			return settings[currentLocationSetting];
 		}
 		else if(settings["dataorg"]){
 			return true;
-		}
-		else
-		{
-			return false;
 		}
 	}
 }
