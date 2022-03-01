@@ -59,6 +59,7 @@ startup
 				settings.Add("02-1B-04", true, "Leaving Yen Sid's Tower (TT1)","TT1");
 
 			settings.Add("HB1", true, "Hollow Bastion 1", "any");	
+				settings.Add("04-09-33", false, "Nobody battle", "HB1");
 				settings.Add("04-08-34", true, "Bailey","HB1");
 
 			settings.Add("LoD1", true, "Land of Dragons 1", "any");
