@@ -53,50 +53,97 @@ startup
 				settings.Add("02-05-57", false, "Axel 1", "STT");
 				settings.Add("02-0C-7D", false, "7 Wonders: Bag", "STT");
 				settings.Add("02-14-89", true, "Axel 2", "STT");
+
 			settings.Add("TT1", true, "Twilight Town 1", "any");
 				settings.Add("02-1E-99", false, "Yen Sid's Tower Last Fight","TT1");
 				settings.Add("02-1B-04", true, "Leaving Yen Sid's Tower (TT1)","TT1");
-			settings.Add("04-08-34", true, "Bailey","any");
-			settings.Add("08-09-4B", true, "Shan-Yu","any");
-			settings.Add("OC1", true,  "Olympus Colosseum","any");
+
+			settings.Add("HB1", true, "Hollow Bastion 1", "any");	
+				settings.Add("04-08-34", true, "Bailey","HB1");
+
+			settings.Add("LoD1", true, "Land of Dragons 1", "any");
+				settings.Add("08-05-48", false, "Cave fight", "LoD1");
+				settings.Add("08-07-49", false, "Summit timed fight", "LoD1");
+				settings.Add("08-09-4B", true, "Shan-Yu","LoD1");
+
+			settings.Add("OC1", true,  "Olympus Coliseum","any");
 				settings.Add("06-07-72", false, "Cerberus","OC1");
 				settings.Add("06-12-AB", true, "Hydra","OC1");
+
 			settings.Add("04-0D-65", false, "Acquire Chicken Little (HB2)","any");
+
 			settings.Add("BC1", true, "Beast Castle 1","any");
 				settings.Add("05-0B-48", false, "Thresholder","BC1");
 				settings.Add("05-05-4F", true, "Dark Thorn","BC1");
+
 			settings.Add("0C-00-33", false, "Minnie Escort","any");
-			settings.Add("0D-03-35", true , "Timeless River Pete","any");
-			settings.Add("10-0A-3C", true , "Barbossa","any");
-			settings.Add("07-03-3B", true , "Twin Lords","any");
+			settings.Add("TR", true, "Timeless River", "any");
+				settings.Add("0D-04-36", false , "Lilliput window","TR");
+				settings.Add("0D-06-38", false , "Scene of the fire window","TR");
+				settings.Add("0D-05-37", false , "Building Site window","TR");
+				settings.Add("0D-07-38", false , "Mickey's house window","TR");
+				settings.Add("0D-03-35", false , "Timeless River Pete","TR");
+
+			settings.Add("PR1", true, "Port Royal 1", "any");
+				settings.Add("10-09-3B", false, "Infinite pirate fight", "PR1");
+				settings.Add("10-0A-3C", true, "Barbossa","PR1");
+
+			settings.Add("AG1", true, "Agrabah 1", "any");
+				settings.Add("07-09-02", false, "Abu's crystal", "AG1");
+				settings.Add("07-0A-3A", false, "Treasure room fight", "AG1");
+				settings.Add("07-03-3B", true , "Twin Lords","AG1");
+
 			settings.Add("HT1", true, "Halloween Town 1","any"); 
 				settings.Add("0E-03-34", false, "Prison Keeper","HT1");
 				settings.Add("0E-09-37", true, "Oogie Boogie","HT1");
-			settings.Add("02-04-50", false, "Berserker fight (TT2)","any");
-			settings.Add("02-08-74", false, "Acquire Limit Form (TT2)","any");
+
+			settings.Add("TT2", true, "Twilight Town 2", "any");
+				settings.Add("02-04-50", false, "Berserker fight","TT2");
+				settings.Add("02-08-74", false, "Acquire Limit Form","TT2");
+
 			settings.Add("SP1", true,  "Space Paranoids 1","any");
 				settings.Add("11-02-EF", false, "Light Cycle","SP1");
 				settings.Add("11-03-36", false, "Screen Minigame","SP1");
 				settings.Add("11-04-37", true, "Hostile Program","SP1");
+
 			settings.Add("HB3", true, "Hollow Bastion 3","any");
 				settings.Add("04-04-37", false, "Demyx","HB3");
 				settings.Add("04-10-41", false, "Final Fantasy Fights","HB3");
 				settings.Add("04-11-42", true , "1K Heartless","HB3");
+
 			settings.Add("05-03-0B", false, "Rumbling Rose", "any");
+
 			settings.Add("PR2", true, "Port Royal 2","any");
 				settings.Add("10-12-55", false, "Grim Reaper 1","PR2");
 				settings.Add("10-01-36", true, "Grim Reaper 2","PR2");
-			settings.Add("0E-07-40", true , "The Experiment","any");
-			settings.Add("07-05-3E", true , "Genie Jafar","any");
-			settings.Add("05-0F-52", true , "Xaldin","any");
-			settings.Add("08-08-4F", true , "Storm Rider","any");
-			settings.Add("02-28-A1", true , "Twilight Town 3","any");
+
+			settings.Add("HT2", true, "Halloween Town 2", "any");
+				settings.Add("0E-0A-3E", false, "Trap Lock, Shock & barrel", "HT2");
+				settings.Add("0E-07-40", true , "The Experiment","HT2");
+
+			settings.Add("AG2", true, "Agrabah 2", "any");
+				settings.Add("07-0E-3D", false, "Escape from the ruins (Carpet autoscroller)", "AG2");
+				settings.Add("07-05-3E", true , "Genie Jafar","AG2");
+
+			settings.Add("BC2", true, "Beast's castle 2", "any");
+				settings.Add("05-00-4B", false, "Entrance hall Nobody fight","BC2");
+				settings.Add("05-0F-52", true , "Xaldin","BC2");
+
+			settings.Add("LoD2", true, "Land of Dragons 2", "any");
+				settings.Add("08-07-4C", false, "Riku ?", "LoD2");
+				settings.Add("08-08-4F", true , "Storm Rider","LoD2");
+
+			settings.Add("TT3", true , "Twilight Town 3","any");
+				settings.Add("02-29-BA", false, "Mansion Nobody waves", "TT3");
+				settings.Add("02-28-A1", true , "Betwix with Axel","TT3");	
+
 			settings.Add("TWTNW",true, "The World that Never Was", "any");
 				settings.Add("12-15-41", false, "Roxas","TWTNW");
 				settings.Add("12-0A-39", false, "Xigbar","TWTNW");
 				settings.Add("12-0E-3A", false, "Luxord","TWTNW");
 				settings.Add("12-0F-38", false, "Saix","TWTNW");
 				settings.Add("12-13-3B", true , "Xenmas 1","TWTNW");
+
 			settings.Add("KH", true, "Final Fights","any");
 				settings.Add("12-19-46", false, "Core","KH");
 				settings.Add("12-18-47", false, "Armored Xenmas 1","KH");
