@@ -12,7 +12,7 @@ state("KINGDOM HEARTS II FINAL MIX", "GLOBAL")
 	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DBC;
 	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DBE;
 	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DC0;
-	int newgameSettings: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBE10;
+	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBE10;
 }
 
 state("KINGDOM HEARTS II FINAL MIX", "JP")
@@ -29,9 +29,7 @@ init
 {
 	timer.IsGameTimePaused = false;
 	vars.splitTimer = 0;
-	vars.currentSplit = 0;
 	vars.startCounter = 0;
-	vars.doubleSplitCounter = 0;
 	if(modules.First().ModuleMemorySize == 46301184){
 		version = "JP";
 	}
@@ -46,57 +44,65 @@ startup
 {
 	vars.booting = false;
 	//any%
-		settings.Add("any", false, "Any%");
-			settings.Add("STT", false, "Roxas Section", "any");
-				settings.Add("02-04-4E", false, "Seifer 2", "STT");
-				settings.Add("02-0E-80", false, "Mansion Dusk", "STT");
+		settings.Add("any", false, "Any% - Set timer to 0.31 if Auto Starting as well.");
+			settings.Add("STT", true, "Roxas Section", "any");
 				settings.Add("02-06-5B", false, "Mail Delivery", "STT");
-				settings.Add("02-20-9A", false, "Three Dusks", "STT");
 				settings.Add("02-22-9D", false, "Twilight Thorn", "STT");
 				settings.Add("02-05-54", false, "Hayner Struggle", "STT");
 				settings.Add("02-05-55", false, "Vivi Struggle", "STT");
-				settings.Add("02-05-57", false, "Axel I", "STT");
-				settings.Add("02-0A-78", false, "7 Wonders: Wall", "STT");
-				settings.Add("02-24-9F", false, "7 Wonders: Vivi", "STT");
-				settings.Add("02-0A-79", false, "7 Wonders: Shadow Roxas", "STT");
+				settings.Add("02-05-57", false, "Axel 1", "STT");
 				settings.Add("02-0C-7D", false, "7 Wonders: Bag", "STT");
-				settings.Add("02-03-49", false, "Two Dusk, One Assasain fight", "STT");
-				settings.Add("02-13-86", false, "Basement Fight", "STT");
-				settings.Add("02-14-89", false, "Axel II", "STT");
-			settings.Add("02-1E-99", false, "Yen Sid's Tower Last Fight","any");
-			settings.Add("02-1B-04", false, "Leaving Yen Sid's Tower (TT1)","any");
-			settings.Add("04-08-34", false, "Bailey","any");
-			settings.Add("08-09-4B", false, "Shan-Yu","any");
-			settings.Add("06-12-AB", false, "Hydra","any");
-			settings.Add("04-09-3A", false, "Fight for Pooh's Book","any");
+				settings.Add("02-14-89", true, "Axel 2", "STT");
+			settings.Add("TT1", true, "Twilight Town 1", "any");
+				settings.Add("02-1E-99", false, "Yen Sid's Tower Last Fight","TT1");
+				settings.Add("02-1B-04", true, "Leaving Yen Sid's Tower (TT1)","TT1");
+			settings.Add("04-08-34", true, "Bailey","any");
+			settings.Add("08-09-4B", true, "Shan-Yu","any");
+			settings.Add("OC1", true,  "Olympus Colosseum","any");
+				settings.Add("06-07-72", false, "Cerberus","OC1");
+				settings.Add("06-12-AB", true, "Hydra","OC1");
 			settings.Add("04-0D-65", false, "Acquire Chicken Little (HB2)","any");
-			settings.Add("05-05-4F", false, "Dark Thorn","any");
+			settings.Add("BC1", true, "Beast Castle 1","any");
+				settings.Add("05-0B-48", false, "Thresholder","BC1");
+				settings.Add("05-05-4F", true, "Dark Thorn","BC1");
 			settings.Add("0C-00-33", false, "Minnie Escort","any");
-			settings.Add("0D-03-35", false, "Timeless River Pete","any");
-			settings.Add("10-0A-3C", false, "Barbossa","any");
-			settings.Add("07-03-3B", false, "Twin Lords","any");
-			settings.Add("0E-09-37", false, "Oogie Boogie","any");
-			settings.Add("02-04-50", false, "Berserker fight","any");
+			settings.Add("0D-03-35", true , "Timeless River Pete","any");
+			settings.Add("10-0A-3C", true , "Barbossa","any");
+			settings.Add("07-03-3B", true , "Twin Lords","any");
+			settings.Add("HT1", true, "Halloween Town 1","any"); 
+				settings.Add("0E-03-34", false, "Prison Keeper","HT1");
+				settings.Add("0E-09-37", true, "Oogie Boogie","HT1");
+			settings.Add("02-04-50", false, "Berserker fight (TT2)","any");
 			settings.Add("02-08-74", false, "Acquire Limit Form (TT2)","any");
-			settings.Add("11-04-37", false, "Hostile Program","any");
-			settings.Add("04-11-42", false, "1K Heartless","any");
+			settings.Add("SP1", true,  "Space Paranoids 1","any");
+				settings.Add("11-02-EF", false, "Light Cycle","SP1");
+				settings.Add("11-03-36", false, "Screen Minigame","SP1");
+				settings.Add("11-04-37", true, "Hostile Program","SP1");
+			settings.Add("HB3", true, "Hollow Bastion 3","any");
+				settings.Add("04-04-37", false, "Demyx","HB3");
+				settings.Add("04-10-41", false, "Final Fantasy Fights","HB3");
+				settings.Add("04-11-42", true , "1K Heartless","HB3");
 			settings.Add("05-03-0B", false, "Rumbling Rose", "any");
-			settings.Add("10-01-36", false, "Grim Reaper II","any");
-			settings.Add("0E-07-40", false, "The Experiment","any");
-			settings.Add("07-05-3E", false, "Genie Jafar","any");
-			settings.Add("05-0F-52", false, "Xaldin","any");
-			settings.Add("08-08-4F", false, "Storm Rider","any");
-			settings.Add("02-28-A1", false, "Twilight Town 3","any");
-			settings.Add("12-15-41", false, "Roxas","any");
-			settings.Add("12-0A-39", false, "Xigbar","any");
-			settings.Add("12-0E-3A", false, "Luxord","any");
-			settings.Add("12-0F-38", false, "Saix","any");
-			settings.Add("12-13-3B", false, "Xenmas I","any");
-			settings.Add("12-19-46", false, "Core","any");
-			settings.Add("12-18-47", false, "Armored Xenmas I","any");
-			settings.Add("12-16-48", false, "Dragon Xenmas","any");
-			settings.Add("12-17-49", false, "Armored Xenmas II","any");
-			settings.Add("12-14-4A", false, "Final Xenmas","any");
+			settings.Add("PR2", true, "Port Royal 2","any");
+				settings.Add("10-12-55", false, "Grim Reaper 1","PR2");
+				settings.Add("10-01-36", true, "Grim Reaper 2","PR2");
+			settings.Add("0E-07-40", true , "The Experiment","any");
+			settings.Add("07-05-3E", true , "Genie Jafar","any");
+			settings.Add("05-0F-52", true , "Xaldin","any");
+			settings.Add("08-08-4F", true , "Storm Rider","any");
+			settings.Add("02-28-A1", true , "Twilight Town 3","any");
+			settings.Add("TWTNW",true, "The World that Never Was", "any");
+				settings.Add("12-15-41", false, "Roxas","TWTNW");
+				settings.Add("12-0A-39", false, "Xigbar","TWTNW");
+				settings.Add("12-0E-3A", false, "Luxord","TWTNW");
+				settings.Add("12-0F-38", false, "Saix","TWTNW");
+				settings.Add("12-13-3B", true , "Xenmas 1","TWTNW");
+			settings.Add("KH", true, "Final Fights","any");
+				settings.Add("12-19-46", false, "Core","KH");
+				settings.Add("12-18-47", false, "Armored Xenmas 1","KH");
+				settings.Add("12-16-48", false, "Dragon Xenmas","KH");
+				settings.Add("12-17-49", false, "Armored Xenmas 2","KH");
+				settings.Add("12-14-4A", true , "Final Xenmas","KH");
 	
 	//dataorg
 		settings.Add("dataorg", false, "Data Org");
@@ -110,7 +116,7 @@ start
 		}
 	}
 	if(vars.startCounter==1){	
-		if(current.newgameSettings == 0){
+		if(current.tempMemBank == 0){
 			vars.startCounter = 0;
 		}
 		if(current.newgame == 2 && old.newgame == 2){
@@ -121,7 +127,7 @@ start
 		if(current.newgame == 4){
 			vars.startCounter = 1;
 		}
-		if(current.newgameSettings == 0){
+		if(current.tempMemBank == 0){
 			vars.startCounter = 0;
 			return true;
 		}
@@ -132,7 +138,8 @@ start
 split
 {	
 	// Converts location IDs to string to compare against toggled splits.
-	var currentLocationSetting = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
+	string currentLocation = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
+	string oldLocation     = string.Format("{0:X2}-{1:X2}-{2:X2}", old.worldID, old.roomID, old.eventID3);
 	
 	// Timer to prevent double splits from occuring.
 	if(vars.splitTimer == 0){
@@ -141,23 +148,30 @@ split
 			print("fightend!");
 			vars.splitTimer = 10;
 			if(settings["any"]){
-				return settings[currentLocationSetting];
+				return settings[currentLocation];
 			}
 			else if (settings["dataorg"]) return true;
 		}
-		// For Event based splits. Rumbling Rose is excluded in the if due to a bug.
-		if (old.eventID3 != current.eventID3 && settings[currentLocationSetting] && !settings["05-03-0B"]){
-			print("Found settings at "+currentLocationSetting);
-			vars.splitTimer = 10;
-			return settings[currentLocationSetting];
+		// For Event based splits.
+		// Note: Not using if(settings[currentLocation]) as it conflicts with boss fights.
+		if (currentLocation!=oldLocation){
+			switch(currentLocation) {
+				case "02-1B-04": 
+				case "04-0D-65":
+				case "02-08-74":
+					print("Found settings at "+currentLocation);
+					return settings[currentLocation];
+					break;
+				default:
+					return false;
+					break;
+			}
 		}
 	}
-	else if(current.fightend == false){
-		vars.splitTimer = vars.splitTimer-1;
+	else if(current.fightend == false && vars.splitTimer > 0){
+		vars.splitTimer = --vars.splitTimer;
 	}
-	else{
-		return false;
-	}
+	else return false;
 }
 
 exit
