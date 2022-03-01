@@ -86,7 +86,7 @@ startup
 				settings.Add("0D-04-36", false , "Lilliput window","TR");
 				settings.Add("0D-06-38", false , "Scene of the fire window","TR");
 				settings.Add("0D-05-37", false , "Building Site window","TR");
-				settings.Add("0D-07-38", false , "Mickey's house window","TR");
+				settings.Add("0D-07-39", false , "Mickey's house window","TR");
 				settings.Add("0D-03-35", false , "Timeless River Pete","TR");
 
 			settings.Add("PR1", true, "Port Royal 1", "any");
