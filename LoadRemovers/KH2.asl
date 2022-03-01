@@ -69,17 +69,17 @@ startup
 			settings.Add("LoD1", true, "Land of Dragons 1", "any");
 				settings.Add("08-05-48", false, "Cave fight", "LoD1");
 				settings.Add("08-07-49", false, "Summit timed fight", "LoD1");
-				settings.Add("08-09-4B", true, "Shan-Yu","LoD1");
+				settings.Add("08-09-4B", true , "Shan-Yu","LoD1");
 
 			settings.Add("OC1", true,  "Olympus Coliseum","any");
 				settings.Add("06-07-72", false, "Cerberus","OC1");
-				settings.Add("06-12-AB", true, "Hydra","OC1");
+				settings.Add("06-12-AB", true , "Hydra","OC1");
 
 			settings.Add("04-0D-65", false, "Acquire Chicken Little (HB2)","any");
 
 			settings.Add("BC1", true, "Beast Castle 1","any");
 				settings.Add("05-0B-48", false, "Thresholder","BC1");
-				settings.Add("05-05-4F", true, "Dark Thorn","BC1");
+				settings.Add("05-05-4F", true , "Dark Thorn","BC1");
 
 			settings.Add("0C-00-33", false, "Minnie Escort","any");
 			settings.Add("TR", true, "Timeless River", "any");
@@ -107,7 +107,7 @@ startup
 				settings.Add("02-08-74", false, "Acquire Limit Form","TT2");
 
 			settings.Add("SP1", true,  "Space Paranoids 1","any");
-				settings.Add("11-02-EF", false, "Light Cycle","SP1");
+				settings.Add("11-02-3E", false, "Light Cycle","SP1");
 				settings.Add("11-03-36", false, "Screen Minigame","SP1");
 				settings.Add("11-04-37", true, "Hostile Program","SP1");
 
