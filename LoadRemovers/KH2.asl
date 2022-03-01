@@ -44,6 +44,10 @@ startup
 {
 	vars.booting = false;
 	//any%
+		settings.Add("Instructions", false, "For Any%: Select the world and the subsplits that you want.");
+		settings.Add("Instructions 2", false, "Selecting only the world won't be enough to get the autosplitter to work");
+		settings.Add("Instructions 4", false, "");
+
 		settings.Add("any", false, "Any% - Set timer to 0.31 if Auto Starting as well.");
 			settings.Add("STT", true, "Roxas Section", "any");
 				settings.Add("02-06-5B", false, "Mail Delivery", "STT");
@@ -153,6 +157,9 @@ startup
 				settings.Add("12-14-4A", true , "Final Xenmas","KH");
 	
 	//dataorg
+		settings.Add("Data Org instructions", false, "");
+		settings.Add("Instructions 3", false, "Uncheck all and select 'Data Org' at the end of the split selection");
+		settings.Add("Data Org instructions 2", false, "You need to start the splitter manually for Data Org");
 		settings.Add("dataorg", false, "Data Org");
 }
 
