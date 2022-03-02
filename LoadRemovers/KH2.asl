@@ -102,7 +102,7 @@ startup
 
 			settings.Add("HT1", true, "Halloween Town 1","any"); 
 				settings.Add("0E-03-34", false, "Prison Keeper","HT1");
-				settings.Add("0E-09-37", true, "Oogie Boogie","HT1");
+				settings.Add("0E-09-37", true , "Oogie Boogie","HT1");
 
 			settings.Add("TT2", true, "Twilight Town 2", "any");
 				settings.Add("02-04-50", false, "Berserker fight","TT2");
@@ -111,7 +111,7 @@ startup
 			settings.Add("SP1", true,  "Space Paranoids 1","any");
 				settings.Add("11-02-3E", false, "Light Cycle","SP1");
 				settings.Add("11-03-36", false, "Screen Minigame","SP1");
-				settings.Add("11-04-37", true, "Hostile Program","SP1");
+				settings.Add("11-04-37", true , "Hostile Program","SP1");
 
 			settings.Add("HB3", true, "Hollow Bastion 3","any");
 				settings.Add("04-04-37", false, "Demyx","HB3");
@@ -152,7 +152,7 @@ startup
 				settings.Add("12-13-3B", true , "Xenmas 1","TWTNW");
 
 			settings.Add("KH", true, "Final Fights","any");
-				settings.Add("12-19-46", false, "Core","KH");
+				settings.Add("12-18-57", false, "Core","KH");
 				settings.Add("12-18-47", false, "Armored Xenmas 1","KH");
 				settings.Add("12-16-48", false, "Dragon Xenmas","KH");
 				settings.Add("12-17-49", false, "Armored Xenmas 2","KH");
@@ -216,6 +216,7 @@ split
 				case "02-1B-04": 
 				case "04-0D-65":
 				case "02-08-74":
+				case "12-18-57":
 					print("Found settings at "+currentLocation);
 					return settings[currentLocation];
 					break;
