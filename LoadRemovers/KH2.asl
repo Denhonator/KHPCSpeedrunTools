@@ -137,12 +137,11 @@ startup
 				settings.Add("05-0F-52", true , "Xaldin","BC2");
 
 			settings.Add("LoD2", true, "Land of Dragons 2", "any");
-				//settings.Add("08-0C-13", false, "Riku ?", "LoD2");
 				settings.Add("08-08-51", false, "Imperial square heartless", "LoD2");
 				settings.Add("08-08-4F", true , "Storm Rider","LoD2");
 
 			settings.Add("TT3", true , "Twilight Town 3","any");
-				settings.Add("02-29-BA", false, "Mansion Nobody waves", "TT3");
+				//settings.Add("02-29-BA", false, "Mansion Nobody waves", "TT3");
 				settings.Add("02-28-A1", true , "Betwix with Axel","TT3");	
 
 			settings.Add("TWTNW",true, "The World that Never Was", "any");
@@ -217,7 +216,6 @@ split
 				case "02-1B-04": 
 				case "04-0D-65":
 				case "02-08-74":
-				//case "08-0C-13":
 					print("Found settings at "+currentLocation);
 					return settings[currentLocation];
 					break;
