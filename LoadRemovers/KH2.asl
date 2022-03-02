@@ -23,6 +23,7 @@ state("KINGDOM HEARTS II FINAL MIX", "JP")
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD5BC0;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x710438;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A1FC98;
+	//To-do: Get Memory Addresses for JP
 }
 
 init
@@ -56,7 +57,7 @@ startup
 				settings.Add("02-05-55", false, "Vivi Struggle", "STT");
 				settings.Add("02-05-57", false, "Axel 1", "STT");
 				settings.Add("02-0C-7D", false, "7 Wonders: Bag", "STT");
-				settings.Add("02-14-89", true, "Axel 2", "STT");
+				settings.Add("02-14-89", true , "Axel 2", "STT");
 
 			settings.Add("TT1", true, "Twilight Town 1", "any");
 				settings.Add("02-1E-99", false, "Yen Sid's Tower Last Fight","TT1");
@@ -64,7 +65,7 @@ startup
 
 			settings.Add("HB1", true, "Hollow Bastion 1", "any");	
 				settings.Add("04-09-33", false, "Nobody battle", "HB1");
-				settings.Add("04-08-34", true, "Bailey","HB1");
+				settings.Add("04-08-34", true , "Bailey","HB1");
 
 			settings.Add("LoD1", true, "Land of Dragons 1", "any");
 				settings.Add("08-05-48", false, "Cave fight", "LoD1");
@@ -83,15 +84,16 @@ startup
 
 			settings.Add("0C-00-33", false, "Minnie Escort","any");
 			settings.Add("TR", true, "Timeless River", "any");
-				settings.Add("0D-04-36", false , "Lilliput window","TR");
-				settings.Add("0D-06-38", false , "Scene of the fire window","TR");
-				settings.Add("0D-05-37", false , "Building Site window","TR");
-				settings.Add("0D-07-39", false , "Mickey's house window","TR");
-				settings.Add("0D-03-35", false , "Timeless River Pete","TR");
+				settings.Add("0D-04-36", false, "Lilliput window","TR");
+				settings.Add("0D-06-38", false, "Scene of the fire window","TR");
+				settings.Add("0D-05-37", false, "Building Site window","TR");
+				settings.Add("0D-07-39", false, "Mickey's house window","TR");
+				settings.Add("0D-03-35", true , "Timeless River Pete","TR");
 
 			settings.Add("PR1", true, "Port Royal 1", "any");
 				settings.Add("10-09-3B", false, "Infinite pirate fight", "PR1");
-				settings.Add("10-0A-3C", true, "Barbossa","PR1");
+				settings.Add("10-07-3A", false, "Boat Fight", "PR1");
+				settings.Add("10-0A-3C", true , "Barbossa","PR1");
 
 			settings.Add("AG1", true, "Agrabah 1", "any");
 				settings.Add("07-09-02", false, "Abu's crystal", "AG1");
@@ -120,7 +122,7 @@ startup
 
 			settings.Add("PR2", true, "Port Royal 2","any");
 				settings.Add("10-12-55", false, "Grim Reaper 1","PR2");
-				settings.Add("10-01-36", true, "Grim Reaper 2","PR2");
+				settings.Add("10-01-36", true , "Grim Reaper 2","PR2");
 
 			settings.Add("HT2", true, "Halloween Town 2", "any");
 				settings.Add("0E-0A-3E", false, "Trap Lock, Shock & barrel", "HT2");
@@ -159,8 +161,8 @@ startup
 	
 	//dataorg
 		settings.Add("Data Org instructions", false, "");
-		settings.Add("Instructions 3", false, "Uncheck all and select 'Data Org' at the end of the split selection");
-		settings.Add("Data Org instructions 2", false, "You need to start the splitter manually for Data Org");
+		settings.Add("Instructions 3", false, "Uncheck 'Any%' and select 'Data Org' at the bottom.");
+		settings.Add("Data Org instructions 2", false, "Auto-Start is not currently supported for Data Org");
 		settings.Add("dataorg", false, "Data Org");
 }
 
