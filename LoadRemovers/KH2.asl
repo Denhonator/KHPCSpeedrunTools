@@ -61,7 +61,7 @@ startup
 
 			settings.Add("TT1", true, "Twilight Town 1", "any");
 				settings.Add("02-1E-99", false, "Yen Sid's Tower Last Fight","TT1");
-				settings.Add("02-1B-04", true, "Leaving Yen Sid's Tower (TT1)","TT1");
+				settings.Add("02-1C-04", true , "Leaving Yen Sid's Tower (TT1)","TT1");
 
 			settings.Add("HB1", true, "Hollow Bastion 1", "any");	
 				settings.Add("04-09-33", false, "Nobody battle", "HB1");
@@ -76,7 +76,7 @@ startup
 				settings.Add("06-07-72", false, "Cerberus","OC1");
 				settings.Add("06-12-AB", true , "Hydra","OC1");
 
-			settings.Add("04-0D-65", false, "Acquire Chicken Little (HB2)","any");
+			settings.Add("04-0D-08", false, "Acquire Chicken Little (HB2)","any");
 
 			settings.Add("BC1", true, "Beast Castle 1","any");
 				settings.Add("05-0B-48", false, "Thresholder","BC1");
@@ -91,7 +91,7 @@ startup
 				settings.Add("0D-03-35", true , "Timeless River Pete","TR");
 
 			settings.Add("PR1", true, "Port Royal 1", "any");
-				settings.Add("10-09-3B", false, "Infinite pirate fight", "PR1");
+				settings.Add("10-09-3B", false, "Minute Pirate Fight", "PR1");
 				settings.Add("10-07-3A", false, "Boat Fight", "PR1");
 				settings.Add("10-0A-3C", true , "Barbossa","PR1");
 
@@ -106,7 +106,7 @@ startup
 
 			settings.Add("TT2", true, "Twilight Town 2", "any");
 				settings.Add("02-04-50", false, "Berserker fight","TT2");
-				settings.Add("02-08-74", false, "Acquire Limit Form","TT2");
+				settings.Add("02-02-48", false, "Acquire Limit Form","TT2");
 
 			settings.Add("SP1", true,  "Space Paranoids 1","any");
 				settings.Add("11-02-3E", false, "Light Cycle","SP1");
@@ -141,22 +141,22 @@ startup
 				settings.Add("08-08-4F", true , "Storm Rider","LoD2");
 
 			settings.Add("TT3", true , "Twilight Town 3","any");
-				//settings.Add("02-29-BA", false, "Mansion Nobody waves", "TT3");
-				settings.Add("02-28-A1", true , "Betwix with Axel","TT3");	
+				//settings.Add("02-29-BA", false, "Mansion Nobody waves", "TT3"); - Double Splits on opening cutscene
+				settings.Add("02-28-A1", true , "Betwixt and Between","TT3");	
 
 			settings.Add("TWTNW",true, "The World that Never Was", "any");
 				settings.Add("12-15-41", false, "Roxas","TWTNW");
 				settings.Add("12-0A-39", false, "Xigbar","TWTNW");
 				settings.Add("12-0E-3A", false, "Luxord","TWTNW");
 				settings.Add("12-0F-38", false, "Saix","TWTNW");
-				settings.Add("12-13-3B", true , "Xenmas 1","TWTNW");
+				settings.Add("12-13-3B", true , "Xemnas 1","TWTNW");
 
 			settings.Add("KH", true, "Final Fights","any");
-				settings.Add("12-18-57", false, "Core","KH");
-				settings.Add("12-18-47", false, "Armored Xenmas 1","KH");
-				settings.Add("12-16-48", false, "Dragon Xenmas","KH");
-				settings.Add("12-17-49", false, "Armored Xenmas 2","KH");
-				settings.Add("12-14-4A", true , "Final Xenmas","KH");
+				settings.Add("12-19-48", false, "Core","KH");
+				settings.Add("12-18-47", false, "Armored Xemnas 1","KH");
+				settings.Add("12-16-48", false, "Dragon Xemnas","KH");
+				settings.Add("12-17-49", false, "Armored Xemnas 2","KH");
+				settings.Add("12-14-4A", true , "Final Xemnas","KH");
 	
 	//dataorg
 		settings.Add("Data Org instructions", false, "");
@@ -201,23 +201,24 @@ split
 	// Timer to prevent double splits from occuring.
 	if(vars.splitTimer == 0){
 		// Determines if a fight is over. 
-		if(current.fightend && !old.fightend && current.soraHP > 0){
-			print("fightend!");
+		if(current.fightend!=old.fightend && current.soraHP > 0){
+			//print("Fight ended! Loc: "+currentLocation);
 			vars.splitTimer = 10;
 			if(settings["any"]){
 				return settings[currentLocation];
 			}
 			else if (settings["dataorg"]) return true;
 		}
-		// For Event based splits
+		// For Event based splits.
 		if (currentLocation!=oldLocation){
-			switch(currentLocation) {
-				case "02-1B-04": 
-				case "04-0D-65":
-				case "02-08-74":
-				case "12-18-57":
-					print("Found settings at "+currentLocation);
-					return settings[currentLocation];
+			//print("C:"+currentLocation+" O:"+oldLocation);
+			switch(oldLocation) {
+				case "02-1C-04": //TT1
+				case "04-0D-08": //Chicken Little
+				case "02-02-48": //TT2
+				case "12-19-48": //Core
+					//print("Sora just left event: "+oldLocation);
+					return settings[oldLocation];
 					break;
 				default:
 					break;
