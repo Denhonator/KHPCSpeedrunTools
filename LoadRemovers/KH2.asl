@@ -167,16 +167,14 @@ startup
 
 start
 {
-	if(vars.startCounter==0){	
-		if(current.newgame == 4){
-			vars.startCounter = 1;
-		}
+	if(vars.startCounter==0 && current.newgame == 4){
+		vars.startCounter = 1;
 	}
 	if(vars.startCounter==1){	
 		if(current.tempMemBank == 0){
 			vars.startCounter = 0;
 		}
-		if(current.newgame == 2 && old.newgame == 2){
+		if(current.newgame == 2){
 			vars.startCounter = 2;
 		}
 	}
@@ -189,11 +187,13 @@ start
 			return true;
 		}
 	}
-	else return false;
 }
 
 split
 {	
+	//startCounter didn't reset. Happens if you start it manually while using 2fmSoftReset.lua
+	if(vars.startCounter != 0) vars.startCounter = 0;
+	
 	// Converts location IDs to string to compare against toggled splits.
 	string currentLocation = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
 	string oldLocation     = string.Format("{0:X2}-{1:X2}-{2:X2}", old.worldID, old.roomID, old.eventID3);
@@ -209,8 +209,7 @@ split
 			}
 			else if (settings["dataorg"]) return true;
 		}
-		// For Event based splits.
-		// Note: Not using if(settings[currentLocation]) as it conflicts with boss fights.
+		// For Event based splits
 		if (currentLocation!=oldLocation){
 			switch(currentLocation) {
 				case "02-1B-04": 
@@ -221,7 +220,6 @@ split
 					return settings[currentLocation];
 					break;
 				default:
-					return false;
 					break;
 			}
 		}
@@ -229,7 +227,6 @@ split
 	else if(current.fightend == false && vars.splitTimer > 0){
 		vars.splitTimer = --vars.splitTimer;
 	}
-	else return false;
 }
 
 exit
