@@ -45,9 +45,11 @@ startup
 {
 	vars.booting = false;
 	//any%
-		settings.Add("Instructions", false, "For Any%: Select the world and the subsplits that you want.");
-		settings.Add("Instructions 2", false, "Selecting only the world won't be enough to get the autosplitter to work");
-		settings.Add("Instructions 4", false, "");
+		settings.Add("startREADME", false, "Auto-Start README (Hover Over)");
+		settings.SetToolTip("startREADME", "Currently compatible with any% for now.\nMake sure to reset before selecting New Game.\nSet timer to start at 0.31 for Any%.");
+		settings.Add("splitREADME", false, "Auto-Split README (Hover Over)");
+		settings.SetToolTip("splitREADME", "Select the category you wish to run, the desired worlds, as well as the world's ending split.\nDo not have multiple categories selected (ex. Any% and Data Org).");
+		settings.Add("Instructions 4", false, "--------------------------------");
 
 		settings.Add("any", false, "Any% - Set timer to 0.31 if Auto Starting as well.");
 			settings.Add("STT", true, "Roxas Section", "any");
@@ -159,10 +161,9 @@ startup
 				settings.Add("12-14-4A", true , "Final Xemnas","KH");
 	
 	//dataorg
-		settings.Add("Data Org instructions", false, "");
-		settings.Add("Instructions 3", false, "Uncheck 'Any%' and select 'Data Org' at the bottom.");
-		settings.Add("Data Org instructions 2", false, "Auto-Start is not currently supported for Data Org");
-		settings.Add("dataorg", false, "Data Org");
+		settings.Add("Data Org instructions", false, "--------------------------------");
+		settings.Add("dataorg", false, "Data Org & README (Hover Over)");
+		settings.SetToolTip("dataorg", "Make sure this is selected and Any% is not selected if running Data Org.\nAuto-Start is not currently supported for Data Org");
 }
 
 start
