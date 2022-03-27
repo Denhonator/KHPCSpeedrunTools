@@ -63,7 +63,7 @@ local worldFlagBase = 0x2DE79D0+0x6C - offset
 local gummiFlagBase = 0x2DE78C0 - offset
 local worldMapLines = 0x2DE78E2 - offset
 local gummiselect = 0x503CEC - offset
-local inGummi = 0x50421D - offset
+local inGummi = 0x504218 - offset
 local battleLevel = 0x2DE7394 - offset
 local unlockedWarps = 0x2DE78D6 - offset
 local warpCount = 0x50BA30 - offset
@@ -212,6 +212,20 @@ local canExecute = false
 local checksDebug = {}
 local checksDebug2 = {}
 
+function ConsoleLog(s)
+	ConsolePrint(s)
+	-- local f = io.open("randoprints.txt")
+	-- if not f then
+		-- local fw = io.open("randoprints.txt", "w")
+		-- fw:close()
+	-- else
+		-- f:close()
+	-- end
+	-- f = io.open("randoprints.txt", "a")
+	-- f:write(s .. "\n")
+	-- f:close()
+end
+
 function RArray(off, c)
 	local l = {}
 	for i=1, c do
@@ -255,15 +269,15 @@ end
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
-		ConsolePrint("KH1 detected, running script")
+		ConsoleLog("KH1 detected, running script")
 	else
-		ConsolePrint("KH1 not detected, not running script")
+		ConsoleLog("KH1 not detected, not running script")
 	end
 
 	if canExecute then
 		local f2 = io.open("randofiles/gummis.txt")
 		if not f2 then
-			ConsolePrint("gummis.txt missing!")
+			ConsoleLog("gummis.txt missing!")
 		else
 			for i=1,0x40 do
 				gummiNames[i] = f2:read("*l")
@@ -272,7 +286,7 @@ function _OnInit()
 			chestDetails = LoadRewards("randofiles/Chests.txt", 1)
 			rewardDetails = LoadRewards("randofiles/Rewards.txt", 1)
 			itemNames = LoadRewards("randofiles/items.txt", 0)
-			ConsolePrint(rewardDetails[1][1])
+			ConsoleLog(rewardDetails[1][1])
 		end
 		for i=1,0xFF do
 			itemids[i] = i
@@ -295,7 +309,7 @@ function _OnInit()
 			text = seedfile:read()
 			seedstring = text
 			if text == "Disabled" then
-				ConsolePrint("Disabling rando because of seed Disabled")
+				ConsoleLog("Disabling rando because of seed Disabled")
 				randomized = true
 			end
 			seed = tonumber(text)
@@ -303,19 +317,19 @@ function _OnInit()
 				seed = Djb2(text)
 			end
 			math.randomseed(seed)
-			ConsolePrint("Found existing seed")
+			ConsoleLog("Found existing seed")
 		else
 			seedfile = io.open("randofiles/seed.txt", "w")
 			local newseed = os.time()
 			math.randomseed(newseed)
 			seedstring = string.format("%d", newseed)
 			seedfile:write(newseed)
-			ConsolePrint("Wrote new seed")
+			ConsoleLog("Wrote new seed")
 		end
 		seedfile:close()
 		
 		initDone = true
-		ConsolePrint("Init done.	")
+		ConsoleLog("Init done.	")
 	end
 end
 
@@ -473,7 +487,7 @@ function IsAccessible(t, i)
 			if itemsAvailable[0xD3] then
 				cards = cards + itemsAvailable[0xD3]
 			end
-			--ConsolePrint(string.format("Postcards %d Required: %s", cards, string.sub(t[i][k], 9)))
+			--ConsoleLog(string.format("Postcards %d Required: %s", cards, string.sub(t[i][k], 9)))
 			thisAccess = thisAccess or cards >= tonumber(string.sub(t[i][k], 9))
 		end
 		if string.find(t[i][k], "Puppies") then
@@ -721,7 +735,7 @@ function Randomize()
 		end
 	end
 	
-	ConsolePrint(#randomGets)
+	ConsoleLog(#randomGets)
 
 	shopPool = {}
 	
@@ -768,7 +782,7 @@ function Randomize()
 		end
 	end
 
-	ConsolePrint("Randomized reward pool")
+	ConsoleLog("Randomized reward pool")
 	
 	order = GetRandomOrder(0x1FF)
 	
@@ -786,7 +800,7 @@ function Randomize()
 					chests[i] = table.remove(importantPool, math.random(#importantPool)) * 0x10
 				elseif #missableRewards > 0 then
 					chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
-					ConsolePrint("Added missable reward to chest")
+					ConsoleLog("Added missable reward to chest")
 				elseif #addItems > 0 then
 					chests[i] = table.remove(addItems, 1) * 0x10
 				else
@@ -807,7 +821,7 @@ function Randomize()
 			end
 		end
 	end
-	ConsolePrint("Randomized chests")
+	ConsoleLog("Randomized chests")
 	
 	local order = GetRandomOrder(0xA9)
 	for j=1, 0x49 do
@@ -852,7 +866,7 @@ function Randomize()
 			rewards[i] = ((ab-0x80) * 0x100) + 0x21
 		end
 	end
-	ConsolePrint("Mixed level up abilities with reward abilities")
+	ConsoleLog("Mixed level up abilities with reward abilities")
 	
 	for i=1, 99 do
 		local r = math.random(99)
@@ -934,7 +948,7 @@ function Randomize()
 			donaldAbilities[r] = orig
 		end
 	end
-	ConsolePrint("Randomized level ups")
+	ConsoleLog("Randomized level ups")
 	
 	local magicPool = {1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7}
 	local magicPool2 = {1,2,3,4,5,6,7}
@@ -944,19 +958,19 @@ function Randomize()
 			perMagicShuffle[i] = table.remove(magicPool2, math.random(#magicPool2))
 		end
 	end
-	ConsolePrint("Randomized magic")
+	ConsoleLog("Randomized magic")
 
 	local trinityPool = {1,2,3,4,5}
 	for i=1,5 do
 		trinityTable[i] = table.remove(trinityPool, math.random(#trinityPool))
 	end
-	ConsolePrint("Randomized trinities")
+	ConsoleLog("Randomized trinities")
 	
 	for i=1,5 do
-		ConsolePrint(string.format("trinity %x became %x", i, trinityTable[i]))
+		ConsoleLog(string.format("trinity %x became %x", i, trinityTable[i]))
 	end
 	--for i=1, 0xFF do
-	--	ConsolePrint(string.format("%x became %x", i, itemids[i]))
+	--	ConsoleLog(string.format("%x became %x", i, itemids[i]))
 	--end
 	
 	for i=0x51,0x85 do
@@ -976,7 +990,7 @@ function Randomize()
 			end
 		end
 	end
-	ConsolePrint("Randomized equipment")
+	ConsoleLog("Randomized equipment")
 	
 	local shopMap = {}
 	for i=0,7 do
@@ -994,7 +1008,7 @@ function Randomize()
 			shopItemID = ReadInt(shopTableBase+(i*0xD4)+(shopItem*4))
 		end
 	end
-	ConsolePrint("Randomized shops")
+	ConsoleLog("Randomized shops")
 	
 	synthCommon = {0x9C, 0xFE, 0xFF}
 	synthUnique = {}
@@ -1018,7 +1032,7 @@ function Randomize()
 		end
 		shopItemID = ReadByte(synthItems+(shopItem*10))
 	end
-	ConsolePrint("Randomized synth")
+	ConsoleLog("Randomized synth")
 
 	successfulRando = true
 	::loaded::
@@ -1037,31 +1051,31 @@ function ValidSeed()
 	for j=1, 10 do
 		GetAvailability()
 		local HBWin = ItemAccessible(0xCD, 1)
-		ConsolePrint(string.format("cd %s", tostring(ItemAccessible(0xCD, 1))))
+		ConsoleLog(string.format("cd %s", tostring(ItemAccessible(0xCD, 1))))
 		for i=0xBC, 0xBF do
-			ConsolePrint(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			ConsoleLog(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			HBWin = HBWin and ItemAccessible(i, 1)
 		end
 		
 		local DIWin = true
 		for i=0xC0, 0xC7 do
-			ConsolePrint(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
+			ConsoleLog(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
 			DIWin = DIWin and ItemAccessible(i, 1)
 		end
 		
 		local misc = dalmatiansAvailable == 99 and ItemAccessible(0xE4, 1) and ItemAccessible(0xD3, 3)
 		
-		ConsolePrint(string.format("Complexity %d", j))
+		ConsoleLog(string.format("Complexity %d", j))
 		if HBWin then
-			ConsolePrint("HBWin")
+			ConsoleLog("HBWin")
 		end
 		if DIWin then
-			ConsolePrint("DI Win")
+			ConsoleLog("DI Win")
 		end
 		if misc then
-			ConsolePrint("All checks possible")
+			ConsoleLog("All checks possible")
 		else
-			ConsolePrint(string.format("Dalm: %d Jack: %s Postcards: %d", 
+			ConsoleLog(string.format("Dalm: %d Jack: %s Postcards: %d", 
 			dalmatiansAvailable, tostring(ItemAccessible(0xE4, 1)), itemsAvailable[0xD3]))
 		end
 		if HBWin and DIWin and misc then
@@ -1072,11 +1086,11 @@ function ValidSeed()
 	
 	for i,v in pairs(checksDebug) do
 		if not checksDebug2[i] then
-			ConsolePrint(i)
+			ConsoleLog(i)
 		end
 	end
 	
-	ConsolePrint("Unwinnable, rerolling")
+	ConsoleLog("Unwinnable, rerolling")
 	return false
 end
 
@@ -1195,7 +1209,7 @@ function SaveRando()
 		randosave:write("\n")
 	end
 	randosave:close()
-	ConsolePrint("Saved rando")
+	ConsoleLog("Saved rando")
 end
 
 function LoadRando()
@@ -1302,7 +1316,7 @@ function LoadRando()
 		end
 	end
 	randosave:close()
-	ConsolePrint("Loaded saved rando")
+	ConsoleLog("Loaded saved rando")
 	isValidSeed = true
 	return true
 end
@@ -1313,14 +1327,14 @@ function ApplyRandomization()
 			WriteShort(rewardTable+((i-1)*2), rewards[i])
 		end
 	end
-	ConsolePrint("Reward randomization applied")
+	ConsoleLog("Reward randomization applied")
 	
 	for i=1, 0x1FF do
 		if chests[i] then
 			WriteShort(chestTable+((i-1)*2), chests[i])
 		end
 	end
-	ConsolePrint("Chest randomization applied")
+	ConsoleLog("Chest randomization applied")
 	
 	for i=1, 0xFF do
 		WriteArray(itemTable+((i-1)*20), itemData[i])
@@ -1328,7 +1342,7 @@ function ApplyRandomization()
 			-- WriteByte(itemTable+((i-1)*20)+j, itemData[i][j+1])
 		-- end
 	end
-	ConsolePrint("Applied item manipulation")
+	ConsoleLog("Applied item manipulation")
 
 	for i=0,7 do
 		local shopItem = 0
@@ -1339,7 +1353,7 @@ function ApplyRandomization()
 			shopItem = shopItem + 1
 		end
 	end
-	ConsolePrint("Shop randomization applied")
+	ConsoleLog("Shop randomization applied")
 	
 	local reqOff = 0
 	for i=0, (#synths)-1 do
@@ -1363,7 +1377,7 @@ function ApplyRandomization()
 		WriteByte(donaldStatTable+(i-1), donaldLevels[i])
 		WriteByte(donaldAbilityTable+(i-1), donaldAbilities[i])
 	end
-	ConsolePrint("Level randomization applied")
+	ConsoleLog("Level randomization applied")
 	
 	for i=0x51, 0x85 do
 		if weaponStr[i] then
@@ -1373,25 +1387,25 @@ function ApplyRandomization()
 			WriteArray(itemTable+((i-1)*20), itemData[itemids[i]])
 		end
 	end
-	ConsolePrint("Weapon randomization applied")
+	ConsoleLog("Weapon randomization applied")
 	
 	for i=0x11, 0x47 do
 		if i~=itemids[i] and string.find(ItemType(i), "Accessory") then
 			WriteArray(itemTable+((i-1)*20), itemData[itemids[i]])
 		end
 	end
-	ConsolePrint("Accessory randomization applied")
+	ConsoleLog("Accessory randomization applied")
 	
 	GenerateSpoilers()
 	
-	ConsolePrint(string.rep("\nHiding spoilers\n", 30))
+	ConsoleLog(string.rep("\nHiding spoilers\n", 30))
 	for i=0x51, 0x60 do
-		ConsolePrint(string.format("%x became %x", i, itemids[i]))
+		ConsoleLog(string.format("%x became %x", i, itemids[i]))
 	end
-	ConsolePrint("You can verify you have the same seed by referring to above")
+	ConsoleLog("You can verify you have the same seed by referring to above")
 	
 	randomized = true
-	ConsolePrint("Applied randomization")
+	ConsoleLog("Applied randomization")
 	successfulRando = true
 end
 
@@ -1449,7 +1463,7 @@ function StringToMem(off, text, l, base)
 			size = #textReplace+1
 			garbageCount = 0
 		end
-		ConsolePrint(garbageCount)
+		ConsoleLog(garbageCount)
 		WriteShort(base+2, size+garbageCount-1, true)
 	end
 end
@@ -1474,7 +1488,7 @@ function MemStringSearch(c, re)
 					textMatch = textMatch + 1
 					if textMatch >= 4 then
 						local start = address+((i-textMatch+2)*20)
-						ConsolePrint(string.format("match at %x", ppos))
+						ConsoleLog(string.format("match at %x", ppos))
 						StringToMem(start, textReplace, #textFind, address)
 						textMatch = 1
 						success = true
@@ -1498,7 +1512,7 @@ function ReplaceTexts()
 		WriteByte(itemDropID, idReplace)
 		idFind = 0
 		textFind = ""
-		ConsolePrint("Replaced item drop")
+		ConsoleLog("Replaced item drop")
 	end
 	
 	if textFind ~= "" and (infoBoxWas==0) then
@@ -1539,7 +1553,7 @@ function UpdateInventory(HUDNow)
 			local itemCount = ReadByte(inventory+(bufferRemove-1))
 			WriteByte(inventory+(bufferRemove-1), itemCount-1)
 			bufferRemove = 0
-			ConsolePrint("Late item rando to prevent softlock")
+			ConsoleLog("Late item rando to prevent softlock")
 		end
 	end
 
@@ -1549,13 +1563,13 @@ function UpdateInventory(HUDNow)
 			local itemCount = ReadByte(inventory+(i-1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
-				ConsolePrint(string.format("%d %s", dif, itemNames[i][1]))
+				ConsoleLog(string.format("%d %s", dif, itemNames[i][1]))
 				if dif > 0 and ReadInt(closeMenu) == 0 then
 					local curid = itemids[i]
 					idFind = i
 					idReplace = curid
-					ConsolePrint(string.format("Replacing %x with %x", i, curid))
-					-- ConsolePrint(string.format("Replacing %s with %s", textFind, textReplace))
+					ConsoleLog(string.format("Replacing %x with %x", i, curid))
+					-- ConsoleLog(string.format("Replacing %s with %s", textFind, textReplace))
 
 					local otherCount = ReadByte(inventory+(curid-1))
 					if (i==0xE0) then
@@ -1581,25 +1595,25 @@ function UpdateInventory(HUDNow)
 				WriteByte(inventory+(i-1), 0)
 				inventoryUpdater[i] = 0
 				inventoryUpdater[itemids[i]] = itemCount
-				ConsolePrint(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]][1]))
+				ConsoleLog(string.format("Used fallback to replace %x with %s", i, itemNames[itemids[i]][1]))
 			end
 		end
 		if i >= 0xCE and i <= 0xD1 and ReadByte(inventory+(i-1)) > 1 then
 			WriteByte(inventory+(i-1), 1)
-			ConsolePrint("Removed duplicate summon gem")
+			ConsoleLog("Removed duplicate summon gem")
 		end
 
 		if (i == 0x89 or i == 0x8C) then
 			if ReadByte(inventory+(i-1)) > 1 and inventoryUpdater[i] < 2 then
 				local hasSummons = {}
 				local giveSummon = (i == 0x89) and 2 or 3
-				ConsolePrint(giveSummon)
+				ConsoleLog(giveSummon)
 				for j=0,5 do
 					if ReadByte(summons+j) == 0xFF and not hasSummons[giveSummon] then
 						WriteByte(summons+j, giveSummon)
 						textFind = "Obtained"
 						textReplace = "Obtained " .. ((i == 0x89) and "Genie  " or "Tinker Bell")
-						ConsolePrint(textReplace)
+						ConsoleLog(textReplace)
 					end
 					hasSummons[ReadByte(summons+j)] = true
 				end
@@ -1625,7 +1639,7 @@ function UpdateInventory(HUDNow)
 					inventoryUpdater[report] = 1
 					textFind = "Obtained"
 					textReplace = "Obtained " .. itemNames[report][1]
-					ConsolePrint(string.format("Replacing %s with %s", textFind, textReplace))
+					ConsoleLog(string.format("Replacing %s with %s", textFind, textReplace))
 				end
 				report = -1
 			end
@@ -1759,7 +1773,7 @@ function UpdateReports(HUDNow)
 			end
 			WriteByte(inventory+(i-1), ReadByte(inventory+(i-1))+addc)
 			inventoryUpdater[i] = ReadByte(inventory+(i-1))
-			ConsolePrint(string.format("Gave %x instead of report", i))
+			ConsoleLog(string.format("Gave %x instead of report", i))
 		end
 		WriteShort(reports, 0)
 	else
@@ -1796,7 +1810,7 @@ function UpdateReports(HUDNow)
 				end
 				mempos = StringToKHText(hintText, mempos)
 			end
-			ConsolePrint("Wrote hints")
+			ConsoleLog("Wrote hints")
 		end
 	end
 end
@@ -1818,7 +1832,7 @@ function ReplaceMagic(HUDNow)
 		if l > magicUpdater[i] then
 			magicUpdater[i] = l
 			if not string.find(textFind, "-G") then
-				ConsolePrint("Replacing magic text")
+				ConsoleLog("Replacing magic text")
 				textFind = magicTexts[i]
 				textReplace = magicTexts[r]
 				nextTextFind = magicTexts2[i]
@@ -1928,7 +1942,10 @@ function StackAbilities()
 				WriteByte(sharedAbilities+i, ab+1)
 			end
 		end
-		WriteInt(superglideSpeedHack, 0x17F35C + math.max(countedAbilities[3]-2, 0)*4)
+		
+		if ReadShort(superglideSpeedHack+1) == 0x17F3 then
+			WriteInt(superglideSpeedHack, 0x17F35C + math.max(countedAbilities[3]-2, 0)*4)
+		end
 		
 		WriteFloat(mermaidKickSpeed, 10+(8*countedAbilities[2]))
 		
@@ -1975,7 +1992,7 @@ function GetDodgeDataAddr()
 	while ReadInt(animHalfPointers+ind, true) > 0 do
 		local dodgePointer = ReadLong(halfPointers+8) + ReadInt(animHalfPointers+ind, true) % 0x1000000
 		if DodgeDataValid(dodgePointer) then
-			ConsolePrint(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByte(dodgePointer+4, true)))
+			ConsoleLog(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByte(dodgePointer+4, true)))
 			return dodgePointer
 		end
 		ind = ind+4
@@ -2013,7 +2030,7 @@ function FlagFixes()
 	end
 	
 	if ReadByte(cutsceneFlags+0xB04) ~= prevTTFlag then
-		ConsolePrint(string.format("%x, %x", prevTTFlag, ReadByte(cutsceneFlags+0xB04)))
+		ConsoleLog(string.format("%x, %x", prevTTFlag, ReadByte(cutsceneFlags+0xB04)))
 	end
 	-- Revert HB1 effect on TT story
 	if (ReadByte(cutsceneFlags+0xB04) == 0x6E and ReadByte(worldFlagBase+0x1C) ~= 5)
@@ -2025,7 +2042,7 @@ function FlagFixes()
 											and ReadByte(cutsceneFlags+0xB04) < 0x6E then
 		WriteByte(cutsceneFlags+0xB04, 0x6E)
 		WriteByte(cutsceneFlags+0xB00, math.max(0xBE, ReadByte(cutsceneFlags+0xB00)))
-		ConsolePrint("Post HB TT")
+		ConsoleLog("Post HB TT")
 	end
 
 	prevTTFlag = ReadByte(cutsceneFlags+0xB04)
@@ -2079,14 +2096,14 @@ function FlagFixes()
 		for i=0, 40 do
 			WriteInt(simbaAddr-0x103fb+i*4-0x20, 0x00000009, true)
 		end
-		ConsolePrint("Removed normal genie")
+		ConsoleLog("Removed normal genie")
 	end
 	
 	if ReadByte(world) == 0xD and ReadInt(simbaAddr-0xd653, true) == 0x18000238 then
 		for i=0, 40 do
 			WriteInt(simbaAddr-0xd653+i*4-0x20, 0x00000009, true)
 		end
-		ConsolePrint("Removed normal tinker bell")
+		ConsoleLog("Removed normal tinker bell")
 	end
 
 	if ReadByte(cutsceneFlags+0xB04) >= 0x31 then
@@ -2147,7 +2164,7 @@ function FlagFixes()
 			WriteByte(unequipBlacklist + (i*4), 0)
 		end
 	end
-	
+	ConsoleLog(ReadByte(inGummi))
 	if ReadByte(inGummi) > 0 then
 		if ReadByte(gummiselect)==3 then
 			WriteShort(worldWarps+0x18, 1) -- Add DI warp
@@ -2207,7 +2224,7 @@ function FlagFixes()
 	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
 		local warpAddr = ReadLong(scriptPointer)+0x6F9D
 		if ReadByte(warpAddr, true)==2 and ReadByte(warpAddr+4, true)==1 then
-			ConsolePrint("DI to EotW warp")
+			ConsoleLog("DI to EotW warp")
 			WriteByte(warpAddr,0x10, true)
 			WriteByte(warpAddr+4,0x1E, true)
 			WriteByte(party1, 1)
@@ -2218,7 +2235,7 @@ function FlagFixes()
 	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
 		local warpAddr = ReadLong(scriptPointer)+0x677D
 		if ReadByte(warpAddr, true)==0xF and ReadByte(warpAddr+4, true)==0xB and ReadByte(blackfade)>0 then
-			ConsolePrint("Skipping HB cutscenes to avoid story flag conflicts")
+			ConsoleLog("Skipping HB cutscenes to avoid story flag conflicts")
 			WriteByte(cutsceneFlags+0xB0D, 0x6A)
 			WriteByte(warpAddr,0xD, true)
 			WriteByte(warpAddr+4,0x9, true)
@@ -2357,7 +2374,7 @@ end
 
 function InstantContinue()
 	if ReadByte(warpTrigger) == 0 then
-		ConsolePrint("Instant continue trigger")
+		ConsoleLog("Instant continue trigger")
 		WriteByte(warpType1, 5)
 		WriteByte(warpType2, 12)
 		WriteByte(warpTrigger, 2)
@@ -2392,10 +2409,10 @@ function _OnFrame()
 			randomized = true
 			ApplyRandomization()
 			if #itemNames==0 or #gummiNames==0 then
-				ConsolePrint("items.txt or gummis.txt missing! Get them from the Github")
+				ConsoleLog("items.txt or gummis.txt missing! Get them from the Github")
 			end
 		elseif not successfulRando then
-			ConsolePrint("Rando unsuccesful! Try restarting and rolling a new seed")
+			ConsoleLog("Rando unsuccesful! Try restarting and rolling a new seed")
 		end
 	elseif randomized then
 		local menuNow = ReadByte(menuCheck)
@@ -2438,7 +2455,7 @@ function _OnFrame()
 		WriteInt(0x233C458-offset, 128)
 		WriteInt(0x233C45C-offset, 128)
 		if removeBlackTimer > 300 then
-			ConsolePrint("Removed black screen")
+			ConsoleLog("Removed black screen")
 			removeBlackTimer = 0
 		end
 	end
