@@ -200,6 +200,7 @@ local chests = {}
 local itemsAvailable = {}
 local abilitiesAvailable = {}
 local magicAvailable = {}
+local reportData = {}
 local dalmatiansAvailable = 0
 local seedstring = ""
 local randomized = false
@@ -1200,6 +1201,15 @@ function SaveRando()
 			randosave:write(string.format("%02x %02x %02x\n", i, weaponStr[i], weaponMag[i]))
 		end
 	end
+	randosave:write("\nReports:\n")
+	GenerateReports()
+	for i=1, 13 do
+		randosave:write(string.format("%02x ", i))
+		for j=1, #reportData[i] do
+			randosave:write(string.format("%02x", reportData[i][j]))
+		end
+		randosave:write("\n")
+	end
 	randosave:write("\nItem data:\n")
 	for i=1, 0xFF do
 		randosave:write(string.format("%02x ", i))
@@ -1222,7 +1232,7 @@ function LoadRando()
 	for i=1, 0xFF do
 		itemData[i] = ReadArray(itemTable+((i-1)*20), 20)
 	end
-	
+
 	local loadstate = ""
 	while randosave do
 		local line = randosave:read("*l")
@@ -1305,6 +1315,13 @@ function LoadRando()
 			local mag = tonumber(string.sub(line, 7, 8), 16)
 			weaponStr[i] = str
 			weaponMag[i] = mag
+		elseif string.find(loadstate, "eports") then
+			local i = tonumber(string.sub(line, 1, 2), 16)
+			reportData[i]= {}
+			for j=1, (#line-3)/2 do
+				local v = tonumber(string.sub(line, 2+(j*2), 3+(j*2)), 16)
+				reportData[i][j] = v
+			end
 		elseif string.find(loadstate, "tem data") then
 			local i = tonumber(string.sub(line, 1, 2), 16)
 			for j=1, 20 do
@@ -1395,10 +1412,8 @@ function ApplyRandomization()
 		end
 	end
 	ConsoleLog("Accessory randomization applied")
-	
-	GenerateSpoilers()
-	
-	ConsoleLog(string.rep("\nHiding spoilers\n", 30))
+
+	ConsoleLog(string.rep("\nHiding spoilers\n", 10))
 	for i=0x51, 0x60 do
 		ConsoleLog(string.format("%x became %x", i, itemids[i]))
 	end
@@ -1655,7 +1670,8 @@ function UpdateInventory(HUDNow)
 end
 
 function StringToKHText(s, mempos)
-	reftable = {[58]=0x6B, [38]=0x61, [40]=0x74, [41]=0x75, [39]=0x71, [45]=0x6E, [46]=0x68, [10]=2, [12]=0xF, [58]=0x6B}
+	reftable = {[58]=0x6B, [38]=0x61, [40]=0x74, [41]=0x75, [39]=0x71, [45]=0x6E, [46]=0x68, [10]=2, [12]=0xF}
+	returnTable = {}
 	for i=1,#s do
 		local c = string.byte(s, i)
 		if c >= 97 then
@@ -1669,12 +1685,23 @@ function StringToKHText(s, mempos)
 		else
 			c = 1
 		end
-		WriteByte(mempos, c)
-		mempos = mempos + 1
-		if c==0xF then
-			WriteByte(mempos, 1)
+		if mempos >= 0 then
+			WriteByte(mempos, c)
 			mempos = mempos + 1
+			if c==0xF then
+				WriteByte(mempos, 1)
+				mempos = mempos + 1
+			end
+		else
+			returnTable[#returnTable + 1] = c
+			if c==0xF then
+				returnTable[#returnTable + 1] = 1
+			end
 		end
+	end
+	if mempos < 0 then
+		returnTable[#returnTable + 1] = 0
+		return returnTable
 	end
 	WriteByte(mempos, 0)
 	return mempos+1
@@ -1758,6 +1785,30 @@ function GenerateSpoilers()
 	return {spoilers, miscSpoilers}
 end
 
+function GenerateReports()
+	local spoilersT = GenerateSpoilers()
+	local spoilers = spoilersT[1]
+	local miscSpoilers = spoilersT[2]
+	math.randomseed(Djb2(seedstring))
+	for i=1, 13 do
+		local hintText = ""
+		local hintRatio = math.floor(#spoilers / (14-i) + 0.99)
+		local mhintRatio = math.floor(#miscSpoilers / (14-i) + 0.99)
+		for j=1, hintRatio do
+			if #spoilers > 0 then
+				hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
+			end
+		end
+		hintText = hintText .. "\f"
+		for j=1, mhintRatio do
+			if #miscSpoilers > 0 then
+				hintText = hintText .. table.remove(miscSpoilers, math.random(#miscSpoilers))
+			end
+		end
+		reportData[i] = StringToKHText(hintText, -1)
+	end
+end
+
 function UpdateReports(HUDNow)
 	if HUDNow < 1 then
 		local reportTable = {[1]=8, [2]=7, [4]=6, [8]=5, [16]=4, [32]=3, [64]=2, [128]=1, 
@@ -1789,26 +1840,10 @@ function UpdateReports(HUDNow)
 		WriteShort(reports, reportStatus)
 		if ReadByte(report1+2) == 0x37 then
 			local mempos = report1
-			local spoilersT = GenerateSpoilers()
-			local spoilers = spoilersT[1]
-			local miscSpoilers = spoilersT[2]
 			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
-				local hintText = ""
-				local hintRatio = math.floor(#spoilers / (14-i) + 0.99)
-				local mhintRatio = math.floor(#miscSpoilers / (14-i) + 0.99)
-				for j=1, hintRatio do
-					if #spoilers > 0 then
-						hintText = hintText .. table.remove(spoilers, math.random(#spoilers))
-					end
-				end
-				hintText = hintText .. "\f"
-				for j=1, mhintRatio do
-					if #miscSpoilers > 0 then
-						hintText = hintText .. table.remove(miscSpoilers, math.random(#miscSpoilers))
-					end
-				end
-				mempos = StringToKHText(hintText, mempos)
+				WriteArray(mempos, reportData[i])
+				mempos = mempos + #reportData[i]
 			end
 			ConsoleLog("Wrote hints")
 		end
@@ -2164,7 +2199,7 @@ function FlagFixes()
 			WriteByte(unequipBlacklist + (i*4), 0)
 		end
 	end
-	ConsoleLog(ReadByte(inGummi))
+
 	if ReadByte(inGummi) > 0 then
 		if ReadByte(gummiselect)==3 then
 			WriteShort(worldWarps+0x18, 1) -- Add DI warp
