@@ -23,6 +23,7 @@ function _OnFrame()
 		if (input == 247042) then 
 			WriteByte(0xAB841A-offset, 0x1)
 			WriteInt(0x751310-offset-0x40, 0x00000001)
+			WriteByte(0x2AE3478-offset-0x40, 0)
 		end
 	end
 end
