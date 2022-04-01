@@ -326,7 +326,7 @@ function AddAddrs()
 	addrs[8][0x95C2C0-offset] = PickRandom(normal) --alley bandit
 	addrs[8][0x953940-offset] = PickRandom(normal) --mainstreet bandit
 	addrs[8][0xA826C0-offset] = PickRandom(normal) --plaza bandit
-	addrs[8][0x9E0180-offset] = PickRandom(normal) --desert: cave bandit
+	addrs[8][0x9E0180-offset] = PickRandom(lite) --desert: cave bandit
 	addrs[8][0x91ABC0-offset] = PickRandom(normal) --bazaar bandit
 	--addrs[8][0x9C4440-offset] = test[math.random(#test)] --pot cent 1
 	--addrs[8][0x9C4480-offset] = test[math.random(#test)] --pot cent 2
