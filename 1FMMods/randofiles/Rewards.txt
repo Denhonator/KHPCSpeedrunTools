@@ -17,7 +17,7 @@
 10  Superglide ; Chernabog ; EotW ; HB1 ; HB2
 11  Fireglow ; Dragon Maleficent ; HB1
 12  Earthshine ; Secret Waterway
-13  Jungle King ; Deep Jungle
+13  Jungle King ; Deep Jungle ; Slides
 14  Three Wishes ; Agrabah
 15  Fairy Harp ; Neverland ; Green Trinity
 16  Pumpkinhead ; Halloween Town ; Jack-In-The-Box
@@ -55,9 +55,9 @@
 36  Orichalcum ; Dalmatians' House ; 72 Puppies
 37  Tech Boost ; Dalmatians' House ; 90 Puppies
 38  Brave Warrior ; Guard Armor
-39  Ifrit's Horn ; Trickmaster
+39  Ifrit's Horn ; Trickmaster ; Evidence
 3A  Inferno Band ; Cerberus
-3B  White Fang ; Sabor 2
+3B  White Fang ; Sabor 2 ; Slides
 3C  Ray of Light ; Pot Centipede
 3D  Holy Circlet ; Oogie Boogie ; Jack-In-The-Box
 3E  Omega Arts ; Behemoth ; HB1 ; HB2
@@ -141,11 +141,11 @@
 8C  Lucid Gem ; Chest ; -
 8D  Mighty Shield ; Chest ; -
 8E  Elixir ; Chest ; -
-8F  Elixir ; 10 Fruits Jungle Slider
-90  AP Up ; 20 Fruits Jungle Slider
-91  Dark Matter ; 30 Fruits in Jungle Slider
-92  Defense Up ; 40 Fruits Jungle Slider
-93  Power Up ; 50 Fruits Jungle Slider
+8F  Elixir ; 10 Fruits Jungle Slider ; Slides
+90  AP Up ; 20 Fruits Jungle Slider ; Slides
+91  Dark Matter ; 30 Fruits in Jungle Slider ; Slides
+92  Defense Up ; 40 Fruits Jungle Slider ; Slides
+93  Power Up ; 50 Fruits Jungle Slider ; Slides
 94  Diamond Dust ; Ice Titan
 95  One-Winged Angel ; Sephiroth ; HB1 ; HB2 ; EotW
 96  Zantetsuken ; Kurt Zisa ; HB1 ; HB2 ; EotW

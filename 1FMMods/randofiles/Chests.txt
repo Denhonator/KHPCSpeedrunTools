@@ -99,19 +99,19 @@ f   Ether            ; ? ; ?
 62  Mega-Potion      ; ? ; ?
 63  Mega-Potion      ; ? ; ?
 64  Thundara-G       ; Queen's Castle
-65  Dalmatians 5     ; Queen's Castle
+65  Dalmatians 5     ; Queen's Castle ; Evidence OR High Jump OR Glide
 66  Meteor-G         ; Queen's Castle
-67  Thundara-G       ; Lotus Forest ; Thunder Magic
+67  Thundara-G       ; Lotus Forest ; Thunder Magic ; Evidence
 68  Dalmatians 20    ; Lotus Forest ; Thunder Magic
 69  Reward 47        ; Lotus Forest ; Glide OR High Jump
 6a  Dalmatians 6     ; Lotus Forest
 6b  Scan-G           ; Lotus Forest
 6c  Defense Up       ; Bizarre Room
 6d  Mega-Potion      ; ? ; ?
-6e  Flare-G          ; Tea Party Garden ; Glide OR High Jump
-6f  Dalmatians 7     ; Tea Party Garden ; Glide OR High Jump
-70  Reward 99        ; Tea Party Garden
-71  Reward 32        ; Tea Party Garden ; Glide OR High Jumpra
+6e  Flare-G          ; Tea Party Garden ; Glide OR High Jump ; Evidence OR Glide
+6f  Dalmatians 7     ; Tea Party Garden ; Glide OR High Jump ; Evidence OR Glide
+70  Reward 99        ; Tea Party Garden ; Evidence OR Glide
+71  Reward 32        ; Tea Party Garden ; Glide OR High Jumpra ; Evidence OR Glide
 72  Reward 48        ; Lotus Forest ; White Trinity
 73  Potion           ; ? ; ?
 74  Potion           ; ? ; ?
@@ -131,13 +131,13 @@ f   Ether            ; ? ; ?
 82  Thundara-G       ; Climbing Trees ; Blue Trinity
 83  Potion           ; ? ; ?
 84  Mega-Ether       ; Jungle: Tunnel
-85  Reward 4b        ; Cavern of Hearts ; White Trinity
+85  Reward 4b        ; Cavern of Hearts ; White Trinity ; Slides
 86  Dalmatians 12    ; Camp ; Blue Trinity
 87  Mythril Shard    ; Camp: Tent
-88  Mythril Shard    ; Waterfall Cavern
-89  Dalmatians 11    ; Waterfall Cavern
-8a  Mythril          ; Waterfall Cavern
-8b  Orichalcum       ; Waterfall Cavern
+88  Mythril Shard    ; Waterfall Cavern ; Slides
+89  Dalmatians 11    ; Waterfall Cavern ; Slides
+8a  Mythril          ; Waterfall Cavern ; Slides
+8b  Orichalcum       ; Waterfall Cavern ; Slides
 8c  Reward 72        ; Jungle: Cliff
 8d  Reward 73        ; Jungle: Cliff
 8e  Reward 75        ; Tree House

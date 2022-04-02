@@ -52,6 +52,8 @@ local summons = 0x2DE61A0 - offset
 local inventory = 0x2DE5E6A - offset
 local tornPageCount = 0x2DE6DD0 - offset
 local emblemCount = 0x2DE787D - offset
+local slides = 0x2DE6BD7 - offset
+local evidence = 0x2DE67D8 - offset
 local emblemDoor = 0x2DE788C - offset
 local minigameStatus = 0x2DE73A5 - offset
 local gummiInventory = 0x2DF1848 - offset
@@ -175,7 +177,8 @@ local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD}
+local important = {0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xD9}
+local randomEvidence = 0xDF
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -357,11 +360,11 @@ function ItemType(i)
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
-	if (i >= 0xD9 and i<= 0xDE) or (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8
+	if (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8 or (i>=0xDF and i<=0xE2 and i~=randomEvidence)
 	or i==0xAA or i==0xAE or i==0xB0 or i==0xB2 or i==0xB7 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
-
+	
 	for j=1,#important do
 		if i==important[j] then
 			attributes = attributes .. "Important"
@@ -390,7 +393,7 @@ function ItemCompatibility(i, r)
 end
 
 function Salable(i)
-	return i < 0xB2 or i==0xD2 or (i>=0xD9 and i<=0xE1) or i==0xE3 or i>=0xE5
+	return i < 0xB2 or i==0xD2 or i==0xE3 or i>=0xE5
 end
 
 -- simple string hashing algorithm designed by Daniel J. Bernstein
@@ -413,14 +416,13 @@ function AbilityAccessible(a, c)
 end
 
 function TrinityAccessible(s)
-	-- for i=1,5 do
-		-- if trinityTexts[i] == s then
-			-- if trinityTable[5] == i then
-				-- return ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1)
-					-- and ItemAccessible(0xCB, 1) and ItemAccessible(0xCC, 1)
-			-- end
-		-- end
-	-- end
+	for i=1,5 do
+		if trinityTexts[i] == s then
+			if trinityTable[2] == i then
+				return ItemAccessible(0xD9, 1)
+			end
+		end
+	end
 	return true
 end
 
@@ -482,6 +484,12 @@ function IsAccessible(t, i)
 		end
 		if string.find(t[i][k], "Jack") then
 			thisAccess = thisAccess or ItemAccessible(0xE4, 1)
+		end
+		if string.find(t[i][k], "Slides") then
+			thisAccess = thisAccess or ItemAccessible(0xD9, 1)
+		end
+		if string.find(t[i][k], "Evidence") then
+			thisAccess = thisAccess or ItemAccessible(randomEvidence, 1)
 		end
 		if string.find(t[i][k], "Postcard") then
 			local cards = 6 + (AbilityAccessible(1, 1) and 1 or 0)
@@ -653,6 +661,10 @@ function Randomize()
 	local randomGets = {}
 	local randomFiller = {}
 	
+	--Add random evidence
+	randomEvidence = 0xDE + math.random(4)
+	important[#important + 1] = randomEvidence
+	
 	for i=1, 0xA9 do
 		if rewardDetails[i] then
 			rewardPool[(#rewardPool)+1] = ReadShort(rewardTable+((i-1)*2))
@@ -715,7 +727,7 @@ function Randomize()
 			itemids[i] = table.remove(accessoryPool, r)
 		end
 	end
-
+	--Replace key item pickups with other stuff
 	local order = GetRandomOrder(0xFF)
 	for j=0x1, 0xFF do
 		local i = order[j]
@@ -727,7 +739,7 @@ function Randomize()
 			end
 		end
 	end
-	
+	--Assign key items to unused item IDs, which are then distributed to checks
 	for i=1, #importantPool do
 		if #randomGets > 0 then
 			itemids[importantPool[i]] = table.remove(randomGets, math.random(#randomGets))
@@ -1413,7 +1425,7 @@ function ApplyRandomization()
 	end
 	ConsoleLog("Accessory randomization applied")
 
-	ConsoleLog(string.rep("\nHiding spoilers\n", 10))
+	--ConsoleLog(string.rep("\nHiding spoilers\n", 30))
 	for i=0x51, 0x60 do
 		ConsoleLog(string.format("%x became %x", i, itemids[i]))
 	end
@@ -1737,15 +1749,15 @@ function GenerateSpoilers()
 			local itype = ItemType(it)
 			if ab > 0 then
 				spoilers[(#spoilers)+1] = string.format(
-					"Chest at\n%s\nhas %s\n\n", 
+					"Chest at\n%s:\n%s\n\n", 
 					chestDetails[c][2], abilityNames[ab])
 			elseif itype == "Important" or it == 0xE4 then
 				spoilers[(#spoilers)+1] = string.format(
-					"Chest at\n%s\nhas %s\n\n", 
+					"Chest at\n%s:\n%s\n\n",
 					chestDetails[c][2], itemNames[it][1])
 			elseif itype == "Summon" or it == 0xD3 or it == 0xD5 or it==0xD6 or it==0x89 or it==0x8C then
 				miscSpoilers[(#miscSpoilers)+1] = string.format(
-					"Chest at\n%s\nhas %s\n\n", 
+					"Chest at\n%s:\n%s\n\n",
 					chestDetails[c][2], itemNames[it][1])
 			end
 		end
@@ -1759,15 +1771,15 @@ function GenerateSpoilers()
 			if (rewards[r] % 0x100 == 0xB1 or rewards[r]//0x100) == 0x16 and rewardDetails[r][2]~="Chest" then
 				ab = rewards[r]//0x100
 				spoilers[(#spoilers)+1] = string.format(
-					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+					"Reward %s\n%s:\n%s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], abilityNames[ab])
 			elseif (itype == "Important" or it == 0xE4) and rewardDetails[r][2]~="Chest" then
 				spoilers[(#spoilers)+1] = string.format(
-					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+					"Reward %s\n%s:\n%s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
 			elseif (itype == "Summon" or it == 0xD3 or it==0x89 or it==0x8C) and rewardDetails[r][2]~="Chest" then
 				miscSpoilers[(#miscSpoilers)+1] = string.format(
-					"Reward %s\n%s\nhas %s\n\n", rewardDetails[r][1],
+					"Reward %s\n%s:\n%s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
 			end
 		end
@@ -2278,24 +2290,28 @@ function FlagFixes()
 	end
 	
 	-- Fall in flight sections without glide
-	-- if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
-		-- local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
-		-- if ReadByte(world) == 0xD then
-			-- if ReadByte(room) == 8 and soraYPos > 600 then
-				-- InstantContinue()
-			-- elseif ReadByte(room) == 9 and soraYPos > 900 then
-				-- RoomWarp(0xD, 0x27)
-			-- end
-		-- end
+	if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
+		local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
+		if ReadByte(world) == 0xD then
+			if ReadByte(room) == 8 and soraYPos > 600 then
+				InstantContinue()
+			elseif ReadByte(room) == 9 and soraYPos > 900 then
+				RoomWarp(0xD, 0x27)
+			end
+		end
 		
-		-- if ReadByte(world) == 0x10 then
-			-- if ReadByte(room) == 0x1A and soraYPos > -400 then
-				-- InstantContinue()
-			-- elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
-				-- WriteFloat(ReadLong(soraPointer)+0x14, -7000, true)
-			-- end
-		-- end
-	-- end
+		if ReadByte(world) == 0x10 then
+			if ReadByte(room) == 0x1A and soraYPos > -400 then
+				InstantContinue()
+			elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
+				WriteFloat(ReadLong(soraPointer)+0x14, -7000, true)
+			end
+		end
+	end
+	
+	if ReadByte(world) == 4 and ReadByte(room) == 3 and ReadFloat(soraHUD) == 1 then
+		WriteInt(evidence, ReadInt(inventory+0xDE))
+	end
 	
 	if ReadByte(world) == 5 then
 		-- if ReadByte(blackfade) < 128 and prevBlack == 128 then
@@ -2318,6 +2334,10 @@ function FlagFixes()
 		end
 		if ReadByte(room) > 0xF then
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
+		end
+		
+		for i=0,5 do
+			WriteByte(slides+i, ReadByte(inventory+0xD8+i))
 		end
 		
 		-- if ReadByte(cutsceneFlags+0xB05) >= 0x6E and (ReadByte(chestsOpened+0x218) // 8) % 2 == 0
