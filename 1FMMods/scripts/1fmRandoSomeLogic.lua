@@ -54,6 +54,7 @@ local tornPageCount = 0x2DE6DD0 - offset
 local emblemCount = 0x2DE787D - offset
 local slides = 0x2DE6BD7 - offset
 local evidence = 0x2DE67D8 - offset
+local clawmarkbox = 0x2D39230 - offset
 local emblemDoor = 0x2DE788C - offset
 local minigameStatus = 0x2DE73A5 - offset
 local gummiInventory = 0x2DF1848 - offset
@@ -2460,6 +2461,8 @@ function FlagFixes()
 	
 	if ReadByte(world) == 4 and ReadByte(room) == 3 and ReadFloat(soraHUD) == 1 then
 		WriteInt(evidence, ReadInt(inventory+0xDE))
+	elseif ReadByte(world) == 4 and ReadByte(room) == 1 and ReadByte(inventory+0xDF) == 1 then
+		WriteLong(clawmarkbox, 0)
 	end
 	
 	if ReadByte(world) == 5 then
