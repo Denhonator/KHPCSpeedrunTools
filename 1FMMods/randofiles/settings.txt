@@ -1,0 +1,33 @@
+c Prevent select key items from being randomized
+c Item ID reference: https://pastebin.com/dfARF8ui
+c Available options: D9, DF, BC, BD, BE, BF, C0, C1, C2, C3, C4, C5, C6, C7, CD, E5
+c D9 corresponds to a random slide, DF corresponds to a random evidence
+c For example, if you want to unrandomize slide, evidence and entry pass:
+c Unrandomize = D9 DF E5
+
+Unrandomize = 
+
+c If you want guaranteed abilities on first level ups, put the hex codes for unequipped abilities here.
+c Maximum 4 or they will replace other abilities.
+c Find ability codes here https://pastebin.com/ZH0L3XXi
+c Scroll down for the Not Equipped versions.
+c For example, early scan and dodge roll would be:
+c EarlyAbilities = 8A 96
+
+EarlyAbilities = 8A
+
+c Variable below determines how weapon stats will be randomized.
+c 0 = Not at all
+c 1 = Weak weapons buffed
+c 2 = Stats shuffled between keyblades (str and magic only)
+c 3 = Stats shuffled and weak stats buffed
+
+WeaponStatRando = 3
+
+c Stack abilities. Currently, you can sometimes get duplicate abilities.
+c This will determine if having multiple equipped is beneficial
+c 0 = No stacking. Vanilla. You just have excess abilities in the menu.
+c 1 = High Jump stacks: Jump higher the more you have.
+c 2 = High Jump, Glides, Mermaid Kick, Dodge Roll. First glide/superglide turns into glide, next into superglide and past that it gets faster.
+
+StackAbilities = 2

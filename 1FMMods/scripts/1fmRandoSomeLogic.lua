@@ -177,8 +177,9 @@ local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xD9}
+local important = {0xD9, 0xDF, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE5}
 local randomEvidence = 0xDF
+local randomSlide = 0xD9
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -292,6 +293,33 @@ function _OnInit()
 			itemNames = LoadRewards("randofiles/items.txt", 0)
 			ConsoleLog(rewardDetails[1][1])
 		end
+
+		for s in io.lines("randofiles/settings.txt") do
+			local setting = ""
+			for word in s:gmatch("%w+") do
+				if setting == "" then
+					setting = word
+				elseif setting == "Unrandomize" then
+					for i=1, #important do
+						if important[i] == tonumber(word, 16) then
+							table.remove(important, i)
+							ConsoleLog("Unrandomizing " .. itemNames[tonumber(word, 16)][1])
+							break
+						end
+					end
+				elseif setting == "EarlyAbilities" then
+					earlyAbilities[#earlyAbilities + 1] = tonumber(word, 16)
+					ConsoleLog("Early ability: " .. word)
+				elseif setting == "WeaponStatRando" then
+					weaponStatRando = tonumber(word)
+					ConsoleLog("WeaponStatRando: " .. word)
+				elseif setting == "StackAbilities" then
+					stackAbilities = tonumber(word)
+					ConsoleLog("StackAbilities: " .. word)
+				end
+			end
+		end
+
 		for i=1,0xFF do
 			itemids[i] = i
 			inventoryUpdater[i] = ReadByte(inventory+(i-1))
@@ -360,7 +388,7 @@ function ItemType(i)
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
-	if (i >= 0xE3 and i <= 0xE6 and i~=0xE4) or i==0xD2 or i==0xA8 or (i>=0xDF and i<=0xE2 and i~=randomEvidence)
+	if i == 0xE3 or i == 0xE6 or i==0xD2 or i==0xA8 or (i>=0xDF and i<=0xE2 and i~=randomEvidence)
 	or i==0xAA or i==0xAE or i==0xB0 or i==0xB2 or i==0xB7 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
@@ -419,7 +447,9 @@ function TrinityAccessible(s)
 	for i=1,5 do
 		if trinityTexts[i] == s then
 			if trinityTable[2] == i then
-				return ItemAccessible(0xD9, 1)
+				return ItemAccessible(randomSlide, 1)
+			elseif trinityTable[4] == i then
+				return ItemAccessible(0xE5, 1)
 			end
 		end
 	end
@@ -486,10 +516,13 @@ function IsAccessible(t, i)
 			thisAccess = thisAccess or ItemAccessible(0xE4, 1)
 		end
 		if string.find(t[i][k], "Slides") then
-			thisAccess = thisAccess or ItemAccessible(0xD9, 1)
+			thisAccess = thisAccess or ItemAccessible(randomSlide, 1)
 		end
 		if string.find(t[i][k], "Evidence") then
 			thisAccess = thisAccess or ItemAccessible(randomEvidence, 1)
+		end
+		if string.find(t[i][k], "Entry Pass") then
+			thisAccess = thisAccess or ItemAccessible(0xE5, 1)
 		end
 		if string.find(t[i][k], "Postcard") then
 			local cards = 6 + (AbilityAccessible(1, 1) and 1 or 0)
@@ -587,7 +620,7 @@ function GetAvailability()
 	
 	for i=0x95, 0xE6 do
 		if itemNames[i] then
-			if itemNames[i][3] and IsAccessible(itemNames, i) then
+			if (itemNames[i][3] and IsAccessible(itemNames, i)) or (itemNames[i][2] and itemNames[i][3] == nil) then
 				itAv[itemids[i]] = itAv[itemids[i]] + 1
 			end
 		end
@@ -601,23 +634,42 @@ function GetAvailability()
 	
 	for i=1, 7 do
 		local m = perMagicShuffle[i]
-		if i==1 or i==4 then
+		if i==1 then
 			magicAvailable[m] = 2
 			if ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1) 
 			and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1) then
 				magicAvailable[m] = 3
 			end
 		elseif i==2 then
-			magicAvailable[m] = 3
-		elseif i==3 then
 			magicAvailable[m] = 2
-			if AbilityAccessible(2, 1) then
+			if ItemAccessible(0xE5, 1) then
 				magicAvailable[m] = 3
 			end
+		elseif i==3 then
+			magicAvailable[m] = 1
+			if AbilityAccessible(2, 1) then
+				magicAvailable[m] = magicAvailable[m] + 1
+			end
+			if ItemAccessible(0xE5, 1) then
+				magicAvailable[m] = magicAvailable[m] + 1
+			end
+		elseif i==4 then
+			local cures = 1
+			if ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1) 
+			and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1) then
+				cures = cures+1
+			end
+			if ItemAccessible(randomSlide, 1) then
+				cures = cures+1
+			end
+			magicAvailable[m] = cures
 		elseif i==5 then
-			magicAvailable[m] = 2
+			magicAvailable[m] = 0
 			if ItemAccessible(0xE4, 1) then
-				magicAvailable[m] = 3
+				magicAvailable[m] = magicAvailable[m] + 1
+			end
+			if ItemAccessible(0xE5, 1) then
+				magicAvailable[m] = magicAvailable[m] + 2
 			end
 		elseif i==6 then
 			local accessiblePages = 0
@@ -661,10 +713,16 @@ function Randomize()
 	local randomGets = {}
 	local randomFiller = {}
 	
-	--Add random evidence
+	--Add random evidence and slide
 	randomEvidence = 0xDE + math.random(4)
-	important[#important + 1] = randomEvidence
-	
+	randomSlide = 0xD8 + math.random(6)
+	if important[1] and important[1] >= 0xDF and important[1] <= 0xE2 then
+		important[1] = randomEvidence
+	end
+	if important[2] and important[2] >= 0xD9 and important[2] <= 0xDE then
+		important[2] = randomSlide
+	end
+
 	for i=1, 0xA9 do
 		if rewardDetails[i] then
 			rewardPool[(#rewardPool)+1] = ReadShort(rewardTable+((i-1)*2))
@@ -734,7 +792,7 @@ function Randomize()
 		if string.find(ItemType(i), "Important") then
 			if #randomFiller > 0 then
 				itemids[i] = table.remove(randomFiller, math.random(#randomFiller))
-			else
+			elseif not (i >= 0xC3 and i <= 0xC7) then
 				itemids[i] = table.remove(randomGets, math.random(#randomGets))
 			end
 		end
@@ -748,7 +806,7 @@ function Randomize()
 		end
 	end
 	
-	ConsoleLog(#randomGets)
+	ConsoleLog(string.format("randomGets: %d", #randomGets))
 
 	shopPool = {}
 	
@@ -822,6 +880,9 @@ function Randomize()
 			end
 		end
 	end
+	
+	ConsoleLog(string.format("importantPool: %d", #importantPool))
+	
 	for i=1, 0x1FF do
 		if chests[i] and (i >= 0x1BF or i == 1) and ((chests[i]-4) % 0x10) == 0 then
 			for j=10, 0x1BE do
@@ -1051,58 +1112,141 @@ function Randomize()
 	::loaded::
 end
 
+function FixSeed()
+	local keyitems = {0xE5, 0xE4, 0xCD, 0xBC, 0xBD, 0xBE, 0xBF}
+	keyitems[#keyitems+1] = randomEvidence
+	keyitems[#keyitems+1] = randomSlide
+	
+	for i=1, #keyitems do
+		local keyitem = keyitems[i]
+		if not ItemAccessible(keyitem, 1) then
+			local o = GetRandomOrder(0x1FF)
+			local validswap = 1
+			for j=1, 0x1FF do
+				local c = o[j]
+				if chests[c] and chests[c]%0x10==0 then
+					local it = itemids[chests[c]//0x10]
+					if it == keyitem and it ~= chests[c]//0x10 then
+						local temp = chests[validswap]
+						chests[validswap] = chests[c]
+						chests[c] = temp
+						ConsoleLog(string.format("Swapped location of %s", itemNames[keyitem][1]))
+						break
+					elseif chests[c] then
+						validswap = c
+					end
+				end
+			end
+
+			o = GetRandomOrder(0xA9)
+			for j=1, 0xA9 do
+				local r = o[j]
+				if rewards[r] and rewards[r] % 0x100 == 0xF0 then
+					local it = itemids[rewards[r]//0x100]
+					if it == keyitem and it ~= rewards[r]//0x100 then
+						local temp = rewards[validswap]
+						rewards[validswap] = rewards[r]
+						rewards[r] = temp
+						ConsoleLog(string.format("Swapped location of %s", itemNames[keyitem][1]))
+						break
+					elseif rewards[r] then
+						validswap = r
+					end
+				end
+			end
+		end
+	end
+end
+
 function ValidSeed()
-	itemsAvailable = {}
-	abilitiesAvailable = {}
-	dalmatiansAvailable = 0
-	
-	for i=1,0xFF do
-		itemsAvailable[i] = 0
-		abilitiesAvailable[i] = 0
-	end
-	
-	for j=1, 10 do
-		GetAvailability()
-		local HBWin = ItemAccessible(0xCD, 1)
-		ConsoleLog(string.format("cd %s", tostring(ItemAccessible(0xCD, 1))))
-		for i=0xBC, 0xBF do
-			ConsoleLog(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
-			HBWin = HBWin and ItemAccessible(i, 1)
+	local keyitems = {0xE5, randomEvidence, randomSlide, 0xE4, 0xCD}
+	for k=1, 5 do
+		itemsAvailable = {}
+		abilitiesAvailable = {}
+		dalmatiansAvailable = 0
+		
+		for i=1,0xFF do
+			itemsAvailable[i] = 0
+			abilitiesAvailable[i] = 0
 		end
 		
-		local DIWin = true
-		for i=0xC0, 0xC7 do
-			ConsoleLog(string.format("%x %s", i, tostring(ItemAccessible(i, 1))))
-			DIWin = DIWin and ItemAccessible(i, 1)
+		checksDebug = {}
+		checksDebug2 = {}
+		
+		for j=1, 10 do
+			GetAvailability()
+			local HBWin = ItemAccessible(0xCD, 1)
+			ConsoleLog(string.format("cd %s", tostring(ItemAccessible(0xCD, 1))))
+			for i=0xBC, 0xBF do
+				ConsoleLog(string.format("%s %s", itemNames[i][1], tostring(ItemAccessible(i, 1))))
+				HBWin = HBWin and ItemAccessible(i, 1)
+			end
+			
+			local DIWin = true
+			for i=0xC0, 0xC7 do
+				ConsoleLog(string.format("%s %s", itemNames[i][1], tostring(ItemAccessible(i, 1))))
+				DIWin = DIWin and ItemAccessible(i, 1)
+			end
+			
+			for i=1, #keyitems do
+				ConsoleLog(string.format("%s %s", itemNames[keyitems[i]][1], tostring(ItemAccessible(keyitems[i], 1))))
+			end
+			
+			local misc = dalmatiansAvailable == 99 and ItemAccessible(0xE4, 1) and ItemAccessible(0xD3, 3)
+			
+			ConsoleLog(string.format("Complexity %d", j))
+			if HBWin then
+				ConsoleLog("HBWin")
+			end
+			if DIWin then
+				ConsoleLog("DI Win")
+			end
+			if misc then
+				ConsoleLog("All checks possible")
+			else
+				ConsoleLog(string.format("Dalm: %d Jack: %s Postcards: %d", 
+				dalmatiansAvailable, tostring(ItemAccessible(0xE4, 1)), itemsAvailable[0xD3]))
+			end
+			if HBWin and DIWin and misc then
+				SaveRando()
+				return true
+			end
+		end
+		-- for i,v in pairs(checksDebug) do
+			-- if not checksDebug2[i] then
+				-- ConsoleLog(i)
+			-- end
+		-- end
+		for c=1, 0x1FF do
+			if chests[c] and chests[c]%0x10==0 then
+				local it = itemids[chests[c]//0x10]
+				if it >= 0xC0 and it <= 0xC7 then
+					ConsoleLog(string.format("%s on chest %x", itemNames[it][1], c))
+					break
+				end
+			end
+		end
+
+		for r=1, 0xA9 do
+			if rewards[r] and rewards[r] % 0x100 == 0xF0 then
+				local it = itemids[rewards[r]//0x100]
+				if it >= 0xC0 and it <= 0xC7 then
+					ConsoleLog(string.format("%s on chest %x", itemNames[it][1], r))
+					break
+				end
+			end
 		end
 		
-		local misc = dalmatiansAvailable == 99 and ItemAccessible(0xE4, 1) and ItemAccessible(0xD3, 3)
+		for i=1, 0xFF do
+			if itemids[i] >= 0xC0 and itemids[i] <= 0xC7 then
+				ConsoleLog(string.format("%s became %s", itemNames[i][1], itemNames[itemids[i]][1]))
+			end
+		end
 		
-		ConsoleLog(string.format("Complexity %d", j))
-		if HBWin then
-			ConsoleLog("HBWin")
-		end
-		if DIWin then
-			ConsoleLog("DI Win")
-		end
-		if misc then
-			ConsoleLog("All checks possible")
-		else
-			ConsoleLog(string.format("Dalm: %d Jack: %s Postcards: %d", 
-			dalmatiansAvailable, tostring(ItemAccessible(0xE4, 1)), itemsAvailable[0xD3]))
-		end
-		if HBWin and DIWin and misc then
-			SaveRando()
-			return true
-		end
+		FixSeed()
+		ConsoleLog("\nAttempted to fix seed\n")
 	end
-	
-	for i,v in pairs(checksDebug) do
-		if not checksDebug2[i] then
-			ConsoleLog(i)
-		end
-	end
-	
+
 	ConsoleLog("Unwinnable, rerolling")
 	return false
 end
@@ -1425,7 +1569,7 @@ function ApplyRandomization()
 	end
 	ConsoleLog("Accessory randomization applied")
 
-	--ConsoleLog(string.rep("\nHiding spoilers\n", 30))
+	ConsoleLog(string.rep("\nHiding spoilers\n", 10))
 	for i=0x51, 0x60 do
 		ConsoleLog(string.format("%x became %x", i, itemids[i]))
 	end
@@ -2184,6 +2328,11 @@ function FlagFixes()
 			WriteFloat(textBox+0x50, 160)
 			OCTextFix = 0
 		end
+		
+		-- Require Entry Pass
+		if ReadByte(cutsceneFlags+0xB06) == 0x10 then
+			WriteByte(worldFlagBase+0x94, ReadByte(inventory+0xE4) > 0 and 3 or 2)
+		end
 	end
 
 	if (ReadByte(waterwayGate) // 0x80) % 2 == 0 then
@@ -2337,7 +2486,11 @@ function FlagFixes()
 		end
 		
 		for i=0,5 do
-			WriteByte(slides+i, ReadByte(inventory+0xD8+i))
+			if itemids[0xD9+i] ~= 0xD9+i and ReadByte(room) == 0xC then
+				WriteByte(slides+i, 0)
+			else
+				WriteByte(slides+i, ReadByte(inventory+0xD8+i))
+			end
 		end
 		
 		-- if ReadByte(cutsceneFlags+0xB05) >= 0x6E and (ReadByte(chestsOpened+0x218) // 8) % 2 == 0

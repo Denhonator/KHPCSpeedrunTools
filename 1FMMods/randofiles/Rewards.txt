@@ -23,16 +23,16 @@
 16  Pumpkinhead ; Halloween Town ; Jack-In-The-Box
 17  Crabclaw ; Atlantica ; Mermaid Kick
 18  Divine Rose ; Belle in HB2 ; HB1 ; HB2
-19  Lionheart ; Leon & Cloud Hades Cup ; HB1
-1A  Metal Chocobo ; Cloud Hercules Cup
+19  Lionheart ; Leon & Cloud Hades Cup ; HB1 ; Entry Pass
+1A  Metal Chocobo ; Cloud Hercules Cup ; Entry Pass
 1B  Oathkeeper ; Kairi TT4 ; HB1
-1C  Genji Shield ; Yuffie Hades Cup
-1D  Herc's Shield ; Hercules Cup
-1E  Sonic Blade ; Olympus Coliseum
+1C  Genji Shield ; Yuffie Hades Cup ; Entry Pass
+1D  Herc's Shield ; Hercules Cup ; Entry Pass
+1E  Sonic Blade ; Olympus Coliseum ; Entry Pass
 1F  Raven's Claw ; Anti-Sora ; Green Trinity
-20  Strike Raid ; Pegasus Cup
+20  Strike Raid ; Pegasus Cup ; Entry Pass
 21  Ragnarok ; Riku 2 ; HB1
-22  Trinity Limit ; Hades Cup ; HB1
+22  Trinity Limit ; Hades Cup ; HB1 ; Entry Pass
 23  Ars Arcanum ; Capt. Hook ; Green Trinity
 24  Cheer (Donald) ; Maleficent ; HB1
 25  Cheer (Goofy); Parasite Cage; High Jump OR Glide
@@ -46,7 +46,7 @@
 2D  EXP Ring ; Hundred Acre Wood ; Page5
 2E  Cheer (Sora) ; From Owl ; Page5
 2F  Dream Shield ; Merlin ; Arts ; All Spells
-30  Olympia ; Olympus Coliseum
+30  Olympia ; Olympus Coliseum ; Entry Pass
 31  Oblivion ; Chest ; -
 32  Mythril ; Chest ; -
 33  Wishing Star ; Chest ; -
@@ -56,7 +56,7 @@
 37  Tech Boost ; Dalmatians' House ; 90 Puppies
 38  Brave Warrior ; Guard Armor
 39  Ifrit's Horn ; Trickmaster ; Evidence
-3A  Inferno Band ; Cerberus
+3A  Inferno Band ; Cerberus ; Entry Pass
 3B  White Fang ; Sabor 2 ; Slides
 3C  Ray of Light ; Pot Centipede
 3D  Holy Circlet ; Oogie Boogie ; Jack-In-The-Box
@@ -92,14 +92,14 @@
 5B  AP Up ; Chest ; -
 5C  Spellbinder ; Merlin ; All Spells
 5D  Dream Rod ; Merlin ; Max Spells
-5E  Combo Plus ; Phil Cup Solo
-5F  Orichalcum ; Pegasus Cup Solo
-60  Critical Plus ; Hercules Cup Solo
-61  Save the Queen ; Hades Cup Solo ; HB1
-62  Tech Boost ; Phil Cup Time Trial
-63  Dark Matter ; Pegasus Cup Time Trial
-64  Gravity Break ; Hercules Cup Time Trial
-65  Save the King ; Hades Cup Time Trial ; HB1
+5E  Combo Plus ; Phil Cup Solo ; Entry Pass
+5F  Orichalcum ; Pegasus Cup Solo ; Entry Pass
+60  Critical Plus ; Hercules Cup Solo ; Entry Pass
+61  Save the Queen ; Hades Cup Solo ; HB1 ; Entry Pass
+62  Tech Boost ; Phil Cup Time Trial ; Entry Pass
+63  Dark Matter ; Pegasus Cup Time Trial ; Entry Pass
+64  Gravity Break ; Hercules Cup Time Trial ; Entry Pass
+65  Save the King ; Hades Cup Time Trial ; HB1 ; Entry Pass
 66  Protect Chain ; Chest ; -
 67  Cottage ; Postcard 1 ; Postcard 1
 68  Mythril Shard ; Postcard 2 ; Postcard 2

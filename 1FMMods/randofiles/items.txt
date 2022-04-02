@@ -189,9 +189,9 @@ BC  Emblem Piece (Flame) ; Entrance Hall ; Fire Magic ; Theon OR High Jumpra
 BD  Emblem Piece (Chest) ; Entrance Hall ; Theon OR High Jumpra
 BE  Emblem Piece (Statue) ; Entrance Hall ; Red Trinity ; Theon OR High Jumpra
 BF  Emblem Piece (Fountain) ; Entrance Hall ; Theon OR High Jumpra
-C0  Log             ; -
-C1  Cloth           ; -
-C2  Rope            ; -
+C0  Log             ; Destiny Islands
+C1  Cloth           ; Destiny Islands
+C2  Rope            ; Destiny Islands
 C3  Seagull Egg ; Destiny Islands ; Day1
 C4  Fish ; Destiny Islands ; Day1
 C5  Mushroom ; Destiny Islands ; Day1
