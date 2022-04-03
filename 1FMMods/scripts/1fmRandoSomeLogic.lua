@@ -389,8 +389,8 @@ function ItemType(i)
 	if (i >= 0xCE and i <= 0xD1) then
 		attributes = attributes .. "Summon"
 	end
-	if i == 0xE3 or i == 0xE6 or i==0xD2 or i==0xA8 or (i>=0xDF and i<=0xE2 and i~=randomEvidence)
-	or i==0xAA or i==0xAE or i==0xB0 or i==0xB2 or i==0xB7 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
+	if i == 0xE3 or i == 0xE6 or i==0xD2 or i==0xA8 or i==0xAA or i==0xAE 
+	or i==0xB0 or i==0xB2 or i==0xB7 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
 	
@@ -792,10 +792,10 @@ function Randomize()
 	local order = GetRandomOrder(0xFF)
 	for j=0x1, 0xFF do
 		local i = order[j]
-		if string.find(ItemType(i), "Important") then
-			if (i >= 0xDF and i <= 0xE2) then
-				itemids[i] = 1
-			elseif #randomFiller > 0 then
+		if (i >= 0xDF and i <= 0xE2) or i == randomSlide then
+			itemids[i] = 1
+		elseif string.find(ItemType(i), "Important") then
+			if #randomFiller > 0 then
 				itemids[i] = table.remove(randomFiller, math.random(#randomFiller))
 			elseif not (i >= 0xC3 and i <= 0xC7) then
 				itemids[i] = table.remove(randomGets, math.random(#randomGets))
