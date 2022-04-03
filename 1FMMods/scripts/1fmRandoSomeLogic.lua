@@ -717,11 +717,13 @@ function Randomize()
 	--Add random evidence and slide
 	randomEvidence = 0xDE + math.random(4)
 	randomSlide = 0xD8 + math.random(6)
-	if important[1] and important[1] >= 0xDF and important[1] <= 0xE2 then
-		important[1] = randomEvidence
-	end
-	if important[2] and important[2] >= 0xD9 and important[2] <= 0xDE then
-		important[2] = randomSlide
+	for i=1,#important do
+		if important[i] >= 0xDF and important[i] <= 0xE2 then
+			important[i] = randomEvidence
+		end
+		if important[i] >= 0xD9 and important[i] <= 0xDE then
+			important[i] = randomSlide
+		end
 	end
 
 	for i=1, 0xA9 do
@@ -758,7 +760,7 @@ function Randomize()
 		end
 	end
 	
-	local filler = 2 + math.random(3)
+	local filler = 5 + math.random(3)
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
@@ -791,7 +793,9 @@ function Randomize()
 	for j=0x1, 0xFF do
 		local i = order[j]
 		if string.find(ItemType(i), "Important") then
-			if #randomFiller > 0 then
+			if (i >= 0xDF and i <= 0xE2) then
+				itemids[i] = 1
+			elseif #randomFiller > 0 then
 				itemids[i] = table.remove(randomFiller, math.random(#randomFiller))
 			elseif not (i >= 0xC3 and i <= 0xC7) then
 				itemids[i] = table.remove(randomGets, math.random(#randomGets))
