@@ -2202,7 +2202,7 @@ function InstantGummi()
 end
 
 function FlagFixes()
-	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadByte(inGummi) == 0 then
+	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadInt(inGummi) == 0 then
 		WriteByte(party1, 0xFF)
 		WriteByte(party1+1, 0xFF)
 	end
@@ -2366,7 +2366,7 @@ function FlagFixes()
 		end
 	end
 
-	if ReadByte(inGummi) > 0 then
+	if ReadInt(inGummi) > 0 then
 		if ReadByte(gummiselect)==3 then
 			WriteShort(worldWarps+0x18, 1) -- Add DI warp
 			if (ReadByte(unlockedWarps-7) // 8) % 2 == 0 then
