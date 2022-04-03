@@ -491,9 +491,8 @@ function BossAdjust(bossHP)
 		str = 0x11
 		def = 0xF
 		endArd = 0xC8
-		if ReadByte(ardOff) == 0xF2 then
-			WriteByte(ardOff, 0xF3)
-		end
+	elseif w == 8 and r == 0x10 and  ReadByte(ardOff) == 0xF2 then
+		WriteByte(ardOff, 0xF3)
 	elseif w == 0xC and r == 4 and ReadByte(cutsceneFlags+0xB09) == 0x2B then
 		addr[1] = 0x2D34730 - offset
 		e[1] = addrs[12][0x9CF440-offset]
