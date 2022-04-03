@@ -197,10 +197,10 @@ C4  Fish ; Destiny Islands ; Day1
 C5  Mushroom ; Destiny Islands ; Day1
 C6  Coconut ; Destiny Islands ; Day1
 C7  Drinking Water ; Destiny Islands ; Day1
-C8  Navi-G Piece 1  ; -
-C9  Navi-G Piece 2  ; -
+C8  Navi-G Piece 1  ; Wonderland ; Evidence
+C9  Navi-G Piece 2  ; Deep Jungle ; Slides
 CA  Navi-Gummi Unused ; -
-CB  Navi-G Piece 3 ; Traverse Town
+CB  Navi-G Piece 3 ; Traverse Town ; Red Trinity
 CC  Navi-G Piece 4 ; Neverland ; Green Trinity
 CD  Navi-Gummi     ; Traverse Town ; HB1
 CE  Watergleam      ; -
