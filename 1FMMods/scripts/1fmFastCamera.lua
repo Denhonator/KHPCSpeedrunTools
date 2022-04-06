@@ -6,6 +6,7 @@ local offset = 0x3A0606
 -- For some reason can't write to these addresses
 local accel = 0x3E7F58 - offset
 local deaccel = 0x3E7F5C - offset
+local curSpeed = 0x25344C4 - offset
 -----
 local snap = 0x1DD299 - offset
 local accelHack = 0x1E2924 - offset
@@ -13,6 +14,8 @@ local deaccelHack = 0x1E291B - offset
 local speed = 0x503A1C - offset
 
 local versionCheck = 0x3D6AB8 - offset
+
+local lastSpeed = 0
 
 local canExecute = false
 
@@ -26,7 +29,9 @@ function _OnInit()
 
 	if canExecute then
 		-- Enables instant camera centering
-		WriteInt(snap, 0x02357487)
+		if ReadInt(snap) == 0x0215EFBF then
+			WriteInt(snap, 0x02357487)
+		end
 		-- Changes it to read acceleration values from elsewhere
 		--WriteInt(accelHack, 0x0020563C)
 		--WriteInt(deaccelHack, 0x00205645)
@@ -34,8 +39,14 @@ function _OnInit()
 end
 
 function _OnFrame()
+	local currentSpeed = ReadFloat(curSpeed)
 	if canExecute and math.abs(ReadFloat(speed)) == 1.0 then -- This way it works for inverted camera
 		-- You can change the 1.4 to anything you wish. Bigger = faster.
 		WriteFloat(speed, ReadFloat(speed) * 1.4)
+	elseif canExecute and math.abs(currentSpeed) > math.abs(lastSpeed) then
+		WriteFloat(curSpeed, math.min(math.max(currentSpeed * 2, -0.44), 0.44))
+	elseif canExecute and math.abs(currentSpeed) < math.abs(lastSpeed) then
+		WriteFloat(curSpeed, currentSpeed * 0.5)
 	end
+	lastSpeed = currentSpeed
 end
