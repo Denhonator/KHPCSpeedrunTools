@@ -7,10 +7,6 @@ Download files from the repository (ex. click the green Code button and download
 ## 1FM and 2FM mods
 Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend. Follow the instructions provided there.
 
-Pick and choose scripts to enable. Any .lua files under scripts folder will run.
-
-Alternatively, you can use the internal version of LuaBackend. That requires patching the game .exe, but allows it to automatically work in the background without an external program. See LuaBackend documentation for more.
-
 Note that using mods that affect a speedrun are not allowed unless specifically stated so. However, mods like SaveAnywhere or SoftReset can be utilized to reset runs faster. Unless activated, those mods do not affect the game.
 
 ## Load removers
