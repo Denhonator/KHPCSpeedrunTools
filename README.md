@@ -5,7 +5,7 @@ How to use:
 Download files from the repository (ex. click the green Code button and download the repository as zip)
 
 ## 1FM and 2FM mods
-Get LuaBackend here https://github.com/Sirius902/LuaBackend. Follow the instructions provided there. Old LuaBackend or LuaFrontend will also work if you still have them.
+Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend. Follow the instructions provided there.
 
 Pick and choose scripts to enable. Any .lua files under scripts folder will run.
 
