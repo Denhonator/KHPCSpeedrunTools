@@ -62,7 +62,7 @@ function _OnFrame()
 			WriteFloat(curSpeedH, currentSpeedH * (1.0 - accelerationSpeed * 10))
 		end
 		if math.abs(ReadFloat(cameraInputV)) > 0.05 then
-			WriteFloat(curSpeedV, math.min(math.max(currentSpeedV + ReadFloat(cameraInputV) * accelerationSpeed, -0.44), 0.44))
+			WriteFloat(curSpeedV, math.min(math.max(currentSpeedV - ReadFloat(cameraInputV) * accelerationSpeed, -0.44), 0.44))
 		else
 			WriteFloat(curSpeedV, currentSpeedV * (1.0 - accelerationSpeed * 10))
 		end
