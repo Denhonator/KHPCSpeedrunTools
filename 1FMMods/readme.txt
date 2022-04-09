@@ -1,6 +1,6 @@
 How to use:
-- Get LuaBackend https://github.com/Sirius902/LuaBackend
-- Follow its instructions on how to setup scripts and they will run automatically with the game
+- Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend
+- Follow the instructions on those pages on how to set up the scripts
 
 SaveAnywhere:
 - In-game, press L1+L2+R2+Select (or equivalent on your input device)
