@@ -2463,10 +2463,12 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(world) == 4 and ReadByte(room) == 3 and ReadFloat(soraHUD) == 1 then
-		WriteInt(evidence, ReadInt(inventory+0xDE))
-	elseif ReadByte(world) == 4 and ReadByte(room) == 1 and ReadByte(inventory+0xDF) == 1 then
-		WriteLong(clawmarkbox, 0)
+	if ReadByte(cutsceneFlags+0xB07) < 0x11 then
+		if ReadByte(world) == 4 and ReadByte(room) == 3 and ReadFloat(soraHUD) == 1 then
+			WriteInt(evidence, ReadInt(inventory+0xDE))
+		elseif ReadByte(world) == 4 and ReadByte(room) == 1 and ReadByte(inventory+0xDF) == 1 then
+			WriteLong(clawmarkbox, 0)
+		end
 	end
 	
 	if ReadByte(world) == 5 then
@@ -2492,11 +2494,13 @@ function FlagFixes()
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
 		end
 		
-		for i=0,5 do
-			if itemids[0xD9+i] ~= 0xD9+i and ReadByte(room) == 0xC then
-				WriteByte(slides+i, 0)
-			else
-				WriteByte(slides+i, ReadByte(inventory+0xD8+i))
+		if ReadByte(cutsceneFlags+0xB05) <= 0x1A then
+			for i=0,5 do
+				if itemids[0xD9+i] ~= 0xD9+i and ReadByte(room) == 0xC then
+					WriteByte(slides+i, 0)
+				else
+					WriteByte(slides+i, ReadByte(inventory+0xD8+i))
+				end
 			end
 		end
 		
