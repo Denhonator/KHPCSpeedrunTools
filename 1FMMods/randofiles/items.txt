@@ -203,15 +203,15 @@ CA  Navi-Gummi Unused ; -
 CB  Navi-G Piece 3 ; Traverse Town ; Red Trinity
 CC  Navi-G Piece 4 ; Neverland ; Green Trinity
 CD  Navi-Gummi     ; Traverse Town ; HB1
-CE  Watergleam      ; -
-CF  Naturespark     ; -
-D0  Fireglow        ; -
-D1  Earthshine      ; -
+CE  Watergleam      ; - ; -
+CF  Naturespark     ; - ; -
+D0  Fireglow        ; - ; -
+D1  Earthshine      ; - ; -
 D2  Crystal Trident ; -
-D3  Postcard        ; -
+D3  Postcard        ; - ; -
 D4  Torn Page 1     ; Dalmatians' House ; 51 Puppies
-D5  Torn Page 2     ; -
-D6  Torn Page 3     ; -
+D5  Torn Page 2     ; - ; -
+D6  Torn Page 3     ; - ; -
 D7  Torn Page 4     ; -
 D8  Torn Page 5     ; -
 D9  Slide 1         ; -
@@ -224,12 +224,12 @@ DF  Footprints      ; -
 E0  Claw Marks      ; -
 E1  Stench          ; -
 E2  Antenna         ; -
-E3  Forget-Me-Not   ; -
-E4  Jack-In-The-Box ; -
+E3  Forget-Me-Not   ; - ; Jack-In-The-Box
+E4  Jack-In-The-Box ; - ; -
 E5  Entry Pass      ; -
-E6  Hero License    ; -
+E6  Hero License    ; - ; Entry Pass
 E7  Pretty Stone    ; -
-E8  N41             ; -
+E8  N41             ; - ; -
 E9  Lucid Shard     ; -
 EA  Lucid Gem       ; -
 EB  Lucid Crystal   ; -
