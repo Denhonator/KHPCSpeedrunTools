@@ -623,6 +623,7 @@ function GetAvailability()
 		if itemNames[i] then
 			if (itemNames[i][3] and IsAccessible(itemNames, i)) or (itemNames[i][2] and itemNames[i][3] == nil) then
 				itAv[itemids[i]] = itAv[itemids[i]] + 1
+				--ConsoleLog(string.format("items.txt available: %s", itemNames[i][1]))
 			end
 		end
 	end
@@ -714,15 +715,23 @@ function Randomize()
 	local randomGets = {}
 	local randomFiller = {}
 	
+	for i=1,0xFF do
+		itemids[i] = i
+	end
+	
 	--Add random evidence and slide
 	randomEvidence = 0xDE + math.random(4)
 	randomSlide = 0xD8 + math.random(6)
+	local findEvidence = false
+	local findSlide = false
 	for i=1,#important do
 		if important[i] >= 0xDF and important[i] <= 0xE2 then
 			important[i] = randomEvidence
+			findEvidence = true
 		end
 		if important[i] >= 0xD9 and important[i] <= 0xDE then
 			important[i] = randomSlide
+			findSlide = true
 		end
 	end
 
@@ -760,7 +769,7 @@ function Randomize()
 		end
 	end
 	
-	local filler = 5 + math.random(3)
+	local filler = 6 + math.random(6)
 
 	for i=1, 0xFF do
 		inventoryUpdater[i] = ReadByte(inventory+(i-1))
@@ -792,7 +801,7 @@ function Randomize()
 	local order = GetRandomOrder(0xFF)
 	for j=0x1, 0xFF do
 		local i = order[j]
-		if (i >= 0xDF and i <= 0xE2) or i == randomSlide then
+		if (i >= 0xDF and i <= 0xE2 and findEvidence) or i == randomSlide and findSlide then
 			itemids[i] = 1
 		elseif string.find(ItemType(i), "Important") then
 			if #randomFiller > 0 then
