@@ -146,8 +146,8 @@
 91  Dark Matter ; 30 Fruits in Jungle Slider ; Slides
 92  Defense Up ; 40 Fruits Jungle Slider ; Slides
 93  Power Up ; 50 Fruits Jungle Slider ; Slides
-94  Diamond Dust ; Ice Titan
-95  One-Winged Angel ; Sephiroth ; HB1 ; HB2 ; EotW
+94  Diamond Dust ; Ice Titan ; Entry Pass
+95  One-Winged Angel ; Sephiroth ; HB1 ; HB2 ; EotW ; Entry Pass
 96  Zantetsuken ; Kurt Zisa ; HB1 ; HB2 ; EotW
 97  EXP Necklace ; Unknown ; HB1 ; HB2 ; EotW
 98  Firagun Band ; ? ; ?
