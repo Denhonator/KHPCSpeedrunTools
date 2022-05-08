@@ -126,6 +126,7 @@ local goofyStats = donaldStats + 0x74
 local experienceMult = 0x2D59180 - offset
 
 local gotoWorldMap = 0x2E1CC24 - offset
+local startGameWarpHack = 0x38C315 - offset
 local worldMapTriggerFlag = 0x2DE6ED0 - offset
 local openMenu = 0x2350CD4 - offset
 local closeMenu = 0x2E90820 - offset
@@ -140,6 +141,7 @@ local warpTrigger = 0x22E86DC - offset
 local warpType1 = 0x233C240 - offset
 local warpType2 = 0x22E86E0 - offset
 local warpDefinitions = 0x232A580 - offset
+local RCName = 0x2863390 - offset
 
 local itemDropID = 0x2849FC8 - offset
 local textsBase = 0x2EE03B0 - offset
@@ -186,6 +188,8 @@ local gummiNames = {}
 local itemNames = {}
 local chestDetails = {}
 local rewardDetails = {}
+local vanillaChests = {}
+local vanillaRewards = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
@@ -217,6 +221,7 @@ local canExecute = false
 
 local checksDebug = {}
 local checksDebug2 = {}
+local sets = {}
 
 function ConsoleLog(s)
 	ConsolePrint(s)
@@ -308,6 +313,10 @@ function _OnInit()
 							break
 						end
 					end
+				elseif setting == "VanillaRewards" then
+					vanillaRewards[tonumber(word, 16)+1] = true
+				elseif setting == "VanillaChests" then
+					vanillaChests[tonumber(word, 16)+1] = true
 				elseif setting == "EarlyAbilities" then
 					earlyAbilities[#earlyAbilities + 1] = tonumber(word, 16)
 					ConsoleLog("Early ability: " .. word)
@@ -317,6 +326,8 @@ function _OnInit()
 				elseif setting == "StackAbilities" then
 					stackAbilities = tonumber(word)
 					ConsoleLog("StackAbilities: " .. word)
+				else
+					sets[setting] = word
 				end
 			end
 		end
@@ -360,6 +371,10 @@ function _OnInit()
 			ConsoleLog("Wrote new seed")
 		end
 		seedfile:close()
+		
+		if ReadByte(startGameWarpHack) == 4 then
+			WriteByte(startGameWarpHack, 6)
+		end
 		
 		initDone = true
 		ConsoleLog("Init done.	")
@@ -736,7 +751,7 @@ function Randomize()
 	end
 
 	for i=1, 0xA9 do
-		if rewardDetails[i] then
+		if rewardDetails[i] and vanillaRewards[i] == nil then
 			rewardPool[(#rewardPool)+1] = ReadShort(rewardTable+((i-1)*2))
 		end
 	end
@@ -754,7 +769,7 @@ function Randomize()
 	local chestPool = {}
 	
 	for i=1, 0x1FF do
-		if chestDetails[i] then
+		if chestDetails[i] and vanillaChests[i] == nil then
 			chestPool[(#chestPool)+1] = ReadShort(chestTable+((i-1)*2))
 		end
 	end
@@ -838,7 +853,8 @@ function Randomize()
 			itemData[i][12] = price // 0x100
 		end
 		
-		if ItemType(i) ~= "" and not (i>=0xC8 and i<=0xCC) then
+		if ItemType(i) ~= "" and not (i>=0xC8 and i<=0xCC) and sets["RandomShops"] ~= "0" and
+			(sets["RandomShops"] ~= "1" or ItemType(i) ~= "Important") then
 			shopPool[(#shopPool)+1] = i
 		end
 	end
@@ -849,19 +865,23 @@ function Randomize()
 	for r=1, 0xA9 do
 		local i=order[r]
 		if rewardDetails[i] then
-			rewards[i] = table.remove(rewardPool, math.random(#rewardPool))
-			if rewards[i] % 0x100 == 0xF0 and ItemType(rewards[i] // 0x100)=="Synth" then
-				if #importantPool > 5 then
-					rewards[i] = table.remove(importantPool, math.random(#importantPool)) * 0x100 + 0xF0
-				elseif #extraAbilities > 0 then
-					rewards[i] = table.remove(extraAbilities, math.random(#extraAbilities)) * 0x100
-					if rewards[i] // 0x100 <= 4 then
-						rewards[i] = rewards[i] + 0xB1
-					else
-						rewards[i] = rewards[i] + 1
+			if vanillaRewards[i] then
+				rewards[i] = ReadShort(rewardTable+((i-1)*2))
+			else
+				rewards[i] = table.remove(rewardPool, math.random(#rewardPool))
+				if rewards[i] % 0x100 == 0xF0 and ItemType(rewards[i] // 0x100)=="Synth" then
+					if #importantPool > 5 then
+						rewards[i] = table.remove(importantPool, math.random(#importantPool)) * 0x100 + 0xF0
+					elseif #extraAbilities > 0 then
+						rewards[i] = table.remove(extraAbilities, math.random(#extraAbilities)) * 0x100
+						if rewards[i] // 0x100 <= 4 then
+							rewards[i] = rewards[i] + 0xB1
+						else
+							rewards[i] = rewards[i] + 1
+						end
+					-- elseif #addItems > 5 then
+						-- rewards[i] = table.remove(addItems, math.random(#addItems)) * 0x100 + 0xF0
 					end
-				-- elseif #addItems > 5 then
-					-- rewards[i] = table.remove(addItems, math.random(#addItems)) * 0x100 + 0xF0
 				end
 			end
 		end
@@ -874,22 +894,26 @@ function Randomize()
 	for c=1, 0x1FF do
 		local i=order[c]
 		if chestDetails[i] then
-			local r = math.random(#chestPool)
-			while i == 0 and chestPool[r] % 0x10 == 4 do
-				r = math.random(#chestPool)
-			end
-			chests[i] = table.remove(chestPool, r)
-			
-			if (chests[i]-2) % 0x10 == 0 then
-				if #importantPool > 0 then
-					chests[i] = table.remove(importantPool, math.random(#importantPool)) * 0x10
-				elseif #missableRewards > 0 then
-					chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
-					ConsoleLog("Added missable reward to chest")
-				elseif #addItems > 0 then
-					chests[i] = table.remove(addItems, 1) * 0x10
-				else
-					chests[i] = chests[i] + 4
+			if vanillaChests[i] then
+				chests[i] = ReadShort(chestTable+((i-1)*2))
+			else
+				local r = math.random(#chestPool)
+				while i == 0 and chestPool[r] % 0x10 == 4 do
+					r = math.random(#chestPool)
+				end
+				chests[i] = table.remove(chestPool, r)
+				
+				if (chests[i]-2) % 0x10 == 0 then
+					if #importantPool > 0 then
+						chests[i] = table.remove(importantPool, math.random(#importantPool)) * 0x10
+					elseif #missableRewards > 0 then
+						chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
+						ConsoleLog("Added missable reward to chest")
+					elseif #addItems > 0 then
+						chests[i] = table.remove(addItems, 1) * 0x10
+					else
+						chests[i] = chests[i] + 4
+					end
 				end
 			end
 		end
@@ -900,7 +924,7 @@ function Randomize()
 	for i=1, 0x1FF do
 		if chests[i] and (i >= 0x1BF or i == 1) and ((chests[i]-4) % 0x10) == 0 then
 			for j=10, 0x1BE do
-				if chests[j] and chests[j] % 0x10 ~= 4 then
+				if chests[j] and chests[j] % 0x10 ~= 4 and vanillaChests[j] == nil then
 					local temp = chests[j]
 					chests[j] = chests[i]
 					chests[i] = temp
@@ -1146,7 +1170,7 @@ function FixSeed()
 						chests[c] = temp
 						ConsoleLog(string.format("Swapped location of %s", itemNames[keyitem][1]))
 						break
-					elseif chests[c] then
+					elseif chests[c] and vanillaChests[c] == nil then
 						validswap = c
 					end
 				end
@@ -1163,7 +1187,7 @@ function FixSeed()
 						rewards[r] = temp
 						ConsoleLog(string.format("Swapped location of %s", itemNames[keyitem][1]))
 						break
-					elseif rewards[r] then
+					elseif rewards[r] and vanillaRewards[r] == nil then
 						validswap = r
 					end
 				end
@@ -2700,6 +2724,11 @@ function _OnFrame()
 		for i=0,4 do
 			WriteByte(0x2E1CBA0+i*4-offset, i) --Set button types
 		end
+	end
+	
+	if ReadByte(RCName) ~= 0x36 and (sets["WarpAnywhere"] == "0" or
+		(sets["WarpAnywhere"] == "1" and (ReadByte(stateFlag) ~= 0 or HUDNow < 1))) then
+		WriteByte(0x2E1CC28-offset, 0)
 	end
 	
 	::done::

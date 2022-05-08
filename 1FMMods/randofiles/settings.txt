@@ -5,7 +5,7 @@ c D9 corresponds to a random slide, DF corresponds to a random evidence
 c For example, if you want to unrandomize slide, evidence and entry pass:
 c Unrandomize = D9 DF E5
 
-Unrandomize = 
+Unrandomize =
 
 c If you want guaranteed abilities on first level ups, put the hex codes for unequipped abilities here.
 c Maximum 4 or they will replace other abilities.
@@ -31,3 +31,35 @@ c 1 = High Jump stacks: Jump higher the more you have.
 c 2 = High Jump, Glides, Mermaid Kick, Dodge Roll. First glide/superglide turns into glide, next into superglide and past that it gets faster.
 
 StackAbilities = 2
+
+c Allow warping with SaveAnywhere
+c Warping at inopportune times can lead to crashes, audio bugs, softlocks or other issues with story progression
+c Use at your own responsibility
+c 0 = You can only warp from a save point
+c 1 = You can warp in normal, non-combat state. Should circuvment most issues
+c 2 = No restrictions
+
+WarpAnywhere = 0
+
+c Shop randomization
+c 0 = Vanilla shops
+c 1 = Shops can have anything but important key items
+c 2 = Shops can have anything, including extra out of logic key items
+
+RandomShops = 2
+
+c Unrandomize rewards
+c List the reward IDs from Rewards.txt that you want to be vanilla
+c For example, if you want to unrandomize Sephiroth and Unknown
+c VanillaRewards = 95 97
+
+VanillaRewards = 
+
+c Unrandomize chests
+c List the chest IDs from Chests.txt that you want to be vanilla
+c For example, if you want to unrandomize 100 acre wood chests
+c VanillaChests = a7 a8 a9 aa
+c However note that if the chest contains a reward, you should unrandomize that reward as well
+c So you should also include 4c 9b 4d in VanillaRewards
+
+VanillaChests =
