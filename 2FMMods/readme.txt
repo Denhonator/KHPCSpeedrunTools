@@ -16,3 +16,9 @@ Autosave:
 
 AutoAttack:
 - Allows physically attacking continuously by holding attack button.
+
+SaveAnywhere:
+- Bring up the save menu anywhere, which allows going to world map
+- In-game, press L2+R2+R1+Triangle (or equivalent on your input device)
+- Works by replacing Auto Valor command, which may have some limitations
+- Saving when you normally wouldn't be able to may or may not work well
