@@ -49,17 +49,22 @@ c 2 = Shops can have anything, including extra out of logic key items
 RandomShops = 2
 
 c Unrandomize rewards
-c List the reward IDs from Rewards.txt that you want to be vanilla
+c List the reward IDs from Rewards.txt that you want to unrandomize
+c List them in VanillaRewards to keep it vanilla, or ReplaceRewards to put in a potion and keep the reward in the pool
 c For example, if you want to unrandomize Sephiroth and Unknown
-c VanillaRewards = 95 97
+c ReplaceRewards = 95 97
 
 VanillaRewards = 
 
+ReplaceRewards = 
+
 c Unrandomize chests
-c List the chest IDs from Chests.txt that you want to be vanilla
+c List the chest IDs from Chests.txt that you want to unrandomize
 c For example, if you want to unrandomize 100 acre wood chests
-c VanillaChests = a7 a8 a9 aa
-c However note that if the chest contains a reward, you should unrandomize that reward as well
-c So you should also include 4c 9b 4d in VanillaRewards
+c ReplaceChests = a7 a8 a9 aa
+c However note that if the chest contains a reward, you should unrandomize that reward as well, else whatever ends up on that reward will be inaccessible
+c So you should also include 4c 9b 4d in ReplaceRewards
 
 VanillaChests =
+
+ReplaceChests = 

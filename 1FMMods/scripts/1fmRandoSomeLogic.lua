@@ -317,6 +317,10 @@ function _OnInit()
 					vanillaRewards[tonumber(word, 16)+1] = true
 				elseif setting == "VanillaChests" then
 					vanillaChests[tonumber(word, 16)+1] = true
+				elseif setting == "ReplaceRewards" then
+					vanillaRewards[tonumber(word, 16)+1] = false
+				elseif setting == "ReplaceChests" then
+					vanillaChests[tonumber(word, 16)+1] = false
 				elseif setting == "EarlyAbilities" then
 					earlyAbilities[#earlyAbilities + 1] = tonumber(word, 16)
 					ConsoleLog("Early ability: " .. word)
@@ -751,7 +755,7 @@ function Randomize()
 	end
 
 	for i=1, 0xA9 do
-		if rewardDetails[i] and vanillaRewards[i] == nil then
+		if rewardDetails[i] and vanillaRewards[i] ~= true then
 			rewardPool[(#rewardPool)+1] = ReadShort(rewardTable+((i-1)*2))
 		end
 	end
@@ -769,7 +773,7 @@ function Randomize()
 	local chestPool = {}
 	
 	for i=1, 0x1FF do
-		if chestDetails[i] and vanillaChests[i] == nil then
+		if chestDetails[i] and vanillaChests[i] ~= true then
 			chestPool[(#chestPool)+1] = ReadShort(chestTable+((i-1)*2))
 		end
 	end
@@ -865,8 +869,10 @@ function Randomize()
 	for r=1, 0xA9 do
 		local i=order[r]
 		if rewardDetails[i] then
-			if vanillaRewards[i] then
+			if vanillaRewards[i] == true then
 				rewards[i] = ReadShort(rewardTable+((i-1)*2))
+			elseif vanillaRewards[i] == false then
+				rewards[i] = 0x01F0
 			else
 				rewards[i] = table.remove(rewardPool, math.random(#rewardPool))
 				if rewards[i] % 0x100 == 0xF0 and ItemType(rewards[i] // 0x100)=="Synth" then
@@ -894,8 +900,10 @@ function Randomize()
 	for c=1, 0x1FF do
 		local i=order[c]
 		if chestDetails[i] then
-			if vanillaChests[i] then
+			if vanillaChests[i] == true then
 				chests[i] = ReadShort(chestTable+((i-1)*2))
+			elseif vanillaChests[i] == false then
+				chests[i] = 0x0010
 			else
 				local r = math.random(#chestPool)
 				while i == 0 and chestPool[r] % 0x10 == 4 do
@@ -938,7 +946,7 @@ function Randomize()
 	local order = GetRandomOrder(0xA9)
 	for j=1, 0x49 do
 		local i = order[j]
-		if rewards[i] and rewards[i] % 0x100 == 1 then
+		if rewards[i] and rewards[i] % 0x100 == 1 and vanillaRewards[i] == nil then
 			local r = math.random(95)+4
 			while soraAbilities[r] < 0x81 do
 				r = math.random(95)+4
@@ -960,7 +968,7 @@ function Randomize()
 				end
 			end
 			rewards[i] = ((ab-0x80) * 0x100) + 1
-		elseif rewards[i] and rewards[i] % 0x100 == 0x21 then
+		elseif rewards[i] and rewards[i] % 0x100 == 0x21 and vanillaRewards[i] == nil then
 			local r = math.random(95)+4
 			while goofyAbilities[r] < 0x81 do
 				r = math.random(95)+4
@@ -968,7 +976,7 @@ function Randomize()
 			local ab = goofyAbilities[r]
 			goofyAbilities[r] = (rewards[i] // 0x100) + 0x80
 			rewards[i] = ((ab-0x80) * 0x100) + 0x21
-		elseif rewards[i] and rewards[i] % 0x100 == 0x11 then
+		elseif rewards[i] and rewards[i] % 0x100 == 0x11 and vanillaRewards[i] == nil then
 			local r = math.random(95)+4
 			while donaldAbilities[r] < 0x81 do
 				r = math.random(95)+4
