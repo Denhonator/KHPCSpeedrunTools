@@ -2737,6 +2737,8 @@ function _OnFrame()
 	if ReadByte(RCName) ~= 0x36 and (sets["WarpAnywhere"] == "0" or
 		(sets["WarpAnywhere"] == "1" and (ReadByte(stateFlag) ~= 0 or HUDNow < 1))) then
 		WriteByte(0x2E1CC28-offset, 0)
+	elseif ReadByte(RCName) == 0x36 then
+		WriteByte(0x2E1CC28-offset, 3)
 	end
 	
 	::done::
