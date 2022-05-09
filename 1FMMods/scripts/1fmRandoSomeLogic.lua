@@ -372,9 +372,9 @@ function _OnInit()
 		end
 		seedfile:close()
 		
-		if ReadByte(startGameWarpHack) == 4 then
-			WriteByte(startGameWarpHack, 6)
-		end
+		-- if ReadByte(startGameWarpHack) == 4 then
+			-- WriteByte(startGameWarpHack, 6)
+		-- end
 		
 		initDone = true
 		ConsoleLog("Init done.	")
@@ -2235,6 +2235,14 @@ function InstantGummi()
 end
 
 function FlagFixes()
+	if ReadByte(world) == 0 and ReadByte(room) == 0 and ReadByte(cutsceneFlags+0xB01) == 0xA then
+		WriteByte(cutsceneFlags+0xB01, 0xD)
+		WriteByte(warpType1, 7)
+		WriteByte(warpType2, 6)
+		WriteByte(warpTrigger, 2)
+		WriteLong(0x25346D0-offset, 0) -- Fixes InstantGummi
+	end
+
 	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadInt(inGummi) == 0 then
 		WriteByte(party1, 0xFF)
 		WriteByte(party1+1, 0xFF)
