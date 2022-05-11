@@ -675,7 +675,10 @@ function GetAvailability()
 				magicAvailable[m] = magicAvailable[m] + 1
 			end
 		elseif i==4 then
-			local cures = 1
+			local cures = 0
+			if TrinityAccessible("Green Trinity") then
+				cures = 1
+			end
 			if ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1) 
 			and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1) then
 				cures = cures+1
@@ -711,9 +714,15 @@ function GetAvailability()
 				magicAvailable[m] = magicAvailable[m] + 1
 			end
 		else
-			magicAvailable[m] = 2
+			magicAvailable[m] = 0
+			if TrinityAccessible("Red Trinity") then
+				magicAvailable[m] = 1
+			end
+			if TrinityAccessible("Yellow Trinity") then
+				magicAvailable[m] = magicAvailable[m] + 1
+			end
 			if dalmatiansAvailable == 99 then
-				magicAvailable[m] = 3
+				magicAvailable[m] = magicAvailable[m] + 1
 			end
 		end
 	end
