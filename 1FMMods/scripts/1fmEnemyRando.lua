@@ -15,6 +15,7 @@ local OCseed = 0x2389480 - offset
 local state = 0x2863958 - offset
 local bittestRender = 0x232A470 - offset
 local combo = 0x2DE24B4 - offset
+local soraHP = 0x2D592CC - offset
 local soraPointer = 0x2534680 - offset
 local bossPointer = 0x2D338D0 - offset
 local malPointer = 0x2D338A8 - offset
@@ -78,13 +79,12 @@ local shadows = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 local bandit = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
 				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
 				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
+				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
 				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
 				"xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2230",
-				"xa_ex_2250", "xa_ex_2270", "xa_ex_2280",
-				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
-				"xa_ex_2340", "xa_ex_2380",
-				"xa_ex_2390", "xa_pp_3020"}
+				"xa_ex_2220", "xa_ex_2230", "xa_ex_2250", "xa_ex_2270",
+				"xa_ex_2290", "xa_ex_2320", "xa_ex_2340",
+				"xa_pp_3020"}
 				
 local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_3000",
 			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
@@ -257,6 +257,7 @@ function Djb2(str)
 end
 
 function RoomWarp(w, r)
+	WriteByte(soraHP, ReadByte(soraHP+4))
 	WriteByte(warpType1, 5)
 	WriteByte(warpType2, 10)
 	WriteByte(worldWarp, w)
@@ -293,11 +294,11 @@ function AddAddrs()
 	addrs[3][0xAC0800-offset] = PickRandom(normal) --2nd district shadow
 	addrs[3][0xB17240-offset] = PickRandom(leon) --tt leon
 	--addrs[3][0xAC0840-offset] = PickRandom(normal) --2nd district soldier
-	addrs[3][0xA97840-offset] = PickRandom(normal) --alleyway shadow
+	addrs[3][0xA97840-offset] = PickRandom(lite) --alleyway shadow
 	addrs[3][0xA97800-offset] = PickRandom(lite) --alleyway soldier
 	addrs[3][0xB16D80-offset] = PickRandom(normal) --1st district shadow
 	addrs[3][0xB0AC00-offset] = PickRandom(normal) --3rd district shadow
-	addrs[3][0xB0ABC0-offset] = PickRandom(normal) --3rd district soldier
+	addrs[3][0xB0ABC0-offset] = PickRandom(lite) --3rd district soldier
 	addrs[3][0x9CAB80-offset] = PickRandom(normal) --gizmo shadow
 	--addrs[3][0xB0ACA0-offset] = test[math.random(#test)] --guard armor
 	--addrs[5][0xA20480-offset] = boss[math.random(#boss)] --treehouse sabor
@@ -323,11 +324,11 @@ function AddAddrs()
 	--addrs[11][0xAD0640-offset] = PickRandom(normal) --oc red
 	--addrs[11][0xAD0680-offset] = PickRandom(normal) --oc blue
 	--addrs[11][0xAD06C0-offset] = PickRandom(normal) --oc blue
-	addrs[8][0x95C2C0-offset] = PickRandom(normal) --alley bandit
-	addrs[8][0x953940-offset] = PickRandom(normal) --mainstreet bandit
-	addrs[8][0xA826C0-offset] = PickRandom(normal) --plaza bandit
+	addrs[8][0x95C2C0-offset] = PickRandom(bandit) --alley bandit
+	addrs[8][0x953940-offset] = PickRandom(bandit) --mainstreet bandit
+	addrs[8][0xA826C0-offset] = PickRandom(bandit) --plaza bandit
 	addrs[8][0x9E0180-offset] = PickRandom(lite) --desert: cave bandit
-	addrs[8][0x91ABC0-offset] = PickRandom(normal) --bazaar bandit
+	addrs[8][0x91ABC0-offset] = PickRandom(bandit) --bazaar bandit
 	--addrs[8][0x9C4440-offset] = test[math.random(#test)] --pot cent 1
 	--addrs[8][0x9C4480-offset] = test[math.random(#test)] --pot cent 2
 	--addrs[8][0x9C43C0-offset] = test[math.random(#test)] --pot cent pot spider
@@ -423,6 +424,12 @@ function Exceptions(addr)
 	elseif ReadByte(cutsceneFlags+0xB05) >= 0x49 and addr == 0x992F00-offset then
 		return true
 	elseif addr == 0xA54540-offset and (ReadByte(room) == 5 or ReadByte(room) == 11) then
+		return true
+	elseif (addr == 0xA97800-offset and ReadByte(cutsceneFlags+0xB04) < 0x20) or
+		(addr == 0xA97840-offset and ReadByte(cutsceneFlags+0xB04) >= 0x20) then
+		return true
+	elseif (addr == 0xB0AC00-offset and ReadByte(cutsceneFlags+0xB04) >= 0x20) or
+		(addr == 0xB0ABC0-offset and ReadByte(cutsceneFlags+0xB04) < 0x20) then
 		return true
 	end
 	return not (ReadByte(addr) == 120 and ReadByte(addr+1) == 97)
