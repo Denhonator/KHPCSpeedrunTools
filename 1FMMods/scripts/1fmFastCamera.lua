@@ -64,7 +64,7 @@ function _OnFrame()
 		
 		if math.abs(ReadFloat(speed)) == 1.0 then -- This way it works for inverted camera
 			WriteFloat(speed, ReadFloat(speed) * overallSpeed)
-			WriteFloat(speed-4, ReadFloat(speed) * overallSpeedV)
+			WriteFloat(speed-4, ReadFloat(speed-4) * overallSpeedV)
 		end
 		
 		if math.abs(ReadFloat(cameraInputH)) > 0.05 then
