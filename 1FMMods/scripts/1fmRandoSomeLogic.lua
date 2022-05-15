@@ -2552,7 +2552,7 @@ function FlagFixes()
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
 		end
 		
-		if ReadByte(cutsceneFlags+0xB05) <= 0x1A then
+		if ReadByte(cutsceneFlags+0xB05) <= 0x1A and ReadByte(room) ~= prevRoom then
 			for i=0,5 do
 				if itemids[0xD9+i] ~= 0xD9+i and ReadByte(room) == 0xC then
 					WriteByte(slides+i, 0)
@@ -2611,7 +2611,7 @@ function FlagFixes()
 			WriteByte(libraryFlag, 2)
 		end
 	end
-	
+
 	if ReadByte(cutsceneFlags+0xB00) == 0xDC then
 		WriteByte(gummiFlagBase+11, 3)
 	end
