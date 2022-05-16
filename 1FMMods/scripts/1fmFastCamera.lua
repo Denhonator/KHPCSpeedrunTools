@@ -67,15 +67,19 @@ function _OnFrame()
 			WriteFloat(speed-4, ReadFloat(speed-4) * overallSpeedV)
 		end
 		
-		if math.abs(ReadFloat(cameraInputH)) > 0.05 then
-			WriteFloat(curSpeedH, math.min(math.max(currentSpeedH + ReadFloat(cameraInputH) * accelerationSpeed, -0.44), 0.44))
-		else
-			WriteFloat(curSpeedH, currentSpeedH * (1.0 - deaccelerationSpeed * 10))
+		if ReadFloat(curSpeedH) ~= 0 then
+			if math.abs(ReadFloat(cameraInputH)) > 0.05 then
+				WriteFloat(curSpeedH, math.min(math.max(currentSpeedH + ReadFloat(cameraInputH) * accelerationSpeed, -0.44), 0.44))
+			else
+				WriteFloat(curSpeedH, currentSpeedH * (1.0 - deaccelerationSpeed * 10))
+			end
 		end
-		if math.abs(ReadFloat(cameraInputV)) > 0.05 then
-			WriteFloat(curSpeedV, math.min(math.max(currentSpeedV - ReadFloat(cameraInputV) * accelerationSpeedV, -0.44), 0.44))
-		else
-			WriteFloat(curSpeedV, currentSpeedV * (1.0 - deaccelerationSpeedV * 10))
+		if ReadFloat(curSpeedV) ~= 0 then
+			if math.abs(ReadFloat(cameraInputV)) > 0.05 then
+				WriteFloat(curSpeedV, math.min(math.max(currentSpeedV - ReadFloat(cameraInputV) * accelerationSpeedV, -0.44), 0.44))
+			else
+				WriteFloat(curSpeedV, currentSpeedV * (1.0 - deaccelerationSpeedV * 10))
+			end
 		end
 		lastSpeedH = currentSpeedH
 		lastSpeedV = currentSpeedV
