@@ -2502,24 +2502,24 @@ function FlagFixes()
 	end
 	
 	-- Fall in flight sections without glide
-	if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
-		local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
-		if ReadByte(world) == 0xD then
-			if ReadByte(room) == 8 and soraYPos > 600 then
-				InstantContinue()
-			elseif ReadByte(room) == 9 and soraYPos > 900 then
-				RoomWarp(0xD, 0x27)
-			end
-		end
+	-- if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
+		-- local soraYPos = ReadFloat(ReadLong(soraPointer)+0x14, true)
+		-- if ReadByte(world) == 0xD then
+			-- if ReadByte(room) == 8 and soraYPos > 600 then
+				-- InstantContinue()
+			-- elseif ReadByte(room) == 9 and soraYPos > 900 then
+				-- RoomWarp(0xD, 0x27)
+			-- end
+		-- end
 		
-		if ReadByte(world) == 0x10 then
-			if ReadByte(room) == 0x1A and soraYPos > -400 then
-				InstantContinue()
-			elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
-				WriteFloat(ReadLong(soraPointer)+0x14, -7000, true)
-			end
-		end
-	end
+		-- if ReadByte(world) == 0x10 then
+			-- if ReadByte(room) == 0x1A and soraYPos > -400 then
+				-- InstantContinue()
+			-- elseif ReadByte(room) == 0x21 and soraYPos > 2500 then
+				-- WriteFloat(ReadLong(soraPointer)+0x14, -7000, true)
+			-- end
+		-- end
+	-- end
 	
 	if ReadByte(cutsceneFlags+0xB07) < 0x11 then
 		if ReadByte(world) == 4 and ReadByte(room) == 3 and ReadFloat(soraHUD) == 1 then
