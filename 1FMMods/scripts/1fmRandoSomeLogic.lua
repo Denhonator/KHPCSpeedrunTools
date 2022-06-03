@@ -9,7 +9,7 @@ LUAGUI_DESC = "Use with InstantGummi"
 -- For example, early scan and dodge roll would be:
 -- local earlyAbilities = {0x8A, 0x96}
 
-local earlyAbilities = {0x8A}
+local earlyAbilities = {}
 
 -- Variable below determines how weapon stats will be randomized.
 -- 0 = Not at all
