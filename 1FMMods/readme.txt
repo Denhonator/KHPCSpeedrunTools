@@ -22,6 +22,9 @@ InstantGummi:
 - To go to Hollow Bastion 2, select the warp point that takes you there
 - There is a possibility that going to Deep Jungle or Neverland for the first time will not initiate the opening cutscenes. In this case, report the issue. You can progress the game by going to treehouse/cabin
 
+HookShip:
+- Causes the ship to always appear when traveling to Neverland for the first time
+
 Unskippable:
 - Allows skipping unskippable cutscenes (Wonderland, HB2)
 - Can not skip text boxes or "mini cutscenes" such as drinking enlarge/shrink potions in Wonderland
