@@ -51,6 +51,8 @@ local summonsReturned = 0x2DE66FC - offset
 local summons = 0x2DE61A0 - offset
 local inventory = 0x2DE5E6A - offset
 local tornPageCount = 0x2DE6DD0 - offset
+local poohProgress = 0x2DE7718 - offset
+local poohProgress2 = 0x2DE6DF0 - offset
 local emblemCount = 0x2DE787D - offset
 local slides = 0x2DE6BD7 - offset
 local evidence = 0x2DE67D8 - offset
@@ -441,7 +443,7 @@ function ItemCompatibility(i, r)
 end
 
 function Salable(i)
-	return i < 0xB2 or i==0xD2 or i==0xE3 or i>=0xE5
+	return i < 0xB2 or i==0xD2 or i==0xE3 or i>=0xE6
 end
 
 -- simple string hashing algorithm designed by Daniel J. Bernstein
@@ -1935,7 +1937,7 @@ function GenerateSpoilers()
 		if chests[c] then
 			local it = 1
 			local ab = 0
-			if chests[c]%0x10==0 then
+			if chests[c]%0x10==0 and vanillaChests[c] == nil then
 				it = itemids[chests[c]//0x10]
 			elseif chests[c]%0x10==0xE and rewards[(chests[c]//0x10)+1] then
 				if rewards[(chests[c]//0x10)+1]%0x100 == 0xF0 then
@@ -1963,7 +1965,7 @@ function GenerateSpoilers()
 	end
 	
 	for r=1, 0xA9 do
-		if rewards[r] then
+		if rewards[r] and vanillaRewards[r] == nil then
 			local it = rewards[r] % 0x100 == 0xF0 and itemids[rewards[r]//0x100] or 1
 			local itype = ItemType(it)
 			local ab = 0
@@ -2569,6 +2571,12 @@ function FlagFixes()
 	end
 	
 	if ReadByte(world) == 6 then
+		if ReadInt(poohProgress) == 0 then
+			WriteInt(poohProgress, 1) --Intro cutscene
+			WriteInt(poohProgress2, 0x00020002) --1st and 2nd area
+			WriteInt(poohProgress2+4, 0x00020005) --3rd area and 4th (4,9 final)
+			WriteInt(poohProgress2+8, 0x00020002) --5th area and 6th (4,9 final)
+		end
 		if ReadByte(collectedFruits) >= 100 and ReadByte(room) == 4 then
 			WriteInt(minigameTimer, 0)
 		end
