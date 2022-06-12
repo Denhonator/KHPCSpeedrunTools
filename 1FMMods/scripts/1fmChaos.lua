@@ -64,7 +64,7 @@ function _OnInit()
 		local commsA = ReadLong(commandMenuP)
 		for i=0, 0x63 do
 			if validCommands[i] then
-				local command = ReadArrayA(commsA+(i*0x10), 0x10)
+				local command = ReadArray(commsA+(i*0x10), 0x10, true)
 				commandData[i+1] = command
 			end
 		end
@@ -131,7 +131,7 @@ function Randomize()
 	for i=0, 0x63 do
 		if commandData[i+1] then
 			local command = table.remove(pool, math.random(#pool))
-			WriteArrayA(commsA+(i*0x10), command)
+			WriteArray(commsA+(i*0x10), command, true)
 		end
 	end
 	
@@ -145,17 +145,17 @@ function Randomize()
 
 	r = math.random(10)*0.1 + 0.4
 	for i=0, 2 do
-		WriteFloatA(ReadLong(goofyPointer)+0x40+(i*4), r)
+		WriteFloat(ReadLong(goofyPointer)+0x40+(i*4), r, true)
 	end
 	
 	r = math.random(10)*0.1 + 0.4
 	for i=0, 2 do
-		WriteFloatA(ReadLong(donaldPointer)+0x40+(i*4), r)
+		WriteFloat(ReadLong(donaldPointer)+0x40+(i*4), r, true)
 	end
 	
 	r = math.random(10)*0.1 + 0.4
 	for i=0, 2 do
-		WriteFloatA(ReadLong(soraPointer)+0x40+(i*4), r)
+		WriteFloat(ReadLong(soraPointer)+0x40+(i*4), r, true)
 	end
 	
 	math.randomseed(baseSeed+ReadByte(world))
@@ -163,11 +163,11 @@ function Randomize()
 	local music1 = musics[math.random(#musics)]
 	local music2 = musics[math.random(#musics)]
 	for i=1, 40 do
-		if musicExists[ReadIntA(musicA)] then
-			WriteByteA(musicA, music1)
+		if musicExists[ReadInt(musicA, true)] then
+			WriteByte(musicA, music1, true)
 		end
-		if musicExists[ReadIntA(musicA+4)] then
-			WriteByteA(musicA+4, music2)
+		if musicExists[ReadInt(musicA+4, true)] then
+			WriteByte(musicA+4, music2, true)
 		end
 		musicA = musicA + 0x20
 	end
@@ -192,12 +192,12 @@ function Randomize()
 	end
 	
 	local soraAnimSpeedA = ReadLong(soraPointer) + 0x284
-	WriteFloatA(soraAnimSpeedA, 0.7+math.random(6)*0.1)
+	WriteFloat(soraAnimSpeedA, 0.7+math.random(6)*0.1, true)
 	
 	local soraAirA = ReadLong(soraPointer) + 0x70
-	local soraAir = ReadByteA(soraAirA)
+	local soraAir = ReadByte(soraAirA, true)
 	if math.random(10)==10 and (soraAir == 0 or soraAir == 8 or soraAir == 0x18) then
-		WriteByteA(soraAirA, airStatuses[math.random(3)])
+		WriteByte(soraAirA, airStatuses[math.random(3)], true)
 	end
 end
 
@@ -216,14 +216,14 @@ function Revert()
 
 	for i=0, 0x63 do
 		if commandData[i+1] then
-			WriteArrayA(commsA+(i*0x10), commandData[i+1])
+			WriteArray(commsA+(i*0x10), commandData[i+1], true)
 		end
 	end
 
 	for i=0, 2 do
-		WriteFloatA(ReadLong(goofyPointer)+0x40+(i*4), 1)
-		WriteFloatA(ReadLong(donaldPointer)+0x40+(i*4), 1)
-		WriteFloatA(ReadLong(soraPointer)+0x40+(i*4), 1)
+		WriteFloat(ReadLong(goofyPointer)+0x40+(i*4), 1, true)
+		WriteFloat(ReadLong(donaldPointer)+0x40+(i*4), 1, true)
+		WriteFloat(ReadLong(soraPointer)+0x40+(i*4), 1, true)
 		WriteFloat(weaponSize+(i*4), 1)
 	end
 	
@@ -239,7 +239,7 @@ function Revert()
 	end
 	
 	local soraAnimSpeedA = ReadLong(soraPointer) + 0x284
-	WriteFloatA(soraAnimSpeedA, 1.0)
+	WriteFloat(soraAnimSpeedA, 1.0, true)
 end
 
 function _OnFrame()
