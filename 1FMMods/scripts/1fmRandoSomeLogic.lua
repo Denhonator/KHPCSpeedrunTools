@@ -2051,7 +2051,7 @@ function UpdateReports(HUDNow)
 			end
 		end
 		WriteShort(reports, reportStatus)
-		if ReadByte(report1+2) == 0x37 then
+		if ReadShort(report1) == 0x0201 then
 			local mempos = report1
 			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
