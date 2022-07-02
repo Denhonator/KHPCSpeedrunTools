@@ -1883,37 +1883,73 @@ function UpdateInventory(HUDNow)
 end
 
 function StringToKHText(s, mempos)
-	reftable = {[58]=0x6B, [38]=0x61, [40]=0x74, [41]=0x75, [39]=0x71, [45]=0x6E, [46]=0x68, [10]=2, [12]=0xF}
+	reftable = {[58]=0x6B, [38]=0x61, [40]=0x74, [41]=0x75, [39]=0x71, 
+				[45]=0x6E, [46]=0x68, [10]=2, [12]=0xF}
+	reftable2 = {[132]=0xCF, [150]=0xDD, [164]=0xE6, [182]=0xF4}
 	returnTable = {}
+	local skip = false
 	for i=1,#s do
-		local c = string.byte(s, i)
-		if c >= 97 then
-			c = c - 97 + 0x45
-		elseif c >= 65 then
-			c = c - 65 + 0x2B
-		elseif c >= 48 and c <=57 then
-			c = c - 48 + 0x21
-		elseif reftable[c] then
-			c = reftable[c]
-		else
-			c = 1
-		end
-		if mempos >= 0 then
-			WriteByte(mempos, c)
-			mempos = mempos + 1
-			if c==0xF then
-				WriteByte(mempos, 1)
+		if not skip then
+			local c = string.byte(s, i)
+			if c == 195 then
+				i = i+1
+				c = string.byte(s, i)
+				if c >= 128 and c <= 130 then
+					c = c + 86
+				elseif c >= 135 and c <= 143 then
+					c = c + 73
+				elseif c >= 145 and c <= 148 then
+					c = c + 74
+				elseif c >= 153 and c <= 156 then
+					c = c + 69
+				elseif c >= 160 and c <= 162 then
+					c = c + 67
+				elseif c >= 167 and c <= 175 then
+					c = c + 64
+				elseif c >= 177 and c <= 180 then
+					c = c + 63
+				elseif c >= 185 and c <= 188 then
+					c = c + 60
+				elseif reftable2[c] then
+					c = reftable2[c]
+				else
+					c = 1
+				end
+				skip = true
+			else
+				if c >= 97 then
+					c = c - 97 + 0x45
+				elseif c >= 65 then
+					c = c - 65 + 0x2B
+				elseif c >= 48 and c <=57 then
+					c = c - 48 + 0x21
+				elseif reftable[c] then
+					c = reftable[c]
+				else
+					c = 1
+				end
+			end
+			if mempos >= 0 then
+				WriteByte(mempos, c)
 				mempos = mempos + 1
+				if c==0xF then
+					WriteByte(mempos, 1)
+					mempos = mempos + 1
+				end
+			else
+				returnTable[#returnTable + 1] = c
+				if c==0xF then
+					returnTable[#returnTable + 1] = 1
+				end
 			end
 		else
-			returnTable[#returnTable + 1] = c
-			if c==0xF then
-				returnTable[#returnTable + 1] = 1
-			end
+			skip = false
 		end
 	end
-	if mempos < 0 then
+	if mempos == -1 then
 		returnTable[#returnTable + 1] = 0
+		return returnTable
+	elseif mempos < -1 then
 		return returnTable
 	end
 	WriteByte(mempos, 0)
@@ -2022,6 +2058,35 @@ function GenerateReports()
 	end
 end
 
+function ArrayReplace(source, f, r)
+	index = 1
+	local newarray = {}
+	for i=1,#source do
+		if source[i] == f[index] then
+			index = index + 1
+			if index > #f then
+				for j=1, i+1-index do
+					newarray[j] = source[j]
+				end
+				for j=1, #r do
+					newarray[#newarray+1] = r[j]
+				end
+				for j=#newarray+1, #source + (#r - #f) do
+					newarray[j] = source[j + (#f - #r)]
+				end
+				return newarray, true
+			end
+		elseif source[i] == f[1] then
+			index = 2
+		else
+			index = 1
+		end
+	end
+	if #newarray == 0 then
+		return source, false
+	end
+end
+
 function UpdateReports(HUDNow)
 	if HUDNow < 1 then
 		local reportTable = {[1]=8, [2]=7, [4]=6, [8]=5, [16]=4, [32]=3, [64]=2, [128]=1, 
@@ -2052,11 +2117,53 @@ function UpdateReports(HUDNow)
 		end
 		WriteShort(reports, reportStatus)
 		if ReadShort(report1) == 0x0201 then
+			local hintLang = sets["HintLanguage"]
+			if hintLang == nil or hintLang == "auto" then
+				if ReadInt(report1+2) == 0x524D4937 then
+					hintLang = "german"
+				elseif ReadInt(report1+2) == 0x4B564536 then
+					hintLang = "spanish"
+				end
+			end
+			ConsoleLog(hintLang)
+			
+			local enwords = {}
+			local transwords = {}
+			local translation = io.open(string.format("randofiles/%s.txt", hintLang))
+			if translation ~= nil then
+				while true do
+					local line = translation:read("*l")
+					if not line then
+						break
+					end
+					local words = {}
+					for w in line:gmatch("([^=]*)") do 
+						words[#words+1] = w
+					end
+					enwords[#enwords+1] = StringToKHText(string.gsub(words[1], '^%s*(.-)%s*$', '%1'), -2)
+					transwords[#transwords+1] = StringToKHText(string.gsub(words[2], '^%s*(.-)%s*$', '%1'), -2)
+					--ConsoleLog(string.format("%s = %d",words[1],#words[1]))
+					--ConsoleLog(string.format("%s = %d",words[2],#words[1]))
+				end
+				translation:close()
+			end
+
 			local mempos = report1
 			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
-				WriteArray(mempos, reportData[i])
-				mempos = mempos + #reportData[i]
+				trdata = reportData[i]
+				if #transwords > 0 then
+					for j=1,#transwords do
+						for k=1,4 do
+							trdata, didreplace = ArrayReplace(trdata,enwords[j],transwords[j])
+							if not didreplace then
+								break
+							end
+						end
+					end
+				end
+				WriteArray(mempos, trdata)
+				mempos = mempos + #trdata
 			end
 			ConsoleLog("Wrote hints")
 		end

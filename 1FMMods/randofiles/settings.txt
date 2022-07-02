@@ -5,7 +5,7 @@ c D9 corresponds to a random slide, DF corresponds to a random evidence
 c For example, if you want to unrandomize slide, evidence and entry pass:
 c Unrandomize = D9 DF E5
 
-Unrandomize =
+Unrandomize = D9 DF E5
 
 c If you want guaranteed abilities on first level ups, put the hex codes for unequipped abilities here.
 c Maximum 4 or they will replace other abilities.
@@ -65,6 +65,13 @@ c ReplaceChests = a7 a8 a9 aa
 c However note that if the chest contains a reward, you should unrandomize that reward as well, else whatever ends up on that reward will be inaccessible
 c So you should also include 4c 9b 4d in ReplaceRewards
 
-VanillaChests =
+VanillaChests = 131
 
 ReplaceChests = 
+
+c Language for hints in Ansem's Reports
+c "auto" detects a supported language automatically
+c You can also manually define the language here
+c In that case, a txt file with the given name must exist, and translations will be read from there
+
+HintLanguage = auto
