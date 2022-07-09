@@ -705,6 +705,14 @@ function BossAdjust(bossHP)
 		def = 0x1E
 	end
 	
+	if ReadInt(0x233D034-offset) == 20224 then
+		for i=1,5 do
+			if hp[i] > 0 then
+				WriteShort(bossHPs[i], 1)
+			end
+		end
+	end
+	
 	local kills = 0
 	for i=1,5 do
 		if hp[i] == 0 then
