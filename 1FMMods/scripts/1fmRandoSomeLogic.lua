@@ -2589,26 +2589,41 @@ function FlagFixes()
 		WriteInt(shopTableBase+(i*0xD4)-4, baseCount+(clearedWorlds*2))
 	end
 	
-	if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
-		local warpAddr = ReadLong(scriptPointer)+0x6F9D
-		if ReadByte(warpAddr, true)==2 and ReadByte(warpAddr+4, true)==1 then
-			ConsoleLog("DI to EotW warp")
-			WriteByte(warpAddr,0x10, true)
-			WriteByte(warpAddr+4,0x1E, true)
-			WriteByte(party1, 1)
-			WriteByte(party1+1, 2)
+	-- if ReadByte(world) == 1 and ReadByte(blackfade)>0 then -- DI Day2 Warp to EotW
+		-- local warpAddr = ReadLong(scriptPointer)+0x6F9D
+		-- if ReadByte(warpAddr, true)==2 and ReadByte(warpAddr+4, true)==1 then
+			-- ConsoleLog("DI to EotW warp")
+			-- WriteByte(warpAddr,0x10, true)
+			-- WriteByte(warpAddr+4,0x1E, true)
+			-- WriteByte(party1, 1)
+			-- WriteByte(party1+1, 2)
+		-- end
+	-- end
+	
+	if ReadByte(world) == 1 and ReadByte(blackfade)>0 and ReadByte(worldFlagBase+0xA) == 2 then -- DI Day2 Warp to EotW
+		RoomWarp(0x10, 0x42)
+		WriteByte(party1, 1)
+		WriteByte(party1+1, 2)
+		WriteByte(worldFlagBase+0xA, 0)
+		if ReadByte(cutsceneFlags+0xB0F) >= 0x5A then
+			WriteByte(cutsceneFlags+0xB0F, 0)
 		end
 	end
 	
-	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
-		local warpAddr = ReadLong(scriptPointer)+0x677D
-		if ReadByte(warpAddr, true)==0xF and ReadByte(warpAddr+4, true)==0xB and ReadByte(blackfade)>0 then
-			ConsoleLog("Skipping HB cutscenes to avoid story flag conflicts")
-			WriteByte(cutsceneFlags+0xB0D, 0x6A)
-			WriteByte(warpAddr,0xD, true)
-			WriteByte(warpAddr+4,0x9, true)
-		end
+	if ReadByte(cutsceneFlags+0xB0D) == 0x64 then
+		RoomWarp(0xD, 0x27)
+		WriteByte(cutsceneFlags+0xB0D, 0x6A)
 	end
+	
+	-- if ReadByte(cutsceneFlags+0xB0D) == 0x64 then -- Skip HB cutscene at end of Neverland
+		-- local warpAddr = ReadLong(scriptPointer)+0x677D
+		-- if ReadByte(warpAddr, true)==0xF and ReadByte(warpAddr+4, true)==0xB and ReadByte(blackfade)>0 then
+			-- ConsoleLog("Skipping HB cutscenes to avoid story flag conflicts")
+			-- WriteByte(cutsceneFlags+0xB0D, 0x6A)
+			-- WriteByte(warpAddr,0xD, true)
+			-- WriteByte(warpAddr+4,0x9, true)
+		-- end
+	-- end
 	
 	-- Fall in flight sections without glide
 	-- if ReadFloat(soraHUD) > 0 and ReadLong(soraPointer) > 0 then
