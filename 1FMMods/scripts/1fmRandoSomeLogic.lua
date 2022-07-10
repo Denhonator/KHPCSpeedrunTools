@@ -136,6 +136,7 @@ local menuCheck = 0x2E8EE98 - offset
 local input = 0x233D034 - offset
 local menuState = 0x2E8F268 - offset
 local report1 = 0x1D03584 - offset
+local language = 0x2E17BAB - offset
 local worldWarp = 0x233CB70 - offset
 local roomWarp = worldWarp + 4
 local roomWarpRead = 0x232A588 - offset
@@ -1884,7 +1885,7 @@ end
 
 function StringToKHText(s, mempos)
 	reftable = {[58]=0x6B, [38]=0x61, [40]=0x74, [41]=0x75, [39]=0x71, 
-				[45]=0x6E, [46]=0x68, [10]=2, [12]=0xF}
+				[45]=0x6E, [46]=0x68, [10]=2, [12]=0xF, [43]=0x63}
 	reftable2 = {[132]=0xCF, [150]=0xDD, [164]=0xE6, [182]=0xF4}
 	returnTable = {}
 	local skip = false
@@ -2022,12 +2023,43 @@ function GenerateSpoilers()
 		end
 	end
 	
+	local hintLang = sets["HintLanguage"]
+	if hintLang == nil or hintLang == "auto" then
+		if ReadInt(language) == 0x47575049 then
+			hintLang = "german"
+		elseif ReadInt(language) == 0x472B0053 then
+			hintLang = "spanish"
+		end
+	end
+	ConsoleLog(hintLang)
+	
+	local enwords = {}
+	local transwords = {}
+	local translation = io.open(string.format("randofiles/%s.txt", hintLang))
+	if translation ~= nil then
+		while true do
+			local line = translation:read("*l")
+			if not line then
+				break
+			end
+			local words = {}
+			for w in line:gmatch("([^=]*)") do 
+				words[#words+1] = w
+			end
+			enwords[#enwords+1] = string.gsub(words[1], '^%s*(.-)%s*$', '%1')
+			transwords[#transwords+1] = string.gsub(words[2], '^%s*(.-)%s*$', '%1')
+			--ConsoleLog(string.format("%s = %d",words[1],#words[1]))
+			--ConsoleLog(string.format("%s = %d",words[2],#words[1]))
+		end
+		translation:close()
+	end
+	
 	f = io.open("randofiles/spoilers.txt", "w")
 	for i=1, #spoilers do
-		f:write(spoilers[i] .. "\n")
+		f:write(Translate(spoilers[i], enwords, transwords, true) .. "\n")
 	end
 	for i=1, #miscSpoilers do
-		f:write(miscSpoilers[i] .. "\n")
+		f:write(Translate(miscSpoilers[i], enwords, transwords, true) .. "\n")
 	end
 	f:close()
 
@@ -2056,6 +2088,29 @@ function GenerateReports()
 		end
 		reportData[i] = StringToKHText(hintText, -1)
 	end
+end
+
+function Translate(s, en, tr, isString)
+	local translated = s
+	if isString then
+		translated = s:gsub("[()-]", "")
+	end
+	if #tr > 0 then
+		for j=1,#tr do
+			for k=1,4 do
+				if isString then
+					translated = translated:gsub(en[j]:gsub("()-]", ""),tr[j])
+					break
+				else
+					translated, didreplace = ArrayReplace(translated,en[j],tr[j])
+					if not didreplace then
+						break
+					end
+				end
+			end
+		end
+	end
+	return translated
 end
 
 function ArrayReplace(source, f, r)
@@ -2149,19 +2204,8 @@ function UpdateReports(HUDNow)
 			end
 
 			local mempos = report1
-			math.randomseed(Djb2(seedstring))
 			for i=1, 13 do
-				trdata = reportData[i]
-				if #transwords > 0 then
-					for j=1,#transwords do
-						for k=1,4 do
-							trdata, didreplace = ArrayReplace(trdata,enwords[j],transwords[j])
-							if not didreplace then
-								break
-							end
-						end
-					end
-				end
+				trdata = Translate(reportData[i], enwords, transwords, false)
 				WriteArray(mempos, trdata)
 				mempos = mempos + #trdata
 			end
