@@ -1,11 +1,21 @@
 c Prevent select key items from being randomized
-c Item ID reference: https://pastebin.com/dfARF8ui
-c Available options: D9, DF, BC, BD, BE, BF, C0, C1, C2, C3, C4, C5, C6, C7, CD, E5
-c D9 corresponds to a random slide, DF corresponds to a random evidence
-c For example, if you want to unrandomize slide, evidence and entry pass:
-c Unrandomize = D9 DF E5
+c Item IDs are listed in items.txt
+c Available options: BC, BD, BE, BF, C0, C1, C2, C3, C4, C5, C6, C7, CD, E5
+c For example, if you want to unrandomize Entry Pass and Navi-Gummi:
+c Unrandomize = CD E5
 
-Unrandomize = D9 DF E5
+Unrandomize =
+
+c Define how many slides are required to progress Deep Jungle
+c And how many evidence is required to progress Wonderland
+c All 4 evidence and 6 slides will be randomized and accessible regardless
+c Slides must be picked up in Deep Jungle after meeting the condition, and must be picked up to progress
+c This is to avoid rare softlocks that happened previously
+c Evidence also becomes available for pick up after meeting condition, but is unnecessary to pick up
+
+RequiredSlides = 1
+
+RequiredEvidence = 1
 
 c If you want guaranteed abilities on first level ups, put the hex codes for unequipped abilities here.
 c Maximum 4 or they will replace other abilities.
@@ -22,7 +32,7 @@ c 1 = Weak weapons buffed
 c 2 = Stats shuffled between keyblades (str and magic only)
 c 3 = Stats shuffled and weak stats buffed
 
-WeaponStatRando = 3
+WeaponStatRando = 2
 
 c Stack abilities. Currently, you can sometimes get duplicate abilities.
 c This will determine if having multiple equipped is beneficial
@@ -56,7 +66,7 @@ c ReplaceRewards = 95 97
 
 VanillaRewards = 
 
-ReplaceRewards = 
+ReplaceRewards = 95 97
 
 c Unrandomize chests
 c List the chest IDs from Chests.txt that you want to unrandomize
@@ -65,7 +75,7 @@ c ReplaceChests = a7 a8 a9 aa
 c However note that if the chest contains a reward, you should unrandomize that reward as well, else whatever ends up on that reward will be inaccessible
 c So you should also include 4c 9b 4d in ReplaceRewards
 
-VanillaChests = 131
+VanillaChests =
 
 ReplaceChests = 
 

@@ -55,8 +55,12 @@ local poohProgress = 0x2DE7718 - offset
 local poohProgress2 = 0x2DE6DF0 - offset
 local emblemCount = 0x2DE787D - offset
 local slides = 0x2DE6BD7 - offset
+local slideActive = 0x2D3CA70 - offset
 local evidence = 0x2DE67D8 - offset
-local clawmarkbox = 0x2D39230 - offset
+local evidenceActiveForest = 0x2D39B90 - offset
+local evidenceActiveBizarre = 0x2D39230 - offset
+local khamaActive = 0x2D34730 - offset
+local theonActive = 0x2D35EA0 - offset
 local emblemDoor = 0x2DE788C - offset
 local minigameStatus = 0x2DE73A5 - offset
 local gummiInventory = 0x2DF1848 - offset
@@ -77,6 +81,8 @@ local libraryFlag = 0x2DE7AF3 - offset
 local scriptPointer = 0x23944B8 - offset
 local OCCupUnlock = 0x2DE77D0 - offset
 local OCCupDialog = 0x23966B0 - offset
+local ardoffset = 0x2394BB0 - offset
+local ardoffsetClock = 0x2394F10 - offset
 local textBox = 0x23D09E4 - offset
 local cupCurrentSeed = 0x2389480 - offset
 local waterwayGate = 0x2DE763D - offset
@@ -183,9 +189,7 @@ local prevTTFlag = 0
 local OCTextFix = 0
 local introJump = true
 
-local important = {0xD9, 0xDF, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE5}
-local randomEvidence = 0xDF
-local randomSlide = 0xD9
+local important = {0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE5}
 local shopPool = {}
 local gummiNames = {}
 local itemNames = {}
@@ -303,6 +307,8 @@ function _OnInit()
 			ConsoleLog(rewardDetails[1][1])
 		end
 
+		sets["RequiredSlides"] = 0
+		sets["RequiredEvidence"] = 0
 		for s in io.lines("randofiles/settings.txt") do
 			local setting = ""
 			for word in s:gmatch("%w+") do
@@ -333,6 +339,8 @@ function _OnInit()
 				elseif setting == "StackAbilities" then
 					stackAbilities = tonumber(word)
 					ConsoleLog("StackAbilities: " .. word)
+				elseif tonumber(word) ~= nil then
+					sets[setting] = tonumber(word)
 				else
 					sets[setting] = word
 				end
@@ -408,11 +416,20 @@ function ItemType(i)
 	if (i >= 0x77 and i <= 0x85) then
 		attributes = attributes .. "GoofyWeapon"
 	end
-	if (i >= 0xCE and i <= 0xD1) then
+	if (i >= 0xCE and i <= 0xD1) or i == 0x89 or i == 0x8C then
 		attributes = attributes .. "Summon"
 	end
-	if i == 0xE3 or i == 0xE6 or i==0xD2 or i==0xA8 or i==0xAA or i==0xAE 
-	or i==0xB0 or i==0xB2 or i==0xB7 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
+	if (i>=0xD9 and i<=0xDE) then
+		attributes = attributes .. "Slide"
+	end
+	if (i>=0xDF and i<=0xE2) then
+		attributes = attributes .. "Evidence"
+	end
+	if i==0xB2 or i==0xB7 then
+		attributes = attributes .. "Book"
+	end
+	if i == 0xE3 or i == 0xE6 or i==0xD2 or i==0xA8 or i==0xAA or i==0xAE
+	or i==0xB0 or i==0xC8 or i==0xC9 or i==0xCB or i==0xCC then
 		attributes = attributes .. "NonImportant"
 	end
 	
@@ -470,7 +487,7 @@ function TrinityAccessible(s)
 	for i=1,5 do
 		if trinityTexts[i] == s then
 			if trinityTable[2] == i then
-				return ItemAccessible(randomSlide, 1)
+				return ItemAccessible(0xD9, 6)
 			elseif trinityTable[4] == i then
 				return ItemAccessible(0xE5, 1)
 			end
@@ -539,10 +556,10 @@ function IsAccessible(t, i)
 			thisAccess = thisAccess or ItemAccessible(0xE4, 1)
 		end
 		if string.find(t[i][k], "Slides") then
-			thisAccess = thisAccess or ItemAccessible(randomSlide, 1)
+			thisAccess = thisAccess or ItemAccessible(0xD9, 6)
 		end
 		if string.find(t[i][k], "Evidence") then
-			thisAccess = thisAccess or ItemAccessible(randomEvidence, 1)
+			thisAccess = thisAccess or ItemAccessible(0xDF, 4)
 		end
 		if string.find(t[i][k], "Entry Pass") then
 			thisAccess = thisAccess or ItemAccessible(0xE5, 1)
@@ -650,6 +667,21 @@ function GetAvailability()
 		end
 	end
 	
+	local slideCount = 0
+	local evidenceCount = 0
+	for i=0xD9,0xDE do
+		slideCount = slideCount + math.min(itAv[i], 1)
+	end
+	for i=0xDF, 0xE2 do
+		evidenceCount = evidenceCount + math.min(itAv[i], 1)
+	end
+	if slideCount >= 6 then
+		itAv[0xD9] = 6
+	end
+	if slideCount >= 4 then
+		itAv[0xDF] = 4
+	end
+	
 	for i=1,0x1FF do
 		itemsAvailable[i] = itAv[i]
 		abilitiesAvailable[i] = abAv[i]
@@ -665,9 +697,12 @@ function GetAvailability()
 				magicAvailable[m] = 3
 			end
 		elseif i==2 then
-			magicAvailable[m] = 2
+			magicAvailable[m] = 1
+			if ItemAccessible(0xDF, 4) then
+				magicAvailable[m] = 2
+			end
 			if ItemAccessible(0xE5, 1) then
-				magicAvailable[m] = 3
+				magicAvailable[m] = magicAvailable[m] + 1
 			end
 		elseif i==3 then
 			magicAvailable[m] = 1
@@ -686,7 +721,7 @@ function GetAvailability()
 			and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1) then
 				cures = cures+1
 			end
-			if ItemAccessible(randomSlide, 1) then
+			if ItemAccessible(0xD9, 6) then
 				cures = cures+1
 			end
 			magicAvailable[m] = cures
@@ -740,7 +775,9 @@ function Randomize()
 	end
 
 	local missableRewards = {0, 2}
-	local addItems = {0xA9,0xAB,0xAC,0xAD,0xAF,0xB1,0x89,0x8C}
+	local addItems = {0x89,0x8C,0xA9,0xAB,0xAC,0xAD,0xAF,0xB1,0xB2,0xB7,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF,0xE0,0xE1,0xE2}
+	local addRewards = {}
+	local addChests = {}
 	local importantPool = {0x5, 0x39, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x91, 0x92, 0x93, 0x94, 0xE8}
 	local rewardPool = {}
 	local randomGets = {}
@@ -750,19 +787,11 @@ function Randomize()
 		itemids[i] = i
 	end
 	
-	--Add random evidence and slide
-	randomEvidence = 0xDE + math.random(4)
-	randomSlide = 0xD8 + math.random(6)
-	local findEvidence = false
-	local findSlide = false
-	for i=1,#important do
-		if important[i] >= 0xDF and important[i] <= 0xE2 then
-			important[i] = randomEvidence
-			findEvidence = true
-		end
-		if important[i] >= 0xD9 and important[i] <= 0xDE then
-			important[i] = randomSlide
-			findSlide = true
+	for i=1,#addItems do
+		if addItems[i] <= 0x8C or math.random(2) == 2 then
+			addChests[#addChests+1] = addItems[i]*0x10
+		else
+			addRewards[#addRewards+1] = addItems[i] * 0x100 + 0xF0
 		end
 	end
 
@@ -832,9 +861,7 @@ function Randomize()
 	local order = GetRandomOrder(0xFF)
 	for j=0x1, 0xFF do
 		local i = order[j]
-		if (i >= 0xDF and i <= 0xE2 and findEvidence) or i == randomSlide and findSlide then
-			itemids[i] = 1
-		elseif string.find(ItemType(i), "Important") then
+		if string.find(ItemType(i), "Important") then
 			if #randomFiller > 0 then
 				itemids[i] = table.remove(randomFiller, math.random(#randomFiller))
 			elseif not (i >= 0xC3 and i <= 0xC7) then
@@ -897,8 +924,8 @@ function Randomize()
 						else
 							rewards[i] = rewards[i] + 1
 						end
-					-- elseif #addItems > 5 then
-						-- rewards[i] = table.remove(addItems, math.random(#addItems)) * 0x100 + 0xF0
+					elseif #addRewards > 0 then
+						rewards[i] = table.remove(addRewards, 1)
 					end
 				end
 			end
@@ -929,8 +956,8 @@ function Randomize()
 					elseif #missableRewards > 0 then
 						chests[i] = table.remove(missableRewards, 1) * 0x10 + 0xE
 						ConsoleLog("Added missable reward to chest")
-					elseif #addItems > 0 then
-						chests[i] = table.remove(addItems, 1) * 0x10
+					elseif #addChests > 0 then
+						chests[i] = table.remove(addChests, 1)
 					else
 						chests[i] = chests[i] + 4
 					end
@@ -940,6 +967,7 @@ function Randomize()
 	end
 	
 	ConsoleLog(string.format("importantPool: %d", #importantPool))
+	ConsoleLog(string.format("AddItems: %d", #addChests + #addRewards))
 	
 	for i=1, 0x1FF do
 		if chests[i] and (i >= 0x1BF or i == 1) and ((chests[i]-4) % 0x10) == 0 then
@@ -1171,9 +1199,7 @@ function Randomize()
 end
 
 function FixSeed()
-	local keyitems = {0xE5, 0xE4, 0xCD, 0xBC, 0xBD, 0xBE, 0xBF}
-	keyitems[#keyitems+1] = randomEvidence
-	keyitems[#keyitems+1] = randomSlide
+	local keyitems = {0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF, 0xE0, 0xE1, 0xE2, 0xE5, 0xE4, 0xCD, 0xBC, 0xBD, 0xBE, 0xBF}
 	
 	for i=1, #keyitems do
 		local keyitem = keyitems[i]
@@ -1184,7 +1210,7 @@ function FixSeed()
 				local c = o[j]
 				if chests[c] and chests[c]%0x10==0 then
 					local it = itemids[chests[c]//0x10]
-					if it == keyitem and it ~= chests[c]//0x10 then
+					if it == keyitem then
 						local temp = chests[validswap]
 						chests[validswap] = chests[c]
 						chests[c] = temp
@@ -1217,7 +1243,7 @@ function FixSeed()
 end
 
 function ValidSeed()
-	local keyitems = {0xE5, randomEvidence, randomSlide, 0xE4, 0xCD}
+	local keyitems = {0xE5, 0xE4, 0xCD, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF, 0xE0, 0xE1, 0xE2}
 	for k=1, 5 do
 		itemsAvailable = {}
 		abilitiesAvailable = {}
@@ -1960,13 +1986,13 @@ end
 function GenerateSpoilers()
 	local spoilers = {}
 	local miscSpoilers = {}
-	for i=1, 0xFF do
-		if ItemType(itemids[i]) == "Important" and ItemType(i)~="" then
-			spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
-		elseif itemids[i] == 0xB2 or itemids[i] == 0xB7 then
-			miscSpoilers[(#miscSpoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
-		end
-	end
+	-- for i=1, 0xFF do
+		-- if ItemType(itemids[i]) == "Important" and ItemType(i)~="" then
+			-- spoilers[(#spoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
+		-- elseif itemids[i] == 0xB2 or itemids[i] == 0xB7 then
+			-- miscSpoilers[(#miscSpoilers)+1] = string.format("%s\nbecame\n%s\n\n", itemNames[i][1], itemNames[itemids[i]][1])
+		-- end
+	-- end
 	
 	abilityNames[0x16] = "Dodge Roll"
 	
@@ -1993,7 +2019,9 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Chest at\n%s:\n%s\n\n",
 					chestDetails[c][2], itemNames[it][1])
-			elseif itype == "Summon" or it == 0xD3 or it == 0xD5 or it==0xD6 or it==0x89 or it==0x8C then
+			elseif itype == "Summon" or (itype == "Slide" and sets["RequiredSlides"]>0) or
+					(itype == "Evidence" and sets["RequiredEvidence"]>0) or itype == "Book"
+					or it == 0xD3 or it == 0xD5 or it==0xD6 then
 				miscSpoilers[(#miscSpoilers)+1] = string.format(
 					"Chest at\n%s:\n%s\n\n",
 					chestDetails[c][2], itemNames[it][1])
@@ -2015,7 +2043,9 @@ function GenerateSpoilers()
 				spoilers[(#spoilers)+1] = string.format(
 					"Reward %s\n%s:\n%s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
-			elseif (itype == "Summon" or it == 0xD3 or it==0x89 or it==0x8C) and rewardDetails[r][2]~="Chest" then
+			elseif (itype == "Summon" or it == 0xD3 or (itype == "Slide" and sets["RequiredSlides"]>0) or
+					(itype == "Evidence" and sets["RequiredEvidence"]>0) or itype == "Book")
+					and rewardDetails[r][2]~="Chest" then
 				miscSpoilers[(#miscSpoilers)+1] = string.format(
 					"Reward %s\n%s:\n%s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
@@ -2458,9 +2488,17 @@ function FlagFixes()
 		WriteByte(oppositeTrigger, 0)
 	end
 	
-	local simbaAddr = ReadLong(scriptPointer) + 0x131C8
-	
 	if ReadByte(world) == 3 and ReadByte(room) == 0x13 then
+		local simbaAddr = ReadLong(scriptPointer) + 0x131C8
+		local earthshine = -0x423B
+		if ReadInt(simbaAddr, true) == 0x53090000 then
+			simbaAddr = simbaAddr + 0x460 --Spanish
+		elseif ReadInt(simbaAddr, true) == 0x01400500 then
+			simbaAddr = simbaAddr + 0x10B0 --German
+		elseif ReadInt(simbaAddr, true) == 0x6D090000 then
+			simbaAddr = simbaAddr - 0x1F68 --Japanese
+			earthshine = -0x4227
+		end
 		if ReadByte(simbaAddr, true)==5 then
 			local hasSummons = {}
 			local hasAll = true
@@ -2481,35 +2519,21 @@ function FlagFixes()
 			-- Nullify normal simba acqusition
 			WriteInt(simbaAddr+4, c and 0x18000238 or 0x18000004, true)
 			WriteInt(simbaAddr+12, c and 0x18000233 or 0x18000004, true)
-			
-			WriteByte(simbaAddr-0x423B, c and 0xD1 or 0xCF, true)
+			-- Replace another summon with Simba
+			WriteByte(simbaAddr+earthshine, c and 0xD1 or 0xCF, true)
 			WriteByte(simbaAddr+0x16FB, c and 0xD1 or 0xCF, true)
 			WriteByte(simbaAddr+0x164B, c and 5 or 1, true)
 			WriteByte(simbaAddr+0x164B+8, c and 5 or 1, true)
-			
-			-- WriteByteA(simbaAddr-0x423B+0xC, genie and 0x89 or 0xCE)
-			-- WriteByteA(simbaAddr+0x16FB-0x12C, genie and 0x89 or 0xCE)
-			-- WriteByteA(simbaAddr+0x151F, genie and 2 or 0)
-			-- WriteByteA(simbaAddr+0x151F+8, genie and 2 or 0)
-			
-			-- WriteByteA(simbaAddr-0x423B+0x18, tbell and 0x8C or 0xD0)
-			-- WriteByteA(simbaAddr+0x16FB+0x12C, tbell and 0x8C or 0xD0)
-			-- WriteByteA(simbaAddr+0x1777, tbell and 3 or 4)
-			-- WriteByteA(simbaAddr+0x1777+8, tbell and 3 or 4)
 		end
 	end
 	
-	if ReadByte(world) == 8 and ReadInt(simbaAddr-0x103fb, true) == 0x18000238 then
-		for i=0, 40 do
-			WriteInt(simbaAddr-0x103fb+i*4-0x20, 0x00000009, true)
-		end
+	if ReadByte(world) == 8 and ReadByte(room) == 0x12 and ReadByte(ardoffset) == 0x7F then
+		WriteByte(ardoffset, 0xD1)
 		ConsoleLog("Removed normal genie")
 	end
 	
-	if ReadByte(world) == 0xD and ReadInt(simbaAddr-0xd653, true) == 0x18000238 then
-		for i=0, 40 do
-			WriteInt(simbaAddr-0xd653+i*4-0x20, 0x00000009, true)
-		end
+	if ReadByte(world) == 0xD and ReadByte(room) == 9 and ReadShort(ardoffsetClock) == 0x5F2 then
+		WriteShort(ardoffsetClock, 0x628)
 		ConsoleLog("Removed normal tinker bell")
 	end
 
@@ -2689,11 +2713,23 @@ function FlagFixes()
 		-- end
 	-- end
 	
-	if ReadByte(cutsceneFlags+0xB07) < 0x11 then
-		if ReadByte(world) == 4 and ReadByte(room) == 3 and ReadFloat(soraHUD) == 1 then
-			WriteInt(evidence, ReadInt(inventory+0xDE))
-		elseif ReadByte(world) == 4 and ReadByte(room) == 1 and ReadByte(inventory+0xDF) == 1 then
-			WriteLong(clawmarkbox, 0)
+	if ReadByte(cutsceneFlags+0xB07) < 0x11 and ReadByte(world) == 4 then
+		local evidenceCount = 0
+		for i=0xDE, 0xE1 do
+			evidenceCount = evidenceCount + math.min(ReadByte(inventory+i), 1)
+		end
+		if evidenceCount >= sets["RequiredEvidence"] then
+			for i=0,3 do
+				WriteByte(evidence+i, math.min(ReadByte(inventory+0xDE+i), 1))
+			end
+		elseif ReadByte(inventory+0xDF) == 0 then
+			if ReadByte(room) == 4 and ReadLong(evidenceActiveForest) == 0x0004001300008003 then
+				WriteLong(evidenceActiveForest, 0)
+				WriteLong(evidenceActiveForest+0x4B0, 0)
+			elseif ReadByte(room) == 1 and ReadLong(evidenceActiveBizarre) == 0x0004001300008003 then
+				WriteLong(evidenceActiveBizarre, 0)
+				WriteLong(evidenceActiveBizarre+0x4B0, 0)
+			end
 		end
 	end
 	
@@ -2720,12 +2756,24 @@ function FlagFixes()
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room)-0xF)*10))
 		end
 		
-		if ReadByte(cutsceneFlags+0xB05) <= 0x1A and ReadByte(room) ~= prevRoom then
-			for i=0,5 do
-				if itemids[0xD9+i] ~= 0xD9+i and ReadByte(room) == 0xC then
-					WriteByte(slides+i, 0)
-				else
-					WriteByte(slides+i, ReadByte(inventory+0xD8+i))
+		if ReadByte(cutsceneFlags+0xB05) <= 0x1A then
+			-- for i=0,5 do
+				-- if itemids[0xD9+i] ~= 0xD9+i and ReadByte(room) == 0xC then
+					-- WriteByte(slides+i, 0)
+				-- else
+					-- WriteByte(slides+i, ReadByte(inventory+0xD8+i))
+				-- end
+			-- end
+			if ReadByte(room) == 0xC then
+				local slideCount = 0
+				for i=0,5 do
+					slideCount = slideCount + math.min(ReadByte(inventory+0xD8+i))
+				end
+				for i=0,5 do
+					if slideCount < sets["RequiredSlides"] and ReadByte(inventory+0xD8+i) == 0
+						and ReadInt(slideActive+i*0x4B0+4) == 0x40018+(i>1 and i+4 or i) then
+						WriteLong(slideActive+i*0x4B0, 0)
+					end
 				end
 			end
 		end
@@ -2783,6 +2831,11 @@ function FlagFixes()
 		
 		if ReadByte(libraryFlag) == 0 then
 			WriteByte(libraryFlag, 2)
+		end
+		
+		if ReadByte(room) == 5 and ReadLong(khamaActive) == 0x0004000000008003 then
+			WriteLong(khamaActive, 0)
+			WriteLong(theonActive, 0)
 		end
 	end
 

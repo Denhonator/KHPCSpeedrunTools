@@ -175,12 +175,12 @@ AE  Ansem's Report 7 ; Oogie ; Jack-In-The-Box
 AF  Ansem's Report 8 ; -
 B0  Ansem's Report 9 ; Hook ; Green Trinity
 B1  Ansem's Report 10 ; -
-B2  Khama Vol. 8    ; -
+B2  Khama Vol. 8    ; - ; -
 B3  Salegg Vol. 6   ; -
 B4  Azal Vol. 3     ; -
 B5  Mava Vol. 3     ; -
 B6  Mava Vol. 6     ; -
-B7  Theon Vol. 6    ; Library ; Khama
+B7  Theon Vol. 6    ;  ; -
 B8  Nahara Vol. 5   ; -
 B9  Hafet Vol. 4    ; -
 BA  Empty Bottle    ; -
@@ -214,16 +214,16 @@ D5  Torn Page 2     ; - ; -
 D6  Torn Page 3     ; - ; -
 D7  Torn Page 4     ; -
 D8  Torn Page 5     ; -
-D9  Slide 1         ; -
-DA  Slide 2         ; -
-DB  Slide 3         ; -
-DC  Slide 4         ; -
-DD  Slide 5         ; -
-DE  Slide 6         ; -
-DF  Footprints      ; -
-E0  Claw Marks      ; -
-E1  Stench          ; -
-E2  Antenna         ; -
+D9  Slide 1         ; - ; -
+DA  Slide 2         ; - ; -
+DB  Slide 3         ; - ; -
+DC  Slide 4         ; - ; -
+DD  Slide 5         ; - ; -
+DE  Slide 6         ; - ; -
+DF  Footprints      ; - ; -
+E0  Claw Marks      ; - ; -
+E1  Stench          ; - ; -
+E2  Antenna         ; - ; -
 E3  Forget-Me-Not   ; - ; Jack-In-The-Box
 E4  Jack-In-The-Box ; - ; -
 E5  Entry Pass      ; -

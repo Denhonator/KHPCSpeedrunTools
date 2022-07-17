@@ -1,6 +1,6 @@
 00  Elixir ; Defeat Leon ; Missable
 01  Dodge Roll ; End of TT
-02  Mega Potion ; Aerith before Guard Armor ; Missable
+02  Mega-Potion ; Aerith TT ; Missable
 03  Dodge Roll ; ? ; ?
 04  Treasure Magnet ; ? ; ?
 05  Second Wind ; ? ; ?
@@ -51,7 +51,7 @@
 32  Mythril ; Chest ; -
 33  Wishing Star ; Chest ; -
 34  Mythril Shard ; Dalmatians' House ; 42 Puppies
-35  Megaelixir ; Dalmatians' House ; 60 Puppies
+35  Megalixir ; Dalmatians' House ; 60 Puppies
 36  Orichalcum ; Dalmatians' House ; 72 Puppies
 37  Tech Boost ; Dalmatians' House ; 90 Puppies
 38  Brave Warrior ; Guard Armor
@@ -67,7 +67,7 @@
 42  Orichalcum ; Chest ; -
 43  Camping Set ; Chest ; -
 44  Mega-Potion ; Chest ; -
-45  Megaelixir ; Chest ; -
+45  Megalixir ; Chest ; -
 46  Mythril Shard ; Chest ; -
 47  Orichalcum ; Chest ; -
 48  Lady Luck ; Chest ; -
@@ -107,7 +107,7 @@
 6A  Mega-Ether ; Postcard 4 ; Postcard 4
 6B  Mythril ; Postcard 5 ; Postcard 5
 6C  Elixir ; Postcard 6 ; Postcard 6
-6D  Mega-Elixir ; Postcard 7 ; Postcard 7
+6D  Megalixir ; Postcard 7 ; Postcard 7
 6E  Orichalcum ; Postcard 8 ; Postcard 8
 6F  AP Up ; Postcard 9 ; Postcard 9
 70  Defense Up ; Postcard 10 ; Postcard 10
@@ -131,8 +131,8 @@
 82  Cottage ; Chest ; -
 83  Gale ; Final Dimension ; EotW
 84  AP Up ; Final Dimension ; EotW
-85  Megaelixir ; ? ; ?
-86  Megaelixir ; ? ; ?
+85  Megalixir ; ? ; ?
+86  Megalixir ; ? ; ?
 87  Spirit Gem ; Chest ; -
 88  Thunder Gem ; Chest ; -
 89  Frost Gem ; Chest ; -
@@ -141,11 +141,11 @@
 8C  Lucid Gem ; Chest ; -
 8D  Mighty Shield ; Chest ; -
 8E  Elixir ; Chest ; -
-8F  Elixir ; 10 Fruits Jungle Slider ; Slides
-90  AP Up ; 20 Fruits Jungle Slider ; Slides
-91  Dark Matter ; 30 Fruits in Jungle Slider ; Slides
-92  Defense Up ; 40 Fruits Jungle Slider ; Slides
-93  Power Up ; 50 Fruits Jungle Slider ; Slides
+8F  Elixir ; Jungle Slider ; Slides
+90  AP Up ; Jungle Slider ; Slides
+91  Dark Matter ; Jungle Slider ; Slides
+92  Defense Up ; Jungle Slider ; Slides
+93  Power Up ; Jungle Slider ; Slides
 94  Diamond Dust ; Ice Titan ; Entry Pass
 95  One-Winged Angel ; Sephiroth ; HB1 ; HB2 ; EotW ; Entry Pass
 96  Zantetsuken ; Kurt Zisa ; HB1 ; HB2 ; EotW

@@ -1,11 +1,8 @@
 10 Fruits Jungle Slider = 10 Früchte Urwaldrutsche
 1st District = Traverse Mitte
-20 Fruits Jungle Slider = 20 Früchte Urwaldrutsche
 2nd District = Traverse Nord
-30 Fruits Jungle Slider = 30 Früchte Urwaldrutsche
-40 Fruits Jungle Slider = 40 Früchte Urwaldrutsche
 42 Puppies = 42 Welpen
-50 Fruits Jungle Slider = 50 Früchte Urwaldrutsche
+Jungle Slider = Urwaldrutsche
 51 Puppies = 51 Welpen
 60 Puppies = 60 Welpen
 72 Puppies = 72 Welpen
@@ -13,7 +10,7 @@
 Ability Stud  = Fleißring
 Accessory Shop = Accessoire-Laden
 Adamant Shield = Adaman-Schild
-Aerith before Guard Armor = Aerith vor dem Panzerrüstor
+Aerith TT = Aerith ST
 Aero Arts = Aero-Meister
 Aero Magic = Aero-Magie
 Aeroga Magic = Aeroga-Magie
