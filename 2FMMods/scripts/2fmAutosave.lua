@@ -26,6 +26,18 @@ function _OnInit()
 end
 
 function _OnFrame()
+SVE = ReadInt(0x9B8130 - offset2)
+BL1 = 825258853 --es01, considered a world-transition. Plays when you idle too long in Pause Menu
+BL2 = 892363362 --bb05
+BL3 = 808609893 --eh20
+BL4 = 842164325 --eh22
+BL5 = 858941541 --eh23
+BL6 = 875718757 --eh24
+BL7 = 892495973 --eh25
+BL8 = 909273189 --eh26
+BL9 = 926050405 --eh27
+BL10 = 942827621 --eh28
+BL11 = 959604837 --eh29
 	if canExecute then
 		local input = ReadInt(0x29F89B0-offset)
 		if (input == 8192 and ReadInt(saveselect) == 0 and ReadInt(save1+0xC) ~= prevSave) then 
@@ -36,7 +48,7 @@ function _OnFrame()
 				ConsolePrint("Loaded autosave")
 			end
 		end
-		if ReadInt(continue+0xC) ~= prevContinue and ReadByte(0x711438-offset2) == 0 then
+		if ReadInt(continue+0xC) ~= prevContinue and ReadByte(0x711438-offset2) == 0 and SVE ~= BL1 and SVE ~= BL2 and SVE ~= BL3 and SVE ~= BL4 and SVE ~= BL5 and SVE ~= BL6 and SVE ~= BL7 and SVE ~= BL8 and SVE ~= BL9 and SVE ~= BL10 and SVE ~= BL11 then
 			local f = io.open("KH2autosave.dat", "wb")
 			f:write(ReadString(continue, 0x10FC0))
 			f:close()
