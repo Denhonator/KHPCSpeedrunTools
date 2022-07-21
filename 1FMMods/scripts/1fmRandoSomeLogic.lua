@@ -896,8 +896,8 @@ function Randomize()
 			itemData[i][12] = price // 0x100
 		end
 		
-		if ItemType(i) ~= "" and not (i>=0xC8 and i<=0xCC) and sets["RandomShops"] ~= "0" and
-			(sets["RandomShops"] ~= "1" or ItemType(i) ~= "Important") then
+		if ItemType(i) ~= "" and not (i>=0xC8 and i<=0xCC) and sets["RandomShops"] ~= 0 and
+			(sets["RandomShops"] ~= 1 or ItemType(i) ~= "Important") then
 			shopPool[(#shopPool)+1] = i
 		end
 	end
@@ -2978,8 +2978,8 @@ function _OnFrame()
 		end
 	end
 	
-	if ReadByte(RCName) ~= 0x36 and (sets["WarpAnywhere"] == "0" or
-		(sets["WarpAnywhere"] == "1" and (ReadByte(stateFlag) ~= 0 or HUDNow < 1))) then
+	if ReadByte(RCName) ~= 0x36 and (sets["WarpAnywhere"] == 0 or
+		(sets["WarpAnywhere"] == 1 and (ReadByte(stateFlag) ~= 0 or HUDNow < 1))) then
 		WriteByte(0x2E1CC28-offset, 0)
 	elseif ReadByte(RCName) == 0x36 then
 		WriteByte(0x2E1CC28-offset, 3)
