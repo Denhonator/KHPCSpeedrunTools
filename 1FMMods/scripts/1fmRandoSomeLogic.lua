@@ -2527,8 +2527,8 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(world) == 8 and ReadByte(room) == 0x12 and ReadByte(ardoffset) == 0x7F then
-		WriteByte(ardoffset, 0xD1)
+	if ReadByte(world) == 8 and ReadByte(room) == 0x12 and ReadShort(ardoffset) == 0x7F then
+		WriteShort(ardoffset, 0xD1)
 		ConsoleLog("Removed normal genie")
 	end
 	
