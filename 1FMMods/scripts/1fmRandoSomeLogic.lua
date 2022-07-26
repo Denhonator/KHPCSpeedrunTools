@@ -2722,12 +2722,16 @@ function FlagFixes()
 			for i=0,3 do
 				WriteByte(evidence+i, math.min(ReadByte(inventory+0xDE+i), 1))
 			end
-		elseif ReadByte(inventory+0xDF) == 0 then
-			if ReadByte(room) == 4 and ReadLong(evidenceActiveForest) == 0x0004001300008203 then
-				WriteLong(evidenceActiveForest, 0)
-				WriteLong(evidenceActiveForest+0x4B0, 0)
-			elseif ReadByte(room) == 1 and ReadLong(evidenceActiveBizarre) == 0x0004001300008003 then
+		end
+		if ReadByte(room) == 4 and ReadLong(evidenceActiveForest) == 0x0004001300008203 
+								and evidenceCount < sets["RequiredEvidence"] then
+			WriteLong(evidenceActiveForest, 0)
+			WriteLong(evidenceActiveForest+0x4B0, 0)
+		elseif ReadByte(room) == 1 and ReadLong(evidenceActiveBizarre) == 0x0004001300008003 then
+			if ReadByte(inventory+0xDF) > 0 or evidenceCount < sets["RequiredEvidence"] then
 				WriteLong(evidenceActiveBizarre, 0)
+			end
+			if evidenceCount < sets["RequiredEvidence"] then
 				WriteLong(evidenceActiveBizarre+0x4B0, 0)
 			end
 		end
