@@ -355,8 +355,9 @@ split
 			if(current.soraHP == 0)vars.splitTimer = 10;
 			break;
 	}
-	if(vars.splitTimer > 0 && current.fightend != true){
-		vars.splitTimer = --vars.splitTimer;
+	if(vars.splitTimer > 0){
+		if (current.fightend != true)--vars.splitTimer;
+		//print(vars.splitTimer.ToString());
 		return;
 	}
 	
