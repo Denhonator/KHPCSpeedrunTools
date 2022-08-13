@@ -2771,12 +2771,19 @@ function FlagFixes()
 			if ReadByte(room) == 0xC then
 				local slideCount = 0
 				for i=0,5 do
-					slideCount = slideCount + math.min(ReadByte(inventory+0xD8+i))
+					slideCount = slideCount + math.min(ReadByte(inventory+0xD8+i), 1)
 				end
-				for i=0,5 do
-					if slideCount < sets["RequiredSlides"] and ReadByte(inventory+0xD8+i) == 0
-						and ReadInt(slideActive+i*0x4B0+4) == 0x40018+(i>1 and i+4 or i) then
-						WriteLong(slideActive+i*0x4B0, 0)
+				if slideCount < sets["RequiredSlides"] then
+					local o = 0
+					while ReadInt(slideActive+o*0x4B0+4) ~= 0x40018 and ReadInt(slideActive+o*0x4B0+4) ~= 0 and o > -5 do
+						o = o-1
+					end
+					if ReadInt(slideActive+o*0x4B0+4) == 0x40018 then
+						for i=0,5 do
+							if ReadInt(slideActive+(i+o)*0x4B0+4) == 0x40018+(i>1 and i+4 or i) then
+								WriteLong(slideActive+(i+o)*0x4B0, 0)
+							end
+						end
 					end
 				end
 			end
