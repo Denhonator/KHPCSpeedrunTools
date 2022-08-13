@@ -2723,16 +2723,27 @@ function FlagFixes()
 				WriteByte(evidence+i, math.min(ReadByte(inventory+0xDE+i), 1))
 			end
 		end
-		if ReadByte(room) == 4 and ReadLong(evidenceActiveForest) == 0x0004001300008203 
-								and evidenceCount < sets["RequiredEvidence"] then
-			WriteLong(evidenceActiveForest, 0)
-			WriteLong(evidenceActiveForest+0x4B0, 0)
-		elseif ReadByte(room) == 1 and ReadLong(evidenceActiveBizarre) == 0x0004001300008003 then
-			if ReadByte(inventory+0xDF) > 0 or evidenceCount < sets["RequiredEvidence"] then
-				WriteLong(evidenceActiveBizarre, 0)
+		if ReadByte(room) == 4 and evidenceCount < sets["RequiredEvidence"] then
+			local o = 0
+			while ReadInt(evidenceActiveForest+4+o*0x4B0) ~= 0x40013 and ReadInt(evidenceActiveForest+4+o*0x4B0) ~= 0 and o > -5 do
+				o = o-1
 			end
-			if evidenceCount < sets["RequiredEvidence"] then
-				WriteLong(evidenceActiveBizarre+0x4B0, 0)
+			if ReadLong(evidenceActiveForest+o*0x4B0) == 0x0004001300008203 then
+				WriteLong(evidenceActiveForest+o*0x4B0, 0)
+				WriteLong(evidenceActiveForest+(o+1)*0x4B0, 0)
+			end
+		elseif ReadByte(room) == 1 then
+			local o = 0
+			while ReadInt(evidenceActiveBizarre+4+o*0x4B0) ~= 0x40013 and ReadInt(evidenceActiveBizarre+4+o*0x4B0) ~= 0 and o > -5 do
+				o = o-1
+			end
+			if ReadLong(evidenceActiveBizarre+o*0x4B0) == 0x0004001300008003 then
+				if ReadByte(inventory+0xDF) > 0 or evidenceCount < sets["RequiredEvidence"] then
+					WriteLong(evidenceActiveBizarre+o*0x4B0, 0)
+				end
+				if evidenceCount < sets["RequiredEvidence"] then
+					WriteLong(evidenceActiveBizarre+(o+1)*0x4B0, 0)
+				end
 			end
 		end
 	end
