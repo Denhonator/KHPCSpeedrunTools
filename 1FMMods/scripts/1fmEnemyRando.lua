@@ -325,7 +325,7 @@ function AddAddrs()
 	--addrs[11][0xAD0680-offset] = PickRandom(normal) --oc blue
 	--addrs[11][0xAD06C0-offset] = PickRandom(normal) --oc blue
 	addrs[8][0x95C2C0-offset] = PickRandom(bandit) --alley bandit
-	addrs[8][0x953940-offset] = PickRandom(bandit) --mainstreet bandit
+	addrs[8][0x953940-offset] = PickRandom(lite) --mainstreet bandit
 	addrs[8][0xA826C0-offset] = PickRandom(bandit) --plaza bandit
 	addrs[8][0x9E0180-offset] = PickRandom(lite) --desert: cave bandit
 	addrs[8][0x91ABC0-offset] = PickRandom(bandit) --bazaar bandit
