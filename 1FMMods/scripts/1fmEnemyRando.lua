@@ -189,7 +189,7 @@ local behe = {"xa_lm_3030", "xa_ew_2040", "xa_ex_2310"}
 local lsb = {"xa_ex_2010", "xa_ex_2030", "xa_ex_2070", "xa_ex_2090", "xa_ex_2100"}
 
 local riku1 = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
-				"xa_ex_1030", "xa_ex_1040", "xa_ex_1150", "xa_pi_3000",
+				"xa_ex_1030", "xa_ex_1040", "xa_pi_3000",
 				"xa_pp_3000", "xa_ew_2040", "xa_ew_2050", "xa_he_3000",
 				"xa_tz_3000", "xa_ex_1580"}
 				
