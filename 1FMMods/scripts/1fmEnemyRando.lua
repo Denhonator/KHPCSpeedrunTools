@@ -291,7 +291,7 @@ function AddAddrs()
 	--addrs[3][0xAC0980-offset] = PickRandom(normal) --2nd district yellow
 	--addrs[3][0xAC0940-offset] = PickRandom(normal) --2nd district blue
 	--addrs[3][0xAC0900-offset] = PickRandom(normal) --2nd district red
-	addrs[3][0xAC0800-offset] = PickRandom(normal) --2nd district shadow
+	addrs[3][0xAC0800-offset] = PickRandom(lite) --2nd district shadow
 	addrs[3][0xB17240-offset] = PickRandom(leon) --tt leon
 	--addrs[3][0xAC0840-offset] = PickRandom(normal) --2nd district soldier
 	addrs[3][0xA97840-offset] = PickRandom(lite) --alleyway shadow
