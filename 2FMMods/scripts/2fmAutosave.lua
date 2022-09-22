@@ -40,6 +40,11 @@ BL10 = 942827621 --eh28
 BL11 = 959604837 --eh29
 	if canExecute then
 		local input = ReadInt(0x29F89B0-offset)
+		local LoadingIndicator = 0x8E9DA0-offset2
+		local loadmenu = 0x741320-0x56454E
+		if input == 8192 and ReadByte(loadmenu) == 0x03 then
+			WriteFloat(LoadingIndicator, 90)
+		end
 		if (input == 8192 and ReadInt(saveselect) == 0 and ReadInt(save1+0xC) ~= prevSave) then 
 			local f = io.open("KH2autosave.dat", "rb")
 			if f ~= nil then
