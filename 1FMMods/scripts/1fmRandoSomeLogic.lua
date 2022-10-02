@@ -541,7 +541,8 @@ function IsAccessible(t, i)
 		end
 		if string.find(t[i][k], "HB1") then
 			thisAccess = thisAccess or (ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1)
-									and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1))
+									and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1)
+									and ItemAccessible(0xD9, 6) and ItemAccessible(0xDF, 4))
 		end
 		if string.find(t[i][k], "NaviG") then
 			thisAccess = thisAccess or (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
@@ -678,7 +679,7 @@ function GetAvailability()
 	if slideCount >= 6 then
 		itAv[0xD9] = 6
 	end
-	if slideCount >= 4 then
+	if evidenceCount >= 4 then
 		itAv[0xDF] = 4
 	end
 	
