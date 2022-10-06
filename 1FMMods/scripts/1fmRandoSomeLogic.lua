@@ -2723,6 +2723,10 @@ function FlagFixes()
 			for i=0,3 do
 				WriteByte(evidence+i, math.min(ReadByte(inventory+0xDE+i), 1))
 			end
+		else
+			for i=0,3 do
+				WriteByte(evidence+i, 0)
+			end
 		end
 		if ReadByte(room) == 4 and evidenceCount < sets["RequiredEvidence"] then
 			local o = 0
