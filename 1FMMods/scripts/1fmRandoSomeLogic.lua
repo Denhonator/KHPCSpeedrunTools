@@ -1944,6 +1944,24 @@ function StringToKHText(s, mempos)
 					c = 1
 				end
 				skip = true
+			elseif c == 194 then
+				i = i+1
+				c = string.byte(s, i)
+				if c == 176 then
+					c = 0xF9
+				else
+					c = 1
+				end
+				skip = true
+			elseif c == 197 then
+				i = i+1
+				c = string.byte(s, i)
+				if c == 146 or c == 147 then
+					c = 0xC8 + c-146
+				else
+					c = 1
+				end
+				skip = true
 			else
 				if c >= 97 then
 					c = c - 97 + 0x45
@@ -2123,6 +2141,7 @@ end
 
 function Translate(s, en, tr, isString)
 	local translated = s
+	local replaceoffset = 1
 	if isString then
 		translated = s:gsub("[()-]", "")
 	end
@@ -2133,8 +2152,8 @@ function Translate(s, en, tr, isString)
 					translated = translated:gsub(en[j]:gsub("()-]", ""),tr[j])
 					break
 				else
-					translated, didreplace = ArrayReplace(translated,en[j],tr[j])
-					if not didreplace then
+					translated, replaceoffset = ArrayReplace(translated,en[j],tr[j],replaceoffset)
+					if replaceoffset < 0 then
 						break
 					end
 				end
@@ -2144,10 +2163,10 @@ function Translate(s, en, tr, isString)
 	return translated
 end
 
-function ArrayReplace(source, f, r)
+function ArrayReplace(source, f, r, offset)
 	index = 1
 	local newarray = {}
-	for i=1,#source do
+	for i=offset,#source do
 		if source[i] == f[index] then
 			index = index + 1
 			if index > #f then
@@ -2160,7 +2179,7 @@ function ArrayReplace(source, f, r)
 				for j=#newarray+1, #source + (#r - #f) do
 					newarray[j] = source[j + (#f - #r)]
 				end
-				return newarray, true
+				return newarray, i
 			end
 		elseif source[i] == f[1] then
 			index = 2
@@ -2169,7 +2188,7 @@ function ArrayReplace(source, f, r)
 		end
 	end
 	if #newarray == 0 then
-		return source, false
+		return source, -1
 	end
 end
 
@@ -2209,6 +2228,8 @@ function UpdateReports(HUDNow)
 					hintLang = "german"
 				elseif ReadInt(report1+2) == 0x4B564536 then
 					hintLang = "spanish"
+				elseif ReadInt(report1+2) == 0x4D457134 then
+					hintLang = "french"
 				end
 			end
 			ConsoleLog(hintLang)
