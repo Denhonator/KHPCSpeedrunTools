@@ -2829,6 +2829,11 @@ function FlagFixes()
 			WriteInt(terminusTeleUsable, 0xFFFFD8F0)
 			WriteInt(terminusTeleVisible, 0xC61C4000)
 		end
+	elseif ReadByte(cutsceneFlags+0xB0E) >= 0xC3 and ReadInt(inGummi) > 0 and ReadByte(unlockedWarps+2) < 3 and sets["EotWSkip"] ~= 0 then
+		WriteByte(unlockedWarps+2, 3)
+		WriteByte(cutsceneFlags+0xB0F, math.max(ReadByte(cutsceneFlags+0xB0F), 8))
+		WriteByte(worldFlagBase+0xDC, 0xD)
+		WriteByte(worldFlagBase+0xDF, 0xD)
 	end
 	
 	if ReadByte(battleLevel) % 2 == 1 and ReadByte(cutsceneFlags+0xB0E) < 0x8C then
