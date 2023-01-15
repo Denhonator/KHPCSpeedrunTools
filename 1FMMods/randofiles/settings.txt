@@ -51,6 +51,14 @@ c 2 = No restrictions
 
 WarpAnywhere = 0
 
+c HB2 unlocks EotW World Terminus warp
+c Allows skipping a large portion of End of the World
+c Still requires Navi Gummi as usual, so only speeds things up after necessary items have been found
+c 0 = Disabled
+c 1 = Enabled
+
+EotWSkip = 1
+
 c Shop randomization
 c 0 = Vanilla shops
 c 1 = Shops can have anything but important key items

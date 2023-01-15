@@ -132,8 +132,8 @@ local duo = {"xa_ex_1150", "xa_ex_1030", "xa_ex_1040", "xa_tz_3020"}
 			  
 local parasite = {"xa_he_1000"}
 local pc1riku = {"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010", 
-				"xa_ex_1030", "xa_ex_1040", "xa_ex_1580"}
-			  
+				"xa_ex_1030", "xa_ex_1040"}
+
 local jafar = {"xa_di_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020",
 			  "xa_ex_1160", "xa_ex_1150", "xa_ex_1030", "xa_di_1030",
 			  "xa_pc_3000", "xa_he_1030", "xa_ex_1010",
@@ -156,7 +156,7 @@ sabor = {"xa_tz_3000"}
 local antisora = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
 					"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
 					"xa_ex_1030", "xa_ex_1040", "xa_pp_3000", "xa_ew_2040",
-					"xa_al_3010", "xa_ex_1580"}
+					"xa_al_3010"}
 					
 local hook = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
 				"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
@@ -538,6 +538,7 @@ function BossAdjust(bossHP)
 		str = 0x1F
 		def = 0x18
 		endArd = 0x57
+		endtime = 200
 	elseif w == 0xF and r == 0xB and ReadByte(cutsceneFlags+0xB0E) == 0x50 then
 		addr[1] = 0x2D35EA0 - offset
 		e[1] = addrs[15][0xA2AAC0-offset]

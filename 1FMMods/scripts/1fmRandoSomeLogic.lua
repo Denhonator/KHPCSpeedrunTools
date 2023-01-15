@@ -541,7 +541,8 @@ function IsAccessible(t, i)
 		end
 		if string.find(t[i][k], "HB1") then
 			thisAccess = thisAccess or (ItemAccessible(0xBC, 1) and ItemAccessible(0xBD, 1)
-									and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1))
+									and ItemAccessible(0xBE, 1) and ItemAccessible(0xBF, 1)
+									and ItemAccessible(0xD9, 6) and ItemAccessible(0xDF, 4))
 		end
 		if string.find(t[i][k], "NaviG") then
 			thisAccess = thisAccess or (ItemAccessible(0xC8, 1) and ItemAccessible(0xC9, 1))
@@ -678,7 +679,7 @@ function GetAvailability()
 	if slideCount >= 6 then
 		itAv[0xD9] = 6
 	end
-	if slideCount >= 4 then
+	if evidenceCount >= 4 then
 		itAv[0xDF] = 4
 	end
 	
@@ -1943,6 +1944,24 @@ function StringToKHText(s, mempos)
 					c = 1
 				end
 				skip = true
+			elseif c == 194 then
+				i = i+1
+				c = string.byte(s, i)
+				if c == 176 then
+					c = 0xF9
+				else
+					c = 1
+				end
+				skip = true
+			elseif c == 197 then
+				i = i+1
+				c = string.byte(s, i)
+				if c == 146 or c == 147 then
+					c = 0xC8 + c-146
+				else
+					c = 1
+				end
+				skip = true
 			else
 				if c >= 97 then
 					c = c - 97 + 0x45
@@ -2122,6 +2141,7 @@ end
 
 function Translate(s, en, tr, isString)
 	local translated = s
+	local replaceoffset = 1
 	if isString then
 		translated = s:gsub("[()-]", "")
 	end
@@ -2132,8 +2152,8 @@ function Translate(s, en, tr, isString)
 					translated = translated:gsub(en[j]:gsub("()-]", ""),tr[j])
 					break
 				else
-					translated, didreplace = ArrayReplace(translated,en[j],tr[j])
-					if not didreplace then
+					translated, replaceoffset = ArrayReplace(translated,en[j],tr[j],replaceoffset)
+					if replaceoffset < 0 then
 						break
 					end
 				end
@@ -2143,10 +2163,10 @@ function Translate(s, en, tr, isString)
 	return translated
 end
 
-function ArrayReplace(source, f, r)
+function ArrayReplace(source, f, r, offset)
 	index = 1
 	local newarray = {}
-	for i=1,#source do
+	for i=offset,#source do
 		if source[i] == f[index] then
 			index = index + 1
 			if index > #f then
@@ -2159,7 +2179,7 @@ function ArrayReplace(source, f, r)
 				for j=#newarray+1, #source + (#r - #f) do
 					newarray[j] = source[j + (#f - #r)]
 				end
-				return newarray, true
+				return newarray, i
 			end
 		elseif source[i] == f[1] then
 			index = 2
@@ -2168,7 +2188,7 @@ function ArrayReplace(source, f, r)
 		end
 	end
 	if #newarray == 0 then
-		return source, false
+		return source, -1
 	end
 end
 
@@ -2208,6 +2228,8 @@ function UpdateReports(HUDNow)
 					hintLang = "german"
 				elseif ReadInt(report1+2) == 0x4B564536 then
 					hintLang = "spanish"
+				elseif ReadInt(report1+2) == 0x4D457134 then
+					hintLang = "french"
 				end
 			end
 			ConsoleLog(hintLang)
@@ -2722,6 +2744,10 @@ function FlagFixes()
 			for i=0,3 do
 				WriteByte(evidence+i, math.min(ReadByte(inventory+0xDE+i), 1))
 			end
+		else
+			for i=0,3 do
+				WriteByte(evidence+i, 0)
+			end
 		end
 		if ReadByte(room) == 4 and evidenceCount < sets["RequiredEvidence"] then
 			local o = 0
@@ -2824,6 +2850,11 @@ function FlagFixes()
 			WriteInt(terminusTeleUsable, 0xFFFFD8F0)
 			WriteInt(terminusTeleVisible, 0xC61C4000)
 		end
+	elseif ReadByte(cutsceneFlags+0xB0E) >= 0xC3 and ReadInt(inGummi) > 0 and ReadByte(unlockedWarps+2) < 3 and sets["EotWSkip"] ~= 0 then
+		WriteByte(unlockedWarps+2, 3)
+		WriteByte(cutsceneFlags+0xB0F, math.max(ReadByte(cutsceneFlags+0xB0F), 8))
+		WriteByte(worldFlagBase+0xDC, 0xD)
+		WriteByte(worldFlagBase+0xDF, 0xD)
 	end
 	
 	if ReadByte(battleLevel) % 2 == 1 and ReadByte(cutsceneFlags+0xB0E) < 0x8C then
