@@ -8,6 +8,8 @@ local saveselect = 0x2614A20 - offset2
 local canExecute = false
 local prevBlack = 0
 local prevContinue = 0
+local blacklist = {"es01", "bb05", "eh20", "eh22", "eh23", "eh24", "eh25", "eh26", "eh27", "eh28", "eh29"}
+local blacklisted = false
 
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
@@ -26,26 +28,25 @@ function _OnInit()
 end
 
 function _OnFrame()
-SVE = ReadInt(0x9B8130 - offset2)
-BL1 = 825258853 --es01, considered a world-transition. Plays when you idle too long in Pause Menu
-BL2 = 892363362 --bb05
-BL3 = 808609893 --eh20
-BL4 = 842164325 --eh22
-BL5 = 858941541 --eh23
-BL6 = 875718757 --eh24
-BL7 = 892495973 --eh25
-BL8 = 909273189 --eh26
-BL9 = 926050405 --eh27
-BL10 = 942827621 --eh28
-BL11 = 959604837 --eh29
+SVE = ReadString(0x9B8130 - offset2, 4)
+for i = 1, 11 do
+	if SVE ~= blacklist[i] then
+	blacklisted = false
+	end
+end
+for i = 1, 11 do
+	if SVE == blacklist[i] then
+	blacklisted = true
+	end
+end
 	if canExecute then
 		local input = ReadInt(0x29F89B0-offset)
 		local LoadingIndicator = 0x8E9DA0-offset2
 		local loadmenu = 0x741320-0x56454E
-		if input == 8192 and ReadByte(loadmenu) == 0x03 then
+		if input & 8192 == 8192 and ReadByte(loadmenu) == 0x03 then
 			WriteFloat(LoadingIndicator, 90)
 		end
-		if (input == 8192 and ReadInt(saveselect) == 0 and ReadInt(save1+0xC) ~= prevSave) then 
+		if (input & 8192 == 8192 and ReadInt(saveselect) == 0 and ReadInt(save1+0xC) ~= prevSave) then 
 			local f = io.open("KH2autosave.dat", "rb")
 			if f ~= nil then
 				WriteString(save1, f:read("*a"))
@@ -53,7 +54,7 @@ BL11 = 959604837 --eh29
 				ConsolePrint("Loaded autosave")
 			end
 		end
-		if ReadInt(continue+0xC) ~= prevContinue and ReadByte(0x711438-offset2) == 0 and SVE ~= BL1 and SVE ~= BL2 and SVE ~= BL3 and SVE ~= BL4 and SVE ~= BL5 and SVE ~= BL6 and SVE ~= BL7 and SVE ~= BL8 and SVE ~= BL9 and SVE ~= BL10 and SVE ~= BL11 then
+		if ReadInt(continue+0xC) ~= prevContinue and ReadByte(0x711438-offset2) == 0 and blacklisted == false then
 			local f = io.open("KH2autosave.dat", "wb")
 			f:write(ReadString(continue, 0x10FC0))
 			f:close()
