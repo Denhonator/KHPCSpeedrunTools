@@ -13,6 +13,7 @@ state("KINGDOM HEARTS FINAL MIX")
 	byte hp : "KINGDOM HEARTS FINAL MIX.exe", 0x2D592CC;
 	byte newgame : "KINGDOM HEARTS FINAL MIX.exe", 0x2E98824;
 	byte fightend : "KINGDOM HEARTS FINAL MIX.exe", 0x2D500B8;
+	byte neverland_scene : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE6EDD;
 	ushort w1 : "KINGDOM HEARTS FINAL MIX.exe", 0x233CADC;
 	ushort w2 : "KINGDOM HEARTS FINAL MIX.exe", 0x233CB4C;
 	ushort w3 : "KINGDOM HEARTS FINAL MIX.exe", 0x2D5CAFA;
@@ -71,9 +72,8 @@ startup
 	settings.Add("oppo", true, "Split on Opposite Armor", "main_splits");
 	settings.Add("riku2", true, "Split on Riku 2", "main_splits");
 	settings.Add("behemoth", true, "Split on Behemoth", "main_splits");
-	settings.Add("cher", true, "Split on Arch Chernabog", "main_splits");
+	settings.Add("cher", true, "Split on Chernabog", "main_splits");
 	settings.Add("a2", true, "Split on Ansem 2", "main_splits");
-	settings.Add("a4", true, "Split on Ansem 4", "main_splits");
 
 	settings.Add("optional_splits", true, "All other Any % splits");
 	settings.Add("shadows_1", false, "Split after clearing Shadows 1 (first full group)", "optional_splits");
@@ -100,6 +100,7 @@ startup
 	settings.Add("oogie", true, "Split on Oogie Boogie", "optional_splits");
 	settings.Add("ship", false, "Split on Hooks ship", "optional_splits");
 	settings.Add("anti", true, "Split on Anti Sora", "optional_splits");
+	settings.Add("pre_hook", false, "Split on completing the pre Hook fight", "optional_splits");
 	settings.Add("fake_guard", false, "Split on fake Guard Armor", "optional_splits");
 	settings.Add("riku", true, "Split on Riku 1", "optional_splits");
 	settings.Add("emblem", false, "Split on Emblem Door", "optional_splits");
@@ -144,7 +145,7 @@ startup
 	settings.Add("jj_splits", false, "Splits for Jimminy's Journal categories");
 	settings.Add("atlantica_1", false, "Split on Leaving Atlantica after getting the torn page", "jj_splits");
 	settings.Add("phil_cup", false, "Split on Finishing Phil Cup", "jj_splits");
-	settings.Add("phil_cup_solo", false, "Split on Finishing Phil Cup solo (split triggers on red armor death)", "jj_splits");
+	settings.Add("phil_cup_solo", false, "Split on Finishing Phil Cup solo", "jj_splits");
 	settings.Add("pg_cup", false, "Split on Finishing Pegasus Cup", "jj_splits");
 	settings.Add("hades_seed_49", false, "Split on Finishing first 10 seeds of Hades Cup", "jj_splits");
 	settings.Add("hades_seed_39", false, "Split on Finishing second 10 seeds of Hades Cup", "jj_splits");
@@ -174,138 +175,153 @@ split
 	vars.summontimer = current.summonload ? vars.summontimer + (current.paused ? 0 : 1) : 0;
 	// station of awakening splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 0)){
-		if(current.room == 2 && old.room == 1 && vars.shadows_1 == 0){
+		if(settings["shadows_1"] && current.room == 2 && old.room == 1 && vars.shadows_1 == 0){
 			vars.shadows_1 = 1;
-				return settings["shadows_1"];
+				return true;
 		}
-		if(current.sora_level == 2 && current.room == 4 && (current.text_progress == 0 && old.text_progress > 0) && vars.shadows_2 == 0){
+		if(settings["shadows_2"] && current.sora_level == 2 && current.room == 4 && (current.text_progress == 0 && old.text_progress > 0) && vars.shadows_2 == 0){
 			vars.shadows_2 = 1;
-				return settings["shadows_2"];
+				return true;
 		}
-		if((current.fightend == 2 && old.fightend == 0) || (current.hp == 0 && old.hp > 0) && current.room == 4 && vars.ds1 == 0){
+		if(settings["ds1"] && ((current.fightend == 2 && old.fightend == 0) || (current.hp == 0 && old.hp > 0)) && current.room == 4 && vars.ds1 == 0){
 			vars.shadows_1 = 1;
-				return settings["ds1"];
+				return true;
 		}
 	}
 	// destiny islands splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 1)){
-		if(current.room == 3 && old.room == 0 && vars.day_1 == 0) {
+		if(settings["day_1"] && current.room == 3 && old.room == 0 && vars.day_1 == 0) {
 			vars.day_1 = 1;
-			return settings["day_1"];
+			return true;
 		}
-		if(old.room == 2 && current.room == 3 && current.scene == 2 && vars.destiny == 0) {
+		if(settings["destiny"] && old.room == 2 && current.room == 3 && current.scene == 2 && vars.destiny == 0) {
 			vars.destiny = 1;
-			return settings["destiny"];
+			return true;
 		}
-		if((current.fightend == 2 && old.fightend == 0) && vars.ds2 == 0) {
+		if(settings["ds2"] && (current.fightend == 2 && old.fightend == 0) && vars.ds2 == 0) {
 			vars.ds2 = 1;
-			return settings["ds2"];
+			return true;
 		}
 	}
 	// traverse town splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 3)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 2 && vars.guard == 0){
+			if(settings["guard"] && current.room == 2 && vars.guard == 0){
 				vars.guard = 1;
-				return settings["guard"];
+				return true;
 			}
-			if(current.room == 1){
-				if(vars.fake_guard == 0) {
-					vars.fake_guard = 1;
-					if (settings["manual_back_step"]){
+			if(current.room == 1 && vars.oppo == 0){
+				if(settings["fake_guard"] && settings["oppo"]) {
+					if(vars.fake_guard == 0) {
+						vars.fake_guard = 1;
 						vars.back_split = "fake";
-					}
-					return settings["fake_guard"];
-				} else if (vars.oppo == 0) {
-					if (!settings["manual_back_step"] && vars.deathcounter == 1) {
-						vars.deathcounter = 0;
-						return;
-					} else if (settings ["manual_back_step"]) {
+					} else {
+						vars.oppo = 1;
 						vars.back_split = "";
 					}
+					return true;
+				} else if(settings["fake_guard"] && !settings["oppo"]) {
+					vars.back_split = "fake";
 					vars.oppo = 1;
-					return settings["oppo"];
+					return true;
+				} else if(!settings["fake_guard"] && settings["oppo"]) {
+					if(vars.fake_guard == 0) {
+						vars.fake_guard = 1;
+						vars.back_split = "fake";
+						return false;
+					}
+					vars.back_split = "";
+					vars.oppo = 1;
+					return true;
 				}
 			}
 		}
-		if(current.room == 0 && current.scene == 3 && vars.leon == 0 && (
+		if(settings["leon"] && current.room == 0 && current.scene == 3 && vars.leon == 0 && (
 				(current.hp == 0 && old.hp > 0) || (current.white > 0 && old.white == 0)
 			)
 		){
 			vars.leon = 1;
-			return settings["leon"];
+			return true;
 		}
-		if(vars.tt_2 == 0 && current.room == 10 && current.scene == 11 && current.in_gummi > 0){
+		if(settings["tt_2"] && vars.tt_2 == 0 && current.room == 10 && current.scene == 11 && current.in_gummi > 0){
 			vars.tt_2 = 1;
-			return settings["tt_2"];
+			return true;
 		}
-		if(vars.tt_4 == 0){
+		if(settings["tt_4"] && vars.tt_4 == 0){
 			if(old.room == 32 && current.room == 22 && !vars.got_oath){
 				vars.got_oath = true;
+				return false;
 			}
 			if(current.scene == 0 && current.room == 10 && current.in_gummi > 0 && vars.got_oath){
 				vars.tt_4 = 1;
-				return settings["tt_4"];
+				return true;
 			}
 		}
-		if(vars.torn_page_power_split == 0){
+		if(settings["power_boost"] && vars.torn_page_power_split == 0){
 			if(vars.checkWorldValue(old.w1, old.w2, old.w3, old.w4, old.w5, old.w6, old.w7, old.w8, 6) && vars.torn_page_power == 1){
 				vars.torn_page_power_split = 1;
-				return settings["power_boost"];
+				return true;
 			}
 		}
-		if(vars.muddy_finish == 1 && vars.seal_100_aw == 0){
+		if(settings["seal_100_aw"] && vars.muddy_finish == 1 && vars.seal_100_aw == 0 && current.room == 19 && old.room == 9){
 			vars.seal_100_aw = 1;
-			return settings["seal_100_aw"];
+			return true;
 		}
 	}
 	// wonderland splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 4)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 3 && vars.crank == 0){
+			if(settings["crank"] && current.room == 3 && vars.crank == 0){
 				vars.crank = 1;
-				return settings["crank"];
+				return true;
 			}
-			if(current.room == 1 && vars.tm == 0){
+			if(settings["tm"] && current.room == 1 && vars.tm == 0){
 				vars.tm = 1;
-				return settings["tm"];
+				return true;
 			}
 		}
 	}
 	// deep jungle splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 5)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 2 && vars.sabor_2 == 0){
+			if(settings["sabor_2"] && current.room == 2 && vars.sabor_2 == 0){
 				vars.sabor_2 = 1;
-				return settings["sabor_2"];
+				return true;
 			}
-			if(current.room == 11){
-				if(vars.clayton_1 == 0) {
-					vars.clayton_1 = 1;
-					if (settings["manual_back_step"]){
+			if(current.room == 11 && vars.clayton_2 == 0){
+				if(settings["clayton_1"] && settings["clayton_2"]) {
+					if(vars.clayton_1 == 0) {
+						vars.clayton_1 = 1;
 						vars.back_split = "clay1";
-					}
-					return settings["clayton_1"];
-				} else if (vars.clayton_2 == 0){
-					if (!settings["manual_back_step"] && vars.deathcounter == 1) {
-						vars.deathcounter = 0;
-						return;
-					} else if (settings ["manual_back_step"]) {
+					} else {
+						vars.clayton_2 = 1;
 						vars.back_split = "";
 					}
+					return true;
+				} else if(settings["clayton_1"] && !settings["clayton_2"]) {
+					vars.back_split = "clay1";
 					vars.clayton_2 = 1;
-					return settings["clayton_2"];
+					return true;
+				} else if(!settings["clayton_1"] && settings["clayton_2"]) {
+					if(vars.clayton_1 == 0) {
+						vars.clayton_1 = 1;
+						vars.back_split = "clay1";
+						return false;
+					}
+					vars.back_split = "";
+					vars.clayton_2 = 1;
+					return true;
 				}
 			}
 		}
-		if(current.room == 0 && current.scene == 0 && vars.sabor_1 == 0 && (
+		if(settings["sabor_1"] && current.room == 0 && current.scene == 0 && vars.sabor_1 == 0 && (
 				(current.hp == 0 && old.hp > 0) || (current.white > 0 && old.white == 0)
 			) 
 		){
 			vars.sabor_1 = 1;
-			return settings["sabor_1"];
+			return true;
 		}
-		if(vars.pw == 0){
+		if(settings["power_wilds"] && vars.pw == 0){
 			if(current.room == 0 && current.scene == 3 && current.house_gummi != old.house_gummi && !vars.house_gummi) {
 				vars.house_gummi = true;
 			}
@@ -328,221 +344,231 @@ split
 				vars.cliff_gummi = false;
 				vars.camp_gummi = false;
 				vars.pw = 1;
-				return settings["power_wilds"];
+				return true;
 			}
 		}
-		if(vars.wfc == 0 && current.room == 10 && current.scene == 0){
+		if(settings["wfc"] && vars.wfc == 0 && current.room == 10 && current.scene == 0){
 			vars.wfc = 1;
-			return settings["wfc"];
+			return true;
 		}
 	}
 	// 100 acre wood
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 6)){
-		if(current.power_boost > old.power_boost && vars.torn_page_power == 0){
+		if(settings["power_boost"] && current.power_boost > old.power_boost && vars.torn_page_power == 0){
 			vars.torn_page_power = 1;
 		}
-		if(current.nature_spark == 1 && old.nature_spark == 0 && vars.nature_spark == 0){
+		if(settings["torn_page_1"] && current.nature_spark == 1 && old.nature_spark == 0 && vars.nature_spark == 0){
 			vars.nature_spark = 1;
-			return settings["torn_page_1"];
+			return true;
 		}
-		if(current.mythril_shard > old.mythril_shard && vars.torn_page_mythril_shard == 0){
+		if(settings["torn_page_2"] && current.mythril_shard > old.mythril_shard && vars.torn_page_mythril_shard == 0){
 			vars.torn_page_mythril_shard = 1;
-			return settings["torn_page_2"];
+			return true;
 		}
-		if(current.stop_level > old.stop_level && vars.stopra == 0){
+		if(settings["torn_page_3"] && current.stop_level > old.stop_level && vars.stopra == 0){
 			vars.stopra = 1;
-			return settings["torn_page_3"];
+			return true;
 		}
-		if(current.mythril > old.mythril && vars.torn_page_mythril == 0){
+		if(settings["torn_page_4"] && current.mythril > old.mythril && vars.torn_page_mythril == 0){
 			vars.torn_page_mythril = 1;
-			return settings["torn_page_4"];
+			return true;
 		}
-		if(current.exp_ring > old.exp_ring && vars.exp_ring == 0){
+		if(settings["torn_page_5"] && current.exp_ring > old.exp_ring && vars.exp_ring == 0){
 			vars.exp_ring = 1;
-			return settings["torn_page_5"];
+			return true;
 		}
-		if(old.room == 9 && current.room == 9 && vars.muddy_finish == 0){
+		if(settings["seal_100_aw"] && old.room == 9 && current.room == 9 && vars.muddy_finish == 0){
 			vars.muddy_finish = 1;
 		}
 	}
 	// agrabah splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 8)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 19 && vars.pot == 0){
+			if(settings["pot"] && current.room == 19 && vars.pot == 0){
 				vars.pot = 1;
-				return settings["pot"];
+				return true;
 			}
-			if(current.room == 1 && vars.tiger == 0){
+			if(settings["tiger"] && current.room == 1 && vars.tiger == 0){
 				vars.tiger = 1;
-				return settings["tiger"];
+				return true;
 			}
-			if(current.room == 16 && vars.jafar == 0){
+			if(settings["jafar"] && current.room == 16 && vars.jafar == 0){
 				vars.jafar = 1;
-				return settings["jafar"];
+				return true;
 			}
-			if(current.room == 17 && vars.gj == 0){
+			if(settings["gj"] && current.room == 17 && vars.gj == 0){
 				vars.gj = 1;
-				return settings["gj"];
+				return true;
 			}
-			if(current.room == 0 && current.scene == 13 && vars.kurt == 0){
+			if(settings["kurt"] && current.room == 0 && current.scene == 13 && vars.kurt == 0){
 				vars.kurt = 1;
-				return settings["kurt"];
+				return true;
 			}
 		}
-		if(current.room == 0 && current.scene == 4 && vars.save_al == 0){
+		if(settings["save_al"] && current.room == 0 && current.scene == 4 && vars.save_al == 0){
 			vars.save_al = 1;
-			return settings["save_al"];
+			return true;
 		}
-		if(current.room == 1 && current.scene == 4 && vars.carpet_escape == 0){
+		if(settings["carpet_escape"] && current.room == 1 && current.scene == 4 && vars.carpet_escape == 0){
 			vars.carpet_escape = 1;
-			return settings["carpet_escape"];
+			return true;
 		}
 	}
 	// atlantica splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 9)){
-		if(vars.atlantica_1 == 0){
+		if(settings["atlantica_1"] && vars.atlantica_1 == 0){
 			if(current.torn_page_count > old.torn_page_count && current.room == 13 && vars.atl_torn_page == 0){
 				vars.atl_torn_page = 1;
 			}
 			if(current.room == 15 && vars.atl_torn_page == 1 && current.in_gummi > 0){
 				vars.atlantica_1 = 1;
-				return settings["atlantica_1"];
+				return true;
 			}
 		}
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 12 && current.scene == 2 && vars.ursula_1 == 0){
+			if(settings["urs_1"] && current.room == 12 && current.scene == 2 && vars.ursula_1 == 0){
 				vars.ursula_1 = 1;
-				return settings["urs_1"];
+				return true;
 			}
-			if(current.room == 16 && vars.ursula_2 == 0){
+			if(settings["urs_2"] && current.room == 16 && vars.ursula_2 == 0){
 				vars.ursula_2 = 1;
-				return settings["urs_2"];
+				return true;
 			}
 		}
 	}
 	// halloween town splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 10)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 9 && vars.lsb == 0){
+			if(settings["lsb"] && current.room == 9 && vars.lsb == 0){
 				vars.lsb = 1;
-				return settings["lsb"];
+				return true;
 			}
-			if(current.room == 7 && vars.oogie == 0){
+			if(settings["oogie"] && current.room == 7 && vars.oogie == 0){
 				vars.oogie = 1;
-				return settings["oogie"];
+				return true;
 			}
-			if(current.room == 8 && vars.oogie_manor == 0){
+			if(settings["oogie_manor"] && current.room == 8 && vars.oogie_manor == 0){
 				vars.oogie_manor = 1;
-				return settings["oogie_manor"];
+				return true;
 			}
 		}
-		if(current.room == 10 && current.fmn == 0 && old.fmn == 1 && vars.fmn == 0){
+		if(settings["fmn"] && current.room == 10 && current.fmn == 0 && old.fmn == 1 && vars.fmn == 0){
 			vars.fmn = 1;
-			return settings["fmn"];
+			return true;
 		}
-		if(current.room == 10 && current.jb == 0 && old.jb == 1 && vars.jb == 0){
+		if(settings["jb"] && current.room == 10 && current.jb == 0 && old.jb == 1 && vars.jb == 0){
 			vars.jb = 1;
-			return settings["jb"];
+			return true;
 		}
 	}
 	// olympus coliseum splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 11)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 2 && current.scene == 0 && vars.cloud_1 == 0){
+			if(settings["cloud_1"] && current.room == 2 && current.scene == 0 && vars.cloud_1 == 0){
 				vars.cloud_1 = 1;
-				return settings["cloud_1"];
+				return true;
 			}
-			if(current.room == 2 && current.scene == 1 && vars.cerb_1 == 0){
+			if(settings["cerb_1"] && current.room == 2 && current.scene == 1 && vars.cerb_1 == 0){
 				vars.cerb_1 = 1;
-				return settings["cerb_1"];
+				return true;
 			}
-			if(current.room == 5 && current.scene == 0 && vars.pg_cup == 0){
+			if(settings["pg_cup"] && current.room == 5 && current.scene == 0 && vars.pg_cup == 0){
 				vars.pg_cup = 1;
-				return settings["pg_cup"];
+				return true;
 			}
 			if(current.room == 2 && current.scene == 9 && vars.herc == 0){
-				if(vars.cloud_2 == 0) {
-					vars.cloud_2 = 1;
-					if (settings["manual_back_step"]){
+				if(settings["cloud_2"] && settings["herc_cup"]) {
+					if(vars.cloud_2 == 0) {
+						vars.cloud_2 = 1;
 						vars.back_split = "cloud2";
-					}
-					return settings["cloud2"];
-				} else {
-					if (!settings["manual_back_step"] && vars.deathcounter == 1) {
-						vars.deathcounter = 0;
-						return;
-					} else if (settings ["manual_back_step"]) {
+					} else {
+						vars.herc = 1;
 						vars.back_split = "";
 					}
+					return true;
+				} else if(settings["cloud_2"] && !settings["herc_cup"]) {
+					vars.back_split = "cloud2";
 					vars.herc = 1;
-					return settings["herc_cup"];
+					return true;
+				} else if(!settings["cloud_2"] && settings["herc_cup"]) {
+					if(vars.cloud_2 == 0) {
+						vars.cloud_2 = 1;
+						vars.back_split = "cloud2";
+						return false;
+					}
+					vars.back_split = "";
+					vars.herc = 1;
+					return true;
 				}
 			}
-			if(current.room == 2 && current.scene == 11 && vars.hades_seed_39 == 0){
+			if(settings["hades_seed_39"] && current.room == 2 && current.scene == 11 && vars.hades_seed_39 == 0){
 				vars.hades_seed_39 = 1;
-				return settings["hades_seed_39"];
+				return true;
 			}
-			if(current.room == 6 && current.scene == 4 && vars.hades_seed_19 == 0){
+			if(settings["hades_seed_19"] && current.room == 6 && current.scene == 4 && vars.hades_seed_19 == 0){
 				vars.hades_seed_19 = 1;
-				return settings["hades_seed_19"];
+				return true;
 			}
-			if(current.room == 5 && current.scene == 13 && vars.hades_seed_9 == 0){
+			if(settings["hades_seed_9"] && current.room == 5 && current.scene == 13 && vars.hades_seed_9 == 0){
 				vars.hades_seed_9 = 1;
-				return settings["hades_seed_9"];
+				return true;
 			}
-			if(current.room == 6 && current.scene == 5 && vars.ice_titan == 0){
+			if(settings["ice_titan"] && current.room == 6 && current.scene == 5 && vars.ice_titan == 0){
 				vars.ice_titan = 1;
-				return settings["ice_titan"];
+				return true;
 			}
-			if(current.room == 6 && current.scene == 6 && vars.seph == 0){
+			if(settings["seph"] && current.room == 6 && current.scene == 6 && vars.seph == 0){
 				vars.seph = 1;
-				return settings["seph"];
+				return true;
 			}
-			//return true; What fight is this returning?
 		}
-		if(vars.thunder == 0){
+		if(settings["thunder"] && vars.thunder == 0){
 			if(current.room == 1 && current.scene == 2 && old.room == 2 && vars.barrel_game == 0){
 				vars.barrel_game = 1;
+				return false;
 			}
 			if(current.room == 0 && current.scene == 1 && vars.barrel_game == 1 && current.in_gummi > 0){
 				vars.thunder = 1;
-				return settings["thunder"];
+				return true;
 			}
 		}
-		if(current.gravity_level > old.gravity_level && vars.phil_cup == 0){
+		if(settings["phil_cup"] && current.gravity_level > old.gravity_level && vars.phil_cup == 0){
 			vars.phil_cup = 1;
-			return settings["phil_cup"];
+			return true;
 		}
-		if(current.party_slot_1 == 255 && current.party_slot_2 == 255 && current.room == 2 && current.scene == 7 && vars.phil_cup_solo == 0){
+		if(settings["phil_cup_solo"] && current.party_slot_1 == 255 && current.party_slot_2 == 255 && current.room == 2 && current.scene == 7 && vars.phil_cup_solo == 0){
 			if(current.non_player_unit_count == 1 && old.non_player_unit_count == 0){
-				vars.phil_cup_solo = 1;
-				return settings["phil_cup_solo"];
+				vars.phil_cup_solo_won = 1;
 			}
 		}
-		if(current.room == 5 && current.scene == 11 && current.colo_behemoth_health == 0 && old.colo_behemoth_health > 0 && vars.hades_seed_49 == 0){
-			vars.hades_seed_49 = 1;
-			return settings["hades_seed_49"];
+		if(settings["phil_cup_solo"] && vars.phil_cup_solo_won == 1 && current.party_slot_1 != 255 && vars.phil_cup_solo == 0){
+			vars.phil_cup_solo = 1;
+			return true;
 		}
-		if(current.room == 5 && current.scene == 4 && vars.hades_seed_29 == 0){
+		if(settings["hades_seed_49"] && old.room == 5 && old.scene == 11 && vars.hades_seed_49 == 0){
+			vars.hades_seed_49 = 1;
+			return true;
+		}
+		if(settings["hades_seed_29"] && current.room == 5 && current.scene == 4 && vars.hades_seed_29 == 0){
 			if(current.non_player_unit_count == 2 && old.non_player_unit_count == 0 && vars.in_cloud_leon_fight == 0){
 				vars.in_cloud_leon_fight = 1;
 			}
 			if(vars.in_cloud_leon_fight == 1 && current.non_player_unit_count == 0 && old.non_player_unit_count == 1){
 				vars.hades_seed_29 = 1;
-				return settings["hades_seed_29"];
+				return true;
 			}
 		}
 	}
 	// monstro splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 12)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 4 && vars.pc == 0){
+			if(settings["pc"] && current.room == 4 && vars.pc == 0){
 				vars.pc = 1;
-				return settings["pc"];
+				return true;
 			}
-			if(current.room == 2 && vars.pc2 == 0){
+			if(settings["pc2"] && current.room == 2 && vars.pc2 == 0){
 				vars.pc2 = 1;
-				return settings["pc2"];
+				return true;
 			}
 		}
 	}
@@ -550,201 +576,238 @@ split
 	// neverland splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 13)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 6 && vars.anti == 0){
+			if(settings["anti"] && current.room == 6 && vars.anti == 0){
 				vars.anti = 1;
-				return settings["anti"];
+				return true;
 			}
-			if(current.room == 8 && vars.hook == 0){
+			if(settings["hook"] && current.room == 8 && vars.hook == 0){
 				vars.hook = 1;
-				return settings["hook"];
+				return true;
 			}
-			if(current.room == 9 && current.scene == 1 && vars.nap == 0){
+			if(settings["nap_time"] && current.room == 9 && current.scene == 1 && vars.nap == 0){
 				vars.nap = 1;
-				return settings["nap_time"];
+				return true;
 			}
 		}
-		if((current.gummi_start == 10 || current.gummi_start == 9) && current.gummi_dest == 13 && current.cutscene && vars.ship == 0){
+		if(settings["pre_hook"] && current.room == 8 && current.scene == 1 && current.neverland_scene == 80 && vars.pre_hook == 0){
+			vars.pre_hook = 1;
+			return true;
+		}
+		if(settings["ship"] && (current.gummi_start == 10 || current.gummi_start == 9) && current.gummi_dest == 13 && current.cutscene && vars.ship == 0){
 			vars.ship = 1;
-			return settings["ship"];
+			return true;
 		}
 	}
 	// hollow bastion splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 15)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 4 && vars.riku == 0){
+			if(settings["riku"] && current.room == 4 && vars.riku == 0){
 				vars.riku = 1;
-				return settings["riku"];
+				return true;
 			}
-			if(current.room == 11 && vars.mal == 0){
+			if(settings["mal"] && current.room == 11 && vars.mal == 0){
 				vars.mal = 1;
-				return settings["mal"];
+				return true;
 			}
-			if(current.room == 12 && current.scene == 0 && vars.dragon == 0){
+			if(settings["dragon"] && current.room == 12 && current.scene == 0 && vars.dragon == 0){
 				vars.dragon = 1;
-				return settings["dragon"];
+				return true;
 			}
-			if(current.room == 14 && vars.riku2 == 0){
+			if(settings["riku2"] && current.room == 14 && vars.riku2 == 0){
 				vars.riku2 = 1;
-				return settings["riku2"];
+				return true;
 			}
-			if(current.room == 15 && vars.behemoth == 0){
+			if(settings["behemoth"] && current.room == 15 && vars.behemoth == 0){
 				vars.behemoth = 1;
-				return settings["behemoth"];
+				return true;
 			}
 		}
-		if(old.room == 11 && current.room == 4 && current.scene == 13 && vars.emblem == 0){
+		if(settings["emblem"] && old.room == 11 && current.room == 4 && current.scene == 13 && vars.emblem == 0){
 			vars.emblem = 1;
-			return settings["emblem"];
+			return true;
 		}
-		if(current.room == 3 && current.scene == 13 && vars.dumbo_1 == 0 && current.summonload && vars.summontimer > 30){
+		if(settings["dumbo_1"] && current.room == 3 && current.scene == 13 && vars.dumbo_1 == 0 && current.summonload && vars.summontimer > 30){
 			vars.dumbo_1 = 1;
-			return settings["dumbo_1"];
+			return true;
 		}
-		if(current.room == 1 && current.scene == 14 && vars.dumbo_2 == 0 && current.summonload && vars.summontimer > 30){
+		if(settings["dumbo_2"] && current.room == 1 && current.scene == 14 && vars.dumbo_2 == 0 && current.summonload && vars.summontimer > 30){
 			vars.dumbo_2 = 1;
-			return settings["dumbo_2"];
+			return true;
 		}
-		if(current.room == 3 && current.scene == 14 && vars.dumbo_3 == 0 && current.summonload && vars.summontimer > 30){
+		if(settings["dumbo_3"] && current.room == 3 && current.scene == 14 && vars.dumbo_3 == 0 && current.summonload && vars.summontimer > 30){
 			vars.dumbo_3 = 1;
-			return settings["dumbo_3"];
+			return true;
 		}
-		if(current.room == 12 && current.scene == 2 && current.exp_necklace > old.exp_necklace && vars.xemnas == 0){
+		if(settings["xemnas"] && current.room == 12 && current.scene == 2 && current.exp_necklace > old.exp_necklace && vars.xemnas == 0){
 			vars.xemnas = 1;
-			return settings["xemnas"];
+			return true;
 		}
 	}
 	// end of world splits
 	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 16)){
 		if(current.fightend == 2 && old.fightend == 0){
-			if(current.room == 26 && vars.cher == 0){
+			if(settings["cher"] && current.room == 26 && vars.cher == 0){
 				vars.cher = 1;
-				return settings["cher"];
+				return true;
 			}
-			if(current.room == 30 && vars.a1 == 0){
+			if(settings["a1"] && current.room == 30 && vars.a1 == 0){
 				vars.a1 = 1;
-				return settings["a1"];
+				return true;
 			}
-			if(current.room == 30 && vars.ds3 == 0 && vars.a1 == 1){
-				vars.ds3 = 1;
-				if (settings["manual_back_step"]) {
-					vars.back_split = "ds3";
+			if(settings["ds3"] && current.room == 30 && vars.ds3 == 0){
+				if(!settings["a1"] && vars.a1 == 0){
+					vars.a1 = 1;
+					return false;
 				}
-				return settings["ds3"];
+				vars.ds3 = 1;
+				vars.back_split = "ds3";
+				return true;
 			}
-			if(current.room == 30 && vars.a2 == 0 && vars.ds3 == 1){
-				if (!settings["manual_back_step"] && vars.deathcounter == 1) {
-					vars.deathcounter = 0;
-					return;
-				} else if (settings ["manual_back_step"]) {
-					vars.back_split = "";
+			if(settings["a2"] && current.room == 30 && vars.a2 == 0){
+				if(vars.a1 == 0){
+					vars.a1 = 1;
+					return false;
+				}
+				if(!settings["ds3"] && vars.ds3 == 0){
+					vars.ds3 = 1;
+					vars.back_split = "ds3";
+					return false;
 				}
 				vars.a2 = 1;
-				return settings["a2"];
+				vars.back_split = "";
+				return true;
 			}
-			if(current.room == 33 && vars.a3 == 0){
+			if(settings["a3"] && current.room == 33 && vars.a3 == 0){
 				vars.a3 = 1;
-				return settings["a3"];
+				return true;
 			}
-			if(current.room == 36 && vars.sc == 0){
+			if(settings["sc"] && current.room == 36 && vars.sc == 0){
 				vars.sc = 1;
-				return settings["sc"];
+				return true;
 			}
-			if(current.room == 37 && vars.dbc == 0){
+			if(settings["dbc"] && current.room == 37 && vars.dbc == 0){
 				vars.dbc = 1;
-				return settings["dbc"];
+				return true;
 			}
-			if(current.room == 33 && vars.face == 0 && vars.a3 == 1){
+			if(settings["face"] && current.room == 33 && vars.face == 0){
+				if(!settings["a3"] && vars.a3 == 0){
+					vars.a3 = 1;
+					return false;
+				}
 				vars.face = 1;
-				return settings["face"];
+				return true;
 			}
-			if(current.room == 38 && vars.inc == 0){
+			if(settings["inc"] && current.room == 38 && vars.inc == 0){
 				vars.inc = 1;
-				return settings["inc"];
+				return true;
 			}
-			if(current.room == 33 && vars.mc == 0 && vars.face == 1){
+			if(settings["mc"] && current.room == 33 && vars.mc == 0){
 				vars.mc = 1;
-				return settings["mc"];
+				return true;
 			}
-			if(current.room == 33 && vars.final_fight == 0 && vars.mc == 1){
+			if(current.room == 33 && vars.final_fight == 0){
+				if(!settings["a3"] && vars.a3 == 0){
+					vars.a3 = 1;
+					return false;
+				}
+				if(!settings["face"] && vars.face == 0){
+					vars.face = 1;
+					return false;
+				}
 				vars.final_fight = 1;
-				return settings["a4"];
+				return true;
 			}
 		}
-		if(current.room == 14 && vars.arch == 0){
+		if(settings["arch"] && current.room == 14 && vars.arch == 0){
 			vars.arch = 1;
-			return settings["arch"];
+			return true;
 		}
-		if(old.room == 18 && current.room == 15 && vars.oc == 0){
+		if(settings["oc"] && old.room == 18 && current.room == 15 && vars.oc == 0){
 			vars.oc = 1;
-			return settings["oc"];
+			return true;
 		}
-		if(old.room == 21 && current.room == 15 && vars.atl == 0){
+		if(settings["atl"] && old.room == 21 && current.room == 15 && vars.atl == 0){
 			vars.atl = 1;
-			return settings["atl"];
+			return true;
 		}
-		if(old.room == 25 && current.room == 15 && vars.hbp == 0){
+		if(settings["hbp"] && old.room == 25 && current.room == 15 && vars.hbp == 0){
 			vars.hbp = 1;
-			return settings["hbp"];
+			return true;
 		}
-		if(current.room == 28 && vars.behemoth_3 == 0 && (current.behemoth_3_health == 0 && old.behemoth_3_health > 0)){
+		if(settings["behemoth_3"] && current.room == 28 && vars.behemoth_3 == 0 && (current.behemoth_3_health == 0 && old.behemoth_3_health > 0)){
 			vars.behemoth_3 = 1;
 		 	vars.back_split = "be3";
-			return settings["behemoth_3"];
+			return true;
 		}
 		if(current.room == 29 && vars.finalrest == 0){
-			vars.finalrest = 1;
 			vars.back_split = "";
-			return settings["finalrest"];
+			if(settings["finalrest"]){
+				vars.finalrest = 1;
+				return true;
+			}
 		}
-		if(old.room == 33 && current.room == 37 && vars.artillery == 0){
+		if(settings["artillery"] && old.room == 33 && current.room == 37 && vars.artillery == 0){
 			vars.artillery = 1;
-			return settings["artillery"];
+			return true;
 		}
 	}
+
+	// manual back step is off but the split it would step over is disabled
+	if(!settings["manual_back_step"] && current.hp == 0 && old.hp > 0){
+		if(vars.back_split == "clay1"){
+			if(!settings["clayton_1"]){
+				vars.clayton_1 = 0;
+			}
+		}
+		if(vars.back_split == "fake"){
+			if(!settings["fake_guard"]){
+				vars.fake_guard = 0;
+			}
+		}
+		if(vars.back_split == "cloud2"){
+			if(!settings["cloud_2"]){
+				vars.cloud_2 = 0;
+			}
+		}
+		if(vars.back_split == "ds3"){
+			if(!settings["ds3"]){
+				vars.ds3 = 0;
+			} else {
+				vars.a1 = 0;
+			}
+		}
+	}
+
 	// settings
-	if(settings["manual_back_step"] && current.hp == 0 && old.hp > 0 && (vars.back_split == "clay1" || vars.back_split == "fake" || vars.back_split == "be3" || vars.back_split == "ds3")){
-		if(vars.back_split == "clay1") {
+	if(settings["manual_back_step"] && current.hp == 0 && old.hp > 0){
+		if(vars.back_split == "clay1"){
 			if(!settings["clayton_2"]){
 				vars.clayton_2 = 0;
 			} else {
 				vars.clayton_1 = 0;
 			}
 		}
-		if(vars.back_split == "fake") {
+		if(vars.back_split == "fake"){
 			if(!settings["oppo"]){
 				vars.oppo = 0;
 			} else {
 				vars.fake_guard = 0;
 			}
 		}
-		if(vars.back_split == "cloud2") {
+		if(vars.back_split == "cloud2"){
 			if(!settings["herc_cup"]){
 				vars.herc = 0;
 			} else {
 				vars.cloud_2 = 0;
 			}
 		}
-		if(vars.back_split == "be3") {
+		if(vars.back_split == "be3"){
 			vars.behemoth_3 = 0;
 		}
-		if(vars.back_split == "ds3") {
+		if(vars.back_split == "ds3"){
 			vars.ds3 = 0;
 		}
 	}
-	if (current.hp == 0 && ((vars.clayton_1 == 1 && vars.clayton_2 == 0) || (vars.fake_guard == 1 && vars.oppo == 0) || (vars.ds3 == 1 && vars.a2 == 0))) {
-		vars.deathcounter = 1;
-	}
-	/*WIP general fight end splits 
-	- Commenting out for bug prevention
-	if(current.fightend == 2 && old.fightend == 0){
-		if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 9)){
-			return true;
-		} else if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 11)){
-			return true;
-		}
-	}
-	return false;
-	*/
 }
 
 exit
@@ -775,6 +838,7 @@ init
 	vars.cerb_1 = 0;
 	vars.phil_cup = 0;
 	vars.phil_cup_solo = 0;
+	vars.phil_cup_solo_won = 0;
 	vars.pg_cup = 0;
 	vars.cloud_2 = 0;
 	vars.herc = 0;
@@ -824,6 +888,7 @@ init
 	vars.oogie_manor = 0;
 	vars.ship = 0;
 	vars.anti = 0;
+	vars.pre_hook = 0;
 	vars.hook = 0;
 	vars.nap = 0;
 	vars.fake_guard = 0;
@@ -838,6 +903,7 @@ init
 	vars.dumbo_2 = 0;
 	vars.dumbo_3 = 0;
 	vars.behemoth = 0;
+	vars.xemnas = 0;
 	vars.arch = 0;
 	vars.oc = 0;
 	vars.atl = 0;
@@ -857,7 +923,6 @@ init
 	vars.mc = 0;
 	vars.final_fight = 0;
 	vars.back_split = "";
-	vars.deathcounter = 0;
 	timer.IsGameTimePaused = false;
 	Func <ushort, ushort, ushort, ushort, ushort, ushort, ushort, ushort, int, bool> checkWorldValue = (ushort a, ushort b, ushort c, ushort d, ushort e, ushort f, ushort g, ushort h, int actual) => {
 		return a == actual || b == actual || c == actual || d == actual || e == actual || f == actual || f == actual || g == actual || h == actual;
