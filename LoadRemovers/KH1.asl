@@ -1,952 +1,1416 @@
 state("KINGDOM HEARTS FINAL MIX")
 {
-	bool blackInv : "KINGDOM HEARTS FINAL MIX.exe", 0x4D93B8;
-	byte white : "KINGDOM HEARTS FINAL MIX.exe", 0x233C49C;
-	bool paused : "KINGDOM HEARTS FINAL MIX.exe", 0x232A63C;
-	bool cutscene : "KINGDOM HEARTS FINAL MIX.exe", 0x233AE74;
-	bool load : "KINGDOM HEARTS FINAL MIX.exe", 0x232A368;
-	bool load2: "KINGDOM HEARTS FINAL MIX.exe", 0x233AEB0;
-	bool saveload : "KINGDOM HEARTS FINAL MIX.exe", 0x2E1CBB8;
-	bool summonload : "KINGDOM HEARTS FINAL MIX.exe", 0x2D50988;
-	bool partyload : "KINGDOM HEARTS FINAL MIX.exe", 0x2E1BAFC;
-	byte titlescreen : "KINGDOM HEARTS FINAL MIX.exe", 0x7FE990;
-	byte hp : "KINGDOM HEARTS FINAL MIX.exe", 0x2D592CC;
-	byte newgame : "KINGDOM HEARTS FINAL MIX.exe", 0x2E98824;
-	byte fightend : "KINGDOM HEARTS FINAL MIX.exe", 0x2D500B8;
-	byte neverland_scene : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE6EDD;
-	ushort w1 : "KINGDOM HEARTS FINAL MIX.exe", 0x233CADC;
-	ushort w2 : "KINGDOM HEARTS FINAL MIX.exe", 0x233CB4C;
-	ushort w3 : "KINGDOM HEARTS FINAL MIX.exe", 0x2D5CAFA;
-	ushort w4 : "KINGDOM HEARTS FINAL MIX.exe", 0x2DB41D0;
-	ushort w5 : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE75EC;
-	ushort w6 : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE7A10;
-	ushort w7 : "KINGDOM HEARTS FINAL MIX.exe", 0x2DFE1EC;
-	ushort w8 : "KINGDOM HEARTS FINAL MIX.exe", 0x2DFE610;
-	ushort room : "KINGDOM HEARTS FINAL MIX.exe", 0x233CB44;
-	ushort scene : "KINGDOM HEARTS FINAL MIX.exe", 0x233CB48;
-	byte camp_gummi : "KINGDOM HEARTS FINAL MIX.exe", 0x2DF1853;
-	byte climb_gummi : "KINGDOM HEARTS FINAL MIX.exe", 0x2DF186C;
-	byte house_gummi : "KINGDOM HEARTS FINAL MIX.exe", 0x2DF1859;
-	byte cliff_gummi : "KINGDOM HEARTS FINAL MIX.exe", 0x2DF186B;
-	byte bamboo_gummi : "KINGDOM HEARTS FINAL MIX.exe", 0x2DF184C;
-	byte power_boost : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5F01;
-	byte fmn : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5F4C;
-	byte jb : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5F4D;
-	ushort gummi_start : "KINGDOM HEARTS FINAL MIX.exe", 0x503C00;
-	ushort gummi_dest : "KINGDOM HEARTS FINAL MIX.exe", 0x5041F0;
-	byte in_gummi : "KINGDOM HEARTS FINAL MIX.exe", 0x50421D;
-	// these do not track the two healths exclusively but will get us the values at those times we need
-	ushort behemoth_3_health : "KINGDOM HEARTS FINAL MIX.exe", 0x2D595CC;
-	ushort colo_behemoth_health : "KINGDOM HEARTS FINAL MIX.exe", 0x284C4EC;
+    // location info
+    ushort world_id_1 : 0x233CADC;
+    ushort world_id_2 : 0x233CB4C;
+    ushort room : 0x233CB44;
+    ushort scene : 0x233CB48;
+    ushort world_id_3 : 0x2D5CAFA;
+    ushort world_id_4 : 0x2DB41D0;
+    ushort world_id_5 : 0x2DE7A10;
+    ushort world_id_6 : 0x2DFE610;
 
-	ushort text_progress : "KINGDOM HEARTS FINAL MIX.exe", 0x232A5F4;
-    byte sora_level : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE59D4;
-    byte nature_spark : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5F38;
-    byte mythril_shard : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5F66;
-    byte mythril : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5F67;
-    byte gravity_level : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5E66;
-    byte stop_level : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5E67;
-    byte exp_ring : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5EA3;
-    byte exp_necklace : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5EA5;
-    byte party_slot_1 : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5E5F;
-    byte party_slot_2 : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE5E60;
-    ushort non_player_unit_count : "KINGDOM HEARTS FINAL MIX.exe", 0x23A243C;
-    byte torn_page_count : "KINGDOM HEARTS FINAL MIX.exe", 0x2DE6DD0;
+    byte8 collected_items_1 : 0x2DE5E72;
+    byte102 collected_items_2 : 0x2DE5F01;  
+    byte32 power_wild_gummis : 0x2DF184C;
+    byte42 equips : 0x2DE5EA3;
+    byte magic_unlock_val : 0x2DE5A44;
+    byte225 magic_levels : 0x2D1F270;
+    ushort gummi_kills : 0x2DF1908;
+    byte96 enemies_defeated : 0x2DE61AA;
+    byte torn_page_count : 0x2DE6DD0;
+    byte6 trinity_counts : 0x2DE7636;
+    ushort puppy_count : 0x2E997A8;
+    ushort mini_game_count : 0x2E999F4;
 }
 
 startup
 {
-	vars.booting = false;
-	vars.summontimer = 0;
+    vars.booting = false;
+    vars.summon_timer = 0;
 
-	settings.Add("main_splits", true, "All end of section splits");
-	settings.Add("ds1", true, "Split on Darkside 1", "main_splits");
-	settings.Add("ds2", true, "Split on Darkside 2", "main_splits");
-	settings.Add("guard", true, "Split on Guard Armor", "main_splits");
-	settings.Add("tm", true, "Split on Trick Master", "main_splits");
-	settings.Add("clayton_2", true, "Split on Clayton 2", "main_splits");
-	settings.Add("gj", true, "Split on Genie Jafar", "main_splits");
-	settings.Add("pc2", true, "Split on Parasite Cage 2", "main_splits");
-	settings.Add("oogie_manor", true, "Split on Oogie Manor", "main_splits");
-	settings.Add("hook", true, "Split on Captain Hook", "main_splits");
-	settings.Add("oppo", true, "Split on Opposite Armor", "main_splits");
-	settings.Add("riku2", true, "Split on Riku 2", "main_splits");
-	settings.Add("behemoth", true, "Split on Behemoth", "main_splits");
-	settings.Add("cher", true, "Split on Chernabog", "main_splits");
-	settings.Add("a2", true, "Split on Ansem 2", "main_splits");
+    settings.Add("main", true, "End of section splits");
+        settings.Add("ds1", true, "Darkside 1", "main");
+        settings.Add("ds2", true, "Darkside 2", "main");
+        settings.Add("guard", true, "Guard Armor", "main");
+        settings.Add("tm", true, "Trick Master", "main");
+        settings.Add("clayton_2", true, "Clayton 2", "main");
+        settings.Add("gj", true, "Genie Jafar", "main");
+        settings.Add("pc2", true, "Parasite Cage 2", "main");
+        settings.Add("oogie_manor", true, "Oogie Manor", "main");
+        settings.Add("hook", true, "Captain Hook", "main");
+        settings.Add("oppo", true, "Opposite Armor", "main");
+        settings.Add("riku2", true, "Riku 2", "main");
+        settings.Add("behemoth", true, "Behemoth", "main");
+        settings.Add("cher", true, "Chernabog", "main");
+        settings.Add("a2", true, "Ansem 2", "main");
 
-	settings.Add("optional_splits", true, "All other Any % splits");
-	settings.Add("shadows_1", false, "Split after clearing Shadows 1 (first full group)", "optional_splits");
-	settings.Add("shadows_2", false, "Split after clearing Shadows 2 (post save point cutscene)", "optional_splits");
-	settings.Add("day_1", false, "Split on Finish of Destiny Islands day one", "optional_splits");
-	settings.Add("destiny", false, "Split on Finish of Destiny Islands day two", "optional_splits");
-	settings.Add("leon", true, "Split on Leon", "optional_splits");
-	settings.Add("crank", true, "Split on Crank Tower", "optional_splits");
-	settings.Add("sabor_1", true, "Split on Sabor 1", "optional_splits");
-	settings.Add("power_wilds", false, "Split after Power Wilds", "optional_splits");
-	settings.Add("sabor_2", true, "Split on Sabor 2", "optional_splits");
-	settings.Add("clayton_1", false, "Split on Clayton 1", "optional_splits");
-	settings.Add("wfc", false, "Split on Finish of Waterfall Cavern", "optional_splits");
-	settings.Add("tt_2", false, "Split on Exit from Traverse Town 2", "optional_splits");
-	settings.Add("save_al", false, "Split on Save Aladdin", "optional_splits");
-	settings.Add("pot", true, "Split on Pot Centipede", "optional_splits");
-	settings.Add("tiger", true, "Split on Tiger Head", "optional_splits");
-	settings.Add("jafar", true, "Split on Jafar", "optional_splits");
-	settings.Add("carpet_escape", false, "Split after Carpet Escape", "optional_splits");
-	settings.Add("pc", true, "Split on Parasite Cage 1", "optional_splits");
-	settings.Add("fmn", false, "Split on Forget Me Not turn in", "optional_splits");
-	settings.Add("jb", false, "Split on Jack in the Box turn in", "optional_splits");
-	settings.Add("lsb", true, "Split on LSB", "optional_splits");
-	settings.Add("oogie", true, "Split on Oogie Boogie", "optional_splits");
-	settings.Add("ship", false, "Split on Hooks ship", "optional_splits");
-	settings.Add("anti", true, "Split on Anti Sora", "optional_splits");
-	settings.Add("pre_hook", false, "Split on completing the pre Hook fight", "optional_splits");
-	settings.Add("fake_guard", false, "Split on fake Guard Armor", "optional_splits");
-	settings.Add("riku", true, "Split on Riku 1", "optional_splits");
-	settings.Add("emblem", false, "Split on Emblem Door", "optional_splits");
-	settings.Add("dumbo_1", false, "Split on Summon of Dumbo for skip 1", "optional_splits");
-	settings.Add("mal", true, "Split on Maleficent", "optional_splits");
-	settings.Add("dragon", true, "Split on Dragon Maleficent", "optional_splits");
-	settings.Add("tt_4", false, "Split on Exit from Traverse Town 4th visit", "optional_splits");
-	settings.Add("dumbo_2", false, "Split on Summon of Dumbo for skip 2", "optional_splits");
-	settings.Add("dumbo_3", false, "Split on Summon of Dumbo for skip 3", "optional_splits");
-	settings.Add("arch", false, "Split on Arch Behemoth", "optional_splits");
-	settings.Add("oc", false, "Split on Olympus Coliseum portal", "optional_splits");
-	settings.Add("atl", false, "Split on Atlantica portal", "optional_splits");
-	settings.Add("hbp", false, "Split on Hollow Bastion portal", "optional_splits");
-	settings.Add("behemoth_3", false, "Split on Behemoth 3 (final rest)", "optional_splits");
-	settings.Add("finalrest", true, "Split on entering Final Rest", "optional_splits");
-	settings.Add("a1", true, "Split on Ansem 1", "optional_splits");
-	settings.Add("ds3", true, "Split on Dark Side 3", "optional_splits");
-	settings.Add("a3", true, "Split on Ansem 3", "optional_splits");
-	settings.Add("sc", true, "Split on Shadow Core", "optional_splits");
-	settings.Add("artillery", false, "Split on Artillery", "optional_splits");
-	settings.Add("dbc", true, "Split on Dark Ball Core", "optional_splits");
-	settings.Add("face", true, "Split on Face", "optional_splits");
-	settings.Add("inc", true, "Split on Invisible Core", "optional_splits");
-	settings.Add("mc", true, "Split on Main Core", "optional_splits");
+    settings.Add("optional_splits", true, "All other Any % splits");
+        settings.Add("shadows_1", false, "Shadows 1 (first full group)", "optional_splits");
+        settings.Add("shadows_2", false, "Shadows 2 (post save point cutscene)", "optional_splits");
+        settings.Add("day_1", false, "Destiny Islands Day One", "optional_splits");
+        settings.Add("destiny", false, "Destiny Islands Day Two", "optional_splits");
+        settings.Add("leon", true, "Leon", "optional_splits");
+        settings.Add("crank", true, "Crank Tower - Fight End", "optional_splits");
+        settings.Add("crank_alt", true, "Crank Tower - Post Fight Cutscene", "optional_splits");
+        settings.Add("sabor_1", true, "Sabor 1", "optional_splits");
+        settings.Add("power_wilds", false, "Split after Power Wilds", "optional_splits");
+        settings.Add("sabor_2", true, "Sabor 2", "optional_splits");
+        settings.Add("clayton_1", false, "Clayton 1", "optional_splits");
+        settings.Add("wfc", false, "Waterfall Cavern", "optional_splits");
+        settings.Add("tt_2", false, "Traverse Town 2", "optional_splits");
+        settings.Add("save_al", false, "Save Aladdin", "optional_splits");
+        settings.Add("pot", true, "Pot Centipede", "optional_splits");
+        settings.Add("tiger", true, "Tiger Head", "optional_splits");
+        settings.Add("jafar", true, "Jafar", "optional_splits");
+        settings.Add("carpet_escape", false, "Carpet Escape", "optional_splits");
+        settings.Add("pc", true, "Parasite Cage 1", "optional_splits");
+        settings.Add("fmn", false, "Forget Me Not", "optional_splits");
+        settings.Add("jb", false, "Jack in the Box", "optional_splits");
+        settings.Add("lsb", true, "LSB", "optional_splits");
+        settings.Add("oogie", true, "Oogie Boogie", "optional_splits");
+        settings.Add("ship_early", false, "Hooks Ship (in gummi mission)", "optional_splits");
+        settings.Add("ship", false, "Hooks Ship (at first cutscene in world)", "optional_splits");
+        settings.Add("anti", true, "Anti Sora", "optional_splits");
+        settings.Add("pre_hook", false, "Pre Hook", "optional_splits");
+        settings.Add("fake_guard", false, "Fake Guard Armor", "optional_splits");
+        settings.Add("riku", true, "Riku 1", "optional_splits");
+        settings.Add("emblem", false, "Emblem Door", "optional_splits");
+        settings.Add("dumbo_1", false, "Dumbo Skip 1", "optional_splits");
+        settings.Add("mal", true, "Maleficent", "optional_splits");
+        settings.Add("dragon", true, "Dragon Maleficent", "optional_splits");
+        settings.Add("tt_4", false, "Traverse Town 4", "optional_splits");
+        settings.Add("dumbo_2", false, "Dumbo Skip 2", "optional_splits");
+        settings.Add("dumbo_3", false, "Dumbo Skip 3", "optional_splits");
+        settings.Add("arch", false, "Arch Behemoth", "optional_splits");
+        settings.Add("oc", false, "Olympus Coliseum portal", "optional_splits");
+        settings.Add("atl", false, "Atlantica portal", "optional_splits");
+        settings.Add("hbp", false, "Hollow Bastion portal", "optional_splits");
+        settings.Add("behemoth_3", false, "Behemoth 3 (final rest)", "optional_splits");
+        settings.Add("final_rest", true, "Enter Final Rest", "optional_splits");
+        settings.Add("a1", true, "Ansem 1", "optional_splits");
+        settings.Add("ds3", true, "Dark Side 3", "optional_splits");
+        settings.Add("a3", true, "Ansem 3", "optional_splits");
+        settings.Add("sc", true, "Shadow Core", "optional_splits");
+        settings.Add("artillery", false, "Artillery", "optional_splits");
+        settings.Add("dbc", true, "Dark Ball Core", "optional_splits");
+        settings.Add("face", true, "Face", "optional_splits");
+        settings.Add("invc", true, "Invisible Core", "optional_splits");
+        settings.Add("mc", true, "Main Core", "optional_splits");
 
-	settings.Add("all_worlds_splits", false, "Splits for All Worlds categories");
-	settings.Add("thunder", false, "Split on Exit from Olympus Coliseum after getting Thunder", "all_worlds_splits");
-	settings.Add("power_boost", false, "Split on Exit from 100 Acre Wood after getting Power Boost", "all_worlds_splits");
-	settings.Add("torn_page_1", false, "Split on Completing first Torn Page of 100 Acre Wood", "all_worlds_splits");
-	settings.Add("torn_page_2", false, "Split on Completing second Torn Page of 100 Acre Wood", "all_worlds_splits");
-	settings.Add("torn_page_3", false, "Split on Completing third Torn Page of 100 Acre Wood", "all_worlds_splits");
-	settings.Add("torn_page_4", false, "Split on Completing fourth Torn Page of 100 Acre Wood", "all_worlds_splits");
-	settings.Add("torn_page_5", false, "Split on Completing fifth Torn Page of 100 Acre Wood", "all_worlds_splits");
-	settings.Add("seal_100_aw", false, "Split on Sealing the 100 Acre Wood Keyhole", "all_worlds_splits");
-	settings.Add("cloud_1", false, "Split on First Cloud Fight", "all_worlds_splits");
-	settings.Add("cerb_1", false, "Split on First Cerberus Fight", "all_worlds_splits");
-	settings.Add("cloud_2", false, "Split on Second Cloud Fight", "all_worlds_splits");
-	settings.Add("herc_cup", false, "Split on Finishing Hercules Cup", "all_worlds_splits");
-	settings.Add("urs_1", false, "Split on Ursula 1", "all_worlds_splits");
-	settings.Add("urs_2", false, "Split on Ursula 2", "all_worlds_splits");
+    settings.Add("all_worlds_splits", false, "All Worlds categories");
+        settings.Add("thunder", false, "Thunder", "all_worlds_splits");
+        settings.Add("power_boost", false, "100 Acre Wood Power Boost", "all_worlds_splits");
+        settings.Add("torn_page_1", false, "Torn Page 1 Complete", "all_worlds_splits");
+        settings.Add("torn_page_2", false, "Torn Page 2 Complete", "all_worlds_splits");
+        settings.Add("torn_page_3", false, "Torn Page 3 Complete", "all_worlds_splits");
+        settings.Add("torn_page_4", false, "Torn Page 4 Complete", "all_worlds_splits");
+        settings.Add("torn_page_5", false, "Torn Page 5 Complete", "all_worlds_splits");
+        settings.Add("seal_100_aw", false, "100 Acre Wood", "all_worlds_splits");
+        settings.Add("cloud_1", false, "Cloud 1", "all_worlds_splits");
+        settings.Add("cerb_1", false, "Cerberus 1", "all_worlds_splits");
+        settings.Add("cloud_2", false, "Cloud 2", "all_worlds_splits");
+        settings.Add("herc_cup", false, "Hercules Cup", "all_worlds_splits");
+        settings.Add("atl_dock", false, "Atlantica Dock", "all_worlds_splits");
+        settings.Add("urs_1", false, "Ursula 1", "all_worlds_splits");
+        settings.Add("urs_2", false, "Ursula 2", "all_worlds_splits");
 
-	settings.Add("jj_splits", false, "Splits for Jimminy's Journal categories");
-	settings.Add("atlantica_1", false, "Split on Leaving Atlantica after getting the torn page", "jj_splits");
-	settings.Add("phil_cup", false, "Split on Finishing Phil Cup", "jj_splits");
-	settings.Add("phil_cup_solo", false, "Split on Finishing Phil Cup solo", "jj_splits");
-	settings.Add("pg_cup", false, "Split on Finishing Pegasus Cup", "jj_splits");
-	settings.Add("hades_seed_49", false, "Split on Finishing first 10 seeds of Hades Cup", "jj_splits");
-	settings.Add("hades_seed_39", false, "Split on Finishing second 10 seeds of Hades Cup", "jj_splits");
-	settings.Add("hades_seed_29", false, "Split on Finishing thrid 10 seeds of Hades Cup", "jj_splits");
-	settings.Add("hades_seed_19", false, "Split on Finishing fourth 10 seeds of Hades Cup", "jj_splits");
-	settings.Add("hades_seed_9", false, "Split on Finishing fifth 10 seeds of Hades Cup", "jj_splits");
-	settings.Add("ice_titan", false, "Split on Ice Titan", "jj_splits");
-	settings.Add("seph", false, "Split on Sephiroth", "jj_splits");
-	settings.Add("kurt", false, "Split on Kurt Zisa", "jj_splits");
-	settings.Add("nap_time", false, "Split on Phantom", "jj_splits");
-	settings.Add("xemnas", false, "Split on Unknown", "jj_splits");
+    settings.Add("jj_splits", false, "Jimminy's Journal categories");
+        settings.Add("hb_2", false, "Behemoth + Library Clean Up", "jj_splits");
+        settings.Add("atlantica_1", false, "Atlantica 1 (torn page)", "jj_splits");
+        settings.Add("phil_cup", false, "Phil Cup", "jj_splits");
+        settings.Add("phil_cup_solo", false, "Phil Cup (solo)", "jj_splits");
+        settings.Add("pg_cup", false, "Pegasus Cup", "jj_splits");
+        settings.Add("hades_seed_49", false, "Hades Cup Seed 49 -> 40", "jj_splits");
+        settings.Add("hades_seed_39", false, "Hades Cup Seed 39 -> 30", "jj_splits");
+        settings.Add("hades_seed_29", false, "Hades Cup Seed 29 -> 20", "jj_splits");
+        settings.Add("hades_seed_19", false, "Hades Cup Seed 19 -> 10", "jj_splits");
+        settings.Add("hades_seed_9", false, "Hades Cup Seed 9 -> End", "jj_splits");
+        settings.Add("ice_titan", false, "Ice Titan", "jj_splits");
+        settings.Add("seph", false, "Sephiroth", "jj_splits");
+        settings.Add("kurt", false, "Kurt Zisa", "jj_splits");
+        settings.Add("nap_time", false, "Phantom", "jj_splits");
+        settings.Add("xemnas", false, "Unknown", "jj_splits");
+        // If a split breaks/a reroute happens update the dictionary in the init for the sepcific world and difficulty
+        settings.Add("revisit_jj_check", false, "Revists checking Journal collection (breakable by reroute)", "jj_splits");
+            settings.Add("wl_2", false, "Wonderland Revisit", "revisit_jj_check");
+            settings.Add("dj_2", false, "Deep Jungle Revisit", "revisit_jj_check");
+            settings.Add("ag_2", false, "Agrabah Revisit", "revisit_jj_check");
+            settings.Add("mo_2", false, "Monstro Revisit", "revisit_jj_check");
+            settings.Add("ht_2", false, "Halloween Town Revisit", "revisit_jj_check");
+            settings.Add("nl_2", false, "Neverland Revisit", "revisit_jj_check");
+            settings.Add("eow", false, "End of the World 1", "revisit_jj_check");
+            settings.Add("jj_complete", false, "Journal Complete - Enter Final Fights", "revisit_jj_check");
+            settings.Add("jj_complete_early", false, "Journal Complete - Check", "revisit_jj_check");
 
-	settings.Add("plat_splits", false, "Splits for Plat trophy RTA");
+    settings.Add("plat_splits", false, "Plat trophy RTA");
+        settings.Add("gummi_kills", false, "2.5k Gummi Kills", "plat_splits");
+        settings.Add("each_mat", false, "1 Each Rare Synth", "plat_splits");
+        settings.SetToolTip(
+            "each_mat",
+            "Split after collecting one of each rare synthasis material."
+        );
+        settings.Add("tt_final", false, "Traverse Town Final", "plat_splits");
+        settings.SetToolTip(
+            "tt_final",
+            "Split when exiting Traverse Town with Ultima Weapon and Aeroga."
+        );
+        settings.Add("more", false, "More to come!", "plat_splits");
 
-	settings.Add("settings", true, "Settings");
-	settings.Add("manual_back_step", false, "Setting to control if you want to re split when forced more than 1 split back", "settings");
 
+    settings.Add("misc", false, "misc catagories");
+        settings.Add("coco", false, "99 coconut", "misc");
+            settings.Add("per_10", false, "Every 10 (and final 9)", "coco");
+            settings.Add("per_1", false, "Every nut", "coco");
+
+    settings.Add("settings", false, "Settings");
+    settings.Add("re-split", false, "Re split", "settings");
+        settings.SetToolTip(
+            "re-split",
+            "When set, splits will trigger more than once if a death occurs." +
+            "\nFor example if you die to Ansem 2, Darkside 3 will split again."
+        );
 }
 
 start
 {
-	return current.newgame == 7 && old.newgame == 6;
+    var ng = vars.watchers["newgame"];
+    ng.Update(game);
+    return ng.Current == 7 && ng.Old == 6;
 }
 
 split
 {
-	vars.summontimer = current.summonload ? vars.summontimer + (current.paused ? 0 : 1) : 0;
-	// station of awakening splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 0)){
-		if(settings["shadows_1"] && current.room == 2 && old.room == 1 && vars.shadows_1 == 0){
-			vars.shadows_1 = 1;
-				return true;
-		}
-		if(settings["shadows_2"] && current.sora_level == 2 && current.room == 4 && (current.text_progress == 0 && old.text_progress > 0) && vars.shadows_2 == 0){
-			vars.shadows_2 = 1;
-				return true;
-		}
-		if(settings["ds1"] && ((current.fightend == 2 && old.fightend == 0) || (current.hp == 0 && old.hp > 0)) && current.room == 4 && vars.ds1 == 0){
-			vars.shadows_1 = 1;
-				return true;
-		}
-	}
-	// destiny islands splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 1)){
-		if(settings["day_1"] && current.room == 3 && old.room == 0 && vars.day_1 == 0) {
-			vars.day_1 = 1;
-			return true;
-		}
-		if(settings["destiny"] && old.room == 2 && current.room == 3 && current.scene == 2 && vars.destiny == 0) {
-			vars.destiny = 1;
-			return true;
-		}
-		if(settings["ds2"] && (current.fightend == 2 && old.fightend == 0) && vars.ds2 == 0) {
-			vars.ds2 = 1;
-			return true;
-		}
-	}
-	// traverse town splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 3)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["guard"] && current.room == 2 && vars.guard == 0){
-				vars.guard = 1;
-				return true;
-			}
-			if(current.room == 1 && vars.oppo == 0){
-				if(settings["fake_guard"] && settings["oppo"]) {
-					if(vars.fake_guard == 0) {
-						vars.fake_guard = 1;
-						vars.back_split = "fake";
-					} else {
-						vars.oppo = 1;
-						vars.back_split = "";
-					}
-					return true;
-				} else if(settings["fake_guard"] && !settings["oppo"]) {
-					vars.back_split = "fake";
-					vars.oppo = 1;
-					return true;
-				} else if(!settings["fake_guard"] && settings["oppo"]) {
-					if(vars.fake_guard == 0) {
-						vars.fake_guard = 1;
-						vars.back_split = "fake";
-						return false;
-					}
-					vars.back_split = "";
-					vars.oppo = 1;
-					return true;
-				}
-			}
-		}
-		if(settings["leon"] && current.room == 0 && current.scene == 3 && vars.leon == 0 && (
-				(current.hp == 0 && old.hp > 0) || (current.white > 0 && old.white == 0)
-			)
-		){
-			vars.leon = 1;
-			return true;
-		}
-		if(settings["tt_2"] && vars.tt_2 == 0 && current.room == 10 && current.scene == 11 && current.in_gummi > 0){
-			vars.tt_2 = 1;
-			return true;
-		}
-		if(settings["tt_4"] && vars.tt_4 == 0){
-			if(old.room == 32 && current.room == 22 && !vars.got_oath){
-				vars.got_oath = true;
-				return false;
-			}
-			if(current.scene == 0 && current.room == 10 && current.in_gummi > 0 && vars.got_oath){
-				vars.tt_4 = 1;
-				return true;
-			}
-		}
-		if(settings["power_boost"] && vars.torn_page_power_split == 0){
-			if(vars.checkWorldValue(old.w1, old.w2, old.w3, old.w4, old.w5, old.w6, old.w7, old.w8, 6) && vars.torn_page_power == 1){
-				vars.torn_page_power_split = 1;
-				return true;
-			}
-		}
-		if(settings["seal_100_aw"] && vars.muddy_finish == 1 && vars.seal_100_aw == 0 && current.room == 19 && old.room == 9){
-			vars.seal_100_aw = 1;
-			return true;
-		}
-	}
-	// wonderland splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 4)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["crank"] && current.room == 3 && vars.crank == 0){
-				vars.crank = 1;
-				return true;
-			}
-			if(settings["tm"] && current.room == 1 && vars.tm == 0){
-				vars.tm = 1;
-				return true;
-			}
-		}
-	}
-	// deep jungle splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 5)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["sabor_2"] && current.room == 2 && vars.sabor_2 == 0){
-				vars.sabor_2 = 1;
-				return true;
-			}
-			if(current.room == 11 && vars.clayton_2 == 0){
-				if(settings["clayton_1"] && settings["clayton_2"]) {
-					if(vars.clayton_1 == 0) {
-						vars.clayton_1 = 1;
-						vars.back_split = "clay1";
-					} else {
-						vars.clayton_2 = 1;
-						vars.back_split = "";
-					}
-					return true;
-				} else if(settings["clayton_1"] && !settings["clayton_2"]) {
-					vars.back_split = "clay1";
-					vars.clayton_2 = 1;
-					return true;
-				} else if(!settings["clayton_1"] && settings["clayton_2"]) {
-					if(vars.clayton_1 == 0) {
-						vars.clayton_1 = 1;
-						vars.back_split = "clay1";
-						return false;
-					}
-					vars.back_split = "";
-					vars.clayton_2 = 1;
-					return true;
-				}
-			}
-		}
-		if(settings["sabor_1"] && current.room == 0 && current.scene == 0 && vars.sabor_1 == 0 && (
-				(current.hp == 0 && old.hp > 0) || (current.white > 0 && old.white == 0)
-			) 
-		){
-			vars.sabor_1 = 1;
-			return true;
-		}
-		if(settings["power_wilds"] && vars.pw == 0){
-			if(current.room == 0 && current.scene == 3 && current.house_gummi != old.house_gummi && !vars.house_gummi) {
-				vars.house_gummi = true;
-			}
-			if(current.room == 2 && current.scene == 2 && current.bamboo_gummi != old.bamboo_gummi && !vars.bamboo_gummi) {
-				vars.bamboo_gummi = true;
-			}
-			if(current.room == 6 && current.scene == 2 && current.climb_gummi != old.climb_gummi && !vars.climb_gummi) {
-				vars.climb_gummi = true;
-			}
-			if(current.room == 11 && current.scene == 2 && current.cliff_gummi != old.cliff_gummi && !vars.cliff_gummi) {
-				vars.cliff_gummi = true;
-			}
-			if(current.room == 12 && current.scene == 1 && current.camp_gummi != old.camp_gummi && !vars.camp_gummi) {
-				vars.camp_gummi = true;
-			}
-			if(vars.house_gummi && vars.bamboo_gummi && vars.climb_gummi && vars.cliff_gummi && vars.camp_gummi){
-				vars.house_gummi = false;
-				vars.bamboo_gummi = false;
-				vars.climb_gummi = false;
-				vars.cliff_gummi = false;
-				vars.camp_gummi = false;
-				vars.pw = 1;
-				return true;
-			}
-		}
-		if(settings["wfc"] && vars.wfc == 0 && current.room == 10 && current.scene == 0){
-			vars.wfc = 1;
-			return true;
-		}
-	}
-	// 100 acre wood
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 6)){
-		if(settings["power_boost"] && current.power_boost > old.power_boost && vars.torn_page_power == 0){
-			vars.torn_page_power = 1;
-		}
-		if(settings["torn_page_1"] && current.nature_spark == 1 && old.nature_spark == 0 && vars.nature_spark == 0){
-			vars.nature_spark = 1;
-			return true;
-		}
-		if(settings["torn_page_2"] && current.mythril_shard > old.mythril_shard && vars.torn_page_mythril_shard == 0){
-			vars.torn_page_mythril_shard = 1;
-			return true;
-		}
-		if(settings["torn_page_3"] && current.stop_level > old.stop_level && vars.stopra == 0){
-			vars.stopra = 1;
-			return true;
-		}
-		if(settings["torn_page_4"] && current.mythril > old.mythril && vars.torn_page_mythril == 0){
-			vars.torn_page_mythril = 1;
-			return true;
-		}
-		if(settings["torn_page_5"] && current.exp_ring > old.exp_ring && vars.exp_ring == 0){
-			vars.exp_ring = 1;
-			return true;
-		}
-		if(settings["seal_100_aw"] && old.room == 9 && current.room == 9 && vars.muddy_finish == 0){
-			vars.muddy_finish = 1;
-		}
-	}
-	// agrabah splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 8)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["pot"] && current.room == 19 && vars.pot == 0){
-				vars.pot = 1;
-				return true;
-			}
-			if(settings["tiger"] && current.room == 1 && vars.tiger == 0){
-				vars.tiger = 1;
-				return true;
-			}
-			if(settings["jafar"] && current.room == 16 && vars.jafar == 0){
-				vars.jafar = 1;
-				return true;
-			}
-			if(settings["gj"] && current.room == 17 && vars.gj == 0){
-				vars.gj = 1;
-				return true;
-			}
-			if(settings["kurt"] && current.room == 0 && current.scene == 13 && vars.kurt == 0){
-				vars.kurt = 1;
-				return true;
-			}
-		}
-		if(settings["save_al"] && current.room == 0 && current.scene == 4 && vars.save_al == 0){
-			vars.save_al = 1;
-			return true;
-		}
-		if(settings["carpet_escape"] && current.room == 1 && current.scene == 4 && vars.carpet_escape == 0){
-			vars.carpet_escape = 1;
-			return true;
-		}
-	}
-	// atlantica splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 9)){
-		if(settings["atlantica_1"] && vars.atlantica_1 == 0){
-			if(current.torn_page_count > old.torn_page_count && current.room == 13 && vars.atl_torn_page == 0){
-				vars.atl_torn_page = 1;
-			}
-			if(current.room == 15 && vars.atl_torn_page == 1 && current.in_gummi > 0){
-				vars.atlantica_1 = 1;
-				return true;
-			}
-		}
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["urs_1"] && current.room == 12 && current.scene == 2 && vars.ursula_1 == 0){
-				vars.ursula_1 = 1;
-				return true;
-			}
-			if(settings["urs_2"] && current.room == 16 && vars.ursula_2 == 0){
-				vars.ursula_2 = 1;
-				return true;
-			}
-		}
-	}
-	// halloween town splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 10)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["lsb"] && current.room == 9 && vars.lsb == 0){
-				vars.lsb = 1;
-				return true;
-			}
-			if(settings["oogie"] && current.room == 7 && vars.oogie == 0){
-				vars.oogie = 1;
-				return true;
-			}
-			if(settings["oogie_manor"] && current.room == 8 && vars.oogie_manor == 0){
-				vars.oogie_manor = 1;
-				return true;
-			}
-		}
-		if(settings["fmn"] && current.room == 10 && current.fmn == 0 && old.fmn == 1 && vars.fmn == 0){
-			vars.fmn = 1;
-			return true;
-		}
-		if(settings["jb"] && current.room == 10 && current.jb == 0 && old.jb == 1 && vars.jb == 0){
-			vars.jb = 1;
-			return true;
-		}
-	}
-	// olympus coliseum splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 11)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["cloud_1"] && current.room == 2 && current.scene == 0 && vars.cloud_1 == 0){
-				vars.cloud_1 = 1;
-				return true;
-			}
-			if(settings["cerb_1"] && current.room == 2 && current.scene == 1 && vars.cerb_1 == 0){
-				vars.cerb_1 = 1;
-				return true;
-			}
-			if(settings["pg_cup"] && current.room == 5 && current.scene == 0 && vars.pg_cup == 0){
-				vars.pg_cup = 1;
-				return true;
-			}
-			if(current.room == 2 && current.scene == 9 && vars.herc == 0){
-				if(settings["cloud_2"] && settings["herc_cup"]) {
-					if(vars.cloud_2 == 0) {
-						vars.cloud_2 = 1;
-						vars.back_split = "cloud2";
-					} else {
-						vars.herc = 1;
-						vars.back_split = "";
-					}
-					return true;
-				} else if(settings["cloud_2"] && !settings["herc_cup"]) {
-					vars.back_split = "cloud2";
-					vars.herc = 1;
-					return true;
-				} else if(!settings["cloud_2"] && settings["herc_cup"]) {
-					if(vars.cloud_2 == 0) {
-						vars.cloud_2 = 1;
-						vars.back_split = "cloud2";
-						return false;
-					}
-					vars.back_split = "";
-					vars.herc = 1;
-					return true;
-				}
-			}
-			if(settings["hades_seed_39"] && current.room == 2 && current.scene == 11 && vars.hades_seed_39 == 0){
-				vars.hades_seed_39 = 1;
-				return true;
-			}
-			if(settings["hades_seed_19"] && current.room == 6 && current.scene == 4 && vars.hades_seed_19 == 0){
-				vars.hades_seed_19 = 1;
-				return true;
-			}
-			if(settings["hades_seed_9"] && current.room == 5 && current.scene == 13 && vars.hades_seed_9 == 0){
-				vars.hades_seed_9 = 1;
-				return true;
-			}
-			if(settings["ice_titan"] && current.room == 6 && current.scene == 5 && vars.ice_titan == 0){
-				vars.ice_titan = 1;
-				return true;
-			}
-			if(settings["seph"] && current.room == 6 && current.scene == 6 && vars.seph == 0){
-				vars.seph = 1;
-				return true;
-			}
-		}
-		if(settings["thunder"] && vars.thunder == 0){
-			if(current.room == 1 && current.scene == 2 && old.room == 2 && vars.barrel_game == 0){
-				vars.barrel_game = 1;
-				return false;
-			}
-			if(current.room == 0 && current.scene == 1 && vars.barrel_game == 1 && current.in_gummi > 0){
-				vars.thunder = 1;
-				return true;
-			}
-		}
-		if(settings["phil_cup"] && current.gravity_level > old.gravity_level && vars.phil_cup == 0){
-			vars.phil_cup = 1;
-			return true;
-		}
-		if(settings["phil_cup_solo"] && current.party_slot_1 == 255 && current.party_slot_2 == 255 && current.room == 2 && current.scene == 7 && vars.phil_cup_solo == 0){
-			if(current.non_player_unit_count == 1 && old.non_player_unit_count == 0){
-				vars.phil_cup_solo_won = 1;
-			}
-		}
-		if(settings["phil_cup_solo"] && vars.phil_cup_solo_won == 1 && current.party_slot_1 != 255 && vars.phil_cup_solo == 0){
-			vars.phil_cup_solo = 1;
-			return true;
-		}
-		if(settings["hades_seed_49"] && old.room == 5 && old.scene == 11 && vars.hades_seed_49 == 0){
-			vars.hades_seed_49 = 1;
-			return true;
-		}
-		if(settings["hades_seed_29"] && current.room == 5 && current.scene == 4 && vars.hades_seed_29 == 0){
-			if(current.non_player_unit_count == 2 && old.non_player_unit_count == 0 && vars.in_cloud_leon_fight == 0){
-				vars.in_cloud_leon_fight = 1;
-			}
-			if(vars.in_cloud_leon_fight == 1 && current.non_player_unit_count == 0 && old.non_player_unit_count == 1){
-				vars.hades_seed_29 = 1;
-				return true;
-			}
-		}
-	}
-	// monstro splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 12)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["pc"] && current.room == 4 && vars.pc == 0){
-				vars.pc = 1;
-				return true;
-			}
-			if(settings["pc2"] && current.room == 2 && vars.pc2 == 0){
-				vars.pc2 = 1;
-				return true;
-			}
-		}
-	}
+    int[] world_ids = {0, 1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 16};
+    int current_world = 0;
+    int old_world = 0;
+    var output_catch = "";
+    var fightend = vars.watchers["fightend"];
+    var cutscene = vars.watchers["cutscene"];
+    var eow_scene = vars.watchers["eow_scene"];
+    var white = vars.watchers["white_screen"];
+    var text_progress = vars.watchers["text_progress"];
+    var sora_hp = vars.watchers["sora_hp"];
+    var summon_load = vars.watchers["summon_load"];
+    var paused = vars.watchers["paused"];
+    var in_gummi = vars.watchers["in_gummi"];
+    var gummi_start_world = vars.watchers["gummi_start_world"];
+    var gummi_destination_world = vars.watchers["gummi_destination_world"];
+    bool fight_complete = fightend.Current == 2 && fightend.Old == 0;
+    bool death = sora_hp.Current == 0 && sora_hp.Old > 0;
+    vars.summon_timer = summon_load.Current ? vars.summon_timer + (paused.Current ? 0 : 1) : 0;
+    foreach (int value in world_ids){
+        if(vars.check_world_id(current.world_id_1, current.world_id_2, current.world_id_3, current.world_id_4, current.world_id_5, current.world_id_6, value)){
+            current_world = value;
+        }
+        if(vars.check_world_id(old.world_id_1, old.world_id_2, old.world_id_3, old.world_id_4, old.world_id_5, old.world_id_6, value)){
+            old_world = value;
+        }
+    }
 
-	// neverland splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 13)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["anti"] && current.room == 6 && vars.anti == 0){
-				vars.anti = 1;
-				return true;
-			}
-			if(settings["hook"] && current.room == 8 && vars.hook == 0){
-				vars.hook = 1;
-				return true;
-			}
-			if(settings["nap_time"] && current.room == 9 && current.scene == 1 && vars.nap == 0){
-				vars.nap = 1;
-				return true;
-			}
-		}
-		if(settings["pre_hook"] && current.room == 8 && current.scene == 1 && current.neverland_scene == 80 && vars.pre_hook == 0){
-			vars.pre_hook = 1;
-			return true;
-		}
-		if(settings["ship"] && (current.gummi_start == 10 || current.gummi_start == 9) && current.gummi_dest == 13 && current.cutscene && vars.ship == 0){
-			vars.ship = 1;
-			return true;
-		}
-	}
-	// hollow bastion splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 15)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["riku"] && current.room == 4 && vars.riku == 0){
-				vars.riku = 1;
-				return true;
-			}
-			if(settings["mal"] && current.room == 11 && vars.mal == 0){
-				vars.mal = 1;
-				return true;
-			}
-			if(settings["dragon"] && current.room == 12 && current.scene == 0 && vars.dragon == 0){
-				vars.dragon = 1;
-				return true;
-			}
-			if(settings["riku2"] && current.room == 14 && vars.riku2 == 0){
-				vars.riku2 = 1;
-				return true;
-			}
-			if(settings["behemoth"] && current.room == 15 && vars.behemoth == 0){
-				vars.behemoth = 1;
-				return true;
-			}
-		}
-		if(settings["emblem"] && old.room == 11 && current.room == 4 && current.scene == 13 && vars.emblem == 0){
-			vars.emblem = 1;
-			return true;
-		}
-		if(settings["dumbo_1"] && current.room == 3 && current.scene == 13 && vars.dumbo_1 == 0 && current.summonload && vars.summontimer > 30){
-			vars.dumbo_1 = 1;
-			return true;
-		}
-		if(settings["dumbo_2"] && current.room == 1 && current.scene == 14 && vars.dumbo_2 == 0 && current.summonload && vars.summontimer > 30){
-			vars.dumbo_2 = 1;
-			return true;
-		}
-		if(settings["dumbo_3"] && current.room == 3 && current.scene == 14 && vars.dumbo_3 == 0 && current.summonload && vars.summontimer > 30){
-			vars.dumbo_3 = 1;
-			return true;
-		}
-		if(settings["xemnas"] && current.room == 12 && current.scene == 2 && current.exp_necklace > old.exp_necklace && vars.xemnas == 0){
-			vars.xemnas = 1;
-			return true;
-		}
-	}
-	// end of world splits
-	if(vars.checkWorldValue(current.w1, current.w2, current.w3, current.w4, current.w5, current.w6, current.w7, current.w8, 16)){
-		if(current.fightend == 2 && old.fightend == 0){
-			if(settings["cher"] && current.room == 26 && vars.cher == 0){
-				vars.cher = 1;
-				return true;
-			}
-			if(settings["a1"] && current.room == 30 && vars.a1 == 0){
-				vars.a1 = 1;
-				return true;
-			}
-			if(settings["ds3"] && current.room == 30 && vars.ds3 == 0){
-				if(!settings["a1"] && vars.a1 == 0){
-					vars.a1 = 1;
-					return false;
-				}
-				vars.ds3 = 1;
-				vars.back_split = "ds3";
-				return true;
-			}
-			if(settings["a2"] && current.room == 30 && vars.a2 == 0){
-				if(vars.a1 == 0){
-					vars.a1 = 1;
-					return false;
-				}
-				if(!settings["ds3"] && vars.ds3 == 0){
-					vars.ds3 = 1;
-					vars.back_split = "ds3";
-					return false;
-				}
-				vars.a2 = 1;
-				vars.back_split = "";
-				return true;
-			}
-			if(settings["a3"] && current.room == 33 && vars.a3 == 0){
-				vars.a3 = 1;
-				return true;
-			}
-			if(settings["sc"] && current.room == 36 && vars.sc == 0){
-				vars.sc = 1;
-				return true;
-			}
-			if(settings["dbc"] && current.room == 37 && vars.dbc == 0){
-				vars.dbc = 1;
-				return true;
-			}
-			if(settings["face"] && current.room == 33 && vars.face == 0){
-				if(!settings["a3"] && vars.a3 == 0){
-					vars.a3 = 1;
-					return false;
-				}
-				vars.face = 1;
-				return true;
-			}
-			if(settings["inc"] && current.room == 38 && vars.inc == 0){
-				vars.inc = 1;
-				return true;
-			}
-			if(settings["mc"] && current.room == 33 && vars.mc == 0){
-				vars.mc = 1;
-				return true;
-			}
-			if(current.room == 33 && vars.final_fight == 0){
-				if(!settings["a3"] && vars.a3 == 0){
-					vars.a3 = 1;
-					return false;
-				}
-				if(!settings["face"] && vars.face == 0){
-					vars.face = 1;
-					return false;
-				}
-				vars.final_fight = 1;
-				return true;
-			}
-		}
-		if(settings["arch"] && current.room == 14 && vars.arch == 0){
-			vars.arch = 1;
-			return true;
-		}
-		if(settings["oc"] && old.room == 18 && current.room == 15 && vars.oc == 0){
-			vars.oc = 1;
-			return true;
-		}
-		if(settings["atl"] && old.room == 21 && current.room == 15 && vars.atl == 0){
-			vars.atl = 1;
-			return true;
-		}
-		if(settings["hbp"] && old.room == 25 && current.room == 15 && vars.hbp == 0){
-			vars.hbp = 1;
-			return true;
-		}
-		if(settings["behemoth_3"] && current.room == 28 && vars.behemoth_3 == 0 && (current.behemoth_3_health == 0 && old.behemoth_3_health > 0)){
-			vars.behemoth_3 = 1;
-		 	vars.back_split = "be3";
-			return true;
-		}
-		if(current.room == 29 && vars.finalrest == 0){
-			vars.back_split = "";
-			if(settings["finalrest"]){
-				vars.finalrest = 1;
-				return true;
-			}
-		}
-		if(settings["artillery"] && old.room == 33 && current.room == 37 && vars.artillery == 0){
-			vars.artillery = 1;
-			return true;
-		}
-	}
+    // Final fight split always goes
+    if(fight_complete && current_world == 16 && current.room == 33 && current.scene == 4){
+        return true;
+    }
 
-	// manual back step is off but the split it would step over is disabled
-	if(!settings["manual_back_step"] && current.hp == 0 && old.hp > 0){
-		if(vars.back_split == "clay1"){
-			if(!settings["clayton_1"]){
-				vars.clayton_1 = 0;
-			}
-		}
-		if(vars.back_split == "fake"){
-			if(!settings["fake_guard"]){
-				vars.fake_guard = 0;
-			}
-		}
-		if(vars.back_split == "cloud2"){
-			if(!settings["cloud_2"]){
-				vars.cloud_2 = 0;
-			}
-		}
-		if(vars.back_split == "ds3"){
-			if(!settings["ds3"]){
-				vars.ds3 = 0;
-			} else {
-				vars.a1 = 0;
-			}
-		}
-	}
+    if(settings["main"]){
+        if(death){
+            if(current_world == 0 && current.room == 4){
+                return settings["ds1"];
+            }
+        }
+        if(fight_complete){
+            switch (current_world){
+                // station of awakening splits
+                case 0:
+                    if(current.room == 4){
+                        return settings["ds1"];
+                    }
+                    break;
+                // destiny islands splits
+                case 1:
+                    if(current.room == 8){
+                        return settings["ds2"];
+                    }
+                    break;
+                // traverse town splits
+                case 3:
+                    if(current.room == 2){
+                        return settings["guard"];
+                    }
+                    if(current.room == 1){
+                        if(!settings["optional_splits"] && !vars.fake_guard){
+                            vars.back_split = "fake";
+                            vars.fake_guard = true;
+                            return false;
+                        }
+                        if(vars.fake_guard){
+                            vars.back_split = "";
+                            return settings["oppo"];
+                        }
+                    }
+                    break;
+                // wonderland splits
+                case 4:
+                    if(current.room == 1){
+                        return settings["tm"];
+                    }
+                    break;
+                // deep jungle splits
+                case 5:
+                    if(current.room == 11){
+                        if(!settings["optional_splits"] && !vars.clayton_1){
+                            vars.back_split = "clay1";
+                            vars.clayton_1 = true;
+                            return false;
+                        }
+                        if(vars.clayton_1){
+                            vars.back_split = "";
+                            return settings["clayton_2"];
+                        }
+                    }
+                    break;
+                // agrabah splits
+                case 8:
+                    if(current.room == 17){
+                        return settings["gj"];
+                    }
+                    break;
+                // halloween town splits
+                case 10:
+                    if(current.room == 8){
+                        return settings["oogie_manor"];
+                    }
+                    break;
+                // monstro splits
+                case 12:
+                    if(current.room == 2){
+                        return settings["pc2"];
+                    }
+                    break;
+                // neverland splits
+                case 13:
+                    if(current.room == 8){
+                        vars.back_split = "";
+                        return settings["hook"];
+                    }
+                    break;
+                // hollow bastion splits
+                case 15:
+                    if(current.room == 14){
+                        return settings["riku2"];
+                    }
+                    if(current.room == 15){
+                        return settings["behemoth"];
+                    }
+                    break;
+                // end of world splits
+                case 16:
+                    if(current.room == 26){
+                        return settings["cher"];
+                    }
+                    eow_scene.Update(game); 
+                    if(current.room == 30 && eow_scene.Current == 257){
+                        if(!settings["optional_splits"]){
+                            if(!vars.ds3){
+                                vars.back_split = "ds3";
+                                vars.ds3 = true;
+                                return false;
+                            }
+                        }
+                        if(vars.ds3){
+                            vars.back_split = "";
+                            return settings["a2"];
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 
-	// settings
-	if(settings["manual_back_step"] && current.hp == 0 && old.hp > 0){
-		if(vars.back_split == "clay1"){
-			if(!settings["clayton_2"]){
-				vars.clayton_2 = 0;
-			} else {
-				vars.clayton_1 = 0;
-			}
-		}
-		if(vars.back_split == "fake"){
-			if(!settings["oppo"]){
-				vars.oppo = 0;
-			} else {
-				vars.fake_guard = 0;
-			}
-		}
-		if(vars.back_split == "cloud2"){
-			if(!settings["herc_cup"]){
-				vars.herc = 0;
-			} else {
-				vars.cloud_2 = 0;
-			}
-		}
-		if(vars.back_split == "be3"){
-			vars.behemoth_3 = 0;
-		}
-		if(vars.back_split == "ds3"){
-			vars.ds3 = 0;
-		}
-	}
+    if(settings["optional_splits"]){
+        if(fight_complete){
+            switch (current_world){
+                case 3:
+                    if(current.room == 1 && !vars.fake_guard){
+                        vars.back_split = "fake";
+                        vars.fake_guard = true;
+                        return settings["fake_guard"];
+                    }
+                    break;
+                // wonderland splits
+                case 4:
+                    if(current.room == 3){
+                        vars.completed_fights.Add("crank");
+                        return settings["crank"];
+                    }
+                    break;
+                // deep jungle splits
+                case 5:
+                    if(current.room == 2){
+                        return settings["sabor_2"];
+                    }
+                    if(current.room == 11 && !vars.clayton_1){
+                        vars.back_split = "clay1";
+                        vars.clayton_1 = true;
+                        return settings["clayton_1"];
+                    }
+                    break;
+                // agrabah splits
+                case 8:
+                    if(current.room == 19){
+                        return settings["pot"];
+                    }
+                    if(current.room == 1){
+                        return settings["tiger"];
+                    }
+                    if(current.room == 16){
+                        return settings["jafar"];
+                    }
+                    break;
+                // halloween town splits
+                case 10:
+                    if(current.room == 9){
+                        return settings["lsb"];
+                    }
+                    if(current.room == 7){
+                        return settings["oogie"];
+                    }
+                    break;
+                // monstro splits
+                case 12:
+                    if(current.room == 4){
+                        return settings["pc"];
+                    }
+                    break;
+                // neverland splits
+                case 13:
+                    if(current.room == 6){
+                        return settings["anti"];
+                    }
+                    if(vars.pre_hook && !vars.hook && !settings["hook"] && current.room == 8){
+                        vars.back_split = "";
+                        vars.hook = true;
+                    }
+                    break;
+                // hollow bastion splits
+                case 15:
+                    if(current.room == 4){
+                        return settings["riku"];
+                    }
+                    if(current.room == 11){
+                        return settings["mal"];
+                    }
+                    if(current.room == 12 && current.scene == 0){
+                        return settings["dragon"];
+                    }
+                    break;
+                // end of world splits
+                case 16:
+                    eow_scene.Update(game); 
+                    if(current.room == 30 && eow_scene.Current == 256){
+                        return settings["a1"];
+                    }
+                    if(!vars.ds3 && current.room == 30){
+                        vars.ds3 = true;
+                        vars.back_split = "ds3";
+                        return settings["ds3"];
+                    }
+                    if(current.room == 33){
+                        if(current.scene == 0){
+                            return settings["a3"];
+                        }
+                        if(current.scene == 2){
+                            return settings["face"];
+                        }
+                        if(current.scene == 3){
+                            return settings["mc"];
+                        }
+                    }
+                    if(current.room == 36){
+                        return settings["sc"];
+                    }
+                    if(current.room == 37){
+                        return settings["dbc"];
+                    }
+                    if(current.room == 38){
+                        return settings["invc"];
+                    }
+                    break;
+            }
+        } else {
+            switch (current_world){
+                // station of awakening splits
+                case 0:
+                    if(current.enemies_defeated[0] >= 5 && cutscene.Current){
+                        return settings["shadows_1"] && vars.completed_splits.Add("shadows_1");
+                    }
+                    // shadows killed
+                    if(current.enemies_defeated[0] >= 9 && text_progress.Current > 0 && text_progress.Old == 0){
+                        return settings["shadows_2"] && vars.completed_splits.Add("shadows_2");
+                    }
+                    break;
+                // destiny islands splits
+                case 1:
+                    // logs 
+                    if(current.collected_items_2[40] < old.collected_items_2[40]){
+                        return settings["day_1"];
+                    }
+                    // coconuts
+                    if(current.collected_items_2[46] < old.collected_items_2[46]){
+                        return settings["destiny"];
+                    }
+                    break;
+                // traverse town splits
+                case 3:
+                    if(current.room == 0 && current.scene == 3 && ((death) || (white.Current > 0 && white.Old == 0))){
+                        return settings["leon"] && vars.completed_splits.Add("leon");
+                    }
+                    if(current.room == 10 && current.scene == 11 && in_gummi.Current > 0){
+                        return settings["tt_2"] && vars.completed_splits.Add("tt_2");
+                    }
+                    // oath keeper
+                    if(current.scene == 0 && current.room == 10 && in_gummi.Current > 0 && current.equips[37] == 1){
+                        return settings["tt_4"] && vars.completed_splits.Add("tt_4");
+                    }
+                    break;
+                // wonderland splits
+                case 4:
+                    if(current.room == 3 && vars.completed_fights.TryGetValue("crank", out output_catch)){
+                        return settings["crank_alt"] && vars.completed_splits.Add("crank_alt");
+                    }
+                    break;
+                // deep jungle splits
+                case 5:
+                    if(current.room == 0 && current.scene == 0 && ((death) || (white.Current > 0 && white.Old == 0))){
+                        return settings["sabor_1"];
+                    }
+                    if(
+                        // house gummi
+                        (current.room == 0 && current.scene == 3 && current.power_wild_gummis[13] != old.power_wild_gummis[13])
+                        // bamboo gummi
+                        (current.room == 2 && current.scene == 2 && current.power_wild_gummis[0] != old.power_wild_gummis[0])
+                        // climbing trees gummi
+                        (current.room == 6 && current.scene == 2 && current.power_wild_gummis[31] != old.power_wild_gummis[31])
+                        // cliff gummi
+                        (current.room == 11 && current.scene == 2 && current.power_wild_gummis[30] != old.power_wild_gummis[30])
+                        // camp gummi
+                        (current.room == 12 && current.scene == 1 && current.power_wild_gummis[7] != old.power_wild_gummis[7])
+                    ){
+                        vars.pw_gummis += 1;
+                    }
+                    if(vars.pw_gummis == 5){
+                        return settings["power_wilds"] && vars.completed_splits.Add("power_wilds");
+                    }
+                    if(current.room == 10 && current.scene == 0){
+                        return settings["wfc"] && vars.completed_splits.Add("wfc");
+                    }
+                    break;
+                // agrabah splits
+                case 8:
+                    if(current.room == 0 && current.scene == 4){
+                        return settings["save_al"] && vars.completed_splits.Add("save_al");
+                    }
+                    if(current.room == 1 && current.scene == 4){
+                        return settings["carpet_escape"] && vars.completed_splits.Add("carpet_escape");
+                    }
+                    break;
+                // halloween town splits
+                case 10:
+                    // forget me not
+                    if(current.room == 10 && current.collected_items_2[75] == 0 && old.collected_items_2[75] == 1){
+                        return settings["fmn"];
+                    }
+                    // jack in the box
+                    if(current.room == 10 && current.collected_items_2[76] == 0 && old.collected_items_2[76] == 1){
+                        return settings["jb"];
+                    }
+                    break;
+                // neverland splits
+                case 13:
+                    var neverland_scene = vars.watchers["neverland_scene"];
+                    neverland_scene.Update(game);
+                    if(!vars.pre_hook && current.room == 8 && current.scene == 1 && neverland_scene.Current == 80){
+                        vars.back_split = "pre_hook";
+                        vars.pre_hook = true;
+                        return settings["pre_hook"];
+                    }
+                    if(cutscene.Current && gummi_destination_world.Current == 13 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)){
+                        return settings["ship"] && vars.completed_splits.Add("ship");
+                    }
+                    break;
+                // hollow bastion splits
+                case 15:
+                    if(old.room == 11 && current.room == 4 && current.scene == 13){
+                        return settings["emblem"];
+                    }
+                    if(current.room == 3 && current.scene == 13 && summon_load.Current && vars.summon_timer > 30){
+                        return settings["dumbo_1"] && vars.completed_splits.Add("dumbo_1");
+                    }
+                    if(current.room == 1 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30){
+                        return settings["dumbo_2"] && vars.completed_splits.Add("dumbo_2");
+                    }
+                    if(current.room == 3 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30){
+                        return settings["dumbo_3"] && vars.completed_splits.Add("dumbo_3");
+                    }
+                    break;
+                // end of world splits
+                case 16:
+                    current.arch_behemoth_defeated = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE620A);
+                    if(current.room == 12 && current.scene == 13 && current.arch_behemoth_defeated == 1 && old.arch_behemoth_defeated == 0){
+                        return settings["arch"];
+                    }
+                    if(old.room == 18 && current.room == 15){
+                        return settings["oc"] && vars.completed_splits.Add("oc_portal");
+                    }
+                    if(old.room == 21 && current.room == 15){
+                        return settings["atl"] && vars.completed_splits.Add("atl_portal");
+                    }
+                    if(old.room == 25 && current.room == 15){
+                        return settings["hbp"];
+                    }
+                    if(!vars.behemoth_3 && current.room == 28 && current.arch_behemoth_defeated > old.arch_behemoth_defeated){
+                        vars.behemoth_3 = true;
+                        vars.back_split = "be3";
+                        return settings["behemoth_3"];
+                    }
+                    if(current.room == 29){
+                        vars.back_split = "";
+                        return settings["final_rest"] && vars.completed_splits.Add("final_rest");
+                    }
+                    if(old.room == 33 && current.room == 37){
+                        return settings["artillery"];
+                    }
+                    break;
+            }
+        }
+        
+        if(gummi_destination_world.Current == 13 && current.ship == 37 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)){
+            return settings["ship_early"] && vars.completed_splits.Add("ship_early");
+        }
+    }
+
+    if(settings["all_worlds_splits"]){
+        if(fight_complete){
+            switch (current_world){
+                // atlantica splits
+                case 9:
+                    if(current.room == 12 && current.scene == 2){
+                        return settings["urs_1"];
+                    }
+                    if(current.room == 16){
+                        return settings["urs_2"];
+                    }
+                    break;
+                // olympus coliseum splits
+                case 11:
+                    if(current.room == 2 && current.scene == 0){
+                        return settings["cloud_1"];
+                    }
+                    if(current.room == 2 && current.scene == 1){
+                        return settings["cerb_1"];
+                    }
+                    if(current.room == 2 && current.scene == 9){
+                        if(!vars.cloud_2){
+                            vars.back_split = "cloud2";
+                            vars.cloud_2 = true;
+                            return settings["cloud_2"];
+                        } else if (!vars.herc_cup) {
+                            vars.herc_cup = true;
+                            vars.back_split = "";
+                            return settings["herc_cup"];
+                        }
+                    }
+                    break;
+            }
+        } else {
+            switch (current_world){
+                // traverse town splits
+                case 3:
+                    if(old_world == 6 && vars.completed_splits.TryGetValue("torn_page_power", out output_catch)){
+                        return settings["power_boost"] && vars.completed_splits.Add("power_boost");
+                    }
+                    if(vars.completed_splits.TryGetValue("torn_page_5", out output_catch) && old.room == 9 && current.room == 19){
+                        return settings["seal_100_aw"];
+                    }
+                    break;
+                // 100 acre wood splits
+                case 6:
+                    // power boost
+                    if(current.collected_items_2[0] > old.collected_items_2[0]){
+                        vars.completed_splits.Add("torn_page_power");
+                    }
+                    // nature spark
+                    if(current.collected_items_2[55] == 1 && old.collected_items_2[55] == 0){
+                        return settings["torn_page_1"];
+                    }
+                    // mythril shard
+                    if(current.collected_items_2[100] > old.collected_items_2[100]){
+                        return settings["torn_page_2"] && vars.completed_splits.Add("torn_page_2");
+                    }
+                    // stop level
+                    if(current.magic_levels[168] > old.magic_levels[168]){
+                        return settings["torn_page_3"];
+                    }
+                    // mythril
+                    if(current.collected_items_2[101] > old.collected_items_2[101]){
+                        return settings["torn_page_4"] && vars.completed_splits.Add("torn_page_4");
+                    }
+                    // exp ring
+                    if(current.equips[0] > old.equips[0]){
+                        vars.completed_splits.Add("torn_page_5");
+                        return settings["torn_page_5"];
+                    }
+                    break;
+                // atlantica splits
+                case 9:
+                    var docked_world = vars.watchers["docked_world"];
+                    docked_world.Update(game);
+                    if(docked_world.Current == 9){
+                        return settings["atl_dock"] && vars.completed_splits.Add("atl_dock");
+                    }
+                    break;
+                // olympus coliseum splits
+                case 11:
+                    // thunder unlocked
+                    if(in_gummi.Current > 0 && (
+                        current.magic_unlock_val == 5 ||
+                        current.magic_unlock_val == 7 ||
+                        current.magic_unlock_val == 15
+                    )){
+                        return settings["thunder"] && vars.completed_splits.Add("thunder");
+                    }
+                    break;
+            }
+        }
+    }
+
+    if(settings["jj_splits"]){
+        if(fight_complete){
+            switch (current_world){
+                // agrabah splits
+                case 8:
+                    if(current.room == 0 && current.scene == 13){
+                        return settings["kurt"];
+                    }
+                    break;
+                // olympus coliseum splits
+                case 11:
+                    if(current.room == 5 && current.scene == 0){
+                        return settings["pg_cup"];
+                    }
+                    if(current.room == 2 && current.scene == 11){
+                        return settings["hades_seed_39"];
+                    }
+                    if(current.room == 6 && current.scene == 4){
+                        return settings["hades_seed_19"];
+                    }
+                    if(current.room == 5 && current.scene == 13){
+                        return settings["hades_seed_9"];
+                    }
+                    if(current.room == 6 && current.scene == 5){
+                        return settings["ice_titan"] && vars.completed_splits.Add("ice_titan");
+                    }
+                    if(current.room == 6 && current.scene == 6){
+                        return settings["seph"] && vars.completed_splits.Add("seph");
+                    }
+                    break;
+                // neverland splits
+                case 13:
+                    if(current.room == 9 && current.scene == 1){
+                        return settings["nap_time"];
+                    }
+                    break;
+            }
+        } else {
+            switch (current_world){
+                // wonderland splits
+                case 4:
+                    if(settings["wl_2"]){
+                        if(vars.completed_splits.TryGetValue("wl_1", out output_catch)){
+                            if(!vars.wl_counts){
+                                vars.wl_counts = true;
+                                vars.puppies = current.puppy_count;
+                                vars.green = current.trinity_counts[3];
+                                vars.blue = current.trinity_counts[0];
+                                vars.white = current.trinity_counts[5];
+                            }
+                            return (
+                                // gigas shadow
+                                current.enemies_defeated[82] >= 1 &&
+                                vars.check_jj_revisit(
+                                    current_world,
+                                    new int[] {vars.puppies, vars.blue, 0, vars.green, 0, vars.white, 0, 0}
+                                )
+                            ) && vars.completed_splits.Add("wl_2");
+                        }
+                    }
+                    break;
+                // deep jungle splits
+                case 5:
+                    if(settings["dj_2"]){
+                        if(vars.completed_splits.TryGetValue("dj_1", out output_catch)){
+                            if(!vars.dj_counts){
+                                vars.dj_counts = true;
+                                vars.mini = current.mini_game_count;
+                                vars.green = current.trinity_counts[3];
+                                vars.white = current.trinity_counts[5];
+                            }
+                            return (
+                                // black ballad and bouncy wild
+                                current.enemies_defeated[86] >= 1 &&
+                                current.enemies_defeated[4] >= 1 &&
+                                vars.check_jj_revisit(
+                                    current_world,
+                                    new int[] {0, 0, 0, vars.green, 0, vars.white, vars.mini, 0}
+                                )
+                            ) && vars.completed_splits.Add("dj_2");
+                        }
+                    }
+                    break;
+                // agrabah splits
+                case 8:
+                    if(settings["ag_2"]){
+                        if(vars.completed_splits.TryGetValue("ag_1", out output_catch)){
+                            if(!vars.ag_counts){
+                                vars.ag_counts = true;
+                                vars.puppies = current.puppy_count;
+                                vars.green = current.trinity_counts[3];
+                                vars.yellow = current.trinity_counts[4];                            
+                                vars.white = current.trinity_counts[5];
+                            }
+                            return (
+                                // pot scorpion
+                                current.enemies_defeated[34] >= 1 &&
+                                vars.check_jj_revisit(
+                                    current_world,
+                                    new int[] {vars.puppies, 0, 0, vars.green, vars.yellow, vars.white, 0, 0}
+                                )
+                            ) && vars.completed_splits.Add("ag_2");
+                        }
+                    }
+                    break;
+                // atlantica splits
+                case 9:
+                    if(current.torn_page_count > old.torn_page_count){
+                        vars.atl_torn_page = true;
+                    }
+                    if(vars.atl_torn_page && in_gummi.Current > 0){
+                        return settings["atlantica_1"] && vars.completed_splits.Add("atlantica_1");
+                    }
+                    break;
+                // halloween town splits
+                case 10:
+                    if(settings["ht_2"]){
+                        if(vars.completed_splits.TryGetValue("ht_1", out output_catch)){
+                            if(!vars.ht_counts){
+                                vars.ht_counts = true;
+                                vars.puppies = current.puppy_count;
+                                vars.red = current.trinity_counts[2];
+                                vars.white = current.trinity_counts[5];
+                            }
+                            return (
+                                // chimera
+                                current.enemies_defeated[48] >= 1 &&
+                                vars.check_jj_revisit(
+                                    current_world,
+                                    new int[] {vars.puppies, 0, vars.red, 0, 0, vars.white, 0, 0}
+                                )
+                            ) && vars.completed_splits.Add("ht_2");
+                        }
+                    }
+                    break;
+                // olympus coliseum splits
+                case 11:
+                    // gravity level
+                    if(current.magic_levels[112] > old.magic_levels[112]){
+                        return settings["phil_cup"] && vars.completed_splits.Add("phil_cup");
+                    }
+                    if(current.room == 2 && current.scene == 7){
+                        vars.party_slot_1 = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE5E5F);
+                        vars.party_slot_2 = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE5E60);
+                        if(vars.party_slot_1 == 255 && vars.party_slot_2 == 255){
+                            // split when next available ability slot becomes combo plus in OC room 2 scene 7
+                            int offset = 0x2DE5A14 + vars.next_ability_slot_idx;
+                            int byte_count = 48 - vars.next_ability_slot_idx;
+                            var next_ability_slot = memory.ReadValue<byte>(modules.First().BaseAddress + offset);
+                            if(next_ability_slot == 134){
+                                return settings["phil_cup_solo"] && vars.completed_splits.Add("phil_cup_solo");
+                            }
+                            byte[] ability_slots = memory.ReadBytes(modules.First().BaseAddress + 0x2DE5A14, byte_count);
+                            var ability_slots_slice = new byte[byte_count]; 
+                            Array.Copy(ability_slots, vars.next_ability_slot_idx, ability_slots_slice, 0, byte_count);
+                            for (int i = 0; i < ability_slots_slice.Length; i++){
+                                if(ability_slots[i] == 0){
+                                    vars.next_ability_slot_idx = i;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    // can be adapted for plat
+                    if(old.room == 5 && old.scene == 11){
+                        return settings["hades_seed_49"] && vars.completed_splits.Add("hades_seed_49");
+                    }
+                    // thunder level up
+                    if(current.magic_levels[0] > old.magic_levels[0] && current.room == 5 && current.scene == 4){
+                        return settings["hades_seed_29"] && vars.completed_splits.Add("hades_seed_29");
+                    }
+                    break;
+                // monstro splits
+                case 12:
+                    if(settings["mo_2"]){
+                        if(vars.completed_splits.TryGetValue("mo_1", out output_catch)){
+                            if(!vars.mo_counts){
+                                vars.mo_counts = true;
+                                vars.puppies = current.puppy_count;
+                                vars.green = current.trinity_counts[3];
+                                vars.white = current.trinity_counts[5];
+                                vars.pages = current.torn_page_count;
+                            }
+                            return (
+                                // grand ghost
+                                current.enemies_defeated[92] >= 1 &&
+                                vars.check_jj_revisit(
+                                    current_world,
+                                    new int[] {vars.puppies, 0, 0, vars.green, 0, vars.white, 0, vars.pages}
+                                )
+                            ) && vars.completed_splits.Add("mo_2");
+                        }
+                    }
+                    break;
+                // neverland splits
+                case 13:
+                    if(settings["nl_2"]){
+                        if(vars.completed_splits.TryGetValue("nl_1", out output_catch)){
+                            if(!vars.nl_counts){
+                                vars.nl_counts = true;
+                                vars.puppies = current.puppy_count;
+                                vars.white = current.trinity_counts[5];
+                                vars.yellow = current.trinity_counts[4];
+                            }
+                            return (
+                                // jet balloon
+                                current.enemies_defeated[88] >= 1 &&
+                                vars.check_jj_revisit(
+                                    current_world,
+                                    new int[] {vars.puppies, 0, 0, 0, vars.yellow, vars.white, 0, 0}
+                                )
+                            ) && vars.completed_splits.Add("nl_2");
+                        }
+                    }
+                    break;
+                // hollow bastion splits
+                case 15:
+                    // divine rose & cure level
+                    if(current.equips[33] == 1 && current.magic_levels[56] == 3 && in_gummi.Current > 0){
+                        return settings["hb_2"] && vars.completed_splits.Add("hb_2");
+                    }
+                    // exp necklace
+                    if(current.room == 12 && current.scene == 2 && current.equips[2] > old.equips[2]){
+                        return settings["xemnas"];
+                    }
+                    break;
+                // end of world splits
+                case 16:
+                    if(in_gummi.Current > 0){
+                        return settings["eow"] && vars.completed_splits.Add("eow");
+                    }
+                    if(current.room == 29){
+                        vars.chronicles_complete = current.chronicles_count == 10;
+                        vars.reports_complete = current.reports_count == 13;
+                        vars.characters_complete = (
+                            current.characters_one_count == 39 &&
+                            current.characters_two_count == 64 &&
+                            current.enemies_defeated[4] >= 1 && // bouncy wild
+                            current.enemies_defeated[10] >= 1 && // sea neon
+                            current.enemies_defeated[12] >= 1 && // sheltering zone
+                            current.enemies_defeated[34] >= 1 && // pot scropion
+                            current.enemies_defeated[44] >= 1 && // aquatank
+                            current.enemies_defeated[46] >= 1 && // screw diver
+                            current.enemies_defeated[48] >= 1 && // chimera
+                            current.enemies_defeated[76] >= 1 && // pink agaricus
+                            current.enemies_defeated[78] >= 1 && // neo shadow
+                            current.enemies_defeated[80] >= 1 && // stealth soldier
+                            current.enemies_defeated[82] >= 1 && // gigas shadow
+                            current.enemies_defeated[84] >= 1 && // sniper wild
+                            current.enemies_defeated[86] >= 1 && // black ballad
+                            current.enemies_defeated[88] >= 1 && // jet balloon
+                            current.enemies_defeated[92] >= 1 // grand ghost
+                        );
+                        vars.world_puppies_complete = current.puppy_count == 99;
+                        vars.world_trinities_complete = (
+                            current.trinity_counts[0] == 17 && // blue
+                            current.trinity_counts[2] == 6 && // red
+                            current.trinity_counts[3] == 9 && // green
+                            current.trinity_counts[4] == 4 && // yellow
+                            current.trinity_counts[5] == 10 // white
+                        );
+                        vars.world_mini_game_complete = current.mini_game_count == 8;
+                        vars.journal_complete = (
+                            vars.chronicles_complete &&
+                            vars.reports_complete &&
+                            vars.characters_complete &&
+                            vars.world_puppies_complete &&
+                            vars.world_trinities_complete &&
+                            vars.chronicles_complete
+                        );
+                        if(vars.journal_complete){
+                            return settings["jj_complete_early"] && vars.completed_splits.Add("jj_complete_early");
+                        }
+                    }
+                    if(old.room == 29 && current.room == 30){
+                        return settings["jj_complete"] && vars.completed_splits.Add("jj_complete");
+                    }
+                    break;
+        }
+        }
+        // Register initial world visits complete for revisit checks
+        if(in_gummi.Current > 0){
+            var docked_world = vars.watchers["docked_world"];
+            docked_world.Update(game);
+            // blizzard unlocked
+            if(settings["wl_2"] && docked_world.Current != 4 && (
+                current.magic_unlock_val == 3 ||
+                current.magic_unlock_val == 7 ||
+                current.magic_unlock_val == 11 ||
+                current.magic_unlock_val == 15
+            )){
+                vars.completed_splits.Add("wl_1");
+            }
+            // jungle king
+            if(settings["dj_2"] && current.equips[28] == 1 && docked_world.Current != 5){
+                vars.completed_splits.Add("dj_1");
+            }
+            // three wishes
+            if(settings["ag_2"] && current.equips[29] == 1 && docked_world.Current != 8){
+                vars.completed_splits.Add("ag_1");
+            }
+            // pumpkin head
+            if(settings["ht_2"] && current.equips[31] == 1 && docked_world.Current != 10){
+                vars.completed_splits.Add("ht_1");
+            }
+            // stop unlocked
+            if(settings["mo_2"] && docked_world.Current == 8 && (
+                current.magic_unlock_val == 43 ||
+                current.magic_unlock_val == 47
+            )){
+                vars.completed_splits.Add("mo_1");
+            }
+            // fairy harp
+            if(settings["nl_2"] && current.equips[30] == 1 && docked_world.Current != 13){
+                vars.completed_splits.Add("nl_1");
+            }
+        }
+    }
+
+    if(settings["plat_splits"]){
+        switch (current_world){
+            // traverse town splits
+            case 3:
+                // aero level
+                if(!vars.aero_level_up && current.magic_levels[224] > old.magic_levels[224]){
+                    vars.aero_level_up = true;
+                }
+                // ultima
+                if(current.equips[41] >= 1 && vars.aero_level_up){
+                    return settings["tt_final"] && vars.completed_splits.Add("tt_final");
+                }
+                break;
+        }
+        // synth splits
+        vars.mats = (
+            current.collected_items_1[0] >= 1 && // fury stone
+            current.collected_items_1[1] >= 1 && // power stone
+            current.collected_items_1[2] >= 1 && // energy stone
+            current.collected_items_1[3] >= 1 && // blazing stone
+            current.collected_items_1[4] >= 1 && // frost stone
+            current.collected_items_1[5] >= 1 && // lightning stone
+            current.collected_items_1[6] >= 1 && // dazzling stone
+            current.collected_items_1[7] >= 1 && // stormy stone
+            current.collected_items_2[3] >= 1 && // serenity power
+            current.collected_items_2[5] >= 1 // mythril stone
+        );
+        if(vars.mats){
+            return settings["each_mat"] && vars.completed_splits.Add("each_mat");
+        }
+        // gummi splits
+        if(current.gummi_kills >= 2500){
+            return settings["gummi_kills"] && vars.completed_splits.Add("gummi_kills");
+        }
+    }
+
+    if(settings["misc"]){
+        if(settings["coco"] && !vars.finished_nut){
+            if(settings["per_10"]){
+                // coconuts
+                if(current.collected_items_2[46] > old.collected_items_2[46] && current.collected_items_2[46] % 10 == 0){
+                    return true;
+                }
+            }
+            else if(settings["per_1"]){
+                // coconuts
+                if(current.collected_items_2[46] > old.collected_items_2[46]){
+                    return true;
+                }
+            }
+            // coconuts
+            if(current.collected_items_2[46] == 99){
+                vars.finished_nut = true;
+                return true;
+            }
+        }
+    }
+
+    // logic for handling death if you want to repeat splits or not and have one off
+    if(death){
+        string back_split = vars.back_split;
+        switch (back_split){
+            case "clay1":
+                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["clayton_1"])){
+                    vars.clayton_1 = false;
+                }
+                break;
+            case "pre_hook":
+                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["pre_hook"])){
+                    vars.pre_hook = false;
+                }
+                break;
+            case "fake":
+                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["fake_guard"])){
+                    vars.fake_guard = false;
+                }
+                break;
+            case "cloud2":
+                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["cloud_2"])){
+                    vars.cloud_2 = false;
+                }
+                break;
+            case "be3":
+                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["behemoth_3"])){
+                    vars.behemoth_3 = false;
+                }
+                break;
+            case "ds3":
+                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["ds3"])){
+                    vars.ds3 = false;
+                }
+                break;
+        }
+    }
 }
 
 exit
 {
-	vars.booting = true;
-	timer.IsGameTimePaused = true;
+    vars.booting = true;
+    timer.IsGameTimePaused = true;  
 }
 
 init
 {
-	vars.camp_gummi = false;
-	vars.climb_gummi = false;
-	vars.house_gummi = false;
-	vars.cliff_gummi = false;
-	vars.bamboo_gummi = false;
-	vars.got_oath = false;
-	vars.shadows_1 = 0;
-	vars.shadows_2 = 0;
-	vars.ds1 = 0;
-	vars.day_1 = 0;
-	vars.destiny = 0;
-	vars.ds2 = 0;
-	vars.leon = 0;
-	vars.guard = 0;
-	vars.barrel_game = 0;
-	vars.thunder = 0;
-	vars.cloud_1 = 0;
-	vars.cerb_1 = 0;
-	vars.phil_cup = 0;
-	vars.phil_cup_solo = 0;
-	vars.phil_cup_solo_won = 0;
-	vars.pg_cup = 0;
-	vars.cloud_2 = 0;
-	vars.herc = 0;
-	vars.hades_seed_49 = 0;
-	vars.hades_seed_39 = 0;
-	vars.in_cloud_leon_fight = 0;
-	vars.hades_seed_29 = 0;
-	vars.hades_seed_19 = 0;
-	vars.hades_seed_9 = 0;
-	vars.ice_titan = 0;
-	vars.seph = 0;	
-	vars.crank = 0;
-	vars.tm = 0;
-	vars.sabor_1 = 0;
-	vars.pw = 0;
-	vars.sabor_2 = 0;
-	vars.clayton_1 = 0;
-	vars.clayton_2 = 0;
-	vars.wfc = 0;
-	vars.tt_2 = 0;
-	vars.torn_page_power = 0;
-	vars.torn_page_power_split = 0;
-	vars.nature_spark = 0;
-	vars.torn_page_mythril_shard = 0;
-	vars.stopra = 0;
-	vars.torn_page_mythril = 0;
-	vars.exp_ring = 0;
-	vars.muddy_finish = 0;
-	vars.seal_100_aw = 0;
-	vars.save_al = 0;
-	vars.pot = 0;
-	vars.tiger = 0;
-	vars.jafar = 0;
-	vars.gj = 0;
-	vars.kurt = 0;
-	vars.carpet_escape = 0;
-	vars.atl_torn_page = 0;
-	vars.atlantica_1 = 0;
-	vars.ursula_1 = 0;
-	vars.ursula_2 = 0;
-	vars.pc = 0;
-	vars.pc2 = 0;
-	vars.fmn = 0;
-	vars.jb = 0;
-	vars.lsb = 0;
-	vars.oogie = 0;
-	vars.oogie_manor = 0;
-	vars.ship = 0;
-	vars.anti = 0;
-	vars.pre_hook = 0;
-	vars.hook = 0;
-	vars.nap = 0;
-	vars.fake_guard = 0;
-	vars.oppo = 0;
-	vars.riku = 0;
-	vars.emblem = 0;
-	vars.dumbo_1 = 0;
-	vars.mal = 0;
-	vars.dragon = 0;
-	vars.riku2 = 0;
-	vars.tt_4 = 0;
-	vars.dumbo_2 = 0;
-	vars.dumbo_3 = 0;
-	vars.behemoth = 0;
-	vars.xemnas = 0;
-	vars.arch = 0;
-	vars.oc = 0;
-	vars.atl = 0;
-	vars.hbp = 0;
-	vars.cher = 0;
-	vars.behemoth_3 = 0;
-	vars.finalrest = 0;
-	vars.a1 = 0;
-	vars.ds3 = 0;
-	vars.a2 = 0;
-	vars.a3 = 0;
-	vars.sc = 0;
-	vars.artillery = 0;
-	vars.dbc = 0;
-	vars.face = 0;
-	vars.inc = 0;
-	vars.mc = 0;
-	vars.final_fight = 0;
-	vars.back_split = "";
-	timer.IsGameTimePaused = false;
-	Func <ushort, ushort, ushort, ushort, ushort, ushort, ushort, ushort, int, bool> checkWorldValue = (ushort a, ushort b, ushort c, ushort d, ushort e, ushort f, ushort g, ushort h, int actual) => {
-		return a == actual || b == actual || c == actual || d == actual || e == actual || f == actual || f == actual || g == actual || h == actual;
-	};
-	vars.checkWorldValue = checkWorldValue;
+    // game base address
+    var gb = modules.First().BaseAddress;
+    vars.watchers = new Dictionary<string, MemoryWatcher>{
+        { "black_inv", new MemoryWatcher<bool>(gb + 0x4D93B8) },
+        { "cutscene", new MemoryWatcher<bool>(gb + 0x233AE74) },
+        { "load", new MemoryWatcher<bool>(gb + 0x232A368) },
+        { "load_2", new MemoryWatcher<bool>(gb + 0x233AEB0) },
+        { "paused", new MemoryWatcher<bool>(gb + 0x232A63C) },
+        { "party_load", new MemoryWatcher<bool>(gb + 0x2E1BAFC) },
+        { "save_load", new MemoryWatcher<bool>(gb + 0x2E1CBB8) },
+        { "summon_load", new MemoryWatcher<bool>(gb + 0x2D50988) },
+        { "white_screen", new MemoryWatcher<byte>(gb + 0x233C49C) },
+        { "titlescreen", new MemoryWatcher<byte>(gb + 0x7FE990) },
+        { "titlescreen_2", new MemoryWatcher<byte>(gb + 0x2ED8434) },
+        { "newgame", new MemoryWatcher<byte>(gb + 0x2E98824) },
+        { "fightend", new MemoryWatcher<byte>(gb + 0x2D500B8) },
+        { "in_gummi", new MemoryWatcher<byte>(gb + 0x50421D) },
+        { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED321E) },
+        { "text_progress", new MemoryWatcher<byte>(gb + 0x232A5F4) },
+        { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DE6EDD) },
+        { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE65DC) },
+        { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFBDFC) },
+        { "non_player_unit_count", new MemoryWatcher<ushort>(gb + 0x23A243C) },
+        { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D592CC) },
+        { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x503C00) },
+        { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x5041F0) },
+        { "docked_world", new MemoryWatcher<ushort>(gb + 0x5229B0) },
+    };
+
+    vars.completed_splits = new HashSet<string>();
+    vars.completed_fights = new HashSet<string>();
+
+    // traverse town vars
+    vars.fake_guard = false;
+    vars.oppo = false;
+    vars.aero_level_up = false;
+
+    // wonderland vars
+    vars.wl_counts = false;
+    vars.wl_2_complete = false;
+
+    // deep jungle vars
+    vars.pw_gummis = 0;
+    vars.clayton_1 = false;
+    vars.clayton_2 = false;
+    vars.dj_counts = false;
+    vars.dj_2_complete = false;
+
+    // agrabah vars
+    vars.ag_counts = false;
+    vars.ag_2_complete = false;
+
+    // atlantica vars
+    vars.atl_torn_page = false;
+
+    // halloween town vars
+    vars.ht_counts = false;
+    vars.ht_2_complete = false;
+
+    // olympus coliseum vars
+    vars.cloud_2 = false;
+    vars.herc_cup = false;
+    vars.next_ability_slot_idx = 0;
+
+    // monstro vars
+    vars.mo_counts = false;
+    vars.mo_2_complete = false;
+
+    // neverland vars
+    vars.pre_hook = false;
+    vars.nl_counts = false;
+    vars.nl_2_complete = false;
+
+    // end of world vars
+    vars.behemoth_3 = false;
+    vars.ds3 = false;
+
+    // outside world vars
+    vars.world_puppies_complete = false;
+    vars.world_enemies_complete = false;
+    vars.world_trinities_complete = false;
+    vars.world_mini_game_complete = false;
+
+    // misc category vars
+    vars.finished_nut = false;
+
+    // manual back step vars
+    vars.back_split = "";
+    // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)
+    // puppies sets are multiples of 3 by sets found
+    vars.revisit_info = new Dictionary<int, Dictionary<int, int[]>>{
+        {
+            // wonderland
+            4,
+            new Dictionary<int, int[]>
+            {
+                // beginner
+                {0, new int[]{12, 1, 0, 2, 0, 1, 0, 0}},
+                // standard
+                {1, new int[]{6, 1, 0, 2, 0, 1, 0, 0}},
+                // proud
+                {2, new int[]{6, 1, 0, 2, 0, 1, 0, 0}},
+                // level 1
+                {3, new int[]{12, 1, 0, 2, 0, 1, 0, 0}}
+            }
+        },
+        {
+            // deep jungle
+            5,
+            new Dictionary<int, int[]>
+            {
+                // beginner
+                {0, new int[]{0, 0, 0, 1, 0, 1, 1, 0}},
+                // standard
+                {1, new int[]{0, 0, 0, 1, 0, 1, 1, 0}},
+                // proud
+                {2, new int[]{0, 0, 0, 1, 0, 1, 1, 0}},
+                // level 1
+                {3, new int[]{0, 0, 0, 1, 0, 1, 1, 0}}
+            }
+        },
+        {
+            // agrabah
+            8,
+            new Dictionary<int, int[]>
+            {
+                // beginner
+                {0, new int[]{6, 0, 0, 1, 1, 1, 0, 0}},
+                // standard
+                {1, new int[]{0, 0, 0, 0, 1, 0, 0, 0}},
+                // proud
+                {2, new int[]{0, 0, 0, 0, 1, 0, 0, 0}},
+                // level 1
+                {3, new int[]{6, 0, 0, 1, 1, 1, 0, 0}}
+            }
+        },
+        {
+            // halloween town
+            10, 
+            new Dictionary<int, int[]>
+            {
+                // beginner
+                {0, new int[]{12, 0, 1, 0, 0, 1, 0, 0}},
+                // standard
+                {1, new int[]{9, 0, 1, 0, 0, 1, 0, 0}},
+                // proud
+                {2, new int[]{9, 0, 1, 0, 0, 1, 0, 0}},
+                // level 1
+                {3, new int[]{12, 0, 1, 0, 0, 1, 0, 0}}
+            }
+        },
+        {
+            // monstro
+            12,
+            new Dictionary<int, int[]>
+            {
+                // beginner
+                {0, new int[]{3, 0, 0, 1, 0, 1, 0, 0}},
+                // standard
+                {1, new int[]{3, 0, 0, 1, 0, 1, 0, 0}},
+                // proud
+                {2, new int[]{3, 0, 0, 1, 0, 1, 0, 0}},
+                // level 1
+                {3, new int[]{3, 0, 0, 1, 0, 1, 0, 1}}
+            }
+        },
+        {
+            // neverland
+            13,
+            new Dictionary<int, int[]>
+            {
+                // beginner
+                {0, new int[]{9, 0, 0, 0, 1, 1, 0, 0}},
+                // standard
+                {1, new int[]{9, 0, 0, 0, 1, 1, 0, 0}},
+                // proud
+                {2, new int[]{9, 0, 0, 0, 1, 1, 0, 0}},
+                // level 1
+                {3, new int[]{9, 0, 0, 0, 1, 1, 0, 0}}
+            }
+        }
+    };
+
+    vars.check_jj_revisit = (Func <int, int[], bool>)(
+        (int world, int[] starting_vals) => {
+            int difficulty = current.difficulty;
+            int[] current_vals = {
+                current.puppy_count,
+                current.trinity_counts[0], // blue
+                current.trinity_counts[2], // red
+                current.trinity_counts[3], // green
+                current.trinity_counts[4], // yellow
+                current.trinity_counts[5], // white
+                current.mini_game_count,
+                current.torn_page_count
+            };
+            int level = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE59D4);
+            vars.cons_met = 0;
+            if(level == 1){
+                difficulty += 1;
+            }
+            foreach (int value in Enumerable.Range(0, 8)){
+                if(current_vals[value] - starting_vals[value] >= vars.revisit_info[world][difficulty][value]){
+                    vars.cons_met += 1;
+                }
+            }
+            if(vars.cons_met == 8){
+                vars.cons_met = 0;
+                return true;
+            } else {
+                vars.cons_met = 0;
+                return false;
+            }
+        }
+    );
+    vars.check_world_id = (Func <ushort, ushort, ushort, ushort, ushort, ushort, int, bool>)(
+        (ushort a, ushort b, ushort c, ushort d, ushort e, ushort f, int actual) => {
+            return (
+                a == actual || b == actual || c == actual ||
+                d == actual || e == actual || f == actual ||
+                f == actual
+            );
+        }
+    );
+    timer.IsGameTimePaused = false;
+}
+
+reset
+{
+    var title = vars.watchers["titlescreen"];
+    var title_2 = vars.watchers["titlescreen_2"];
+    if(title_2.Current == 0 && title.Current == 1 && title.Old != 1 && current.scene == 0 && current.room == 0){
+        if(vars.check_world_id(current.world_id_1, current.world_id_2, current.world_id_3, current.world_id_4, current.world_id_5, current.world_id_6, 0)){
+            return true;
+        }
+    }
 }
 
 update
 {
-	if(vars.booting && current.titlescreen == 1){
-		vars.booting = false;
-	}
+    var output_catch = "";
+    vars.watchers["black_inv"].Update(game);
+    vars.watchers["cutscene"].Update(game);
+    vars.watchers["text_progress"].Update(game);
+    vars.watchers["load"].Update(game);
+    vars.watchers["load_2"].Update(game);
+    vars.watchers["party_load"].Update(game);
+    vars.watchers["paused"].Update(game);
+    vars.watchers["save_load"].Update(game);
+    vars.watchers["sora_hp"].Update(game);
+    vars.watchers["summon_load"].Update(game);
+    vars.watchers["titlescreen"].Update(game);
+    vars.watchers["titlescreen_2"].Update(game);
+    vars.watchers["white_screen"].Update(game);
+    vars.watchers["fightend"].Update(game);
+    if(
+        (settings["tt_2"] && !vars.completed_splits.TryGetValue("tt_2", out output_catch)) || (settings["tt_4"] && !vars.completed_splits.TryGetValue("tt_4", out output_catch)) ||
+        (settings["thunder"] && !vars.completed_splits.TryGetValue("thunder", out output_catch)) || (settings["atlantica_1"] && !vars.completed_splits.TryGetValue("atlantica_1", out output_catch)) ||
+        (settings["hb_2"] && !vars.completed_splits.TryGetValue("hb_2", out output_catch)) || (settings["eow"] && !vars.completed_splits.TryGetValue("eow", out output_catch)) ||
+        (settings["wl_2"] && !vars.completed_splits.TryGetValue("wl_2", out output_catch)) || (settings["dj_2"] && !vars.completed_splits.TryGetValue("dj_2", out output_catch)) ||
+        (settings["ag_2"] && !vars.completed_splits.TryGetValue("ag_2", out output_catch)) || (settings["ht_1"] && !vars.completed_splits.TryGetValue("ht_2", out output_catch)) ||
+        (settings["mo_2"] && !vars.completed_splits.TryGetValue("mo_2", out output_catch)) || (settings["nl_2"] && !vars.completed_splits.TryGetValue("nl_2", out output_catch))
+    ){
+        vars.watchers["in_gummi"].Update(game);
+    }
+    if(
+        (settings["ship"] && !vars.completed_splits.TryGetValue("ship", out output_catch)) || (settings["ship_early"] && !vars.completed_splits.TryGetValue("ship_early", out output_catch)) ||
+        (settings["wl_2"] && !vars.completed_splits.TryGetValue("wl_2", out output_catch)) || (settings["dj_2"] && !vars.completed_splits.TryGetValue("dj_2", out output_catch)) ||
+        (settings["ag_2"] && !vars.completed_splits.TryGetValue("ag_2", out output_catch)) || (settings["ht_2"] && !vars.completed_splits.TryGetValue("ht_2", out output_catch)) ||
+        (settings["mo_2"] && !vars.completed_splits.TryGetValue("mo_2", out output_catch)) || (settings["nl_2"] && !vars.completed_splits.TryGetValue("nl_2", out output_catch))
+    ){
+        vars.watchers["gummi_start_world"].Update(game);
+        vars.watchers["gummi_destination_world"].Update(game);
+    }
+    if(settings["atl_dock"] && !vars.completed_splits.TryGetValue("atl_dock", out output_catch)){
+        vars.watchers["docked_world"].Update(game);
+    }
+
+    if(vars.booting && vars.watchers["titlescreen"].Current == 1){
+        vars.booting = false;
+    }
 }
 
 isLoading
 {
-	vars.summontimer = current.summonload ? vars.summontimer + (current.paused ? 0 : 1) : 0;
-	
-	return ((current.load 
-	|| !current.blackInv
-	|| (current.white == 128 && !current.cutscene)
-	|| vars.summontimer > 30) && !current.paused)
-	|| current.saveload
-	|| current.partyload
-	|| (current.load2 && current.hp == 0) 
-	|| vars.booting;
+    var load = vars.watchers["load"];
+    var load_2 = vars.watchers["load_2"];
+    var black = vars.watchers["black_inv"];
+    var white = vars.watchers["white_screen"];
+    var cutscene = vars.watchers["cutscene"];
+    var paused = vars.watchers["paused"];
+    var summon_load = vars.watchers["summon_load"];
+    var save_load = vars.watchers["save_load"];
+    var party_load = vars.watchers["party_load"];
+    var sora_hp = vars.watchers["sora_hp"];
+    vars.summon_timer = summon_load.Current ? vars.summon_timer + (paused.Current ? 0 : 1) : 0;
+
+    return ((load.Current 
+    || !black.Current
+    || (white.Current == 128 && !cutscene.Current)
+    || vars.summon_timer > 30) && !paused.Current)
+    || save_load.Current
+    || party_load.Current
+    || (load_2.Current && sora_hp.Current == 0)
+    || vars.booting;
 }
