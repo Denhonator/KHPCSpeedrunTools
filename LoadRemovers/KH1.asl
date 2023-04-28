@@ -1,28 +1,23 @@
 state("KINGDOM HEARTS FINAL MIX")
 {
     // location info
-    ushort world_id_1 : 0x233CADC;
-    ushort world_id_2 : 0x233CB4C;
     ushort room : 0x233CB44;
     ushort scene : 0x233CB48;
-    ushort world_id_3 : 0x2D5CAFA;
-    ushort world_id_4 : 0x2DB41D0;
-    ushort world_id_5 : 0x2DE7A10;
-    ushort world_id_6 : 0x2DFE610;
+    ushort world : 0x233CB4C;
+    byte white : 0x233C49C;
+    byte in_gummi : 0x50421D;
+    byte magic_unlock_val : 0x2DE5A44;
 
     byte8 collected_items_1 : 0x2DE5E72;
     byte102 collected_items_2 : 0x2DE5F01;  
     byte33 power_wild_gummis : 0x2DF184C;
     byte42 equips : 0x2DE5EA3;
-    byte magic_unlock_val : 0x2DE5A44;
     byte225 magic_levels : 0x2D1F270;
-    ushort gummi_kills : 0x2DF1908;
     byte96 enemies_defeated : 0x2DE61AA;
     byte torn_page_count : 0x2DE6DD0;
     byte6 trinity_counts : 0x2DE7636;
     ushort puppy_count : 0x2E997A8;
     ushort mini_game_count : 0x2E999F4;
-    byte in_gummi : 0x50421D;
 }
 
 startup
@@ -182,14 +177,12 @@ start
 
 split
 {
-    int[] world_ids = {0, 1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 16};
-    int current_world = 0;
-    int old_world = 0;
+    int current_world = current.world;
+    int old_world = old.world;
     var output_catch = "";
     var fightend = vars.watchers["fightend"];
     var cutscene = vars.watchers["cutscene"];
     var eow_scene = vars.watchers["eow_scene"];
-    var white = vars.watchers["white_screen"];
     var text_progress = vars.watchers["text_progress"];
     var sora_hp = vars.watchers["sora_hp"];
     var summon_load = vars.watchers["summon_load"];
@@ -199,14 +192,6 @@ split
     bool fight_complete = fightend.Current == 2 && fightend.Old == 0;
     bool death = sora_hp.Current == 0 && sora_hp.Old > 0;
     vars.summon_timer = summon_load.Current ? vars.summon_timer + (paused.Current ? 0 : 1) : 0;
-    foreach (int value in world_ids){
-        if(vars.check_world_id(current.world_id_1, current.world_id_2, current.world_id_3, current.world_id_4, current.world_id_5, current.world_id_6, value)){
-            current_world = value;
-        }
-        if(vars.check_world_id(old.world_id_1, old.world_id_2, old.world_id_3, old.world_id_4, old.world_id_5, old.world_id_6, value)){
-            old_world = value;
-        }
-    }
 
     // Final fight split always goes
     if(fight_complete && current_world == 16 && current.room == 33 && current.scene == 4){
@@ -463,26 +448,26 @@ split
                     break;
                 // traverse town splits
                 case 3:
-                    if(current.room == 0 && current.scene == 3 && ((death) || (white.Current > 0 && white.Old == 0))){
+                    if(current.room == 0 && current.scene == 3 && ((death) || (current.white > 0 && old.white == 0))){
                         return vars.completed_splits.Add("leon") && settings["leon"];
                     }
                     if(current.room == 10 && current.scene == 11 && current.in_gummi > 0){
                         return vars.completed_splits.Add("tt_2") && settings["tt_2"];
                     }
                     // oath keeper
-                    if(current.scene == 0 && current.room == 10 && current.in_gummi > 0 && current.equips[37] == 1){
+                    if(current.scene == 0 && current.room == 10 && current.in_gummi > 0 && current.equips[38] == 1){
                         return vars.completed_splits.Add("tt_4") && settings["tt_4"];
                     }
                     break;
                 // wonderland splits
                 case 4:
-                    if(current.room == 3 && vars.completed_fights.TryGetValue("crank", out output_catch)){
+                    if(current.room == 3 && vars.completed_fights.TryGetValue("crank", out output_catch) && cutscene.Current){
                         return vars.completed_splits.Add("crank_alt") && settings["crank_alt"];
                     }
                     break;
                 // deep jungle splits
                 case 5:
-                    if(current.room == 0 && current.scene == 0 && ((death) || (white.Current > 0 && white.Old == 0))){
+                    if(current.room == 0 && current.scene == 0 && ((death) || (current.white > 0 && old.white == 0))){
                         return vars.completed_splits.Add("sabor_1") && settings["sabor_1"];
                     }
                     if(
@@ -500,6 +485,7 @@ split
                         vars.pw_gummis += 1;
                     }
                     if(vars.pw_gummis == 5){
+                        vars.pw_gummis = 0;
                         return vars.completed_splits.Add("power_wilds") && settings["power_wilds"];
                     }
                     if(current.room == 10 && current.scene == 0){
@@ -1042,7 +1028,10 @@ split
             return vars.completed_splits.Add("each_mat") && settings["each_mat"];
         }
         // gummi splits
-        if(current.gummi_kills >= 2500){
+        if(current.in_gummi){
+            vars.gummi_kills = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DF1908);            
+        }
+        if(vars.gummi_kills >= 2500){
             return vars.completed_splits.Add("gummi_kills") && settings["gummi_kills"];
         }
     }
@@ -1126,9 +1115,6 @@ init
         { "party_load", new MemoryWatcher<bool>(gb + 0x2E1BAFC) },
         { "save_load", new MemoryWatcher<bool>(gb + 0x2E1CBB8) },
         { "summon_load", new MemoryWatcher<bool>(gb + 0x2D50988) },
-        { "white_screen", new MemoryWatcher<byte>(gb + 0x233C49C) },
-        { "titlescreen", new MemoryWatcher<byte>(gb + 0x7FE990) },
-        { "titlescreen_2", new MemoryWatcher<byte>(gb + 0x2ED8434) },
         { "newgame", new MemoryWatcher<byte>(gb + 0x2E98824) },
         { "fightend", new MemoryWatcher<byte>(gb + 0x2D500B8) },
         { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED321E) },
@@ -1197,6 +1183,7 @@ init
     vars.world_enemies_complete = false;
     vars.world_trinities_complete = false;
     vars.world_mini_game_complete = false;
+    vars.gummi_kills = 0;
 
     // misc category vars
     vars.finished_nut = false;
@@ -1330,26 +1317,14 @@ init
             }
         }
     );
-    vars.check_world_id = (Func <ushort, ushort, ushort, ushort, ushort, ushort, int, bool>)(
-        (ushort a, ushort b, ushort c, ushort d, ushort e, ushort f, int actual) => {
-            return (
-                a == actual || b == actual || c == actual ||
-                d == actual || e == actual || f == actual ||
-                f == actual
-            );
-        }
-    );
     timer.IsGameTimePaused = false;
 }
 
 reset
 {
-    var title = vars.watchers["titlescreen"];
-    var title_2 = vars.watchers["titlescreen_2"];
-    if(title_2.Current == 0 && title.Current == 1 && title.Old != 1 && current.scene == 0 && current.room == 0){
-        if(vars.check_world_id(current.world_id_1, current.world_id_2, current.world_id_3, current.world_id_4, current.world_id_5, current.world_id_6, 0)){
-            return true;
-        }
+    // -1 value of 4 byte for world
+    if(current.scene == 0 && current.room == 0 && current.world == 65535 && old.world != 65535){
+        return true;
     }
 }
 
@@ -1366,9 +1341,6 @@ update
     vars.watchers["save_load"].Update(game);
     vars.watchers["sora_hp"].Update(game);
     vars.watchers["summon_load"].Update(game);
-    vars.watchers["titlescreen"].Update(game);
-    vars.watchers["titlescreen_2"].Update(game);
-    vars.watchers["white_screen"].Update(game);
     vars.watchers["fightend"].Update(game);
     if(
         (settings["ship"] && !vars.completed_splits.TryGetValue("ship", out output_catch)) || (settings["ship_early"] && !vars.completed_splits.TryGetValue("ship_early", out output_catch)) ||
@@ -1383,7 +1355,7 @@ update
         vars.watchers["docked_world"].Update(game);
     }
 
-    if(vars.booting && vars.watchers["titlescreen"].Current == 1){
+    if(vars.booting && current.world == 65535){
         vars.booting = false;
     }
 }
@@ -1393,7 +1365,6 @@ isLoading
     var load = vars.watchers["load"];
     var load_2 = vars.watchers["load_2"];
     var black = vars.watchers["black_inv"];
-    var white = vars.watchers["white_screen"];
     var cutscene = vars.watchers["cutscene"];
     var paused = vars.watchers["paused"];
     var summon_load = vars.watchers["summon_load"];
@@ -1404,7 +1375,7 @@ isLoading
 
     return ((load.Current 
     || !black.Current
-    || (white.Current == 128 && !cutscene.Current)
+    || (current.white == 128 && !cutscene.Current)
     || vars.summon_timer > 30) && !paused.Current)
     || save_load.Current
     || party_load.Current
