@@ -4,8 +4,8 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX")
     ushort room : 0x8150A1;
     ushort scene : 0x8150A2;
     ushort world : 0x10F9AF60;
-    ushort kills : 0x10FACA94;
-    byte mt : 0x10FACDC0;
+    byte game_start : 0x8A677F5;
+    byte in_fight : 0x10FB1428;
 }
 
 startup
@@ -24,27 +24,26 @@ startup
 
 start
 {
-    var character = vars.watchers["character"];
-    character.Update(game);
-    return character.Current != 0 && character.Old == 0;
+    return current.game_start == 2 && old.game_start == 0;
 }
 
 split
 {
-    if (settings["shared_base"]) {
-        if (current.kills == 10 && old.kills != 10) {
-            return settings["orbs"];
+    var fight_complete = current.in_fight != 2 && old.in_fight == 2;
+    if (fight_complete) {
+        if (settings["shared_base"]) {
+            if (current.world == 1 && current.room == 2) {
+                return settings["orbs"];
+            }
         }
-    }
-    if (settings["aqua_base"]) {
+        if (settings["aqua_base"]) {
 
-    }
-    if (settings["terra_base"]) {
-        
-    }
-    if (settings["ven_base"]) {
-        if (current.mt == 1 && !old.mt == 1) {
-            return settings["mt"];
+        }
+        if (settings["terra_base"]) {
+            
+        }
+        if (settings["ven_base"]) {
+
         }
     }
 }
@@ -71,7 +70,6 @@ init
         // { "difficulty", new MemoryWatcher<ushort>(gb + ) },
         // { "player_hp", new MemoryWatcher<byte>(gb + ) },
         { "character", new MemoryWatcher<byte>(gb + 0xCF7DAD) },
-        { "kills", new MemoryWatcher<byte>(gb + 0x10FACA94) },
     };
 
     timer.IsGameTimePaused = false;
@@ -89,7 +87,7 @@ reset
 
 update
 {
-    if(vars.booting && current.world == 65535){
+    if(vars.booting && current.world == 0){
         vars.booting = false;
     }
 }
