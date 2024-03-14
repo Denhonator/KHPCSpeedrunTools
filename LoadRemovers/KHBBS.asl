@@ -1,9 +1,9 @@
 state("KINGDOM HEARTS Birth by Sleep FINAL MIX")
 {
     // location info
-    ushort room : 0x8150A1;
+    byte room : 0x8150A1;
     byte scene : 0x8150A2;
-    byte world : 0x10F9AF60;
+    ushort world : 0x10F9AF60;
 
     // game state info
     byte gs1 : 0x10FB1428; 
@@ -12,15 +12,16 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX")
     byte gs2 : 0x10FB1468;
     // states for game state 2
     // 0: freeplay, 1: menu option?, 2: room transition/loading heart?
-    // 3: black out?, 4: loaded screen without control, 64: white blur?
+    // 3: black out?, 4: loaded screen without control, 64: white blur
+    // 192: post forced fight non blur
     byte char_select_confirm_1 : 0x10F87828;
-    // used for reset if you back off confirmation
-    byte char_select_confirm_2 : 0x8F60F00;
+    byte char_select_confirm_2 : 0x8F79D80;
+    byte character : 0xCF7DAD;
+    byte max_hp : 0x10FA26D0;
 
     // mini games
-    byte rumble_racing_complete : 0x10FAEA3C;
-    ushort ice_cream_beat_score : 0x10FAC59C;
-    byte fruit_ball_score : 0x10FAC554;
+    byte urns_score : 0x10FACA98;
+    byte dwarf_count : 0x10F9FEC4;
 }
 
 startup
@@ -76,7 +77,12 @@ startup
         settings.Add("ven_goons", true, "Goons", "ven_base");
         settings.Add("ven_maleficent", true, "Maleficent", "ven_base");
         settings.Add("ven_vanitas1", true, "Keyblade Graveyard Vanitas", "ven_base");
+        settings.Add("ven_abound", false, "Abounding Crystal", "ven_base");
+        settings.Add("cd_grind_2", false, "Castle of Dreams Return Grind", "ven_base");
+        settings.Add("rg_grind_meld", false, "Radiant Garden Grind", "ven_base");
+        settings.Add("leave_rg", true, "Leave Radiant Garden", "ven_base");
         settings.Add("icb", true, "Ice Cream Beats", "ven_base");
+        settings.Add("oc_ff", false, "OC Forced fight", "ven_base");
         settings.Add("pots", true, "OC Pots", "ven_base");
         settings.Add("js_swarm", true, "Jellyshade Swarm", "ven_base");
         settings.Add("meta1", true, "Metamorphisis 1", "ven_base");
@@ -90,27 +96,25 @@ startup
 start
 {
     if (vars.in_character_select) {
-        if (current.char_select_confirm_1 == 64 && old.char_select_confirm_1 != 64) {
+        if (current.char_select_confirm_1 == 64 && current.char_select_confirm_2 == 2 && old.char_select_confirm_2 == 1) {
             vars.in_character_select = false;
             return true;
         }
     } else {
-        var character = vars.watchers["character"];
-        character.Update(game);
-        vars.in_character_select = character.Current == 1 && character.Old == 0;
+        vars.in_character_select = current.character == 1 && old.character == 0;
     }
 }
 
 split
 {    
-    var character = vars.watchers["character"];
-    character.Update(game);
 
-    var aquaConfirm = settings["aqua_base"] && character.Current == 3;
-    var terraConfirm = settings["terra_base"] && character.Current == 2;
-    var venConfirm = settings["ven_base"] && character.Current == 1;
+    var aquaConfirm = settings["aqua_base"] && current.character == 3;
+    var terraConfirm = settings["terra_base"] && current.character == 2;
+    var venConfirm = settings["ven_base"] && current.character == 1;
 
     var fight_complete = current.gs1 != 2 && old.gs1 == 2 && current.gs2 != 128;
+    // placeholder for death logic if needed or wanted
+    // var death = current.gs2 == 128;
     if (fight_complete) {
         if (settings["shared_base"]) {
             if (current.world == 1 && current.room == 2) {
@@ -151,21 +155,19 @@ split
             if (current.world == 9 && current.room == 9) {
                 return settings["gantu"];
             }
-            if (current.world == 8 && current.room == 4 && vars.preReq1Complete == true) {
-                return settings["aqua_zack"];
-            }
             if (current.world == 8 && current.room == 6) {
                 return settings["hades"];
             }
             if (current.world == 11 && current.room == 8) {
                 return settings["nl_vanitas"];
             }
-            if (current.world == 13 && current.room == 12 && vars.preReq2Complete == false) {
-                vars.preReq1Complete = true;
-                return settings["kg_braig"];
-            }
-            if (current.world == 13 && current.room == 12 && vars.preReq2Complete == true) {
-                return settings["final_vanitas"];
+            if (current.world == 13 && current.room == 12) {
+                // if you hit continue instead on death to van this will split again
+                if (current.max_hp > old.max_hp) {
+                    return settings["kg_braig"];
+                } else {
+                    return settings["final_vanitas"];
+                }
             }
         }
         if (terraConfirm) {
@@ -178,61 +180,66 @@ split
             if (current.world == 3 && current.room == 9) {
                 return settings["sm"];
             }
+            if (current.world == 3 && current.room == 10) {
+               return settings["cinderella"];
+            }
             if (current.world == 6 && current.room == 11) {
                 return settings["rg_braig"];
             }
             if (current.world == 9 && current.room == 6) {
                 return settings["experiment221"];
             }
-            if (current.world == 11 && current.room == 13 && vars.preReq3Complete == false) {
-                vars.preReq3Complete = true;
-                return settings["pan"];
-            }
-            if (current.world == 11 && current.room == 13 && vars.preReq3Complete == true) {
-                return settings["shade_swarm"];
+            if (current.world == 11 && current.room == 13) {
+                var bladecharge = vars.watchers["bladecharge"];
+                bladecharge.Update(game);
+                if (bladecharge.Current == 5 && bladecharge.Old == 0) {
+                    return settings["pan"];
+                } else {
+                    return settings["shade_swarm"];
+                }
             }
             if (current.world == 1 && current.room == 1) {
                 return settings["eraqus"];
             }
-            if (current.world == 13 && current.room == 10 && vars.preReq4Complete == false) {
-                vars.preReq4Complete = true;
-                return settings["terra_vanitas"];
-            }
-            if (current.world == 13 && current.room == 10 && vars.preReq4Complete == true) {
-                return settings["mx"];
+            if (current.world == 13 && current.room == 10) {
+                if (current.max_hp > current.max_hp) {
+                    return settings["mx"];
+                } else {
+                    return settings["terra_vanitas"];
+                }
             }
             if (current.world == 13 && current.room == 11) {
                 return settings["terranort"];
             }
         }
         if (venConfirm) {
-            if (current.world == 2 && current.room == 8 && vars.preReq1Complete == false) {
-                vars.preReq1Complete = true;
-                return settings["sw_escort"];
-            }
-            if (current.world == 2 && current.room == 8 && vars.preReq1Complete == true) {
-                return settings["mt"];
+            if (current.world == 2 && current.room == 8) {
+                if (current.gs2 == 192) {
+                    return settings["sw_escort"];
+                } else {
+                    return settings["mt"];
+                }
             }
             if (current.world == 3 && current.room == 13) {
                 return settings["lucifer"];
             }
-            if (current.world == 4 && current.room == 3 && vars.preReq2Complete == false) {
-                vars.preReq2Complete = true;
-                return settings["ven_goons"];
-            }
-            if (current.world == 4 && current.room == 3 && vars.preReq2Complete == true) {
-                return settings["ven_maleficent"];
+            if (current.world == 4 && current.room == 3) {
+                var thunderbolt = vars.watchers["thunderbolt"];
+                thunderbolt.Update(game);
+                if (thunderbolt.Current == 5 && thunderbolt.Old == 0) {
+                    return settings["ven_maleficent"];
+                } else {
+                    return settings["ven_goons"];
+                }
             }
             if (current.world == 13 && current.room == 1) {
-                if (vars.preReq3Complete == false) {
-                    vars.preReq3Complete = true;
-                } else {
+                if (current.max_hp > old.max_hp) {
                     return settings["ven_vanitas1"];
                 }
             }
             if (current.world == 8 && current.room == 5) {
-                if (vars.preReq5Complete == false) {
-                    vars.preReq5Complete = true;
+                if (current.urns_score == 0) {
+                    return settings["oc_ff"];
                 } else {
                     return settings["js_swarm"];
                 }
@@ -253,15 +260,53 @@ split
                 return settings["ven_vanitas3"];
             }
         }
+
+        if (current.world == 8 && current.room == 4) {
+            var slots = vars.watchers["deck_slots"];
+            slots.Update(game);
+            if (aquaConfirm){
+                if (slots.Current > slots.Old) {
+                    return settings["aqua_zack"];
+                }
+                if (current.max_hp > old.max_hp) {
+                    return settings["aqua_tournament"];
+                }
+            }
+            if (terraConfirm) {
+                if (current.max_hp > old.max_hp) {
+                    vars.terra_oc_progress = 1;
+                    return settings["terra_tournament"];
+                } else {
+                    if (vars.terra_oc_progress == 2) {
+                        return settings["terra_zack2"];
+                    } else if (vars.terra_oc_progress == 1) {
+                        vars.terra_oc_progress = 2;
+                        return settings["terra_zack1"];
+                    }
+                }
+            }
+        }
     }
+    // placeholder for death logic if needed or wanted
+    // if (death) {
+    //     if (aquaConfirm) {
+
+    //     }
+    //     if (terraConfirm) {
+
+    //     }
+    //     if (venConfirm) {
+
+    //     }
+    // }
 
     if (aquaConfirm) {
-        if (current.world == 8 && current.room == 1 && old.room == 4 && current.gs1 == 0 && vars.preReq1Complete == false) {
-            vars.preReq1Complete = true;
-            return settings["aqua_tournament"];
-        }
-        if (current.fruit_ball_score > 0 && old.fruit_ball_score == 0) {
-            return settings["fruitball"];
+        if (current.world == 12) {
+            var score = vars.watchers["fruit_ball_score"];
+            score.Update(game);
+            if (score.Current > 0 && score.Old == 0) {
+                return settings["fruitball"];
+            }
         }
         if (current.world == 9 && current.room == 10 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
             return settings["ttg"];
@@ -269,27 +314,11 @@ split
     }
 
     if (terraConfirm) {
-        if (current.world == 3 && current.room == 10 && current.gs1 == 1 && old.gs1 == 2) {
-            return settings["cinderella"];
-        }
-        if (current.rumble_racing_complete == 1 && old.rumble_racing_complete == 0) {
-            return settings["rr"];
-        } 
-        if (current.world == 8 && current.room == 4)  {
-            if (vars.preReq1Complete == false) {
-                if (current.gs2 == 65 && old.gs2 == 64) {
-                    vars.preReq1Complete = true;
-                    return settings["terra_tournament"];
-                }
-            } else {
-                if (current.gs1 != 2 && old.gs1 == 2 && current.gs2 == 64) {
-                    if (vars.preReq2Complete == false) {
-                        vars.preReq2Complete = true;
-                        return settings["terra_zack1"];
-                    } else if (vars.preReq2Complete == true) {
-                        return settings["terra_zack2"];
-                    }
-                }
+        if (current.world == 12) {
+            var rr_complete = vars.watchers["rumble_racing_complete"];
+            rr_complete.Update(game);
+            if (rr_complete.Current == 1 && rr_complete.Old == 0) {
+                return settings["rr"];
             }
         }
         if (current.world == 9 && current.room == 13 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
@@ -298,21 +327,36 @@ split
     }
 
     if (venConfirm) {
-        if (current.world == 2 && current.room == 1 && old.room == 2) {
-            return settings["dwarves"];
+        var output_catch = "";
+        // only find 6 dwarves for values of 1/2/4/8/16/32
+        if (current.world == 2 && current.room == 2 && current.dwarf_count == 63) {
+            return vars.completed_splits.Add("dwarves") && settings["dwarves"];
         } 
-        if (current.world == 3 && current.room == 1 && current.scene == 0 && (old.scene == 3 || old.scene == 5)) {
+        if (current.world == 3 && current.room == 1 && old.room == 3) {
             return settings["dress"];
         }
-        if (current.ice_cream_beat_score > 1129 && old.ice_cream_beat_score < 1130) {
-            return settings["icb"];
-        }
-        if (current.world == 8 && current.room == 3 && current.gs1 == 7 && current.gs2 == 64 && old.gs2 == 0) {
-            if(vars.preReq4Complete == false) {
-                vars.preReq4Complete = true;
+        if (current.world == 17 && old.world == 6) {
+            if (!vars.completed_splits.TryGetValue("ven_abound", out output_catch)){
+                return vars.completed_splits.Add("ven_abound") && settings["ven_abound"];
             } else {
-                return settings["pots"];
+                return vars.completed_splits.Add("leave_rg") && settings["leave_rg"];
             }
+        }
+        if (current.world == 17 && old.world == 3 && vars.completed_splits.TryGetValue("ven_abound", out output_catch)) {
+            return vars.completed_splits.Add("cd_grind_2") && settings["cd_grind_2"];
+        }
+        if (current.world == 6 && current.room == 6 && old.room == 6) {
+            return vars.completed_splits.Add("rg_grind_meld") && settings["rg_grind_meld"];
+        }
+        if (current.world == 12) {
+            var icb_score = vars.watchers["ice_cream_beat_score"];
+            icb_score.Update(game);
+            if (icb_score.Current > 1129 && icb_score.Old < 1130) {
+                return settings["icb"];
+            }
+        }
+        if (current.world == 8 && current.room == 3 && current.urns_score > 0 && old.urns_score == 0) {
+            return settings["pots"];
         }
         if (current.world == 9 && current.room == 13 && current.gs2 == 64 && old.gs2 == 0) {
             return settings["meta1"];
@@ -326,34 +370,29 @@ exit
 }
 
 init
-{
-    // General prerequisite variables that can be used when two splits take place in the same room (i.e. braig and vanitas in aqua's final fights)
-    vars.preReq1Complete = false;
-    vars.preReq2Complete = false;
-    vars.preReq3Complete = false;
-    vars.preReq4Complete = false;
-    vars.preReq5Complete = false;
-    
+{    
     // game base address
     var gb = modules.First().BaseAddress;
     vars.watchers = new Dictionary<string, MemoryWatcher>{
-        { "character", new MemoryWatcher<byte>(gb + 0xCF7DAD) },
+        { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FAEA3C) },
+        { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FAC59C) },
+        { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FAC554) },
+        { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA1AD1) },
+        { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA1AD3) },
+        { "deck_slots", new MemoryWatcher<byte>(gb + 0x10F9B366) },
+
     };
+    vars.completed_splits = new HashSet<string>();
 
     timer.IsGameTimePaused = false;
 }
 
 reset
 {
-    var character = vars.watchers["character"];
-    character.Update(game);
-    if(character.Current == 0 && character.Old != 0){
+    if (current.character == 0 && old.character != 0) {
+        vars.completed_splits = new HashSet<string>();
         return true;
     }
-    // if(current.char_select_confirm_2 == 6 && old.char_select_confirm_2 == 8){
-    //     vars.in_character_select = true;
-    //     return true;
-    // }
 }
 
 update
