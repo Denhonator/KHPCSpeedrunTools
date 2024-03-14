@@ -262,13 +262,12 @@ split
         }
 
         if (current.world == 8 && current.room == 4) {
-            var slots = vars.watchers["deck_slots"];
-            slots.Update(game);
             if (aquaConfirm){
-                if (slots.Current > slots.Old) {
+                if (vars.aqua_oc_progress == 1) {
                     return settings["aqua_zack"];
-                }
+                } 
                 if (current.max_hp > old.max_hp) {
+                    vars.aqua_oc_progress = 1;
                     return settings["aqua_tournament"];
                 }
             }
@@ -383,6 +382,8 @@ init
 
     };
     vars.completed_splits = new HashSet<string>();
+    vars.terra_oc_progress = 0;
+    vars.aqua_oc_progress = 0;
 
     timer.IsGameTimePaused = false;
 }
@@ -391,6 +392,8 @@ reset
 {
     if (current.character == 0 && old.character != 0) {
         vars.completed_splits = new HashSet<string>();
+        vars.terra_oc_progress = 0;
+        vars.aqua_oc_progress = 0;
         return true;
     }
 }
