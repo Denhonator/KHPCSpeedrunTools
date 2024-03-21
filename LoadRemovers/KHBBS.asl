@@ -346,7 +346,7 @@ split
         if (current.world == 12) {
             var icb_score = vars.watchers["ice_cream_beat_score"];
             icb_score.Update(game);
-            if (icb_score.Current > 1129 && icb_score.Old < 1130) {
+            if (icb_score.Current > 999 && icb_score.Old < 1000) {
                 return settings["icb"];
             }
         }
