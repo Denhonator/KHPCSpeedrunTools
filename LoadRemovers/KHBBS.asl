@@ -14,6 +14,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX")
     // 0: freeplay, 1: menu option?, 2: room transition/loading heart?
     // 3: black out?, 4: loaded screen without control, 64: white blur
     // 192: post forced fight non blur
+    byte text_box : 0x8F60F00;
     byte char_select_confirm_1 : 0x10F87828;
     byte char_select_confirm_2 : 0x8F79D80;
     byte character : 0xCF7DAD;
@@ -26,7 +27,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX")
 
 startup
 {
-    vars.in_character_select = false;
+    vars.character_select_load = false;
 
     settings.Add("shared_base", true, "Splits in all characters");
         settings.Add("orbs", true, "Orbs (mark of mastery)", "shared_base");
@@ -95,18 +96,15 @@ startup
 
 start
 {
-    if (vars.in_character_select) {
-        if (current.char_select_confirm_1 == 64 && current.char_select_confirm_2 == 2 && old.char_select_confirm_2 == 1) {
-            vars.in_character_select = false;
-            return true;
-        }
-    } else {
-        vars.in_character_select = current.character == 1 && old.character == 0;
+    if (current.char_select_confirm_1 == 64 && current.char_select_confirm_2 == 2 && old.char_select_confirm_2 == 1) {
+        vars.character_select_load = true;
+        return true;
     }
 }
 
 split
 {    
+    var output_catch = "";
 
     var aquaConfirm = settings["aqua_base"] && current.character == 3;
     var terraConfirm = settings["terra_base"] && current.character == 2;
@@ -163,9 +161,7 @@ split
             }
             if (current.world == 13 && current.room == 12) {
                 // if you hit continue instead on death to van this will split again
-                if (current.max_hp > old.max_hp) {
-                    return settings["kg_braig"];
-                } else {
+                if (vars.completed_splits.TryGetValue("kg_braig", out output_catch)) {
                     return settings["final_vanitas"];
                 }
             }
@@ -202,11 +198,7 @@ split
                 return settings["eraqus"];
             }
             if (current.world == 13 && current.room == 10) {
-                if (current.max_hp > current.max_hp) {
-                    return settings["mx"];
-                } else {
-                    return settings["terra_vanitas"];
-                }
+                return vars.completed_splits.Add("terra_vanitas") && settings["terra_vanitas"];
             }
             if (current.world == 13 && current.room == 11) {
                 return settings["terranort"];
@@ -230,11 +222,6 @@ split
                     return settings["ven_maleficent"];
                 } else {
                     return settings["ven_goons"];
-                }
-            }
-            if (current.world == 13 && current.room == 1) {
-                if (current.max_hp > old.max_hp) {
-                    return settings["ven_vanitas1"];
                 }
             }
             if (current.world == 8 && current.room == 5) {
@@ -265,23 +252,18 @@ split
             if (aquaConfirm){
                 if (vars.aqua_oc_progress == 1) {
                     return settings["aqua_zack"];
-                } 
-                if (current.max_hp > old.max_hp) {
+                } else {
                     vars.aqua_oc_progress = 1;
-                    return settings["aqua_tournament"];
                 }
             }
             if (terraConfirm) {
-                if (current.max_hp > old.max_hp) {
+                if (vars.terra_oc_progress == 2) {
+                    return settings["terra_zack2"];
+                } else if (vars.terra_oc_progress == 1) {
+                    vars.terra_oc_progress = 2;
+                    return settings["terra_zack1"];
+                } else {                    
                     vars.terra_oc_progress = 1;
-                    return settings["terra_tournament"];
-                } else {
-                    if (vars.terra_oc_progress == 2) {
-                        return settings["terra_zack2"];
-                    } else if (vars.terra_oc_progress == 1) {
-                        vars.terra_oc_progress = 2;
-                        return settings["terra_zack1"];
-                    }
                 }
             }
         }
@@ -299,6 +281,11 @@ split
     //     }
     // }
 
+    if (current.world == 8 && current.room == 4) {
+        if (current.max_hp > old.max_hp) {
+            return (settings["aqua_tournament"] && aquaConfirm) || (settings["terra_tournament"] && terraConfirm);
+        }
+    }
     if (aquaConfirm) {
         if (current.world == 12) {
             var score = vars.watchers["fruit_ball_score"];
@@ -310,6 +297,9 @@ split
         if (current.world == 9 && current.room == 10 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
             return settings["ttg"];
         }
+        if (current.world == 13 && current.room == 12 && current.max_hp > old.max_hp) {
+            return vars.completed_splits.Add("kg_braig") && settings["kg_braig"];
+        }
     }
 
     if (terraConfirm) {
@@ -320,20 +310,26 @@ split
                 return settings["rr"];
             }
         }
+        if (current.world == 13 && current.room == 10 && current.max_hp > old.max_hp) {
+            return settings["mx"];
+        }
         if (current.world == 9 && current.room == 13 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
             return settings["ds_ambush"];
         }
     }
 
     if (venConfirm) {
-        var output_catch = "";
         // only find 6 dwarves for values of 1/2/4/8/16/32
-        if (current.world == 2 && current.room == 2 && current.dwarf_count == 63) {
-            return vars.completed_splits.Add("dwarves") && settings["dwarves"];
+        if (current.dwarf_count == 63 && old.dwarf_count < 63) {
+            return settings["dwarves"];
         } 
         if (current.world == 3 && current.room == 1 && old.room == 3) {
             return settings["dress"];
         }
+        if (current.world == 13 && current.room == 1 && current.max_hp > old.max_hp) {
+            return settings["ven_vanitas1"];
+        }
+        // will need updates if route changes
         if (current.world == 17 && old.world == 6) {
             if (!vars.completed_splits.TryGetValue("ven_abound", out output_catch)){
                 return vars.completed_splits.Add("ven_abound") && settings["ven_abound"];
@@ -365,6 +361,7 @@ split
 
 exit
 {
+    vars.character_select_load = false;
     timer.IsGameTimePaused = true;  
 }
 
@@ -378,8 +375,6 @@ init
         { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FAC554) },
         { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA1AD1) },
         { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA1AD3) },
-        { "deck_slots", new MemoryWatcher<byte>(gb + 0x10F9B366) },
-
     };
     vars.completed_splits = new HashSet<string>();
     vars.terra_oc_progress = 0;
@@ -400,10 +395,16 @@ reset
 
 update
 {
-
+    if (vars.character_select_load && current.text_box == 2 && old.text_box == 1) {
+        vars.character_select_load = false;
+    }
 }
 
 isLoading
 {
-    return (current.gs2 == 2 || current.gs2 == 3);
+    var in_oc_tournament = current.world == 8 && current.room == 4;
+    return (
+        (current.gs2 > 1 && current.gs2 < 5 && current.world != 17 && !vars.character_select_load) ||
+        (current.gs2 == 64 && current.text_box != 3 && !in_oc_tournament)
+    );
 }
