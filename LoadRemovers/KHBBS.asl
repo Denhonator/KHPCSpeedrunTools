@@ -198,7 +198,10 @@ split
                 return settings["eraqus"];
             }
             if (current.world == 13 && current.room == 10) {
-                return vars.completed_splits.Add("terra_vanitas") && settings["terra_vanitas"];
+                if (current.max_hp > old.max_hp) {
+                    return settings["mx"];
+                }
+                return settings["terra_vanitas"];
             }
             if (current.world == 13 && current.room == 11) {
                 return settings["terranort"];
@@ -309,9 +312,6 @@ split
             if (rr_complete.Current == 1 && rr_complete.Old == 0) {
                 return settings["rr"];
             }
-        }
-        if (current.world == 13 && current.room == 10 && current.max_hp > old.max_hp) {
-            return settings["mx"];
         }
         if (current.world == 9 && current.room == 13 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
             return settings["ds_ambush"];
