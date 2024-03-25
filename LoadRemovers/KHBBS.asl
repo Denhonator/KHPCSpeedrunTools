@@ -81,12 +81,14 @@ startup
         settings.Add("ven_abound", false, "Abounding Crystal", "ven_base");
         settings.Add("cd_grind_2", false, "Castle of Dreams Return Grind", "ven_base");
         settings.Add("rg_grind_meld", false, "Radiant Garden Grind", "ven_base");
-        settings.Add("leave_rg", true, "Leave Radiant Garden", "ven_base");
+        settings.Add("rg_forced_fight", true, "Radiant Garden Forced Fight", "ven_base");
+        settings.Add("leave_rg", false, "Leave Radiant Garden", "ven_base");
         settings.Add("icb", true, "Ice Cream Beats", "ven_base");
         settings.Add("oc_ff", false, "OC Forced fight", "ven_base");
         settings.Add("pots", true, "OC Pots", "ven_base");
         settings.Add("js_swarm", true, "Jellyshade Swarm", "ven_base");
-        settings.Add("meta1", true, "Metamorphisis 1", "ven_base");
+        settings.Add("meta1", false, "Metamorphisis 1", "ven_base");
+        settings.Add("ven_ds_ff", true, "Deep Space Forced Fight Ven", "ven_base");
         settings.Add("meta2", true, "Metamorphisis 2", "ven_base");
         settings.Add("nl_mobs", true, "Neverland Mob Fight", "ven_base");
         settings.Add("hook", true, "Hook", "ven_base");
@@ -98,6 +100,9 @@ start
 {
     if (current.char_select_confirm_1 == 64 && current.char_select_confirm_2 == 2 && old.char_select_confirm_2 == 1) {
         vars.character_select_load = true;
+        vars.completed_splits = new HashSet<string>();
+        vars.terra_oc_progress = 0;
+        vars.aqua_oc_progress = 0;
         return true;
     }
 }
@@ -227,6 +232,9 @@ split
                     return settings["ven_goons"];
                 }
             }
+            if (current.world == 6 && current.room == 3) {
+                return settings["rg_forced_fight"];
+            }
             if (current.world == 8 && current.room == 5) {
                 if (current.urns_score == 0) {
                     return settings["oc_ff"];
@@ -234,8 +242,12 @@ split
                     return settings["js_swarm"];
                 }
             }
-            if (current.world == 9 && current.room == 8) {
-                return settings["meta2"];
+            if (current.world == 9) {
+                if (current.room == 8) {
+                    return settings["meta2"];
+                } else {
+                    return settings["ven_ds_ff"];
+                }
             }
             if (current.world == 11 && current.room == 8) {
                 return settings["nl_mobs"];
@@ -385,12 +397,7 @@ init
 
 reset
 {
-    if (current.character == 0 && old.character != 0) {
-        vars.completed_splits = new HashSet<string>();
-        vars.terra_oc_progress = 0;
-        vars.aqua_oc_progress = 0;
-        return true;
-    }
+    return current.character == 0 && old.character != 0;
 }
 
 update
