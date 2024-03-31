@@ -13,7 +13,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX")
     // states for game state 2
     // 0: freeplay, 1: menu option?, 2: room transition/loading heart?
     // 3: black out?, 4: loaded screen without control, 64: white blur
-    // 192: post forced fight non blur
+    // 192: post Forced Fight non blur
     byte text_box : 0x8F60F00;
     byte char_select_confirm_1 : 0x10F87828;
     byte char_select_confirm_2 : 0x8F79D80;
@@ -52,21 +52,29 @@ startup
         settings.Add("kg_braig", true, "Braig", "aqua_base");
         settings.Add("final_vanitas", true, "Final Vanitas", "aqua_base");
     settings.Add("terra_base", false, "Terra Base splits");
+        settings.Add("ed_ff", false, "Enchanted Dominion Forced Fight", "terra_base");
         settings.Add("wm", true, "Wheel Master", "terra_base");
-        settings.Add("terra_mirror", true, "Magic Mirror", "terra_base");
+        settings.Add("cd_ff", false, "Castle of Dreams Forced Fight", "terra_base");
         settings.Add("cinderella", true, "Cinderella Escort", "terra_base");
         settings.Add("sm", true, "Symphony Master", "terra_base");
+        settings.Add("dw_ff", false, "Dwarf Woodlands Forced Fight", "terra_base");
+        settings.Add("terra_mirror", true, "Magic Mirror", "terra_base");
+        settings.Add("trg_ff", false, "Radiant Garden Forced Fight", "terra_base");
+        settings.Add("trg_grind_meld", false, "Radiant Garden Grind", "terra_base");
         settings.Add("rg_braig", true, "Braig", "terra_base");
         settings.Add("rr", true, "Rumble Racing", "terra_base");
+        settings.Add("toc_ff", false, "OC Forced Fight", "terra_base");
         settings.Add("terra_tournament", true, "OC Tournament", "terra_base");
         settings.Add("terra_zack1", true, "Zack 1", "terra_base");
         settings.Add("terra_zack2", true, "Zack 2", "terra_base");
         settings.Add("ds_ambush", true, "Deep Space Jellyshade Ambush", "terra_base");
-        settings.Add("experiment221", true, "Experiment 221", "terra_base");
+        settings.Add("tds_ff", false, "Deep Space Forced Fight", "terra_base");
+        settings.Add("ex221", true, "Experiment 221", "terra_base");
+        settings.Add("tnl_ff", false, "Neverland Forced Fight", "terra_base");
         settings.Add("pan", true, "Peter Pan", "terra_base");
-        settings.Add("shade_swarm", true, "Jellyshade Swarm", "terra_base");
+        settings.Add("tjs_swarm", true, "Jellyshade Swarm", "terra_base");
         settings.Add("eraqus", true, "Master Eraqus", "terra_base");
-        settings.Add("terra_vanitas", true, "Vanitas", "terra_base");
+        settings.Add("terra_vanitas", false, "Vanitas", "terra_base");
         settings.Add("mx", true, "Master Xehanort", "terra_base");
         settings.Add("terranort", true, "Terranort", "terra_base");
     settings.Add("ven_base", false, "Ventus Base splits");
@@ -75,25 +83,25 @@ startup
         settings.Add("mt", true, "Mad Treant", "ven_base");
         settings.Add("dress", true, "Dress Pieces Collection", "ven_base");
         settings.Add("lucifer", true, "Lucifer", "ven_base");
-        settings.Add("ven_goons", true, "Goons", "ven_base");
+        settings.Add("ven_goons", false, "Goons", "ven_base");
         settings.Add("ven_maleficent", true, "Maleficent", "ven_base");
-        settings.Add("ven_vanitas1", true, "Keyblade Graveyard Vanitas", "ven_base");
+        settings.Add("ven_van1", true, "Keyblade Graveyard Vanitas", "ven_base");
         settings.Add("ven_abound", false, "Abounding Crystal", "ven_base");
         settings.Add("cd_grind_2", false, "Castle of Dreams Return Grind", "ven_base");
-        settings.Add("rg_grind_meld", false, "Radiant Garden Grind", "ven_base");
-        settings.Add("rg_forced_fight", true, "Radiant Garden Forced Fight", "ven_base");
-        settings.Add("leave_rg", false, "Leave Radiant Garden", "ven_base");
+        settings.Add("vrg_grind_meld", false, "Radiant Garden Grind", "ven_base");
+        settings.Add("vrg_ff", false, "Radiant Garden Forced Fight", "ven_base");
+        settings.Add("leave_rg", true, "Leave Radiant Garden", "ven_base");
         settings.Add("icb", true, "Ice Cream Beats", "ven_base");
-        settings.Add("oc_ff", false, "OC Forced fight", "ven_base");
+        settings.Add("voc_ff", false, "OC Forced Fight", "ven_base");
         settings.Add("pots", true, "OC Pots", "ven_base");
-        settings.Add("js_swarm", true, "Jellyshade Swarm", "ven_base");
+        settings.Add("vjs_swarm", true, "Jellyshade Swarm", "ven_base");
         settings.Add("meta1", false, "Metamorphisis 1", "ven_base");
-        settings.Add("ven_ds_ff", true, "Deep Space Forced Fight Ven", "ven_base");
+        settings.Add("vds_ff", false, "Deep Space Forced Fight", "ven_base");
         settings.Add("meta2", true, "Metamorphisis 2", "ven_base");
-        settings.Add("nl_mobs", true, "Neverland Mob Fight", "ven_base");
+        settings.Add("vnl_ff", false, "Neverland Forced Fight", "ven_base");
         settings.Add("hook", true, "Hook", "ven_base");
-        settings.Add("ven_vanitas2", true, "Vanitas 2", "ven_base");
-        settings.Add("ven_vanitas3", true, "Final Vanitas", "ven_base");
+        settings.Add("ven_van2", true, "Vanitas 2", "ven_base");
+        settings.Add("ven_van3", true, "Final Vanitas", "ven_base");
 }
 
 start
@@ -101,8 +109,6 @@ start
     if (current.char_select_confirm_1 == 64 && current.char_select_confirm_2 == 2 && old.char_select_confirm_2 == 1) {
         vars.character_select_load = true;
         vars.completed_splits = new HashSet<string>();
-        vars.terra_oc_progress = 0;
-        vars.aqua_oc_progress = 0;
         return true;
     }
 }
@@ -172,23 +178,42 @@ split
             }
         }
         if (terraConfirm) {
+            if (current.world == 4 && current.room == 7) {
+                return settings["ed_ff"];
+            }
             if (current.world == 4 && current.room == 12) {
                 return settings["wm"];
             }
-            if (current.world == 2 && current.room == 9) {
-                return settings["terra_mirror"];
-            }
-            if (current.world == 3 && current.room == 9) {
-                return settings["sm"];
+            if (current.world == 3 && current.room == 6) {
+                return settings["cd_ff"];
             }
             if (current.world == 3 && current.room == 10) {
                return settings["cinderella"];
             }
+            if (current.world == 3 && current.room == 9) {
+                return settings["sm"];
+            }
+            if (current.world == 2 && current.room == 7) {
+                return settings["dw_ff"];
+            }
+            if (current.world == 2 && current.room == 9) {
+                return settings["terra_mirror"];
+            }
+
             if (current.world == 6 && current.room == 11) {
                 return settings["rg_braig"];
             }
+            if (current.world == 8 && current.room == 5) {
+                return settings["toc_ff"];
+            }
+            if (current.world == 9 && current.room == 1) {
+                return settings["tds_ff"];
+            }
             if (current.world == 9 && current.room == 6) {
-                return settings["experiment221"];
+                return settings["ex221"];
+            }
+            if (current.world == 11 && current.room == 4) {
+                return settings["tnl_ff"];
             }
             if (current.world == 11 && current.room == 13) {
                 var bladecharge = vars.watchers["bladecharge"];
@@ -196,7 +221,7 @@ split
                 if (bladecharge.Current == 5 && bladecharge.Old == 0) {
                     return settings["pan"];
                 } else {
-                    return settings["shade_swarm"];
+                    return settings["tjs_swarm"];
                 }
             }
             if (current.world == 1 && current.room == 1) {
@@ -232,56 +257,65 @@ split
                     return settings["ven_goons"];
                 }
             }
-            if (current.world == 6 && current.room == 3) {
-                return settings["rg_forced_fight"];
-            }
             if (current.world == 8 && current.room == 5) {
                 if (current.urns_score == 0) {
-                    return settings["oc_ff"];
+                    return settings["voc_ff"];
                 } else {
-                    return settings["js_swarm"];
+                    return settings["vjs_swarm"];
                 }
             }
             if (current.world == 9) {
                 if (current.room == 8) {
                     return settings["meta2"];
                 } else {
-                    return settings["ven_ds_ff"];
+                    if (vars.completed_splits.TryGetValue("vds_ff_room_1", out output_catch)) {
+                        return vars.completed_splits.Add("vds_ff") && settings["vds_ff"];
+                    } else {
+                        vars.completed_splits.Add("vds_ff_room_1");
+                    }
                 }
             }
             if (current.world == 11 && current.room == 8) {
-                return settings["nl_mobs"];
+                return settings["vnl_ff"];
             }
             if (current.world == 11 && current.room == 1) {
                 return settings["hook"];
             }
             if (current.world == 13 && current.room == 12) {
-                return settings["ven_vanitas2"];
+                return settings["ven_van2"];
             }
             if (current.world == 13 && current.room == 51) {
-                return settings["ven_vanitas3"];
+                return settings["ven_van3"];
             }
         }
 
         if (current.world == 8 && current.room == 4) {
             if (aquaConfirm){
-                if (vars.aqua_oc_progress == 1) {
-                    return settings["aqua_zack"];
+                if (vars.completed_splits.TryGetValue("aqua_tournament", out output_catch)) {
+                    return vars.completed_splits.Add("aqua_zack") && settings["aqua_zack"];
                 } else {
-                    vars.aqua_oc_progress = 1;
+                    vars.completed_splits.Add("aqua_tournament");
                 }
             }
             if (terraConfirm) {
-                if (vars.terra_oc_progress == 2) {
-                    return settings["terra_zack2"];
-                } else if (vars.terra_oc_progress == 1) {
-                    vars.terra_oc_progress = 2;
-                    return settings["terra_zack1"];
+                if (vars.completed_splits.TryGetValue("terra_zack1", out output_catch)) {
+                    return vars.completed_splits.Add("terra_zack2") && settings["terra_zack2"];
+                } else if (vars.completed_splits.TryGetValue("terra_tournament", out output_catch)) {
+                    return vars.completed_splits.Add("terra_zack1") && settings["terra_zack1"];
                 } else {                    
-                    vars.terra_oc_progress = 1;
+                    vars.completed_splits.Add("terra_tournament");
                 }
             }
         }
+
+        if (current.world == 6 && current.room == 3) {
+            if (venConfirm) {
+                return settings["vrg_ff"];
+            } else if (terraConfirm) {                
+                return settings["trg_ff"];
+            }
+        }
+
     }
     // placeholder for death logic if needed or wanted
     // if (death) {
@@ -328,6 +362,9 @@ split
         if (current.world == 9 && current.room == 13 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
             return settings["ds_ambush"];
         }
+        if (current.world == 6 && current.room == 11) {
+            return vars.completed_splits.Add("trg_grind_meld") && settings["trg_grind_meld"];
+        }
     }
 
     if (venConfirm) {
@@ -339,7 +376,7 @@ split
             return settings["dress"];
         }
         if (current.world == 13 && current.room == 1 && current.max_hp > old.max_hp) {
-            return settings["ven_vanitas1"];
+            return settings["ven_van1"];
         }
         // will need updates if route changes
         if (current.world == 17 && old.world == 6) {
@@ -353,7 +390,7 @@ split
             return vars.completed_splits.Add("cd_grind_2") && settings["cd_grind_2"];
         }
         if (current.world == 6 && current.room == 6 && old.room == 6) {
-            return vars.completed_splits.Add("rg_grind_meld") && settings["rg_grind_meld"];
+            return vars.completed_splits.Add("vrg_grind_meld") && settings["vrg_grind_meld"];
         }
         if (current.world == 12) {
             var icb_score = vars.watchers["ice_cream_beat_score"];
@@ -389,8 +426,6 @@ init
         { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA1AD3) },
     };
     vars.completed_splits = new HashSet<string>();
-    vars.terra_oc_progress = 0;
-    vars.aqua_oc_progress = 0;
 
     timer.IsGameTimePaused = false;
 }
