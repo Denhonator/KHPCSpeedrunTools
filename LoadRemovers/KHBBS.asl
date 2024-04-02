@@ -60,6 +60,7 @@ startup
         settings.Add("dw_ff", false, "Dwarf Woodlands Forced Fight", "terra_base");
         settings.Add("terra_mirror", true, "Magic Mirror", "terra_base");
         settings.Add("trg_ff", false, "Radiant Garden Forced Fight", "terra_base");
+        settings.Add("get_to_trinity", false, "Radiant Garden Reach Trinity", "terra_base");
         settings.Add("trg_grind_meld", false, "Radiant Garden Grind", "terra_base");
         settings.Add("rg_braig", true, "Braig", "terra_base");
         settings.Add("rr", true, "Rumble Racing", "terra_base");
@@ -199,7 +200,6 @@ split
             if (current.world == 2 && current.room == 9) {
                 return settings["terra_mirror"];
             }
-
             if (current.world == 6 && current.room == 11) {
                 return settings["rg_braig"];
             }
@@ -212,16 +212,17 @@ split
             if (current.world == 9 && current.room == 6) {
                 return settings["ex221"];
             }
-            if (current.world == 11 && current.room == 4) {
-                return settings["tnl_ff"];
-            }
-            if (current.world == 11 && current.room == 13) {
-                var bladecharge = vars.watchers["bladecharge"];
-                bladecharge.Update(game);
-                if (bladecharge.Current == 5 && bladecharge.Old == 0) {
-                    return settings["pan"];
+            if (current.world == 11) {
+                if (current.room == 13) {
+                    var bladecharge = vars.watchers["bladecharge"];
+                    bladecharge.Update(game);
+                    if (bladecharge.Current == 5 && bladecharge.Old == 0) {
+                        return settings["pan"];
+                    } else {
+                        return settings["tjs_swarm"];
+                    }
                 } else {
-                    return settings["tjs_swarm"];
+                    return settings["tnl_ff"];
                 }
             }
             if (current.world == 1 && current.room == 1) {
@@ -335,6 +336,13 @@ split
             return (settings["aqua_tournament"] && aquaConfirm) || (settings["terra_tournament"] && terraConfirm);
         }
     }
+    if (current.world == 6 && current.room == 6 && old.room == 6) {
+        if (venConfirm){
+            return vars.completed_splits.Add("vrg_grind_meld") && settings["vrg_grind_meld"];
+        } else if (terraConfirm) {
+            return vars.completed_splits.Add("get_to_trinity") && settings["get_to_trinity"];            
+        }
+    }
     if (aquaConfirm) {
         if (current.world == 12) {
             var score = vars.watchers["fruit_ball_score"];
@@ -388,9 +396,6 @@ split
         }
         if (current.world == 17 && old.world == 3 && vars.completed_splits.TryGetValue("ven_abound", out output_catch)) {
             return vars.completed_splits.Add("cd_grind_2") && settings["cd_grind_2"];
-        }
-        if (current.world == 6 && current.room == 6 && old.room == 6) {
-            return vars.completed_splits.Add("vrg_grind_meld") && settings["vrg_grind_meld"];
         }
         if (current.world == 12) {
             var icb_score = vars.watchers["ice_cream_beat_score"];
