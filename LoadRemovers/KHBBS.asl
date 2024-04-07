@@ -29,6 +29,8 @@ startup
 {
     vars.character_select_load = false;
 
+    settings.Add("all_stories", false, "All Stories");
+    settings.SetToolTip("all_stories", "Set this on to not reset on return to menu");
     settings.Add("shared_base", true, "Splits in all characters");
         settings.Add("orbs", true, "Orbs (mark of mastery)", "shared_base");
         settings.Add("ta", true, "Trinity Armor", "shared_base");
@@ -36,15 +38,19 @@ startup
         settings.Add("jaq", true, "Jaq Escort", "aqua_base");
         settings.Add("cc", true, "Cursed Coach", "aqua_base");
         settings.Add("aqua_mirror", true, "Magic Mirror", "aqua_base");
-        settings.Add("goons", true, "Goons", "aqua_base");
-        settings.Add("gates", true, "Gates", "aqua_base");
-        settings.Add("maleficent", true, "Maleficent", "aqua_base");
+        settings.Add("aqua_goons", false, "Goons (inside)", "aqua_base");
+        settings.Add("gates", true, "Gates (outside goons)", "aqua_base");
+        settings.Add("dragon_mal", true, "Dragon Maleficent", "aqua_base");
+        settings.Add("aqua_abound", false, "Abounding Crystal", "aqua_base");
         settings.Add("mickey_ff", true, "Forced Fight w/ Mickey", "aqua_base");
+        settings.Add("aqua_cod_grind", false, "Castle of Dreams Grinding", "aqua_base");
         settings.Add("rg_vanitas", true, "Radiant Garden Vanitas", "aqua_base");
-        settings.Add("ttg", true, "Take That, Gotchya", "aqua_base");
-        settings.Add("ds_ff", true, "Prison Block Forced Fight", "aqua_base");
-        settings.Add("aqua_tournament", true, "OC Tournament", "aqua_base");
         settings.Add("fruitball", true, "Fruitball", "aqua_base");
+        settings.Add("aoc_ff", true, "OC Forced Fight", "aqua_base");
+        settings.Add("aqua_tournament", true, "OC Tournament", "aqua_base");
+        settings.Add("ds_dt_ff", false, "Deep Space Transporter Forced Fight", "aqua_base");
+        settings.Add("ttg", true, " Deep Space Glider Game (Take That, Gotchya)", "aqua_base");
+        settings.Add("ds_pb_ff", true, "Deep Space Prison Block Forced Fight", "aqua_base");
         settings.Add("gantu", true, "Gantu", "aqua_base");
         settings.Add("aqua_zack", true, "Zack", "aqua_base");
         settings.Add("hades", true, "Hades", "aqua_base");
@@ -54,7 +60,7 @@ startup
     settings.Add("terra_base", false, "Terra Base splits");
         settings.Add("ed_ff", false, "Enchanted Dominion Forced Fight", "terra_base");
         settings.Add("wm", true, "Wheel Master", "terra_base");
-        settings.Add("cd_ff", false, "Castle of Dreams Forced Fight", "terra_base");
+        settings.Add("cod_ff", false, "Castle of Dreams Forced Fight", "terra_base");
         settings.Add("cinderella", true, "Cinderella Escort", "terra_base");
         settings.Add("sm", true, "Symphony Master", "terra_base");
         settings.Add("dw_ff", false, "Dwarf Woodlands Forced Fight", "terra_base");
@@ -88,7 +94,7 @@ startup
         settings.Add("ven_maleficent", true, "Maleficent", "ven_base");
         settings.Add("ven_van1", true, "Keyblade Graveyard Vanitas", "ven_base");
         settings.Add("ven_abound", false, "Abounding Crystal", "ven_base");
-        settings.Add("cd_grind_2", false, "Castle of Dreams Return Grind", "ven_base");
+        settings.Add("cod_grind_2", false, "Castle of Dreams Return Grind", "ven_base");
         settings.Add("vrg_grind_meld", false, "Radiant Garden Grind", "ven_base");
         settings.Add("vrg_ff", false, "Radiant Garden Forced Fight", "ven_base");
         settings.Add("leave_rg", true, "Leave Radiant Garden", "ven_base");
@@ -123,8 +129,6 @@ split
     var venConfirm = settings["ven_base"] && current.character == 1;
 
     var fight_complete = current.gs1 != 2 && old.gs1 == 2 && current.gs2 != 128;
-    // placeholder for death logic if needed or wanted
-    // var death = current.gs2 == 128;
     if (fight_complete) {
         if (settings["shared_base"]) {
             if (current.world == 1 && current.room == 2) {
@@ -145,13 +149,13 @@ split
                 return settings["aqua_mirror"];
             }
             if (current.world == 4 && current.room == 17) {
-                return settings["goons"];
+                return settings["aqua_goons"];
             }
             if (current.world == 4 && current.room == 2) {
                 return settings["gates"];
             }
             if (current.world == 4 && current.room == 10) {
-                return settings["maleficent"];
+                return settings["dragon_mal"];
             }
             if (current.world == 6 && current.room == 10) {
                 return settings["mickey_ff"];
@@ -159,8 +163,14 @@ split
             if (current.world == 6 && current.room == 3) {
                 return settings["rg_vanitas"];
             }
+            if (current.world == 8 && current.room == 1) {
+                return settings["aoc_ff"];
+            }
+            if (current.world == 9 && current.room == 3) {
+                return settings["ds_dt_ff"];
+            }
             if (current.world == 9 && current.room == 1) {
-                return settings["ds_ff"];
+                return settings["ds_pb_ff"];
             }
             if (current.world == 9 && current.room == 9) {
                 return settings["gantu"];
@@ -172,7 +182,6 @@ split
                 return settings["nl_vanitas"];
             }
             if (current.world == 13 && current.room == 12) {
-                // if you hit continue instead on death to van this will split again
                 if (vars.completed_splits.TryGetValue("kg_braig", out output_catch)) {
                     return settings["final_vanitas"];
                 }
@@ -186,7 +195,7 @@ split
                 return settings["wm"];
             }
             if (current.world == 3 && current.room == 6) {
-                return settings["cd_ff"];
+                return settings["cod_ff"];
             }
             if (current.world == 3 && current.room == 10) {
                return settings["cinderella"];
@@ -318,18 +327,6 @@ split
         }
 
     }
-    // placeholder for death logic if needed or wanted
-    // if (death) {
-    //     if (aquaConfirm) {
-
-    //     }
-    //     if (terraConfirm) {
-
-    //     }
-    //     if (venConfirm) {
-
-    //     }
-    // }
 
     if (current.world == 8 && current.room == 4) {
         if (current.max_hp > old.max_hp) {
@@ -344,6 +341,12 @@ split
         }
     }
     if (aquaConfirm) {
+        if (current.world == 6 && current.room == 10 && old.room == 9){
+            return vars.completed_splits.Add("aqua_abound") && settings["aqua_abound"];
+        }
+        if (current.world == 17 && old.world == 3 && old.room == 7 && vars.completed_splits.TryGetValue("aqua_abound", out output_catch)) {
+            return vars.completed_splits.Add("aqua_cod_grind") && settings["aqua_cod_grind"];
+        }
         if (current.world == 12) {
             var score = vars.watchers["fruit_ball_score"];
             score.Update(game);
@@ -395,7 +398,7 @@ split
             }
         }
         if (current.world == 17 && old.world == 3 && vars.completed_splits.TryGetValue("ven_abound", out output_catch)) {
-            return vars.completed_splits.Add("cd_grind_2") && settings["cd_grind_2"];
+            return vars.completed_splits.Add("cod_grind_2") && settings["cod_grind_2"];
         }
         if (current.world == 12) {
             var icb_score = vars.watchers["ice_cream_beat_score"];
@@ -437,7 +440,7 @@ init
 
 reset
 {
-    return current.character == 0 && old.character != 0;
+    return current.character == 0 && old.character != 0 && !settings["all_stories"];
 }
 
 update
@@ -449,9 +452,5 @@ update
 
 isLoading
 {
-    var in_oc_tournament = current.world == 8 && current.room == 4;
-    return (
-        (current.gs2 > 1 && current.gs2 < 5 && current.world != 17 && !vars.character_select_load) ||
-        (current.gs2 == 64 && current.text_box != 3 && !in_oc_tournament)
-    );
+    return current.gs2 > 1 && current.gs2 < 5 && current.world != 17 && !vars.character_select_load;
 }
