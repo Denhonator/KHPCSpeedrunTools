@@ -344,8 +344,15 @@ split
         if (current.world == 6 && current.room == 10 && old.room == 9){
             return vars.completed_splits.Add("aqua_abound") && settings["aqua_abound"];
         }
-        if (current.world == 17 && old.world == 3 && old.room == 7 && vars.completed_splits.TryGetValue("aqua_abound", out output_catch)) {
-            return vars.completed_splits.Add("aqua_cod_grind") && settings["aqua_cod_grind"];
+        // breaks if you go out of CoD more than once before finishing grind but after getting to mickey in RG
+        if (current.world == 17 && old.world == 3) {
+            if (vars.completed_splits.TryGetValue("aqua_abound", out output_catch)) {
+                if (vars.completed_splits.TryGetValue("aqua_cod_shop", out output_catch)) {
+                    return vars.completed_splits.Add("aqua_cod_grind") && settings["aqua_cod_grind"];
+                } else {
+                    vars.completed_splits.Add("aqua_cod_shop");
+                }
+            }
         }
         if (current.world == 12) {
             var score = vars.watchers["fruit_ball_score"];
