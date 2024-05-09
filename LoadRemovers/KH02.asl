@@ -21,9 +21,9 @@ startup
 	settings.Add("shadows_2", true, "Shadows II");
 	settings.Add("gears", true, "Gears");
 	settings.SetToolTip(
-        "gears",
-        "Gears:\n!WARNING!\nThis split will trigger early if you use a finisher between the last and second to last gear that is not on the final gear.\n\nTurn off if you wish to avoid this and split manually\n!WARNING!"
-    );
+		"gears",
+		"Gears:\n!WARNING!\nThis split will trigger early if you use a finisher between the last and second to last gear that is not on the final gear.\n\nTurn off if you wish to avoid this and split manually\n!WARNING!"
+	);
 	settings.Add("dt_1", true, "Demon Tower I");
 	settings.Add("aqua_1", true, "Aqua I");
 	settings.Add("aqua_2", true, "Aqua II");
@@ -47,13 +47,13 @@ start
 			if (current.hints != 12) {
 				game.WriteBytes(modules.First().BaseAddress + 0x499B179, new byte[] {0xB});
 			}
-		    vars.check_gear_kill = false;
-		    vars.playing = false;
-		    vars.check_hint = false;
+			vars.check_gear_kill = false;
+			vars.playing = false;
+			vars.check_hint = false;
 			vars.cutscene_base = 100;
 		 	vars.initial_load = 0;
-	    	vars.split_count = 0;
-		    vars.hint_count = 0;
+			vars.split_count = 0;
+			vars.hint_count = 0;
 			return true;
 		}
 	}
@@ -102,13 +102,13 @@ exit
 init
 {
 	vars.check_gear_kill = false;
-    vars.playing = false;
-    vars.check_hint = false;
+	vars.playing = false;
+	vars.check_hint = false;
 	vars.cutscene_base = 100;
- 	vars.initial_load = 0;
-    vars.split_count = 0;
-    vars.cutscene_count = 0;
-    vars.hint_count = 0;
+	vars.initial_load = 0;
+	vars.split_count = 0;
+	vars.cutscene_count = 0;
+	vars.hint_count = 0;
 }
 
 reset
@@ -144,12 +144,12 @@ update
 		vars.check_gear_kill = true;
 	}
 	if (!vars.check_hint && vars.check_gear_kill && current.gear_kill == 0 && old.gear_kill != 0) {
-	    vars.check_hint = true;
+		vars.check_hint = true;
 	}
 	if (vars.hint_count < 3 && vars.check_hint && current.hints == 11 && old.hints != 11) {
-	    vars.hint_count += 1;
-	    vars.check_gear_kill = false;
-	    vars.check_hint = false;
+		vars.hint_count += 1;
+		vars.check_gear_kill = false;
+		vars.check_hint = false;
 	}
 }
 
