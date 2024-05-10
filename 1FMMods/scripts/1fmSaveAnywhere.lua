@@ -26,6 +26,9 @@ local title = 0x233CAB8 - offset
 local continue = 0x2DFC5D0 - offset
 local config = 0x2DFBDD0 - offset
 local cam = 0x503A18 - offset
+local titlescreenpicture = 0x2EE55EC - offset
+local titlescreenamvtimer = 0x2EE55E0 - offset
+
 
 local canExecute = false
 
@@ -62,6 +65,7 @@ function SoftReset()
 	WriteByte(warpType2, 1)
 	if ReadByte(title) == 0 then
 		WriteByte(title, 1)
+		WriteInt(titlescreenamvtimer, 0)
 	end
 	WriteByte(warpTrigger, 2)
 end
@@ -69,6 +73,10 @@ end
 function _OnFrame()
 	if not canExecute then
 		goto done
+	end
+
+	if ReadByte(titlescreenpicture) == 0 then
+		WriteByte(title, 1)
 	end
 
 	local input = ReadInt(0x233D034-offset)
@@ -151,6 +159,7 @@ function _OnFrame()
 	lastInput = input
 	lastDeathPointer = ReadLong(deathPointer)
 	
+	-- For boss rush comment this if block out as it writes to the auto save files as well
 	if ReadFloat(soraHUD) == 1 and prevHUD < 1 then
 		local f = io.open("autosave.dat", "wb")
 		f:write(ReadString(continue, 0x16C00))
@@ -159,5 +168,4 @@ function _OnFrame()
 	end
 	prevHUD = ReadFloat(soraHUD)
 	
-	::done::
 end
