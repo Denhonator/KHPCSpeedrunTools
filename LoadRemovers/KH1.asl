@@ -176,6 +176,69 @@ startup
 
 start
 {
+    // resets all used variables on restart
+    vars.completed_splits = new HashSet<string>();
+    vars.completed_fights = new HashSet<string>();
+
+    // traverse town vars
+    vars.fake_guard = false;
+    vars.oppo = false;
+    vars.aero_level_up = false;
+
+    // wonderland vars
+    vars.wl_counts = false;
+    vars.wl_2_complete = false;
+
+    // deep jungle vars
+    vars.pw_gummis = 0;
+    vars.clayton_1 = false;
+    vars.clayton_2 = false;
+    vars.dj_counts = false;
+    vars.dj_2_complete = false;
+
+    // agrabah vars
+    vars.ag_counts = false;
+    vars.ag_2_complete = false;
+
+    // atlantica vars
+    vars.atl_torn_page = false;
+
+    // halloween town vars
+    vars.ht_counts = false;
+    vars.ht_2_complete = false;
+
+    // olympus coliseum vars
+    vars.cloud_2 = false;
+    vars.herc_cup = false;
+    vars.next_ability_slot_idx = 0;
+
+    // monstro vars
+    vars.mo_counts = false;
+    vars.mo_2_complete = false;
+
+    // neverland vars
+    vars.pre_hook = false;
+    vars.nl_counts = false;
+    vars.nl_2_complete = false;
+
+    // end of world vars
+    vars.journal_complete = false;
+    vars.behemoth_3 = false;
+    vars.ds3 = false;
+
+    // outside world vars
+    vars.world_puppies_complete = false;
+    vars.world_enemies_complete = false;
+    vars.world_trinities_complete = false;
+    vars.world_mini_game_complete = false;
+    vars.gummi_kills = 0;
+
+    // misc category vars
+    vars.finished_nut = false;
+
+    // manual back step vars
+    vars.back_split = "";
+
     var ng = vars.watchers["newgame"];
     ng.Update(game);
     if (settings["boss_rush"]) {
@@ -1258,67 +1321,6 @@ init
         { "docked_world", new MemoryWatcher<ushort>(gb + 0x5229B0) },
     };
 
-    vars.completed_splits = new HashSet<string>();
-    vars.completed_fights = new HashSet<string>();
-
-    // traverse town vars
-    vars.fake_guard = false;
-    vars.oppo = false;
-    vars.aero_level_up = false;
-
-    // wonderland vars
-    vars.wl_counts = false;
-    vars.wl_2_complete = false;
-
-    // deep jungle vars
-    vars.pw_gummis = 0;
-    vars.clayton_1 = false;
-    vars.clayton_2 = false;
-    vars.dj_counts = false;
-    vars.dj_2_complete = false;
-
-    // agrabah vars
-    vars.ag_counts = false;
-    vars.ag_2_complete = false;
-
-    // atlantica vars
-    vars.atl_torn_page = false;
-
-    // halloween town vars
-    vars.ht_counts = false;
-    vars.ht_2_complete = false;
-
-    // olympus coliseum vars
-    vars.cloud_2 = false;
-    vars.herc_cup = false;
-    vars.next_ability_slot_idx = 0;
-
-    // monstro vars
-    vars.mo_counts = false;
-    vars.mo_2_complete = false;
-
-    // neverland vars
-    vars.pre_hook = false;
-    vars.nl_counts = false;
-    vars.nl_2_complete = false;
-
-    // end of world vars
-    vars.journal_complete = false;
-    vars.behemoth_3 = false;
-    vars.ds3 = false;
-
-    // outside world vars
-    vars.world_puppies_complete = false;
-    vars.world_enemies_complete = false;
-    vars.world_trinities_complete = false;
-    vars.world_mini_game_complete = false;
-    vars.gummi_kills = 0;
-
-    // misc category vars
-    vars.finished_nut = false;
-
-    // manual back step vars
-    vars.back_split = "";
     // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)
     // puppies sets are multiples of 3 by sets found
     vars.revisit_info = new Dictionary<int, Dictionary<int, int[]>>{
@@ -1413,6 +1415,9 @@ init
             }
         }
     };
+
+    vars.completed_splits = new HashSet<string>();
+    vars.completed_fights = new HashSet<string>();
 
     vars.check_jj_revisit = (Func <int, int[], bool>)(
         (int world, int[] starting_vals) => {
