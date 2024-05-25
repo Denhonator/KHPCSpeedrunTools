@@ -158,21 +158,105 @@ startup
         settings.Add("coco", false, "99 coconut", "misc");
             settings.Add("per_10", false, "Every 10 (and final 9)", "coco");
             settings.Add("per_1", false, "Every nut", "coco");
+        settings.Add("boss_rush", false, "Boss Rush", "misc");
+            settings.Add("custom_install", false, "Custom game install location", "boss_rush");
+            settings.SetToolTip(
+                "custom_install",
+                "Check this and update the path in the asl file if you have the game installed in a non standard location for use with the boss rush!"
+            );
 
     settings.Add("settings", false, "Settings");
-    settings.Add("re-split", false, "Re split", "settings");
-        settings.SetToolTip(
-            "re-split",
-            "When set, splits will trigger more than once if a death occurs." +
-            "\nFor example if you die to Ansem 2, Darkside 3 will split again."
-        );
+        settings.Add("re-split", false, "Re split", "settings");
+            settings.SetToolTip(
+                "re-split",
+                "When set, splits will trigger more than once if a death occurs." +
+                "\nFor example if you die to Ansem 2, Darkside 3 will split again."
+            );
 }
 
 start
 {
+    // resets all used variables on restart
+    vars.completed_splits = new HashSet<string>();
+    vars.completed_fights = new HashSet<string>();
+
+    // traverse town vars
+    vars.fake_guard = false;
+    vars.oppo = false;
+    vars.aero_level_up = false;
+
+    // wonderland vars
+    vars.wl_counts = false;
+    vars.wl_2_complete = false;
+
+    // deep jungle vars
+    vars.pw_gummis = 0;
+    vars.clayton_1 = false;
+    vars.clayton_2 = false;
+    vars.dj_counts = false;
+    vars.dj_2_complete = false;
+
+    // agrabah vars
+    vars.ag_counts = false;
+    vars.ag_2_complete = false;
+
+    // atlantica vars
+    vars.atl_torn_page = false;
+
+    // halloween town vars
+    vars.ht_counts = false;
+    vars.ht_2_complete = false;
+
+    // olympus coliseum vars
+    vars.cloud_2 = false;
+    vars.herc_cup = false;
+    vars.next_ability_slot_idx = 0;
+
+    // monstro vars
+    vars.mo_counts = false;
+    vars.mo_2_complete = false;
+
+    // neverland vars
+    vars.pre_hook = false;
+    vars.nl_counts = false;
+    vars.nl_2_complete = false;
+
+    // end of world vars
+    vars.journal_complete = false;
+    vars.behemoth_3 = false;
+    vars.ds3 = false;
+
+    // outside world vars
+    vars.world_puppies_complete = false;
+    vars.world_enemies_complete = false;
+    vars.world_trinities_complete = false;
+    vars.world_mini_game_complete = false;
+    vars.gummi_kills = 0;
+
+    // misc category vars
+    vars.finished_nut = false;
+
+    // manual back step vars
+    vars.back_split = "";
+
     var ng = vars.watchers["newgame"];
     ng.Update(game);
-    return ng.Current == 7 && ng.Old == 6;
+    if (settings["boss_rush"]) {
+        var drives = "CDEFGHIJKLMNOPQRSTUVWXYZ";
+        var base_path = @":\Program Files\Epic Games\KH_1.5_2.5";
+        if (settings["custom_install"]) {
+            base_path = @":\Users\chuds\Desktop\KH Current\KH_1.5_2.5";
+        }
+        foreach (char drive in drives) {
+            if(Directory.Exists(drive + base_path)) {
+                vars.autosavedst = drive + base_path + @"\autosave.dat";
+                break;
+            } 
+        }
+        File.Copy(@"Boss Rush\001_Darkside 1.dat", vars.autosavedst, true);
+    } else {
+        return ng.Current == 7 && ng.Old == 6;
+    }
 }
 
 split
@@ -195,32 +279,49 @@ split
 
     // Final fight split always goes
     if(fight_complete && current_world == 16 && current.room == 33 && current.scene == 4){
+        if (settings["boss_rush"]) {
+            File.Copy(@"Boss Rush\001_Darkside 1.dat", vars.autosavedst, true);
+        }
         return true;
     }
 
     if(settings["main"]){
         if(death){
+            // death abuse splits
             if(current_world == 0 && current.room == 4){
+                if (settings["boss_rush"]) {
+                    File.Copy(@"Boss Rush\002_Darkside 2.dat", vars.autosavedst, true);
+                }
                 return settings["ds1"];
             }
         }
         if(fight_complete){
+            // fight win splits
             switch (current_world){
-                // station of awakening splits
+                // station of awakening
                 case 0:
                     if(current.room == 4){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\002_Darkside 2.dat", vars.autosavedst, true);
+                        }
                         return settings["ds1"];
                     }
                     break;
-                // destiny islands splits
+                // destiny islands
                 case 1:
                     if(current.room == 8){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\003_Leon.dat", vars.autosavedst, true);
+                        }
                         return settings["ds2"];
                     }
                     break;
-                // traverse town splits
+                // traverse town
                 case 3:
                     if(current.room == 2){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\005_Crank Tower.dat", vars.autosavedst, true);
+                        }
                         return settings["guard"];
                     }
                     if(current.room == 1){
@@ -231,17 +332,23 @@ split
                         }
                         if(vars.fake_guard){
                             vars.back_split = "";
+                            if (settings["boss_rush"]) {
+                                File.Copy(@"Boss Rush\021_Riku 1.dat", vars.autosavedst, true);
+                            }
                             return settings["oppo"];
                         }
                     }
                     break;
-                // wonderland splits
+                // wonderland
                 case 4:
                     if(current.room == 1){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\007_Sabor 2.dat", vars.autosavedst, true);
+                        }
                         return settings["tm"];
                     }
                     break;
-                // deep jungle splits
+                // deep jungle
                 case 5:
                     if(current.room == 11){
                         if(!settings["optional_splits"] && !vars.clayton_1){
@@ -251,47 +358,71 @@ split
                         }
                         if(vars.clayton_1){
                             vars.back_split = "";
+                            if (settings["boss_rush"]) {
+                                File.Copy(@"Boss Rush\009_Pot Centipede.dat", vars.autosavedst, true);
+                            }
                             return settings["clayton_2"];
                         }
                     }
                     break;
-                // agrabah splits
+                // agrabah
                 case 8:
                     if(current.room == 17){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\013_Parasite Cage 1.dat", vars.autosavedst, true);
+                        }
                         return settings["gj"];
                     }
                     break;
-                // halloween town splits
+                // halloween town
                 case 10:
                     if(current.room == 8){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\018_Anti Sora.dat", vars.autosavedst, true);
+                        }
                         return settings["oogie_manor"];
                     }
                     break;
-                // monstro splits
+                // monstro
                 case 12:
                     if(current.room == 2){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\015_Lock Shock Barrel.dat", vars.autosavedst, true);
+                        }
                         return settings["pc2"];
                     }
                     break;
-                // neverland splits
+                // neverland
                 case 13:
                     if(current.room == 8){
                         vars.back_split = "";
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\020_Opposite Armor.dat", vars.autosavedst, true);
+                        }
                         return settings["hook"];
                     }
                     break;
-                // hollow bastion splits
+                // hollow bastion
                 case 15:
                     if(current.room == 14){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\025_Behemoth.dat", vars.autosavedst, true);
+                        }
                         return settings["riku2"];
                     }
                     if(current.room == 15){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\026_Arch Behemoth.dat", vars.autosavedst, true);
+                        }
                         return settings["behemoth"];
                     }
                     break;
-                // end of world splits
+                // end of world
                 case 16:
                     if(current.room == 26){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\028_Ansem 1.dat", vars.autosavedst, true);
+                        }
                         return settings["cher"];
                     }
                     eow_scene.Update(game); 
@@ -305,6 +436,9 @@ split
                         }
                         if(vars.ds3){
                             vars.back_split = "";
+                            if (settings["boss_rush"]) {
+                                File.Copy(@"Boss Rush\030_Ansem 3.dat", vars.autosavedst, true);
+                            }
                             return settings["a2"];
                         }
                     }
@@ -314,8 +448,10 @@ split
     }
 
     if(settings["optional_splits"]){
+        // fight win splits
         if(fight_complete){
             switch (current_world){
+                // traverse town
                 case 3:
                     if(current.room == 1 && !vars.fake_guard){
                         vars.back_split = "fake";
@@ -323,16 +459,22 @@ split
                         return settings["fake_guard"];
                     }
                     break;
-                // wonderland splits
+                // wonderland
                 case 4:
                     if(current.room == 3){
                         vars.completed_fights.Add("crank");
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\006_Trickmaster.dat", vars.autosavedst, true);
+                        }
                         return settings["crank"];
                     }
                     break;
-                // deep jungle splits
+                // deep jungle
                 case 5:
                     if(current.room == 2){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\008_Clayton.dat", vars.autosavedst, true);
+                        }
                         return settings["sabor_2"];
                     }
                     if(current.room == 11 && !vars.clayton_1){
@@ -344,33 +486,54 @@ split
                 // agrabah splits
                 case 8:
                     if(current.room == 19){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\010_Tiger Head.dat", vars.autosavedst, true);
+                        }
                         return settings["pot"];
                     }
                     if(current.room == 1){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\011_Jafar.dat", vars.autosavedst, true);
+                        }
                         return settings["tiger"];
                     }
                     if(current.room == 16){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\012_Genie Jafar.dat", vars.autosavedst, true);
+                        }
                         return settings["jafar"];
                     }
                     break;
-                // halloween town splits
+                // halloween town
                 case 10:
                     if(current.room == 9){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\016_Oogie Boogie.dat", vars.autosavedst, true);
+                        }
                         return settings["lsb"];
                     }
                     if(current.room == 7){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\017_Oogie Manor.dat", vars.autosavedst, true);
+                        }
                         return settings["oogie"];
                     }
                     break;
-                // monstro splits
+                // monstro
                 case 12:
                     if(current.room == 4){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\014_Parasite Cage 2.dat", vars.autosavedst, true);
+                        }
                         return settings["pc"];
                     }
                     break;
-                // neverland splits
+                // neverland
                 case 13:
                     if(current.room == 6){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\019_Hook.dat", vars.autosavedst, true);
+                        }
                         return settings["anti"];
                     }
                     if(vars.pre_hook && !vars.hook && !settings["hook"] && current.room == 8){
@@ -378,22 +541,34 @@ split
                         vars.hook = true;
                     }
                     break;
-                // hollow bastion splits
+                // hollow bastion
                 case 15:
                     if(current.room == 4){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\022_Maleficent.dat", vars.autosavedst, true);
+                        }
                         return settings["riku"];
                     }
                     if(current.room == 11){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\023_Dragon Maleficent.dat", vars.autosavedst, true);
+                        }
                         return settings["mal"];
                     }
                     if(current.room == 12 && current.scene == 0){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\024_Riku Ansem.dat", vars.autosavedst, true);
+                        }
                         return settings["dragon"];
                     }
                     break;
-                // end of world splits
+                // end of world
                 case 16:
                     eow_scene.Update(game); 
                     if(current.room == 30 && eow_scene.Current == 256){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\029_Ansem 2.dat", vars.autosavedst, true);
+                        }
                         return settings["a1"];
                     }
                     if(!vars.ds3 && current.room == 30){
@@ -403,9 +578,15 @@ split
                     }
                     if(current.room == 33){
                         if(current.scene == 0){
+                            if (settings["boss_rush"]) {
+                                File.Copy(@"Boss Rush\031_World of Chaos Face.dat", vars.autosavedst, true);
+                            }
                             return settings["a3"];
                         }
                         if(current.scene == 2){
+                            if (settings["boss_rush"]) {
+                                File.Copy(@"Boss Rush\032_Ansem 4.dat", vars.autosavedst, true);
+                            }
                             return settings["face"];
                         }
                         if(current.scene == 3){
@@ -424,8 +605,9 @@ split
                     break;
             }
         } else {
+            // all other splits
             switch (current_world){
-                // station of awakening splits
+                // station of awakening
                 case 0:
                     if(current.enemies_defeated[0] >= 5 && cutscene.Current){
                         return vars.completed_splits.Add("shadows_1") && settings["shadows_1"];
@@ -435,7 +617,7 @@ split
                         return vars.completed_splits.Add("shadows_2") && settings["shadows_2"];
                     }
                     break;
-                // destiny islands splits
+                // destiny islands
                 case 1:
                     // logs 
                     if(current.collected_items_2[40] < old.collected_items_2[40]){
@@ -446,9 +628,12 @@ split
                         return settings["destiny"];
                     }
                     break;
-                // traverse town splits
+                // traverse town
                 case 3:
                     if(current.room == 0 && current.scene == 3 && ((death) || (current.white > 0 && old.white == 0))){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\004_Guard Armor.dat", vars.autosavedst, true);
+                        }
                         return vars.completed_splits.Add("leon") && settings["leon"];
                     }
                     if(current.room == 10 && current.scene == 11 && current.in_gummi > 0){
@@ -459,13 +644,13 @@ split
                         return vars.completed_splits.Add("tt_4") && settings["tt_4"];
                     }
                     break;
-                // wonderland splits
+                // wonderland
                 case 4:
                     if(current.room == 3 && vars.completed_fights.TryGetValue("crank", out output_catch) && cutscene.Current){
                         return vars.completed_splits.Add("crank_alt") && settings["crank_alt"];
                     }
                     break;
-                // deep jungle splits
+                // deep jungle
                 case 5:
                     if(current.room == 0 && current.scene == 0 && ((death) || (current.white > 0 && old.white == 0))){
                         return vars.completed_splits.Add("sabor_1") && settings["sabor_1"];
@@ -492,7 +677,7 @@ split
                         return vars.completed_splits.Add("wfc") && settings["wfc"];
                     }
                     break;
-                // agrabah splits
+                // agrabah
                 case 8:
                     if(current.room == 0 && current.scene == 4){
                         return vars.completed_splits.Add("save_al") && settings["save_al"];
@@ -501,7 +686,7 @@ split
                         return vars.completed_splits.Add("carpet_escape") && settings["carpet_escape"];
                     }
                     break;
-                // halloween town splits
+                // halloween town
                 case 10:
                     // forget me not
                     if(current.room == 10 && current.collected_items_2[75] == 0 && old.collected_items_2[75] == 1){
@@ -512,7 +697,7 @@ split
                         return settings["jb"];
                     }
                     break;
-                // neverland splits
+                // neverland
                 case 13:
                     var neverland_scene = vars.watchers["neverland_scene"];
                     neverland_scene.Update(game);
@@ -525,7 +710,7 @@ split
                         return vars.completed_splits.Add("ship") && settings["ship"];
                     }
                     break;
-                // hollow bastion splits
+                // hollow bastion
                 case 15:
                     if(old.room == 11 && current.room == 4 && current.scene == 13){
                         return settings["emblem"];
@@ -540,10 +725,13 @@ split
                         return vars.completed_splits.Add("dumbo_3") && settings["dumbo_3"];
                     }
                     break;
-                // end of world splits
+                // end of world
                 case 16:
                     current.arch_behemoth_defeated = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE620A);
                     if(current.room == 12 && current.scene == 13 && current.arch_behemoth_defeated == 1 && old.arch_behemoth_defeated == 0){
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\027_Chernabog.dat", vars.autosavedst, true);
+                        }
                         return settings["arch"];
                     }
                     if(old.room == 18 && current.room == 15){
@@ -580,8 +768,9 @@ split
 
     if(settings["all_worlds_splits"]){
         if(fight_complete){
+            // fight win splits
             switch (current_world){
-                // atlantica splits
+                // atlantica
                 case 9:
                     if(current.room == 12 && current.scene == 2){
                         return settings["urs_1"];
@@ -590,7 +779,7 @@ split
                         return settings["urs_2"];
                     }
                     break;
-                // olympus coliseum splits
+                // olympus coliseum
                 case 11:
                     if(current.room == 2 && current.scene == 0){
                         return settings["cloud_1"];
@@ -612,8 +801,9 @@ split
                     break;
             }
         } else {
+            // all other splits
             switch (current_world){
-                // traverse town splits
+                // traverse town
                 case 3:
                     if(old_world == 6 && vars.completed_splits.TryGetValue("torn_page_power", out output_catch)){
                         return vars.completed_splits.Add("power_boost") && settings["power_boost"];
@@ -622,7 +812,7 @@ split
                         return settings["seal_100_aw"];
                     }
                     break;
-                // 100 acre wood splits
+                // 100 acre wood
                 case 6:
                     // power boost
                     if(current.collected_items_2[0] > old.collected_items_2[0]){
@@ -649,7 +839,7 @@ split
                         return vars.completed_splits.Add("torn_page_5") && settings["torn_page_5"];
                     }
                     break;
-                // atlantica splits
+                // atlantica
                 case 9:
                     var docked_world = vars.watchers["docked_world"];
                     docked_world.Update(game);
@@ -657,7 +847,7 @@ split
                         return vars.completed_splits.Add("atl_dock") && settings["atl_dock"];
                     }
                     break;
-                // olympus coliseum splits
+                // olympus coliseum
                 case 11:
                     // thunder unlocked
                     if(current.in_gummi > 0 && (
@@ -674,14 +864,15 @@ split
 
     if(settings["jj_splits"]){
         if(fight_complete){
+            // fight win splits
             switch (current_world){
-                // agrabah splits
+                // agrabah
                 case 8:
                     if(current.room == 0 && current.scene == 13){
                         return settings["kurt"];
                     }
                     break;
-                // olympus coliseum splits
+                // olympus coliseum
                 case 11:
                     if(current.room == 5 && current.scene == 0){
                         return settings["pg_cup"];
@@ -702,7 +893,7 @@ split
                         return vars.completed_splits.Add("seph") && settings["seph"];
                     }
                     break;
-                // neverland splits
+                // neverland
                 case 13:
                     if(current.room == 9 && current.scene == 1){
                         return settings["nap_time"];
@@ -710,8 +901,9 @@ split
                     break;
             }
         } else {
+            // all other splits
             switch (current_world){
-                // wonderland splits
+                // wonderland
                 case 4:
                     if(settings["wl_2"]){
                         if(vars.completed_splits.TryGetValue("wl_1", out output_catch)){
@@ -734,7 +926,7 @@ split
                         }
                     }
                     break;
-                // deep jungle splits
+                // deep jungle
                 case 5:
                     if(settings["dj_2"]){
                         if(vars.completed_splits.TryGetValue("dj_1", out output_catch)){
@@ -757,7 +949,7 @@ split
                         }
                     }
                     break;
-                // agrabah splits
+                // agrabah
                 case 8:
                     if(settings["ag_2"]){
                         if(vars.completed_splits.TryGetValue("ag_1", out output_catch)){
@@ -780,7 +972,7 @@ split
                         }
                     }
                     break;
-                // atlantica splits
+                // atlantica
                 case 9:
                     if(current.torn_page_count > old.torn_page_count){
                         vars.atl_torn_page = true;
@@ -789,7 +981,7 @@ split
                         return vars.completed_splits.Add("atlantica_1") && settings["atlantica_1"];
                     }
                     break;
-                // halloween town splits
+                // halloween town
                 case 10:
                     if(settings["ht_2"]){
                         if(vars.completed_splits.TryGetValue("ht_1", out output_catch)){
@@ -811,7 +1003,7 @@ split
                         }
                     }
                     break;
-                // olympus coliseum splits
+                // olympus coliseum
                 case 11:
                     // gravity level
                     if(current.magic_levels[112] > old.magic_levels[112]){
@@ -848,7 +1040,7 @@ split
                         return vars.completed_splits.Add("hades_seed_29") && settings["hades_seed_29"];
                     }
                     break;
-                // monstro splits
+                // monstro
                 case 12:
                     if(settings["mo_2"]){
                         if(vars.completed_splits.TryGetValue("mo_1", out output_catch)){
@@ -871,7 +1063,7 @@ split
                         }
                     }
                     break;
-                // neverland splits
+                // neverland
                 case 13:
                     if(settings["nl_2"]){
                         if(vars.completed_splits.TryGetValue("nl_1", out output_catch)){
@@ -893,7 +1085,7 @@ split
                         }
                     }
                     break;
-                // hollow bastion splits
+                // hollow bastion
                 case 15:
                     // divine rose & cure level
                     if(current.equips[33] == 1 && current.magic_levels[56] == 3 && current.in_gummi > 0){
@@ -904,7 +1096,7 @@ split
                         return settings["xemnas"];
                     }
                     break;
-                // end of world splits
+                // end of world
                 case 16:
                     if(current.in_gummi > 0){
                         return vars.completed_splits.Add("eow") && settings["eow"];
@@ -956,7 +1148,7 @@ split
                         return vars.completed_splits.Add("jj_complete") && settings["jj_complete"];
                     }
                     break;
-        }
+            }
         }
         // Register initial world visits complete for revisit checks
         if(current.in_gummi > 0){
@@ -1129,67 +1321,6 @@ init
         { "docked_world", new MemoryWatcher<ushort>(gb + 0x5229B0) },
     };
 
-    vars.completed_splits = new HashSet<string>();
-    vars.completed_fights = new HashSet<string>();
-
-    // traverse town vars
-    vars.fake_guard = false;
-    vars.oppo = false;
-    vars.aero_level_up = false;
-
-    // wonderland vars
-    vars.wl_counts = false;
-    vars.wl_2_complete = false;
-
-    // deep jungle vars
-    vars.pw_gummis = 0;
-    vars.clayton_1 = false;
-    vars.clayton_2 = false;
-    vars.dj_counts = false;
-    vars.dj_2_complete = false;
-
-    // agrabah vars
-    vars.ag_counts = false;
-    vars.ag_2_complete = false;
-
-    // atlantica vars
-    vars.atl_torn_page = false;
-
-    // halloween town vars
-    vars.ht_counts = false;
-    vars.ht_2_complete = false;
-
-    // olympus coliseum vars
-    vars.cloud_2 = false;
-    vars.herc_cup = false;
-    vars.next_ability_slot_idx = 0;
-
-    // monstro vars
-    vars.mo_counts = false;
-    vars.mo_2_complete = false;
-
-    // neverland vars
-    vars.pre_hook = false;
-    vars.nl_counts = false;
-    vars.nl_2_complete = false;
-
-    // end of world vars
-    vars.journal_complete = false;
-    vars.behemoth_3 = false;
-    vars.ds3 = false;
-
-    // outside world vars
-    vars.world_puppies_complete = false;
-    vars.world_enemies_complete = false;
-    vars.world_trinities_complete = false;
-    vars.world_mini_game_complete = false;
-    vars.gummi_kills = 0;
-
-    // misc category vars
-    vars.finished_nut = false;
-
-    // manual back step vars
-    vars.back_split = "";
     // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)
     // puppies sets are multiples of 3 by sets found
     vars.revisit_info = new Dictionary<int, Dictionary<int, int[]>>{
@@ -1285,6 +1416,9 @@ init
         }
     };
 
+    vars.completed_splits = new HashSet<string>();
+    vars.completed_fights = new HashSet<string>();
+
     vars.check_jj_revisit = (Func <int, int[], bool>)(
         (int world, int[] starting_vals) => {
             int difficulty = current.difficulty;
@@ -1324,6 +1458,9 @@ reset
 {
     // -1 value of 4 byte for world
     if(current.scene == 0 && current.room == 0 && current.world == 65535 && old.world != 65535){
+        if (settings["boss_rush"]) {
+            File.Copy(@"Boss Rush\001_Darkside 1.dat", vars.autosavedst, true);
+        }
         return true;
     }
 }
