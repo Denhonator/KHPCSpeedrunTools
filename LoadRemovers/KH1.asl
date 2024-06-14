@@ -18,6 +18,9 @@ state("KINGDOM HEARTS FINAL MIX")
     byte6 trinity_counts : 0x2DE7636;
     ushort puppy_count : 0x2E997A8;
     ushort mini_game_count : 0x2E999F4;
+
+    // temp for scripts
+    byte copyright : 2EE98E0;
 }
 
 startup
@@ -170,6 +173,69 @@ startup
 
 start
 {
+    // resets all used variables on restart
+    vars.completed_splits = new HashSet<string>();
+    vars.completed_fights = new HashSet<string>();
+
+    // traverse town vars
+    vars.fake_guard = false;
+    vars.oppo = false;
+    vars.aero_level_up = false;
+
+    // wonderland vars
+    vars.wl_counts = false;
+    vars.wl_2_complete = false;
+
+    // deep jungle vars
+    vars.pw_gummis = 0;
+    vars.clayton_1 = false;
+    vars.clayton_2 = false;
+    vars.dj_counts = false;
+    vars.dj_2_complete = false;
+
+    // agrabah vars
+    vars.ag_counts = false;
+    vars.ag_2_complete = false;
+
+    // atlantica vars
+    vars.atl_torn_page = false;
+
+    // halloween town vars
+    vars.ht_counts = false;
+    vars.ht_2_complete = false;
+
+    // olympus coliseum vars
+    vars.cloud_2 = false;
+    vars.herc_cup = false;
+    vars.next_ability_slot_idx = 0;
+
+    // monstro vars
+    vars.mo_counts = false;
+    vars.mo_2_complete = false;
+
+    // neverland vars
+    vars.pre_hook = false;
+    vars.nl_counts = false;
+    vars.nl_2_complete = false;
+
+    // end of world vars
+    vars.journal_complete = false;
+    vars.behemoth_3 = false;
+    vars.ds3 = false;
+
+    // outside world vars
+    vars.world_puppies_complete = false;
+    vars.world_enemies_complete = false;
+    vars.world_trinities_complete = false;
+    vars.world_mini_game_complete = false;
+    vars.gummi_kills = 0;
+
+    // misc category vars
+    vars.finished_nut = false;
+
+    // manual back step vars
+    vars.back_split = "";
+
     var ng = vars.watchers["newgame"];
     ng.Update(game);
     return ng.Current == 7 && ng.Old == 6;

@@ -56,12 +56,24 @@ function InstantContinue()
 	end
 end
 
-function SoftReset()
-	ConsolePrint("Soft reset")
-	WriteByte(warpType1, 3)
-	WriteByte(warpType2, 1)
-	if ReadByte(title) == 0 then
-		WriteByte(title, 1)
+function Reset()
+	if language == "en" then
+		ConsolePrint("Soft reset")
+		WriteByte(warpType1, 0)
+		WriteByte(warpType2, 0)
+		WriteByte(cutSceneAspect, 127)
+		if ReadByte(title) == 0 then
+			WriteByte(title, 1)
+			WriteInt(titlescreenamvtimer, 0)
+		end
+		WriteByte(warpTrigger, 2)
+		WriteLong(menuReset, 0)
+		WriteInt(titlescreenamvtimer, 0)
+	else
+		-- A soft reset that does not cause bugs for Japanese has not been found yet
+		-- This will replicate the return to title from the game it self
+		WriteLong(menuReset, 0)
+		WriteInt(hardReset, 1)
 	end
 	WriteByte(warpTrigger, 2)
 end
