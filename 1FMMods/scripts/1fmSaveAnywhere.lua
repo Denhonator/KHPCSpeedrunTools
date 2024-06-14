@@ -2,7 +2,6 @@ LUAGUI_NAME = "1fmSaveAnywhere"
 LUAGUI_AUTH = "denhonator"
 LUAGUI_DESC = "Read readme for button combinations"
 
-local extraSafety = false
 local offset = 0x3A0606
 local addgummi = 0
 local lastInput = 0
@@ -14,11 +13,11 @@ local soraHUD = 0x280EB1C - offset
 local soraHP = 0x2D592CC - offset
 local stateFlag = 0x2863958 - offset
 local deathCheck = 0x2978E0 - offset
-local safetyMeasure = 0x297746 - offset
 local whiteFade = 0x233C49C - offset
 local blackFade = 0x4D93B8 - offset
 local closeMenu = 0x2E90820 - offset
 local deathPointer = 0x23944B8 - offset
+local hardReset = 0x22E86E4 - offset
 local warpTrigger = 0x22E86DC - offset
 local warpType1 = 0x233C240 - offset
 local warpType2 = 0x22E86E0 - offset
@@ -26,8 +25,15 @@ local title = 0x233CAB8 - offset
 local continue = 0x2DFC5D0 - offset
 local config = 0x2DFBDD0 - offset
 local cam = 0x503A18 - offset
+local titlescreenpicture = 0x2EE55EC - offset
+local titlescreenamvtimer = 0x2EE55E0 - offset
+local cutSceneAspect = 0x4DA20A - offset
+local menuReset = 0x2E90820 - offset
+-- change this to true doing the boss rush category
+local bossRush = false
 
 local canExecute = false
+local language = "en"
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
@@ -35,8 +41,7 @@ function _OnInit()
 			ConsolePrint("Global version detected")	
 		elseif ReadShort(deathCheck-0x1C0) == 0x2E74 then
 			deathCheck = deathCheck-0x1C0
-			safetyMeasure = safetyMeasure-0x1C0
-			extraSafety = false
+			language = "jp"
 			ConsolePrint("JP detected")
 		end
 		canExecute = true
@@ -75,12 +80,15 @@ function Reset()
 		WriteLong(menuReset, 0)
 		WriteInt(hardReset, 1)
 	end
-	WriteByte(warpTrigger, 2)
 end
 
 function _OnFrame()
 	if not canExecute then
 		goto done
+	end
+
+	if ReadByte(titlescreenpicture) == 0 then
+		WriteByte(title, 1)
 	end
 
 	local input = ReadInt(0x233D034-offset)
@@ -111,7 +119,7 @@ function _OnFrame()
 	end
 	
 	if input == 3848 and lastInput ~= 3848 then
-		SoftReset()
+		Reset()
 	end
 	
 	-- Remove white screen on death (it bugs out this way normally)
@@ -126,9 +134,6 @@ function _OnFrame()
 	-- Reverts disabling death condition check (or it crashes)
 	if revertCode and ReadLong(deathPointer) ~= lastDeathPointer then
 		WriteShort(deathCheck, 0x2E74)
-		if extraSafety then
-			WriteLong(safetyMeasure, 0x8902AB8973058948)
-		end
 		removeWhite = 1000
 		revertCode = false
 	end
@@ -142,9 +147,6 @@ function _OnFrame()
 		WriteByte(soraHP, 0)
 		WriteByte(stateFlag, 1)
 		WriteShort(deathCheck, 0x9090)
-		if extraSafety then
-			WriteLong(safetyMeasure, 0x89020B958735894C)
-		end
 		revertCode = true
 	end
 	
@@ -163,13 +165,14 @@ function _OnFrame()
 	lastInput = input
 	lastDeathPointer = ReadLong(deathPointer)
 	
-	if ReadFloat(soraHUD) == 1 and prevHUD < 1 then
+	-- For boss rush comment this if block out as it writes to the auto save files as well
+	if ReadFloat(soraHUD) == 1 and prevHUD < 1  and not bossRush then
 		local f = io.open("autosave.dat", "wb")
 		f:write(ReadString(continue, 0x16C00))
 		f:close()
 		ConsolePrint("Wrote autosave")
 	end
 	prevHUD = ReadFloat(soraHUD)
-	
+
 	::done::
 end
