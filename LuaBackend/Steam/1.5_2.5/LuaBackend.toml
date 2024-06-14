@@ -1,0 +1,27 @@
+[kh1]
+scripts = [{ path = "scripts/kh1/", relative = true }]
+base = 0x3A29A6
+thread_struct = 0x22BAA20
+exe = "KINGDOM HEARTS FINAL MIX.exe"
+game_docs = "KINGDOM HEARTS HD 1.5+2.5 ReMIX"
+
+[kh2]
+scripts = [{ path = "scripts/kh2/", relative = true }]
+base = 0x56668E
+thread_struct = 0x8A0930
+exe = "KINGDOM HEARTS II FINAL MIX.exe"
+game_docs = "KINGDOM HEARTS HD 1.5+2.5 ReMIX"
+
+[bbs]
+scripts = [{ path = "scripts/bbs/", relative = true }]
+base = 0x6107B4
+thread_struct = 0x110B84A0
+exe = "KINGDOM HEARTS Birth by Sleep FINAL MIX.exe"
+game_docs = "KINGDOM HEARTS HD 1.5+2.5 ReMIX"
+
+[recom]
+scripts = [{ path = "scripts/recom/", relative = true }]
+base = 0x4E7040
+thread_struct = 0xC072C0
+exe = "KINGDOM HEARTS Re_Chain of Memories.exe"
+game_docs = "KINGDOM HEARTS HD 1.5+2.5 ReMIX"

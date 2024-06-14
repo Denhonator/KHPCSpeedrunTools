@@ -18,6 +18,9 @@ state("KINGDOM HEARTS FINAL MIX")
     byte6 trinity_counts : 0x2DE7636;
     ushort puppy_count : 0x2E997A8;
     ushort mini_game_count : 0x2E999F4;
+
+    // temp for scripts
+    byte copyright : 2EE98E0;
 }
 
 startup
