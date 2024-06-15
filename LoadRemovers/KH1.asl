@@ -40,6 +40,7 @@ state("KINGDOM HEARTS FINAL MIX", "EG JP")
     byte6 trinity_counts : 0x2DEA946;
     ushort puppy_count : 0x2E9CAA8;
     ushort mini_game_count : 0x2E9CCF4;
+
 }
 
 startup
