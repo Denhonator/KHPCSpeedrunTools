@@ -2,14 +2,14 @@ LUAGUI_NAME = "1fmHookShip"
 LUAGUI_AUTH = "denhonator"
 LUAGUI_DESC = "Makes Hook Ship always appear when conditions are met"
 
-local offset = 0x3A0606
-local hookship = 0xED321E - offset
-local dest = 0x5041F0 - offset
-local neverland = 0x2DE78C7 - offset
-local posDebugString = 0x3E7F28 - offset
-local posDebug1 = 0x232A3A0 - offset
-local posDebug2 = 0x2534654 - offset
-local ingummi = 0x504218 - offset
+local offset = 0x3A2B86
+local hookship = 0xED751E - offset
+local dest = 0x508280 - offset
+local neverland = 0x2DEBBD7 - offset
+local posDebugString = 0x3EB158 - offset
+local posDebug1 = 0x232E6A0 - offset
+local posDebug2 = 0x2538964 - offset
+local ingummi = 0x5082AD - offset
 
 local canExecute = false
 

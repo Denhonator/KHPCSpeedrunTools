@@ -1,34 +1,34 @@
 LUAGUI_NAME = "1fmSaveAnywhere"
-LUAGUI_AUTH = "denhonator"
+LUAGUI_AUTH = "me"
 LUAGUI_DESC = "Read readme for button combinations"
 
-local offset = 0x3A0606
+local offset = 0x3A2B86
 local addgummi = 0
 local lastInput = 0
 local prevHUD = 0
 local revertCode = false
 local removeWhite = 0
 local lastDeathPointer = 0
-local soraHUD = 0x280EB1C - offset
-local soraHP = 0x2D592CC - offset
-local stateFlag = 0x2863958 - offset
-local deathCheck = 0x2978E0 - offset
-local whiteFade = 0x233C49C - offset
-local blackFade = 0x4D93B8 - offset
-local closeMenu = 0x2E90820 - offset
-local deathPointer = 0x23944B8 - offset
-local hardReset = 0x22E86E4 - offset
-local warpTrigger = 0x22E86DC - offset
-local warpType1 = 0x233C240 - offset
-local warpType2 = 0x22E86E0 - offset
-local title = 0x233CAB8 - offset
-local continue = 0x2DFC5D0 - offset
-local config = 0x2DFBDD0 - offset
-local cam = 0x503A18 - offset
+local soraHUD = 0x2812E1C - offset
+local soraHP = 0x2D5D5CC - offset
+local stateFlag = 0x2867C58 - offset
+local deathCheck = 0x299BE0 - offset
+local whiteFade = 0x234079C - offset
+local blackFade = 0x4DD6B8 - offset
+local closeMenu = 0x2E94B20 - offset
+local deathPointer = 0x23987B8 - offset
+local hardReset = 0x22EC9E4 - offset
+local warpTrigger = 0x22EC9DC - offset
+local warpType1 = 0x2340540 - offset
+local warpType2 = 0x22EC9E0 - offset
+local title = 0x2340DB8 - offset
+local continue = 0x2E008D0 - offset
+local config = 0x2E000D0 - offset
+local cam = 0x507D18 - offset
 local titlescreenpicture = 0x2EE55EC - offset
-local titlescreenamvtimer = 0x2EE55E0 - offset
-local cutSceneAspect = 0x4DA20A - offset
-local menuReset = 0x2E90820 - offset
+local titlescreenamvtimer = 0x2EE98D4 - offset
+local cutSceneAspect = 0x4DE242 - offset
+local menuReset = 0x2E94B20 - offset
 -- change this to true doing the boss rush category
 local bossRush = false
 
@@ -41,8 +41,8 @@ function _OnInit()
 			ConsolePrint("Global version detected")	
 		elseif ReadShort(deathCheck-0x1C0) == 0x2E74 then
 			deathCheck = deathCheck-0x1C0
-			language = "jp"
 			ConsolePrint("JP detected")
+			language = "jp"
 		end
 		canExecute = true
 	else
@@ -91,11 +91,11 @@ function _OnFrame()
 		WriteByte(title, 1)
 	end
 
-	local input = ReadInt(0x233D034-offset)
-	local savemenuopen = ReadByte(0x232A604-offset)
+	local input = ReadInt(0x2ED3034-offset)
+	local savemenuopen = ReadByte(0x232E904-offset)
 	
-	if input == 1793 and lastInput ~= 1793 and savemenuopen~=4 and ReadByte(0x2350CD4-offset) == 0 then 
-		WriteByte(0x2350CD4-offset, 0x1)
+	if input == 1793 and lastInput ~= 1793 and savemenuopen~=4 and ReadByte(0x2354FD4-offset) == 0 then 
+		WriteByte(0x2354FD4-offset, 0x1)
 		addgummi = 5
 	elseif input == 1793 and lastInput ~= 1793 then
 		WriteLong(closeMenu, 0)
@@ -113,8 +113,8 @@ function _OnFrame()
 			ConsolePrint("Loaded autosave")
 			WriteByte(closeMenu, 1)
 			InstantContinue()
-			WriteFloat(cam, -1.0 + ReadByte(config+0x14)*2)
-			WriteFloat(cam+4, 1.0 - ReadByte(config+0x18)*2)
+			WriteFloat(cam, -1.0 + ReadByte(config + 0x14) * 2)
+			WriteFloat(cam + 4, 1.0 - ReadByte(config + 0x18) * 2)
 		end
 	end
 	
@@ -151,12 +151,12 @@ function _OnFrame()
 	end
 	
 	if savemenuopen == 4 and addgummi==1 then
-		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
-		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E8F450-offset, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E8F452-offset, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E20F28 - offset, 3) --Unlock gummi
+		WriteByte(0x2E20E9C - offset, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E93750 - offset, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E93752 - offset, 5) --Set 5 buttons to save menu
 		for i=0,4 do
-			WriteByte(0x2E1CBA0+i*4-offset, i) --Set button types
+			WriteByte(0x2E20EA0 + i * 4 - offset, i) --Set button types
 		end
 	end
 	
@@ -166,6 +166,8 @@ function _OnFrame()
 	lastDeathPointer = ReadLong(deathPointer)
 	
 	-- For boss rush comment this if block out as it writes to the auto save files as well
+	-- ConsolePrint(soraHUD)
+	-- ConsolePrint(prevHUD)
 	if ReadFloat(soraHUD) == 1 and prevHUD < 1  and not bossRush then
 		local f = io.open("autosave.dat", "wb")
 		f:write(ReadString(continue, 0x16C00))
