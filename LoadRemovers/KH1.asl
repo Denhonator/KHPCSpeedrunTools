@@ -1,26 +1,23 @@
 state("KINGDOM HEARTS FINAL MIX")
 {
     // location info
-    ushort room : 0x233CB44;
-    ushort scene : 0x233CB48;
-    ushort world : 0x233CB4C;
-    byte white : 0x233C49C;
-    byte in_gummi : 0x50421D;
-    byte magic_unlock_val : 0x2DE5A44;
+    ushort room : 0x2340E44;
+    ushort scene : 0x2340E48;
+    ushort world : 0x2340E4C;
+    byte white : 0x234079C;
+    byte in_gummi : 0x5082AD;
+    byte magic_unlock_val : 0x2DE9D54;
 
-    byte8 collected_items_1 : 0x2DE5E72;
-    byte102 collected_items_2 : 0x2DE5F01;  
-    byte33 power_wild_gummis : 0x2DF184C;
-    byte42 equips : 0x2DE5EA3;
-    byte225 magic_levels : 0x2D1F270;
-    byte96 enemies_defeated : 0x2DE61AA;
-    byte torn_page_count : 0x2DE6DD0;
-    byte6 trinity_counts : 0x2DE7636;
-    ushort puppy_count : 0x2E997A8;
-    ushort mini_game_count : 0x2E999F4;
-
-    // temp for scripts
-    byte copyright : 2EE98E0;
+    byte8 collected_items_1 : 0x2DEA182;
+    byte102 collected_items_2 : 0x2DEA211;  
+    byte33 power_wild_gummis : 0x2DF5B5C;
+    byte42 equips : 0x2DEA1B3;
+    byte225 magic_levels : 0x2D23580;
+    byte96 enemies_defeated : 0x2DEA4BA;
+    byte torn_page_count : 0x2DEB0E0;
+    byte6 trinity_counts : 0x2DEB946;
+    ushort puppy_count : 0x2E9DAA8;
+    ushort mini_game_count : 0x2E9DCF4;
 }
 
 startup
@@ -730,7 +727,7 @@ split
                     break;
                 // end of world
                 case 16:
-                    current.arch_behemoth_defeated = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE620A);
+                    current.arch_behemoth_defeated = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE620A + 0x4300);
                     if(current.room == 12 && current.scene == 13 && current.arch_behemoth_defeated == 1 && old.arch_behemoth_defeated == 0){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\027_Chernabog.dat", vars.autosavedst, true);
@@ -1013,17 +1010,17 @@ split
                         return settings["phil_cup"] && vars.completed_splits.Add("phil_cup");
                     }
                     if(current.room == 2 && current.scene == 7){
-                        vars.party_slot_1 = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE5E5F);
-                        vars.party_slot_2 = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE5E60);
+                        vars.party_slot_1 = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE5E5F + 0x4300);
+                        vars.party_slot_2 = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE5E60 + 0x4300);
                         if(vars.party_slot_1 == 255 && vars.party_slot_2 == 255){
                             // split when next available ability slot becomes combo plus in OC room 2 scene 7
-                            int offset = 0x2DE5A14 + vars.next_ability_slot_idx;
+                            int offset = 0x2DE5A14 + vars.next_ability_slot_idx + 0x4300;
                             int byte_count = 48 - vars.next_ability_slot_idx;
                             var next_ability_slot = memory.ReadValue<byte>(modules.First().BaseAddress + offset);
                             if(next_ability_slot == 134){
                                 return vars.completed_splits.Add("phil_cup_solo") && settings["phil_cup_solo"];
                             }
-                            byte[] ability_slots = memory.ReadBytes(modules.First().BaseAddress + 0x2DE5A14, byte_count);
+                            byte[] ability_slots = memory.ReadBytes(modules.First().BaseAddress + 0x2DE5A14 + 0x4300, byte_count);
                             var ability_slots_slice = new byte[byte_count]; 
                             Array.Copy(ability_slots, vars.next_ability_slot_idx, ability_slots_slice, 0, byte_count);
                             for (int i = 0; i < ability_slots_slice.Length; i++){
@@ -1224,7 +1221,7 @@ split
         }
         // gummi splits
         if(current.in_gummi){
-            vars.gummi_kills = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DF1908);            
+            vars.gummi_kills = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DF1908 + 0x4300);            
         }
         if(vars.gummi_kills >= 2500){
             return vars.completed_splits.Add("gummi_kills") && settings["gummi_kills"];
@@ -1302,26 +1299,26 @@ init
     // game base address
     var gb = modules.First().BaseAddress;
     vars.watchers = new Dictionary<string, MemoryWatcher>{
-        { "black_inv", new MemoryWatcher<bool>(gb + 0x4D93B8) },
-        { "cutscene", new MemoryWatcher<bool>(gb + 0x233AE74) },
-        { "load", new MemoryWatcher<bool>(gb + 0x232A368) },
-        { "load_2", new MemoryWatcher<bool>(gb + 0x233AEB0) },
-        { "paused", new MemoryWatcher<bool>(gb + 0x232A63C) },
-        { "party_load", new MemoryWatcher<bool>(gb + 0x2E1BAFC) },
-        { "save_load", new MemoryWatcher<bool>(gb + 0x2E1CBB8) },
-        { "summon_load", new MemoryWatcher<bool>(gb + 0x2D50988) },
-        { "newgame", new MemoryWatcher<byte>(gb + 0x2E98824) },
-        { "fightend", new MemoryWatcher<byte>(gb + 0x2D500B8) },
-        { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED321E) },
-        { "text_progress", new MemoryWatcher<byte>(gb + 0x232A5F4) },
-        { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DE6EDD) },
-        { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE65DC) },
-        { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFBDFC) },
-        { "non_player_unit_count", new MemoryWatcher<ushort>(gb + 0x23A243C) },
-        { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D592CC) },
-        { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x503C00) },
-        { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x5041F0) },
-        { "docked_world", new MemoryWatcher<ushort>(gb + 0x5229B0) },
+        { "black_inv", new MemoryWatcher<bool>(gb + 0x4DD3F8) },
+        { "cutscene", new MemoryWatcher<bool>(gb + 0x233AE74 + 0x4300) },
+        { "load", new MemoryWatcher<bool>(gb + 0x232A368 + 0x4300) },
+        { "load_2", new MemoryWatcher<bool>(gb + 0x233AEB0 + 0x4300) },
+        { "paused", new MemoryWatcher<bool>(gb + 0x232A63C + 0x4300) },
+        { "party_load", new MemoryWatcher<bool>(gb + 0x2E1BAFC + 0x4300) },
+        { "save_load", new MemoryWatcher<bool>(gb + 0x2E1CBB8 + 0x4300) },
+        { "summon_load", new MemoryWatcher<bool>(gb + 0x2D50988 + 0x4300) },
+        { "newgame", new MemoryWatcher<byte>(gb + 0x2E98824 + 0x4300) },
+        { "fightend", new MemoryWatcher<byte>(gb + 0x2D500B8 + 0x4300) },
+        { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED321E + 0x4300) },
+        { "text_progress", new MemoryWatcher<byte>(gb + 0x232A5F4 + 0x4300) },
+        { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DE6EDD + 0x4300) },
+        { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE65DC + 0x4300) },
+        { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFBDFC + 0x4300) },
+        { "non_player_unit_count", new MemoryWatcher<ushort>(gb + 0x23A243C + 0x4300) },
+        { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D592CC + 0x4300) },
+        { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x503C00 + 0x4300) },
+        { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x5041F0 + 0x4300) },
+        { "docked_world", new MemoryWatcher<ushort>(gb + 0x5229B0 + 0x4300) },
     };
 
     // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)
@@ -1435,7 +1432,7 @@ init
                 current.mini_game_count,
                 current.torn_page_count
             };
-            int level = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE59D4);
+            int level = memory.ReadValue<byte>(modules.First().BaseAddress + 0x2DE59D4 + 0x4300);
             vars.cons_met = 0;
             if(level == 1){
                 difficulty += 1;
@@ -1513,10 +1510,15 @@ isLoading
     var sora_hp = vars.watchers["sora_hp"];
     vars.summon_timer = summon_load.Current ? vars.summon_timer + (paused.Current ? 0 : 1) : 0;
 
-    return ((load.Current 
-    || !black.Current
-    || (current.white == 128 && !cutscene.Current)
-    || vars.summon_timer > 30) && !paused.Current)
+    return (
+        (
+            load.Current 
+            || !black.Current
+            || (current.white == 128 && !cutscene.Current)
+            || vars.summon_timer > 30
+        )
+        && !paused.Current
+    )
     || save_load.Current
     || party_load.Current
     || (load_2.Current && sora_hp.Current == 0)

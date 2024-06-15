@@ -2,9 +2,13 @@ LUAGUI_NAME = "1fmAutoattack"
 LUAGUI_AUTH = "denhonator"
 LUAGUI_DESC = "Hold attack to combo"
 
+local offset = 0x3A2B86
 local cooldown = 0
-
 local canExecute = false
+local swapped = 0x22DAF7E - offset
+local menu = 0x232E900 - offset
+local dialog = 0x299C488 - offset
+local attackCommand = 0x52988C - offset
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
@@ -20,19 +24,15 @@ function _OnFrame()
 		goto done
 	end
 
-	local swapped = ReadByte(0x22D6C7E - 0x3A0606)
-	local attackInput = (ReadByte(0x233D035-0x3A0606)//(64-(32*swapped)))%2 == 1
-	local menu = ReadInt(0x232A600-0x3A0606) == 1
-	local dialog = ReadInt(0x2998188-0x3A0606) == 0
-	if menu or dialog then
+	local attackInput = (ReadByte(0x2341335-offset)//(64-(32*ReadByte(swapped))))%2 == 1
+	if ReadInt(menu) == 1 or ReadInt(dialog) == 0 then
 		cooldown = 20
 	elseif cooldown > 0 then
 		cooldown = cooldown - 1
 	end
-	local attackCommand = ReadByte(0x52558C-0x3A0606) == 0
-	local autofireState = (attackInput and attackCommand and cooldown == 0)  and 1 or 0
-	WriteInt(0x23D0600-0x3A0606, autofireState)
-	WriteInt(0x232A444-0x3A0606, autofireState)
+	local autofireState = (attackInput and ReadByte(attackCommand) and cooldown == 0) and 1 or 0
+	WriteInt(0x23D4900-offset, autofireState)
+	WriteInt(0x232E744-offset, autofireState)
 	
 	::done::
 end
