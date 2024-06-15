@@ -1,6 +1,7 @@
 How to use:
 - Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend
 - Follow the instructions on those pages on how to set up the scripts
+- Update the base in the .toml file to 0x0 (or add the offset listed there to each address per script)
 
 SaveAnywhere:
 - In-game, press L1+L2+R2+Select (or equivalent on your input device)

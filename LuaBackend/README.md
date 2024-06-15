@@ -8,17 +8,23 @@ From https://github.com/Sirius902/LuaBackend/releases download the most recent D
 
 ## Updating
 
-There are two values which will need to be changed when updates to the game are released and if the files here have not been updated to work with them this will guide you through finding said information.
+There is one essential and one optional value which will need to be changed when updates to the game are released and if the files here have not been updated to work with them this will guide you through finding said information.
 
 The two pieces of information the .toml file needs to ensure a working state are `base` and `thread_struct` being the base address offset for the individual games executable and the address offset for the games thread structure. To find these two pieces of inormation we will be using Cheat Engine if you need to download it go here: https://www.cheatengine.org/downloads.php
 
 ### base
 
-This is the easier of the two values to find with the game you are looking for open, open Cheat Engine and attach to the game process. Once you are attached click the Memory View button and a new window will pop up with a highlighted address. This address has the needed offset we are looking for, to ensure you are looking at the correct value the line will have a comment section containing (at least on windows machines) -> MSCOREE.CorExeMain
+This is piece of information is the optional one as it can be set to 0x0 as long as the scripts you are using are updated to match or don't use and offset to begin with. If the script maintainers are using an offset it will most likely be found through the following method.
+
+With the game you are looking for open, open Cheat Engine and attach to the game process. Once you are attached click the Memory View button and a new window will pop up with a highlighted address. This address has the needed offset we are looking for, to ensure you are looking at the correct value the line will have a comment section containing (at least on windows machines) -> MSCOREE.CorExeMain
+
+#### Disclaimer
+
+Check the scripts you intend to use, if they have the offset value associated with them leave it be, if there is no offset in the script set the base in the .toml file to 0x0.
 
 ### thread_struct
 
-This is the slightly trickier value to find with the game you are looking for open, open Cheat Engine and attach to the game process. Once attached you will need to do a memory scan, you will be looking for a byte array value type with the following values as Hex (make sure to select the games exe in memory scan options):
+This is the essential and slightly trickier value to find with the game you are looking for open, open Cheat Engine and attach to the game process. Once attached you will need to do a memory scan, you will be looking for a byte array value type with the following values as Hex (make sure to select the games exe in memory scan options):
 
 ```
 44 00 49 00 53 00 50 00 4C 00 41 00 59 00
