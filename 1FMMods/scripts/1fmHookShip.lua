@@ -2,7 +2,6 @@ LUAGUI_NAME = "1fmHookShip"
 LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Makes Hook Ship always appear when conditions are met"
 
-
 local posDebugString = 0x3EB158
 local debug1Value = 1
 local offset = 0x0
@@ -41,6 +40,14 @@ function _OnInit()
 			posDebug2 = 0x2537E40
 			ingummi = 0x5075AD
 		end
+		hookship = hookship - offset
+		dest = dest - offset
+		neverland = neverland - offset
+		posDebugString = posDebugString - debugOffset
+		posDebug1 = posDebug1 - offset
+		debug1Value = 2
+		posDebug2 = posDebug2 - offset
+		ingummi = ingummi - offset
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end

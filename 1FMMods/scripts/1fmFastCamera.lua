@@ -1,5 +1,5 @@
 LUAGUI_NAME = "1fmFastCamera"
-LUAGUI_AUTH = "deathofall84"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Speeds up camera movement and camera centering"
 
 local centerSpeed = 2
