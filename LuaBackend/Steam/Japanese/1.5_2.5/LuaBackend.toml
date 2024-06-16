@@ -8,7 +8,7 @@ game_docs = "KINGDOM HEARTS HD 1.5+2.5 ReMIX"
 [kh2]
 scripts = [{ path = "scripts/kh2/", relative = true }]
 base = 0x0
-thread_struct = 0x8A0930
+thread_struct = 0x89F930
 exe = "KINGDOM HEARTS II FINAL MIX.exe"
 game_docs = "KINGDOM HEARTS HD 1.5+2.5 ReMIX"
 

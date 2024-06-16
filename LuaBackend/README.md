@@ -1,10 +1,14 @@
 # LuaBackend
 
-How to use:
+## How to use:
 
 Download the specific .toml for the game pack you are interested in from here and place it into the instillation directory alongside the .exe files ie. where you would find things like KINGDOM HEARTS Birth by Sleep FINAL MIX.exe
 
 From https://github.com/Sirius902/LuaBackend/releases download the most recent DBGHELP.zip file and extract the lua54.dll (number may change) and DBGHELP.dll into the same directory as the .toml file
+
+### Steam
+
+For the Steam version by default this will look for the scripts in the same locaation as the Epic Games version previously had them ie. Documents\KINGDOM HEARTS HD 1.5+2.5 ReMIX\scripts\gamespecificfolder. If you do not have the Epic Games versions or wish to have the scripts you use seperate for steam change the scripts path in the .toml file and set relative to false.
 
 ## Updating
 
