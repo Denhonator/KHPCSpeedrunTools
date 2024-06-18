@@ -37,7 +37,7 @@ function _OnInit()
 			stateFlag = 0x2867C58 - offset
 			whiteFade = 0x234079C - offset
 			blackFade = 0x4DD3F8 - offset
-			closeMenu = 0x2E94B30 - offset
+			closeMenu = 0x2E94B20 - offset
 			deathPointer = 0x23987B8 - offset
 			warpTrigger = 0x22EC9DC - offset
 			warpType1 = 0x2340540 - offset
@@ -49,7 +49,7 @@ function _OnInit()
 			titlescreenpicture = 0x2EE55EC - offset
 			titlescreenamvtimer = 0x2EE98D4 - offset
 			cutSceneAspect = 0x4DE242 - offset
-			inputAddress = 0x2ED3034 - offset
+			inputAddress = 0x2341334 - offset
 			saveOpenAddress = 0x232E904 - offset
 			saveAnywhere = 0x23551D4 - offset
 		else
