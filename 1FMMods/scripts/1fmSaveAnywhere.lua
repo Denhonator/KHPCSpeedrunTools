@@ -26,11 +26,13 @@ function _OnInit()
 			deathCheck = 0x299BE0
 			if ReadShort(deathCheck) == 0x2E74 then
 				ConsolePrint("Global version detected, no offset change needed")
-			elseif ReadShort(deathCheck-0x1C0) == 0x2E74 then -- check this
+				version = "eg-global"
+			elseif ReadShort(deathCheck-0x1C0) == 0x2E74 then
 				ConsolePrint("JP version detected, setting offsets")
 				offset = offset + 0x1000
 				offset_2 = offset_2 + 0x3090
 				deathCheck = deathCheck - 0x1C0
+				version = "eg-jp"
 			end
 			soraHUD = 0x2812E1C - offset
 			soraHP = 0x2D5D5CC - offset
@@ -51,17 +53,16 @@ function _OnInit()
 			cutSceneAspect = 0x4DE242 - offset
 			inputAddress = 0x2ED3034 - offset
 			saveOpenAddress = 0x232E904 - offset
-			saveAnywhere = 0x23551D4 - offset
+			saveAnywhere = 0x2354FD4 - offset
 		else
 			ConsolePrint("Steam detected")
-			deathCheck = 0x29BD70
 			soraHUD = 0x281407C
 			soraHP = 0x2D5CC4C
-			stateFlag = 0x28672C8
-			whiteFade = 0x233FE1C
+			stateFlag = 0x2867C58 + 0x1260
+			whiteFade = 0x233F79C
 			blackFade = 0x4DC718
 			closeMenu = 0x2E941C0
-			deathPointer = 0x2382568
+			deathPointer = 0x23987B8 - 0x960
 			warpTrigger = 0x22EC07C
 			warpType1 = 0x233FBC0
 			warpType2 = 0x22EC080
@@ -74,7 +75,8 @@ function _OnInit()
 			cutSceneAspect = 0x4DD562
 			inputAddress = 0x22C92D0
 			saveOpenAddress = 0x232DFA4
-			saveAnywhere = 0x2354854
+			saveAnywhere = 0x2354FD4 - 0x960
+			version = "steam"
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -118,6 +120,7 @@ function _OnFrame()
 	local input = ReadInt(inputAddress)
 	local savemenuopen = ReadByte(saveOpenAddress)
 	
+	-- ConsolePrint(ReadByte(saveAnywhere))
 	if input == 1793 and lastInput ~= 1793 and savemenuopen~=4 and ReadByte(saveAnywhere) == 0 then 
 		WriteByte(saveAnywhere, 1)
 		addgummi = 5
@@ -125,7 +128,7 @@ function _OnFrame()
 		WriteLong(closeMenu, 0)
 	end
 	
-	if input == 3968 and lastInput ~= 3968 and ReadLong(closeMenu) == 0 then
+	if input == 3968 and lastInput ~= 3968 and ReadLong(closeMenu) == 0 and version ~= "steam" then
 		InstantContinue()
 	end
 	
@@ -135,7 +138,7 @@ function _OnFrame()
 			WriteString(continue, f:read("*a"))
 			f:close()
 			ConsolePrint("Loaded autosave")
-			WriteByte(closeMenu, 0)
+			WriteByte(closeMenu, 1)
 			InstantContinue()
 			WriteFloat(cam, -1.0 + ReadByte(config + 0x14) * 2)
 			WriteFloat(cam + 4, 1.0 - ReadByte(config + 0x18) * 2)
@@ -149,6 +152,7 @@ function _OnFrame()
 	-- Remove white screen on death (it bugs out this way normally)
 	if removeWhite > 0 then
 		removeWhite = removeWhite - 1
+		-- WriteLong(closeMenu, 0)
 		if ReadByte(whiteFade) == 128 then
 			WriteByte(whiteFade, 0)
 		end
@@ -165,8 +169,9 @@ function _OnFrame()
 	-- Sora HP to 0 (not necessary)
 	-- State to combat
 	-- Death condition check disable
+	-- Currently not compatible with EG JP
 	if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0 and ReadByte(blackFade)==128
-					 and ReadShort(deathCheck) == 0x2E74 then
+					 and ReadShort(deathCheck) == 0x2E74 and version ~= "eg-jp" then
 		WriteByte(soraHP, 0)
 		WriteByte(stateFlag, 1)
 		WriteShort(deathCheck, 0x9090)
@@ -174,17 +179,12 @@ function _OnFrame()
 	end
 	
 	if savemenuopen == 4 and addgummi==1 then
-		-- WriteByte(0x2E20F28, 3) --Unlock gummi
-		WriteByte(0x2E205D5, 3) --Unlock gummi
-		-- WriteByte(0x2E20E9C, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E20549, 5) --Set 5 buttons to save menu
-		-- WriteByte(0x2E93750, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E93750 - 0x960, 5) --Set 5 buttons to save menu
-		-- WriteByte(0x2E93752, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E93752 - 0x960, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E20F28, 3) --Unlock gummi
+		WriteByte(0x2E20E9C, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E93750, 5) --Set 5 buttons to save menu
+		WriteByte(0x2E93752, 5) --Set 5 buttons to save menu
 		for i=0,4 do
-			-- WriteByte(0x2E20EA0 + i * 4, i) --Set button types
-			WriteByte(0x2E2054D + i * 4, i) --Set button types
+			WriteByte(0x2E20EA0 + i * 4, i) --Set button types
 		end
 	end
 	
