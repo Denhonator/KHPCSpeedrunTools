@@ -37,7 +37,7 @@ function _OnInit()
 			stateFlag = 0x2867C58 - offset
 			whiteFade = 0x234079C - offset
 			blackFade = 0x4DD3F8 - offset
-			closeMenu = 0x2E94B30 - offset
+			closeMenu = 0x2E94B20 - offset
 			deathPointer = 0x23987B8 - offset
 			warpTrigger = 0x22EC9DC - offset
 			warpType1 = 0x2340540 - offset
