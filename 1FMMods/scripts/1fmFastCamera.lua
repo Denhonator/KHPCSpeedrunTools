@@ -15,38 +15,38 @@ local canExecute = false
 local offset = 0x0
 local speedOffset = 0x0
 
-local curSpeedV = 0x25387D0
-local curSpeedH = 0x25387D4
-local cameraInputH = 0x2341360
-local cameraInputV = 0x2341364
-local cameraCenter = 0x2538A34
-local speed = 0x507AAC
-
-local menuOpen = 0x232E900
 local posDebugString = 0x3EB158
-
------
--- need to check these
-local snap = 0x1DD299 + 0x4310
-local accelHack = 0x1E2924 + 0x4310
-local deaccelHack = 0x1E291B + 0x4310
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) ~= 0x58 and ReadByte(posDebugString-0x1020) == 0x58 then
-			ConsolePrint("JP EG detected, setting offsets")
-			offset = 0x1000
-			speedOffset = 0xF5C
+		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString-0x1020) == 0x58 then
+			ConsolePrint("Epic Games detected")
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Global version detected, no offset change needed")				
+			elseif ReadByte(posDebugString) ~= 0x58 and ReadByte(posDebugString-0x1020) == 0x58 then
+				ConsolePrint("JP version detected, setting offsets")
+				offset = 0x1000
+				speedOffset = 0xF5C
+			end
+			curSpeedV = 0x25387D0 - offset
+			curSpeedH = 0x25387D4 - offset
+			cameraInputH = 0x2341360 - offset
+			cameraInputV = 0x2341364 - offset
+			cameraCenter = 0x2538A34 - offset
+			speed = 0x507AAC - offset
+			menuOpen = 0x232E900 - offset
+		else
+			ConsolePrint("Steam detected")
+			curSpeedV = 0x25380EC
+			curSpeedH = 0x25380F0
+			cameraInputH = 0x23407E0
+			cameraInputV = 0x23407E4
+			cameraCenter = 0x2537EEC
+			speed = 0x506CDC
+			menuOpen = 0x232DFA0
 		end
-		curSpeedV = curSpeedV - offset
-		curSpeedH = curSpeedH - offset
-		cameraInputH = cameraInputH - offset
-		cameraInputV = cameraInputV - offset
-		cameraCenter = cameraCenter - offset
-		speed = speed - offset
-		menuOpen = menuOpen - offset
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end

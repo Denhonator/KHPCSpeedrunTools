@@ -2,14 +2,7 @@ LUAGUI_NAME = "1fmHookShip"
 LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Makes Hook Ship always appear when conditions are met"
 
-local hookship = 0xED751E
-local dest = 0x508280
-local neverland = 0x2DEBBD7
 local posDebugString = 0x3EB158
-local posDebug1 = 0x232E6A0
-local posDebug2 = 0x2538964
-local ingummi = 0x5082AD
-
 local debug1Value = 1
 local offset = 0x0
 local debugOffset = 0x0
@@ -18,12 +11,34 @@ local canExecute = false
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		ConsolePrint("KH1 detected, running script")
 		canExecute = true
-		if ReadByte(posDebugString) ~= 0x58 and ReadByte(posDebugString-0x1020) == 0x58 then
-			ConsolePrint("JP EG detected, setting offsets")
-			offset = 0x1000
-			debugOffset = 0x1020
+		ConsolePrint("KH1 detected, running script")
+		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString-0x1020) == 0x58 then
+			ConsolePrint("Epic Games detected")
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Global version detected, no offset change needed")
+			elseif ReadByte(posDebugString) ~= 0x58 and ReadByte(posDebugString-0x1020) == 0x58 then
+				ConsolePrint("JP version detected, setting offsets")
+				offset = 0x1000
+				debugOffset = 0x1020
+				debug1Value = 2
+			end
+			posDebugString = posDebugString - debugOffset
+			hookship = 0xED751E - offset
+			dest = 0x508280 - offset
+			neverland = 0x2DEBBD7 - offset
+			posDebug1 = 0x232E6A0 - offset
+			posDebug2 = 0x2538964 - offset
+			ingummi = 0x5082AD - offset
+		else
+			ConsolePrint("Steam detected")
+			posDebugString = 0x3EA318
+			hookship = 0xED6A1E
+			dest = 0x507580
+			neverland = 0x2DEB257
+			posDebug1 = 0x232DD20
+			posDebug2 = 0x2537E40
+			ingummi = 0x5075AD
 		end
 		hookship = hookship - offset
 		dest = dest - offset
