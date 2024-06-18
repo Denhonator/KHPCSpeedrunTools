@@ -49,7 +49,7 @@ function _OnInit()
 			titlescreenpicture = 0x2EE55EC - offset
 			titlescreenamvtimer = 0x2EE98D4 - offset
 			cutSceneAspect = 0x4DE242 - offset
-			inputAddress = 0x2ED3034 - offset
+			inputAddress = 0x2341334 - offset
 			saveOpenAddress = 0x232E904 - offset
 			saveAnywhere = 0x23551D4 - offset
 		else
