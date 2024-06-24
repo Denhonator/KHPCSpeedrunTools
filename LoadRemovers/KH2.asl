@@ -1,46 +1,91 @@
-state("KINGDOM HEARTS II FINAL MIX", "GLOBAL")
+state("KINGDOM HEARTS II FINAL MIX", "EPIC-GLOBAL")
 {
-	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8E9DA3;
-	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xAB8BC7;
-	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBD34;
-	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD6BC0;
-	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x711438;
-	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A20C98;
-	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A20A20;
-	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0D148;
-	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0D23A;
-	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B71F4;
-	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x258BDF4;
-	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB8;
-	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DB9;
-	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBE08;
-	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DBC;
-	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DBE;
-	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x714DC0;
-	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEBE10;
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EBFF3;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABAE07;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE094;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8E00;
+	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x713438;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22FD8;
+	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22D60;
+	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F488;
+	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F57A;
+	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B9554;
+	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2590194;
+	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF8;
+	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF9;
+	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFC;
+	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFE;
+	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x716E00;
+	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE168;
+	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE0F0;
 }
 
-state("KINGDOM HEARTS II FINAL MIX", "JP")
+state("KINGDOM HEARTS II FINAL MIX", "EPIC-JP")
 {
-	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8E8DA3;
-	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xAB7BC7;
-	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEAD34;
-	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD5BC0;
-	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x710438;
-	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A1FC98;
-	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A1FA20;
-	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0C148;
-	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0C23A;
-	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B61F4;
-	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x258ADF4;
-	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x713DB8;
-	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x713DB9;
-	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBECE08;
-	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x713DBC;
-	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x713DBE;
-	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x713DC0;
-	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBECE10;
-	//To-do: Test Memory Pointers for JP. Coverted from: [Global - 0x1000 = JP]
+	//This is exactly the same as EPIC-GLOBAL, HOWEVER. 
+	//Some values in the 0x900000 range might be different. This is future proofing.
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EBFF3;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABAE07;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE094;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8E00;
+	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x713438;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22FD8;
+	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22D60;
+	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F488;
+	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F57A;
+	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B9554;
+	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2590194;
+	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF8;
+	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF9;
+	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFC;
+	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFE;
+	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x716E00;
+	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE168;
+	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE170;
+}
+
+state("KINGDOM HEARTS II FINAL MIX", "STEAM-GLOBAL")
+{
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC543;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB347;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE5D4;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD9340;
+	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x7169B4;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23518;
+	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A232A0;
+	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F9C8;
+	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0FABA;
+	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B9BF4;
+	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2590894;
+	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x717008;
+	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x717009;
+	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x71700C;
+	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x71700E;
+	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x717010;
+	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE6A8;
+	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE6B0;
+}
+
+state("KINGDOM HEARTS II FINAL MIX", "STEAM-JP")
+{
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EB543;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABA347;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBED5D4;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8340;
+	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x7159B4;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22518;
+	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A222A0;
+	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0E9C8;
+	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0EABA;
+	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B8BF4;
+	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x258F894;
+	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716008;
+	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716009;
+	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x71600C;
+	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x71600E;
+	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x716010;
+	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBED6A8;
+	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBED6B0;
 }
 
 init
@@ -48,14 +93,24 @@ init
 	timer.IsGameTimePaused = false;
 	vars.splitTimer = 0;
 	vars.startCounter = 0;
-	if(modules.First().ModuleMemorySize == 46301184){
-		version = "JP";
-	}
-	else{
-		version = "GLOBAL";
-		//46305280
+	
+	// Thank you to DeathofAll for the idea, and DA for offset
+	var gb = modules.First().BaseAddress;
+    if (modules.First().ModuleMemorySize == 46313472) { 
+        if (memory.ReadValue<int>(gb + 0x9A70B0) == 0x4A32484B) {
+            version = "EPIC-GLOBAL";
+		} else if (memory.ReadValue<int>(gb + 0x9A92F0) == 0x4A32484B){
+			version = "EPIC-JP";
+		} else if (memory.ReadValue<int>(gb + 0x9A9830) == 0x4A32484B){
+            version = "STEAM-GLOBAL";
+        }
+	} else if (modules.First().ModuleMemorySize == 46309376) {
+		if (memory.ReadValue<int>(gb + 0x9A8830) == 0x4A32484B){
+			version = "STEAM-JP";
+		}
 	}
 	print(modules.First().ModuleMemorySize.ToString());
+	print(version);
 }
 
 startup
@@ -68,8 +123,8 @@ startup
 						"\nSet timer to start at 0.31 for Any% (From Edit Splits).");
 		settings.Add("splitREADME", false, "README: Auto-Split (Hover Over)");
 		settings.SetToolTip("splitREADME", "To Enable: Click the button ABOVE called 'Split'."+
-						"\nSelect the category(s) you wish to run, the desired worlds, "+
-						"as well as any splits for that section.");
+						"\nSelect the category you wish to run, the desired worlds, "+
+						"as well as the world's ending split.");
 		settings.Add("Instructions 4", false, "--------------------------------");
 		settings.Add("any", false, "Any%");
 			settings.Add("STT", true, "Roxas Section", "any");
@@ -119,6 +174,7 @@ startup
 				settings.Add("06-12-AB", true , "Hydra","OC1");
 
 			settings.Add("04-0D-08", false, "Acquire Chicken Little (HB2)","any");
+			settings.Add("04-09-3A", false, "HB2 Heartless Fight","any");
 
 			settings.Add("BC1", true, "Beast Castle 1","any");
 				settings.Add("05-0B-48", false, "Thresholder","BC1");
@@ -146,7 +202,7 @@ startup
 				settings.Add("07-0A-3A", false, "Treasure room fight", "AG1");
 				settings.Add("07-03-3B", true , "Twin Lords","AG1");
 
-			settings.Add("HT1", true, "Halloween Town 1","any"); 
+			settings.Add("HT1", true, "Halloween Town 1","any");
 				settings.Add("0E-06-35", false, "Candy Cane Lane Battle","HT1");
 				settings.Add("0E-03-34", false, "Prison Keeper","HT1");
 				settings.Add("0E-09-37", true , "Oogie Boogie","HT1");
@@ -271,8 +327,26 @@ startup
 			settings.Add("12-15-63", true, "Data Roxas","Data");
 			
 		settings.Add("GC", false, "(Experimental) Gold Crown / Jimminy's Journal 100%");
-			settings.Add("GCNote", false, "Currently no supported splits, but potentially in the making. "+
+			settings.Add("GCNote", false, "There's a lot that goes into a GC/JJ run. "+
 						"Bear with us as we find ways to create them.","GC");
+}
+
+reset
+{
+	if (current.titlescreen != 1)return;
+	
+	if(vars.startCounter==0 && current.newgame==4){
+		vars.startCounter = 1;
+	}
+	if(vars.startCounter==1){	
+		if(current.tempMemBank == 0){
+			vars.startCounter = 0;
+		}
+		else if(current.newgame == 2){
+			vars.startCounter = 2;
+			return true;
+		}
+	}
 }
 
 start
@@ -302,7 +376,7 @@ split
 	string currentLocation = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
 	string oldLocation     = string.Format("{0:X2}-{1:X2}-{2:X2}", old.worldID, old.roomID, old.eventID3);
 	
-	//Conditional cases if Sora or if specific things need to survive
+	//Conditional cases if Sora or specific things need to survive
 	switch (currentLocation) {
 		//Party Member Dying
 		case "12-14-4A": 
@@ -346,6 +420,7 @@ split
 		case "10-07-3A":
 			if ((current.medalTimer!=old.medalTimer && current.medalTimer == 0) || current.soraHP == 0)vars.splitTimer = 20;
 			break;
+			
 		//Marluxia
 		case "04-26-91":
 		case "04-26-96":
@@ -364,9 +439,11 @@ split
 	// Write all and any split logic under here. 
 	// The splitTimer if statement above will stop it from double splitting.
 	if(current.fightend == true){
+		//print("Fight ended! Loc: "+currentLocation);
 		vars.splitTimer = 10;
 		return settings[currentLocation];
 	} else if (currentLocation!=oldLocation){
+		//print("C:"+currentLocation+" O:"+oldLocation);
 		switch(oldLocation) {
 			case "02-02-48":
 			case "02-08-6C":
@@ -412,7 +489,7 @@ exit
 }
 
 update
-{
+{	
 	if(vars.booting && current.titlescreen == 1)vars.booting = false;
 }
 
