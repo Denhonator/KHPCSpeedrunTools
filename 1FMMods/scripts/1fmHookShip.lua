@@ -3,27 +3,24 @@ LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Makes Hook Ship always appear when conditions are met"
 
 local posDebugString = 0x3EB158
-local debug1Value = 1
-local offset = 0x0
-local debugOffset = 0x0
 local canExecute = false
-
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString-0x1020) == 0x58 then
+		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
 			ConsolePrint("Epic Games detected")
 			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Global version detected, no offset change needed")
-			elseif ReadByte(posDebugString) ~= 0x58 and ReadByte(posDebugString-0x1020) == 0x58 then
-				ConsolePrint("JP version detected, setting offsets")
+				ConsolePrint("Global version detected")
+				offset = 0x0
+				debug1Value = 1
+			elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+				ConsolePrint("JP version detected")
+				posDebugString = posDebugString - 0x1020
 				offset = 0x1000
-				debugOffset = 0x1020
 				debug1Value = 2
 			end
-			posDebugString = posDebugString - debugOffset
 			hookship = 0xED751E - offset
 			dest = 0x508280 - offset
 			neverland = 0x2DEBBD7 - offset
@@ -33,21 +30,19 @@ function _OnInit()
 		else
 			ConsolePrint("Steam detected")
 			posDebugString = 0x3EA318
-			hookship = 0xED6A1E
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Global version detected")
+			elseif ReadByte(posDebugString - 0x80) == 0x58 then
+				ConsolePrint("JP version detected")
+				posDebugString = posDebugString - 0x80
+			end
 			dest = 0x507580
+			hookship = 0xED6A1E
 			neverland = 0x2DEB257
 			posDebug1 = 0x232DD20
 			posDebug2 = 0x2537E40
 			ingummi = 0x5075AD
 		end
-		hookship = hookship - offset
-		dest = dest - offset
-		neverland = neverland - offset
-		posDebugString = posDebugString - debugOffset
-		posDebug1 = posDebug1 - offset
-		debug1Value = 2
-		posDebug2 = posDebug2 - offset
-		ingummi = ingummi - offset
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end

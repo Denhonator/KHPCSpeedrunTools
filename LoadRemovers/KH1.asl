@@ -13,7 +13,7 @@ state("KINGDOM HEARTS FINAL MIX", "EG Global")
     byte102 collected_items_2 : 0x2DEA211;  
     byte33 power_wild_gummis : 0x2DF5B5C;
     byte42 equips : 0x2DEA1B3;
-    byte225 magic_levels : 0x2D23580;
+    byte225 magic_levels : 0x2D23570;
     byte96 enemies_defeated : 0x2DEA4BA;
     byte torn_page_count : 0x2DEB0E0;
     byte6 trinity_counts : 0x2DEB946;
@@ -1352,7 +1352,7 @@ init
     // game base address
     var gb = modules.First().BaseAddress;
     if (memory.ReadValue<byte>(gb + 0x3EB158) == 0x58 || memory.ReadValue<byte>(gb + 0x3EA138) == 0x58) {
-        if (memory.ReadValue<ushort>(gb + 0x299BE0) == 0x2E74) {
+        if (memory.ReadValue<ushort>(gb + 0x3EB158) == 0x58) {
             version = "EG Global";
             vars.offset = 0x0;
         } else {
@@ -1363,8 +1363,8 @@ init
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DD3F8 - vars.offset) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233F174 - vars.offset) },
             { "load", new MemoryWatcher<bool>(gb + 0x232E668 - vars.offset) },
-            // { "load_2", new MemoryWatcher<bool>(gb + 0x233F1B0 - vars.offset) },
-            { "paused", new MemoryWatcher<bool>(gb + 0x232EFC0 - vars.offset) },
+            { "load_2", new MemoryWatcher<bool>(gb + 0x233F1B0 - vars.offset) },
+            { "paused", new MemoryWatcher<bool>(gb + 0x232E93C - vars.offset) },
             { "party_load", new MemoryWatcher<bool>(gb + 0x2E1FDFC - vars.offset) },
             { "save_load", new MemoryWatcher<bool>(gb + 0x2E20EB8 - vars.offset) },
             { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54C88 - vars.offset) },
@@ -1374,34 +1374,34 @@ init
             { "text_progress", new MemoryWatcher<byte>(gb + 0x232E8F4 - vars.offset) },
             { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEB1ED - vars.offset) },
             { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DEA8EC - vars.offset) },
-            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E000FC - vars.offset) },
+            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E0010C - vars.offset) },
             { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5D5CC - vars.offset) },
-            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507F00 - vars.offset) },
-            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x5084F0 - vars.offset) },
-            { "docked_world", new MemoryWatcher<ushort>(gb + 0x526CB0 - vars.offset) },
+            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507C90 - vars.offset) },
+            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x508280 - vars.offset) },
+            { "docked_world", new MemoryWatcher<ushort>(gb + 0x526A40 - vars.offset) },
         };
     } else {
         version = "Steam";
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DC718) },
-            { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
+            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x50A4D4) },
+            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x507580) },
+            { "docked_world", new MemoryWatcher<ushort>(gb + 0x525D60) }, 
+            { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED6A1E) },
             { "load", new MemoryWatcher<bool>(gb + 0x232DCE8) },
-            // { "load_2", new MemoryWatcher<bool>(gb + 0x232DCE8) },
+            { "text_progress", new MemoryWatcher<byte>(gb + 0x232DF74) },
             { "paused", new MemoryWatcher<bool>(gb + 0x232DFC0) },
+            { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
+            { "load_2", new MemoryWatcher<bool>(gb + 0x233E830) },
+            { "fightend", new MemoryWatcher<byte>(gb + 0x2D53A38) },
+            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D5B070) },
+            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5CC4C) }, 
+            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE9F6C) },
+            { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEA86D) },
+            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFF78C) },
             { "party_load", new MemoryWatcher<bool>(gb + 0x2E1F4E8) },
             { "save_load", new MemoryWatcher<bool>(gb + 0x2E20564) },
-            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54308) },
             { "newgame", new MemoryWatcher<byte>(gb + 0x2E9C1C8) },
-            { "fightend", new MemoryWatcher<byte>(gb + 0x2D53A38) },
-            { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED6A1E) },
-            { "text_progress", new MemoryWatcher<byte>(gb + 0x232DF74) },
-            { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEA86D) },
-            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE9F6C) },
-            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E1638C) },
-            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5CC4C) },
-            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x506F90) },
-            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x507580) },
-            { "docked_world", new MemoryWatcher<ushort>(gb + 0x525D60) },
         };
     }
     // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)

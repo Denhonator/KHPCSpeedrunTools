@@ -9,11 +9,8 @@ local accelerationSpeed = 0.001
 local accelerationSpeedV = 0.0014
 local deaccelerationSpeedV = -0.001
 local deaccelerationSpeed = -0.0016
-local lastSpeedH = 0
-local lastSpeedV = 0
 local canExecute = false
 local offset = 0x0
-local speedOffset = 0x0
 
 local posDebugString = 0x3EB158
 
@@ -21,14 +18,13 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString-0x1020) == 0x58 then
+		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
 			ConsolePrint("Epic Games detected")
 			if ReadByte(posDebugString) == 0x58 then
 				ConsolePrint("Global version detected, no offset change needed")				
-			elseif ReadByte(posDebugString) ~= 0x58 and ReadByte(posDebugString-0x1020) == 0x58 then
+			elseif ReadByte(posDebugString) ~= 0x58 and ReadByte(posDebugString - 0x1020) == 0x58 then
 				ConsolePrint("JP version detected, setting offsets")
 				offset = 0x1000
-				speedOffset = 0xF5C
 			end
 			curSpeedV = 0x25387D0 - offset
 			curSpeedH = 0x25387D4 - offset
@@ -50,24 +46,12 @@ function _OnInit()
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
-
-	-- if canExecute then
-		-- -- Enables instant camera centering
-		-- if ReadInt(snap) == 0x0215EFBF then
-			-- WriteInt(snap, 0x02357487)
-		-- end
-		-- -- Changes it to read acceleration values from elsewhere
-		-- --WriteInt(accelHack, 0x0020563C)
-		-- --WriteInt(deaccelHack, 0x00205645)
-	-- end
 end
 
 function _OnFrame()
 	if canExecute and ReadByte(menuOpen) == 0 then
 		local currentSpeedH = ReadFloat(curSpeedH)
 		local currentSpeedV = ReadFloat(curSpeedV)
-		local difH = currentSpeedH - lastSpeedH
-		local difV = currentSpeedV - lastSpeedV
 		
 		if ReadFloat(cameraCenter) > 1 then
 			WriteFloat(cameraCenter, ReadFloat(cameraCenter)-centerSpeed)
@@ -75,7 +59,7 @@ function _OnFrame()
 		
 		if math.abs(ReadFloat(speed)) == 1.0 then -- This way it works for inverted camera
 			WriteFloat(speed, ReadFloat(speed) * overallSpeed)
-			WriteFloat(speed-4, ReadFloat(speed-4) * overallSpeedV)
+			WriteFloat(speed - 4, ReadFloat(speed - 4) * overallSpeedV)
 		end
 		
 		if ReadFloat(curSpeedH) ~= 0 then
@@ -92,7 +76,5 @@ function _OnFrame()
 				WriteFloat(curSpeedV, currentSpeedV * (1.0 - deaccelerationSpeedV * 10))
 			end
 		end
-		lastSpeedH = currentSpeedH
-		lastSpeedV = currentSpeedV
 	end
 end
