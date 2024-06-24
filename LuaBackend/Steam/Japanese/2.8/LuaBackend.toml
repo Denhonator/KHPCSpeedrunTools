@@ -1,6 +1,0 @@
-[kh3d]
-scripts = [{ path = "scripts/kh3d/", relative = true }]
-base = 0x0
-thread_struct = 0x14DAA7F0
-exe = "KINGDOM HEARTS Dream Drop Distance.exe"
-game_docs = "KINGDOM HEARTS HD 2.8 Final Chapter Prologue"
