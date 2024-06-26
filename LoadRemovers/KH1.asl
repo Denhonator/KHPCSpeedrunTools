@@ -1352,7 +1352,7 @@ init
     // game base address
     var gb = modules.First().BaseAddress;
     if (memory.ReadValue<byte>(gb + 0x3EB158) == 0x58 || memory.ReadValue<byte>(gb + 0x3EA138) == 0x58) {
-        if (memory.ReadValue<ushort>(gb + 0x3EB158) == 0x58) {
+        if (memory.ReadValue<byte>(gb + 0x3EB158) == 0x58) {
             version = "EG Global";
             vars.offset = 0x0;
         } else {
@@ -1394,7 +1394,7 @@ init
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
             { "load_2", new MemoryWatcher<bool>(gb + 0x233E830) },
             { "fightend", new MemoryWatcher<byte>(gb + 0x2D53A38) },
-            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D5B070) },
+            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54308) },
             { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5CC4C) }, 
             { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE9F6C) },
             { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEA86D) },
