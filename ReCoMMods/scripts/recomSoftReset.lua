@@ -6,7 +6,7 @@ local canExecute = false
 
 function _OnInit()
 	if GAME_ID == 0x9E3134F5 and ENGINE_TYPE == "BACKEND" then
-		ConsolePrint("RE:CoM detected")
+		ConsolePrint("Re:CoM detected")
 		canExecute = true
 		if ReadByte(0x4E6C80) == 255 or ReadByte(0x4E6AC0) == 255 then
 			reset = 0xAC3E00
@@ -34,7 +34,7 @@ function _OnInit()
 			ConsolePrint("Steam Version")
 		end
 	else
-		ConsolePrint("RE:CoM not detected, not running script")
+		ConsolePrint("Re:CoM not detected, not running script")
 	end
 end
 
