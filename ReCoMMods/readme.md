@@ -1,5 +1,5 @@
 ## Disclaimer:
-At the time of this update it is unclear if mods are aloud use for runs, use at your own risk
+At the time of this update mods are not aloud for use with runs submitted to speedrun.com
 
 ## How to use:
 - Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend

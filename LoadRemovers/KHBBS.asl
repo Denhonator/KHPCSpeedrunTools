@@ -1,28 +1,70 @@
-state("KINGDOM HEARTS Birth by Sleep FINAL MIX")
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - Global")
 {
     // location info
-    byte room : 0x8150A1;
-    byte scene : 0x8150A2;
-    ushort world : 0x10F9AF60;
+    byte world : 0x819120;
+    byte room : 0x819121;
+    byte scene : 0x819122;
 
     // game state info
-    byte gs1 : 0x10FB1428; 
-    // states for game state 1
-    // 0: freeplay, 1: scene?, 2: in forced combat, 12: world map, 13: menu   
-    byte gs2 : 0x10FB1468;
-    // states for game state 2
-    // 0: freeplay, 1: menu option?, 2: room transition/loading heart?
-    // 3: black out?, 4: loaded screen without control, 64: white blur
-    // 192: post Forced Fight non blur
-    byte text_box : 0x8F60F00;
-    byte char_select_confirm_1 : 0x10F87828;
-    byte char_select_confirm_2 : 0x8F79D80;
-    byte character : 0xCF7DAD;
-    byte max_hp : 0x10FA26D0;
+    byte text_box : 0x8F65180;
+    byte char_select_confirm_1 : 0x8F7E000;
+    byte char_select_confirm_2 : 0x10F8BAA8;
+    byte state_1 : 0x10FB56A8;  
+    byte state_2 : 0x10FB56E8;
+
+    // character info
+    byte character : 0xCFC02D;
+    byte max_hp : 0x10FA6950;
 
     // mini games
-    byte urns_score : 0x10FACA98;
-    byte dwarf_count : 0x10F9FEC4;
+    byte dwarf_count : 0x10FA4144;
+    byte urns_score : 0x10FB0D18;
+}
+
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - JP")
+{
+    // location info
+    byte world : 0x818120;
+    byte room : 0x818121;
+    byte scene : 0x818122;
+
+    // game state info
+    byte text_box : 0x8F64180;
+    byte char_select_confirm_1 : 0x8F7D000;
+    byte char_select_confirm_2 : 0x10F8AAA8;
+    byte state_1 : 0x10FB46A8;  
+    byte state_2 : 0x10FB46E8;
+
+    // character info
+    byte character : 0xD1702D;
+    byte max_hp : 0x10FA5950;
+
+    // mini games
+    byte dwarf_count : 0x10FA3144;
+    byte urns_score : 0x10FAFD18;
+}
+
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam")
+{
+    // location info
+    byte world : 0x817120;
+    byte room : 0x817121;
+    byte scene : 0x817122;
+
+    // game state info
+    byte text_box : 0x8F63A00;
+    byte char_select_confirm_1 : 0x8F7C880;
+    byte char_select_confirm_2 : 0x10F8A328;
+    byte state_1 : 0x10FB3F28;  
+    byte state_2 : 0x10FB3F68;
+
+    // character info
+    byte character : 0xCF7DAD;
+    byte max_hp : 0x10FA51D0;
+
+    // mini games
+    byte dwarf_count : 0x10FA29C4;
+    byte urns_score : 0x10FAF598;
 }
 
 startup
@@ -113,7 +155,7 @@ startup
 
 start
 {
-    if (current.char_select_confirm_1 == 64 && current.char_select_confirm_2 == 2 && old.char_select_confirm_2 == 1) {
+    if (current.char_select_confirm_1 == 2 && old.char_select_confirm_1 == 1 && current.char_select_confirm_2 == vars.confirm_val) {
         vars.character_select_load = true;
         vars.completed_splits = new HashSet<string>();
         return true;
@@ -124,11 +166,11 @@ split
 {    
     var output_catch = "";
 
-    var aquaConfirm = settings["aqua_base"] && current.character == 3;
-    var terraConfirm = settings["terra_base"] && current.character == 2;
     var venConfirm = settings["ven_base"] && current.character == 1;
+    var terraConfirm = settings["terra_base"] && current.character == 2;
+    var aquaConfirm = settings["aqua_base"] && current.character == 3;
 
-    var fight_complete = current.gs1 != 2 && old.gs1 == 2 && current.gs2 != 128;
+    var fight_complete = current.state_1 != 2 && old.state_1 == 2 && current.state_2 != 128;
     if (fight_complete) {
         if (settings["shared_base"]) {
             if (current.world == 1 && current.room == 2) {
@@ -249,7 +291,7 @@ split
         }
         if (venConfirm) {
             if (current.world == 2 && current.room == 8) {
-                if (current.gs2 == 192) {
+                if (current.state_2 == 192) {
                     return settings["sw_escort"];
                 } else {
                     return settings["mt"];
@@ -361,7 +403,7 @@ split
                 return settings["fruitball"];
             }
         }
-        if (current.world == 9 && current.room == 10 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
+        if (current.world == 9 && current.room == 10 && current.state_1 == 1 && old.state_1 == 7 && current.state_2 == 64) {
             return settings["ttg"];
         }
         if (current.world == 13 && current.room == 12 && current.max_hp > old.max_hp) {
@@ -377,7 +419,7 @@ split
                 return settings["rr"];
             }
         }
-        if (current.world == 9 && current.room == 13 && current.gs1 == 1 && old.gs1 == 7 && current.gs2 == 64) {
+        if (current.world == 9 && current.room == 13 && current.state_1 == 1 && old.state_1 == 7 && current.state_2 == 64) {
             return settings["ds_ambush"];
         }
         if (current.world == 6 && current.room == 11) {
@@ -417,7 +459,7 @@ split
         if (current.world == 8 && current.room == 3 && current.urns_score > 0 && old.urns_score == 0) {
             return settings["pots"];
         }
-        if (current.world == 9 && current.room == 13 && current.gs2 == 64 && old.gs2 == 0) {
+        if (current.world == 9 && current.room == 13 && current.state_2 == 64 && old.state_2 == 0) {
             return settings["meta1"];
         }
     }
@@ -433,13 +475,33 @@ init
 {    
     // game base address
     var gb = modules.First().BaseAddress;
-    vars.watchers = new Dictionary<string, MemoryWatcher>{
-        { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FAEA3C) },
-        { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FAC59C) },
-        { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FAC554) },
-        { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA1AD1) },
-        { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA1AD3) },
-    };
+    if (memory.ReadValue<byte>(gb + 0x6107D4) == 255 || memory.ReadValue<byte>(gb + 0x610614) == 255) {
+        int offset = 0x0;
+        if (memory.ReadValue<byte>(gb + 0x6107D4) == 255) {
+            version = "Epic Games - Global";
+        } else {
+            version = "Epic Games - JP";
+            offset = 0x1000;
+        }
+        vars.watchers = new Dictionary<string, MemoryWatcher>{
+            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA1AD1 - offset) },
+            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA1AD3 - offset) },
+            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FAC554 - offset) },
+            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FAC59C - offset) },
+            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FAEA3C - offset) },
+        };
+        vars.confirm_val = 192;
+    } else {
+        version = "Steam";
+        vars.watchers = new Dictionary<string, MemoryWatcher>{
+            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51) },
+            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5D53) },
+            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB07D4) },
+            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB081C) },
+            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB2CBC) },
+        };
+        vars.confirm_val = 64;
+    }
     vars.completed_splits = new HashSet<string>();
 
     timer.IsGameTimePaused = false;
@@ -459,5 +521,5 @@ update
 
 isLoading
 {
-    return current.gs2 > 1 && current.gs2 < 5 && current.world != 17 && !vars.character_select_load;
+    return current.state_2 > 1 && current.state_2 < 5 && current.world != 17 && !vars.character_select_load;
 }

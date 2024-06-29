@@ -2,25 +2,50 @@ LUAGUI_NAME = "bbsSoftReset"
 LUAGUI_AUTH = "deathofall84 (Credits to Topaz and KSX)"
 LUAGUI_DESC = "Soft reset with shoulder buttons + start (options)"
 
-local offset = 0x60E334
 local canExecute = false
-softreset = 0x86321C - offset
-location = 0x8150A0 - offset -- 3 seperate bytes for world, room, scene/spawn set all to 255 or 0xFF to reset
-buttonCombo = 0x8F60DB0-offset
 
 function _OnInit()
 	if GAME_ID == 0xBED4B944 and ENGINE_TYPE == "BACKEND" then
+		ConsolePrint("Birth by Sleep detected")
 		canExecute = true
+		if ReadByte(0x6107D4) == 255 or ReadByte(0x610614) == 255 then
+			if ReadByte(0x6107D4) == 255 then
+				ConsolePrint("Epic Games Global Version")
+				offset = 0x0
+			else
+				ConsolePrint("Epic Games JP Version")
+				offset = 0x1000
+			end
+			softreset = 0x86749C - offset
+			location = 0x819120 - offset
+			input = 0x8F65030 - offset
+			title_skip_1 = 0x42BB59
+			title_skip_2 = 0x3EE25F
+			title_skip_3 = 0x3EE241
+			ConsolePrint("Epic Games Version")
+		elseif ReadByte(0x6107B4) == 255 or ReadByte(0x610534) == 255 then
+			softreset = 0x865D1C
+			input = 0x8F638B0
+			location = 0x817120
+			title_skip_1 = 0x42C319
+			title_skip_2 = 0x3EE59F
+			title_skip_3 = 0x3EE581
+			ConsolePrint("Steam Version")
+		end
 	else
-		canExecute = false
+		ConsolePrint("Birth by Sleep not detected, not running script")
 	end
 end
 
 
 function _OnFrame()
-	local input = ReadInt(buttonCombo)
-	if input == 3848 then
-		WriteInt(location, 0xFFFFFF)
-		WriteByte(softreset, 1)
+	if canExecute then
+		WriteByte(title_skip_1, 0x73)
+		WriteByte(title_skip_2, 0x73)
+		WriteByte(title_skip_3, 0x73)
+		if ReadInt(input) == 3848 then
+			WriteInt(location, 0xFFFFFF)
+			WriteByte(softreset, 1)
+		end
 	end
 end
