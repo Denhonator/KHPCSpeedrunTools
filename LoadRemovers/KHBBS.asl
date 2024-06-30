@@ -12,8 +12,6 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - Global")
     byte state_1 : 0x10FB56A8;  
     byte state_2 : 0x10FB56E8;
 
-    // character info
-    byte character : 0xCFC02D;
     byte max_hp : 0x10FA6950;
 
     // mini games
@@ -35,8 +33,6 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - JP")
     byte state_1 : 0x10FB46A8;  
     byte state_2 : 0x10FB46E8;
 
-    // character info
-    byte character : 0xD1702D;
     byte max_hp : 0x10FA5950;
 
     // mini games
@@ -58,8 +54,6 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam")
     byte state_1 : 0x10FB3F28;  
     byte state_2 : 0x10FB3F68;
 
-    // character info
-    byte character : 0xCF7DAD;
     byte max_hp : 0x10FA51D0;
 
     // mini games
@@ -166,9 +160,9 @@ split
 {    
     var output_catch = "";
 
-    var venConfirm = settings["ven_base"] && current.character == 1;
-    var terraConfirm = settings["terra_base"] && current.character == 2;
-    var aquaConfirm = settings["aqua_base"] && current.character == 3;
+    var venConfirm = settings["ven_base"] && vars.watchers["character"].Current == 1;
+    var terraConfirm = settings["terra_base"] && vars.watchers["character"].Current == 2;
+    var aquaConfirm = settings["aqua_base"] && vars.watchers["character"].Current == 3;
 
     var fight_complete = current.state_1 != 2 && old.state_1 == 2 && current.state_2 != 128;
     if (fight_complete) {
@@ -475,33 +469,42 @@ init
 {    
     // game base address
     var gb = modules.First().BaseAddress;
+    int character_address = 0x0;
     if (memory.ReadValue<byte>(gb + 0x6107D4) == 255 || memory.ReadValue<byte>(gb + 0x610614) == 255) {
         int offset = 0x0;
         if (memory.ReadValue<byte>(gb + 0x6107D4) == 255) {
             version = "Epic Games - Global";
+            character_address = 0xCFC02D;
         } else {
             version = "Epic Games - JP";
             offset = 0x1000;
+            character_address = 0xD1702D;
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
-            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA1AD1 - offset) },
-            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA1AD3 - offset) },
-            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FAC554 - offset) },
-            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FAC59C - offset) },
-            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FAEA3C - offset) },
+            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51 - offset) },
+            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5D53 - offset) },
+            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB07D4 - offset) },
+            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB081C - offset) },
+            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB2CBC - offset) },
         };
         vars.confirm_val = 192;
     } else {
         version = "Steam";
+        if (memory.ReadValue<byte>(gb + 0x6107B4) == 255) {
+            character_address = 0xCFA8AD;
+        } else {
+            character_address = 0xD168AD;
+        }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
-            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51) },
-            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5D53) },
-            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB07D4) },
-            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB081C) },
-            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB2CBC) },
+            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA45D1) },
+            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA45D3) },
+            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FAF054) },
+            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FAF09C) },
+            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB153C) },
         };
         vars.confirm_val = 64;
     }
+    vars.watchers["character"] = new MemoryWatcher<byte>(gb + character_address);
     vars.completed_splits = new HashSet<string>();
 
     timer.IsGameTimePaused = false;
@@ -509,11 +512,13 @@ init
 
 reset
 {
-    return current.character == 0 && old.character != 0 && !settings["all_stories"];
+    return vars.watchers["character"].Current == 0 && vars.watchers["character"].Old != 0 && !settings["all_stories"];
 }
 
 update
 {
+    var character = vars.watchers["character"];
+    character.Update(game);
     if (vars.character_select_load && current.text_box == 2 && old.text_box == 1) {
         vars.character_select_load = false;
     }
