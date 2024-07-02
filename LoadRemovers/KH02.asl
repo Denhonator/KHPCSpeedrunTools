@@ -1,18 +1,29 @@
-state("KINGDOM HEARTS 0.2 Birth by Sleep")
+state("KINGDOM HEARTS 0.2 Birth by Sleep", "Epic Games")
 {
-	byte hints : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x499B179;
-	byte start : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x49F356D;
-	byte fightend : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x49F3645;
-	byte finisher : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x49F3C5A;
-	byte world : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x49F9EFC;
-	byte loading_2 : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4B5A994;
-	byte loading : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4E24AA4;
-	// This address checks more than gear kills as it tracks some amount of transitions
-	// but for our purposes it ticks over to 0 on each gear, we combo this with the use of finishers
-	// and location and we are good to go.
-	byte gear_kill : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4FA6813;
-	byte scene : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x506A79C;
-	byte title : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x5082C8D;
+	byte world : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4490604;
+	byte hints : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x449C439;
+	byte start : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44F708D;
+	byte fightend : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44F7165;
+	byte finisher : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44F7748;
+	byte loading : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4509394;
+	byte gear_kill : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x453178D;
+	byte scene : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x466C64C;
+	byte title : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x47CD35D;
+	byte loading_2 : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4893D94;
+}
+
+state("KINGDOM HEARTS 0.2 Birth by Sleep", "Steam")
+{
+	byte world : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44BD854;
+	byte start : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x452452D;
+	byte fightend : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4524605;
+	byte finisher : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4524BED;
+	byte loading : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4536724;
+	byte gear_kill : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x455EB05;
+	byte scene : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x46999CC;
+	byte title : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x47FA6DD;
+	byte hints : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4834A51;
+	byte loading_2 : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x48C1014;
 }
 
 startup
@@ -38,14 +49,16 @@ startup
 start
 {
 	if (current.title == 1) {
-		if (current.start > 0 && old.start == 0) {
+		if (current.start == 1 && old.start == 0) {
 			// If soft reset is used just after a fight end it can mess with the game sound and splitter, this is to fix a hole in the soft reset.
-			if (current.loading == 16) {
-				game.WriteBytes(modules.First().BaseAddress + 0x4E24AA4, new byte[] {0x0});
-			}
+			int loading = vars.loading;
+			game.WriteBytes(modules.First().BaseAddress + loading, new byte[] {0x0});
 			// Soft reset does not always get this value right, fixes load removal for first few scenes.
-			if (current.hints != 12) {
-				game.WriteBytes(modules.First().BaseAddress + 0x499B179, new byte[] {0xB});
+			int hints = vars.hints;
+			if (version == "Epic Games") {
+				game.WriteBytes(modules.First().BaseAddress + hints, new byte[] {0xB});
+			} else {
+				game.WriteBytes(modules.First().BaseAddress + hints, new byte[] {0xC});					
 			}
 			vars.check_gear_kill = false;
 			vars.playing = false;
@@ -109,6 +122,20 @@ init
 	vars.split_count = 0;
 	vars.cutscene_count = 0;
 	vars.hint_count = 0;
+    var gb = modules.First().BaseAddress;
+	if (memory.ReadValue<byte>(gb + 0x444DD30) == 0x54) { // epic global
+		vars.loading = 0x4509394;
+		vars.hints = 0x449C439;
+		vars.hint_val = 11;
+		vars.hint_start_val = 15;
+		version = "Epic Games";
+	} else if (memory.ReadValue<byte>(gb + 0x447B680) == 0x54 || memory.ReadValue<byte>(gb + 0x447B700) == 0x54) {
+		vars.loading = 0x0;
+		vars.hints = 0x4834A51;
+		vars.hint_val = 15;
+		vars.hint_start_val = 17;
+		version = "Steam";
+	}
 }
 
 reset
@@ -124,7 +151,7 @@ reset
 
 update
 {
-	if (vars.initial_load == 0 && current.hints == 10) {
+	if (vars.initial_load == 0 && old.hints == vars.hint_start_val && current.hints != vars.hint_start_val) {
 		vars.initial_load = 1;
 	}
 	if (vars.playing && vars.cutscene_base == 100 && current.loading != 1) {
@@ -146,7 +173,7 @@ update
 	if (!vars.check_hint && vars.check_gear_kill && current.gear_kill == 0 && old.gear_kill != 0) {
 		vars.check_hint = true;
 	}
-	if (vars.hint_count < 3 && vars.check_hint && current.hints == 11 && old.hints != 11) {
+	if (vars.hint_count < 3 && vars.check_hint && current.hints == vars.hint_val && old.hints != vars.hint_val) {
 		vars.hint_count += 1;
 		vars.check_gear_kill = false;
 		vars.check_hint = false;
