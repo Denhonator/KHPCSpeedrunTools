@@ -49,17 +49,14 @@ startup
 start
 {
 	if (current.title == 1) {
-		if (current.start == 1 && old.start == 0) {
+		// print(version);
+		if ((current.start == 1 || current.start == 2) && old.start == 0) {
 			// If soft reset is used just after a fight end it can mess with the game sound and splitter, this is to fix a hole in the soft reset.
 			int loading = vars.loading;
 			game.WriteBytes(modules.First().BaseAddress + loading, new byte[] {0x0});
 			// Soft reset does not always get this value right, fixes load removal for first few scenes.
 			int hints = vars.hints;
-			if (version == "Epic Games") {
-				game.WriteBytes(modules.First().BaseAddress + hints, new byte[] {0xB});
-			} else {
-				game.WriteBytes(modules.First().BaseAddress + hints, new byte[] {0xC});					
-			}
+			game.WriteBytes(modules.First().BaseAddress + hints, new byte[] {0xC});					
 			vars.check_gear_kill = false;
 			vars.playing = false;
 			vars.check_hint = false;
@@ -130,10 +127,15 @@ init
 		vars.hint_start_val = 15;
 		version = "Epic Games";
 	} else if (memory.ReadValue<byte>(gb + 0x447B680) == 0x54 || memory.ReadValue<byte>(gb + 0x447B700) == 0x54) {
-		vars.loading = 0x0;
+		vars.loading = 0x4536724;
 		vars.hints = 0x4834A51;
-		vars.hint_val = 15;
-		vars.hint_start_val = 17;
+		if (memory.ReadValue<byte>(gb + 0x447B680) == 0x54) { // Global
+			vars.hint_val = 13;
+			vars.hint_start_val = 16;
+		} else { // JP
+			vars.hint_val = 15;
+			vars.hint_start_val = 17;
+		}
 		version = "Steam";
 	}
 }

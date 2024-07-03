@@ -470,9 +470,12 @@ init
     // game base address
     var gb = modules.First().BaseAddress;
     int character_address = 0x0;
-    if (memory.ReadValue<byte>(gb + 0x6107D4) == 255 || memory.ReadValue<byte>(gb + 0x610614) == 255) {
+    int epic_gl = memory.ReadValue<byte>(gb + 0x7262E4);
+    int epic_jp = memory.ReadValue<byte>(gb + 0x7252E4);
+    int steam_gl = memory.ReadValue<byte>(gb + 0x7253E4);
+    if (epic_gl == 0x6A || epic_jp == 0x6A) {
         int offset = 0x0;
-        if (memory.ReadValue<byte>(gb + 0x6107D4) == 255) {
+        if (epic_gl == 0x6A) {
             version = "Epic Games - Global";
             character_address = 0xCFC02D;
         } else {
@@ -490,7 +493,7 @@ init
         vars.confirm_val = 192;
     } else {
         version = "Steam";
-        if (memory.ReadValue<byte>(gb + 0x6107B4) == 255) {
+        if (steam_gl == 0x6A) {
             character_address = 0xCFA8AD;
         } else {
             character_address = 0xD168AD;

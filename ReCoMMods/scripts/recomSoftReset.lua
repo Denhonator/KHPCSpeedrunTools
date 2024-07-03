@@ -8,11 +8,14 @@ function _OnInit()
 	if GAME_ID == 0x9E3134F5 and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("Re:CoM detected")
 		canExecute = true
-		if ReadByte(0x4E6C80) == 255 or ReadByte(0x4E6AC0) == 255 then
+		epic_gl = ReadByte(0x3A2FD9)
+		epic_jp = ReadByte(0x3A2E19)
+		steam_gl = ReadByte(0x3A3459)
+		if epic_gl == 117 or epic_gl == 115 or epic_jp == 117 or epic_jp == 115 then
 			reset = 0xAC3E00
 			input = 0xC7D594
 			kbinput = 0x822178
-			if ReadByte(0x4E6C80) == 255 then
+			if epic_gl == 117 or epic_gl == 115 then
 				copyright_skip_1 = 0x3A2FD9
 				copyright_skip_2 = 0x3A30D0
 			else
@@ -20,11 +23,11 @@ function _OnInit()
 				copyright_skip_2 = 0x3A2F10
 			end
 			ConsolePrint("Epic Games Version")
-		elseif ReadByte(0x4E7040) == 255 or ReadByte(0x4E6DC0) == 255 then
+		else
 			reset = 0xAC4474
 			input = 0xC1DC20
 			kbinput = 0x8223E8
-			if ReadByte(0x4E7040) == 255 then
+			if steam_gl == 117 or steam_gl == 115 then
 				copyright_skip_1 = 0x3A3459
 				copyright_skip_2 = 0x3A3555
 			else
