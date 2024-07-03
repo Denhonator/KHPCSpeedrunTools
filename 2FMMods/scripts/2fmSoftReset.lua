@@ -1,29 +1,34 @@
-local offset = 0x56450E
-
 local canExecute = false
 
 function _OnInit()
-	if GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
+	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then
 		canExecute = true
-		ConsolePrint("KH2 detected, running script")
-		if ReadInt(0x2A5A056-offset) > 0 and ReadInt(0x2A59056-offset) == 0 then
-			offset = 0x56550E
-			ConsolePrint("Detected JP version. If this is incorrect, try reloading at a different time")
-		else
-			ConsolePrint("Detected GLOBAL version. If this is incorrect, try reloading at a different time")
+		if ReadString(0x09A92F0,4) == 'KH2J' then --EGS
+			ConsolePrint('Epic Version Detected')
+			input = 0x29FAD30
+			softreset = 0xABA69A
+			rng = 0x753350
+			spawns = 0x2AE57B8
+		elseif ReadString(0x09A9830,4) == 'KH2J' or  ReadString(0x09A8830,4) == 'KH2J' then --Steam
+			if ReadString(0x09A9830,4) == 'KH2J' then -- Global
+				ConsolePrint('Steam Global Version Detected')
+				offset = 0x0
+			else -- JP
+				ConsolePrint('Steam JP Version Detected')
+				offset = 0x1000
+			end
+			input = 0xBF3120 - offset
+			softreset = 0xABABDA - offset
+			rng = 0x7535C0 - offset
+			spawns = 0x2AE5CF8 - offset
 		end
-	else
-		ConsolePrint("KH2 not detected, not running script")
 	end
 end
 
 function _OnFrame()
-	if canExecute then
-		local input = ReadInt(0x29F89B0-offset)
-		if (input == 247042) then 
-			WriteByte(0xAB841A-offset, 0x1)
-			WriteInt(0x751310-offset-0x40, 0x00000001)
-			WriteByte(0x2AE3478-offset-0x40, 0)
-		end
+	if canExecute and ReadInt(input) == 247042 then
+		WriteByte(softreset, 1)
+		WriteInt(rng, 0x00000001)
+		WriteByte(spawns, 0)
 	end
 end
