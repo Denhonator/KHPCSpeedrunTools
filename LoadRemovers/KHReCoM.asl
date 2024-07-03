@@ -275,7 +275,9 @@ init
     vars.completed_splits = new HashSet<string>();
     timer.IsGameTimePaused = false;
     var gb = modules.First().BaseAddress;
-    if (memory.ReadValue<byte>(gb + 0x4E6C80) == 255 || memory.ReadValue<byte>(gb + 0x4E6C80) == 255) {
+    int epic_global = memory.ReadValue<byte>(gb + 0x3A2FD9);
+    int epic_jp = memory.ReadValue<byte>(gb + 0x3A2E19);
+    if (epic_global == 117 || epic_jp == 117 || epic_global == 115 || epic_jp == 115) {
         version = "Epic";
     } else {
         version = "Steam"
