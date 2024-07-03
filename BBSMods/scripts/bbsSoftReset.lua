@@ -8,8 +8,8 @@ function _OnInit()
 	if GAME_ID == 0xBED4B944 and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("Birth by Sleep detected")
 		canExecute = true
-		if ReadByte(0x6107D4) == 255 or ReadByte(0x610614) == 255 then
-			if ReadByte(0x6107D4) == 255 then
+		if ReadByte(0x7262E4) == 0x6A or ReadByte(0x7252E4) == 0x6A then
+			if ReadByte(0x7262E4) == 0x6A then
 				ConsolePrint("Epic Games Global Version")
 				offset = 0x0
 			else
@@ -22,8 +22,7 @@ function _OnInit()
 			title_skip_1 = 0x42BB59
 			title_skip_2 = 0x3EE25F
 			title_skip_3 = 0x3EE241
-			ConsolePrint("Epic Games Version")
-		elseif ReadByte(0x6107B4) == 255 or ReadByte(0x610534) == 255 then
+		else
 			softreset = 0x865D1C
 			input = 0x8F638B0
 			location = 0x817120
