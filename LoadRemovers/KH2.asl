@@ -20,30 +20,6 @@ state("KINGDOM HEARTS II FINAL MIX", "EPIC-GLOBAL")
 	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE0F0;
 }
 
-state("KINGDOM HEARTS II FINAL MIX", "EPIC-JP")
-{
-	//This is exactly the same as EPIC-GLOBAL, HOWEVER. 
-	//Some values in the 0x900000 range might be different. This is future proofing.
-	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EBFF3;
-	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABAE07;
-	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE094;
-	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8E00;
-	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x713438;
-	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22FD8;
-	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22D60;
-	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F488;
-	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F57A;
-	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B9554;
-	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2590194;
-	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF8;
-	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF9;
-	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFC;
-	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFE;
-	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x716E00;
-	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE168;
-	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE170;
-}
-
 state("KINGDOM HEARTS II FINAL MIX", "STEAM-GLOBAL")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC543;
@@ -93,14 +69,11 @@ init
 	timer.IsGameTimePaused = false;
 	vars.splitTimer = 0;
 	vars.startCounter = 0;
-	
-	// Thank you to DeathofAll for the idea, and DA for offset
+	Thread.Sleep(2000);
 	var gb = modules.First().BaseAddress;
     if (modules.First().ModuleMemorySize == 46313472) { 
-        if (memory.ReadValue<int>(gb + 0x9A70B0) == 0x4A32484B) {
+        if (memory.ReadValue<int>(gb + 0x9A92F0) == 0x4A32484B) {
             version = "EPIC-GLOBAL";
-		} else if (memory.ReadValue<int>(gb + 0x9A92F0) == 0x4A32484B){
-			version = "EPIC-JP";
 		} else if (memory.ReadValue<int>(gb + 0x9A9830) == 0x4A32484B){
             version = "STEAM-GLOBAL";
         }
@@ -109,7 +82,7 @@ init
 			version = "STEAM-JP";
 		}
 	}
-	print(modules.First().ModuleMemorySize.ToString());
+	//print("The Game's base address is:"+modules.First().BaseAddress.ToString()+" and "+ modules.First().ModuleMemorySize.ToString());
 	print(version);
 }
 
@@ -489,7 +462,7 @@ exit
 }
 
 update
-{	
+{
 	if(vars.booting && current.titlescreen == 1)vars.booting = false;
 }
 
