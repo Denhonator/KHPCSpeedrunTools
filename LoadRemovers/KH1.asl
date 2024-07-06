@@ -1384,7 +1384,7 @@ init
         version = "Steam";
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DC718) },
-            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x50A4D4) },
+            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x506F90) },
             { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x507580) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x525D60) }, 
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED6A1E) },

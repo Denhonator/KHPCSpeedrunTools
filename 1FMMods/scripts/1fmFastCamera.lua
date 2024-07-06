@@ -21,9 +21,9 @@ function _OnInit()
 		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
 			ConsolePrint("Epic Games detected")
 			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Global version detected, no offset change needed")				
+				ConsolePrint("Epic Games Global version detected")				
 			elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-				ConsolePrint("JP version detected, setting offsets")
+				ConsolePrint("Epic Games JP version detected")
 				offset = 0x1000
 			end
 			curSpeedV = 0x25387D0 - offset

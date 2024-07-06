@@ -12,7 +12,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Epic")
 
 state("KINGDOM HEARTS Re_Chain of Memories", "Steam")
 {
-    byte character : 0x87B145;
+    byte character : 0x87B845;
     byte state : 0x87B800;
     byte scene : 0x87B860;
     byte world : 0x87B862;

@@ -1,19 +1,31 @@
 LUAGUI_NAME = "1fm4By3"
-LUAGUI_AUTH = "denhonator"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Changes aspect ratio. Visit display settings to apply"
 
-local offset = 0x3A0606
-local height = 0x3B1534 - offset
-
 local canExecute = false
+local posDebugString = 0x3EB158
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		ConsolePrint("KH1 detected, running script")
 		canExecute = true
-		if ReadFloat(height) == 0 and ReadFloat(height-0x20) > 1 then
-			height = height - 0x20
-			ConsolePrint("JP detected, adjusting address")
+		ConsolePrint("KH1 detected, running script")
+		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Epic Games Global version detected")
+				height = 0x3B4594
+			else
+				ConsolePrint("Epic Games JP version detected")
+				height = 0x3B3574
+			end
+		else
+			posDebugString = 0x3EA318
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Steam Global version detected")
+				height = 0x3B3504
+			else
+				ConsolePrint("Steam JP version detected")
+				height = 0x3B3484
+			end
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")

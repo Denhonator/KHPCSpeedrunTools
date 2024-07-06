@@ -1,3 +1,9 @@
+## Update status
+All mods have been updated to work with Epic Games release 1.0.0.9 and Steam except:
+- Chaos
+- EnemyRando
+- RandoSomeLogic
+
 ## Disclaimer:
 Not all of these scripts are allowed in speedruns, the following are allowed:
 - Hook Ship

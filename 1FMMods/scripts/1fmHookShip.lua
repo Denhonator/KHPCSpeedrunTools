@@ -10,13 +10,12 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
-			ConsolePrint("Epic Games detected")
 			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Global version detected")
+				ConsolePrint("Epic Games Global version detected")
 				offset = 0x0
 				debug1Value = 1
-			elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-				ConsolePrint("JP version detected")
+			else
+				ConsolePrint("Epic Games JP version detected")
 				posDebugString = posDebugString - 0x1020
 				offset = 0x1000
 				debug1Value = 2
@@ -28,12 +27,11 @@ function _OnInit()
 			posDebug2 = 0x2538964 - offset
 			ingummi = 0x5082AD - offset
 		else
-			ConsolePrint("Steam detected")
 			posDebugString = 0x3EA318
 			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Global version detected")
-			elseif ReadByte(posDebugString - 0x80) == 0x58 then
-				ConsolePrint("JP version detected")
+				ConsolePrint("Steam Global version detected")
+			else
+				ConsolePrint("Steam JP version detected")
 				posDebugString = posDebugString - 0x80
 			end
 			dest = 0x507580

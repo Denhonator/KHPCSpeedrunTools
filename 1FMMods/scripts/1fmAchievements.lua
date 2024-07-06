@@ -1,13 +1,11 @@
 LUAGUI_NAME = "1fmAchievements"
-LUAGUI_AUTH = "denhonator"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Achievement tracker for plat% speedruns"
-
-local offset = 0x3A0606
-local ach = 0x21A7628 - offset
 
 local canExecute = false
 local prevAch = {0,0}
 local curAch = {0,0} 
+local posDebugString = 0x3EB158
 
 local achievementList = {
 "Proud Player         ",
@@ -71,6 +69,18 @@ function _OnInit()
 		ConsolePrint("KH1 detected, running script")
 		Track(-1)
 		canExecute = true
+		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Epic Games Global version detected")
+				ach = 0x21AB8A8
+			else
+				ConsolePrint("Epic Games JP version detected")
+				ach = 0x21AA8A8
+			end
+		else
+			ConsolePrint("Steam version detected")
+			ach = 0x21AAE28
+		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end

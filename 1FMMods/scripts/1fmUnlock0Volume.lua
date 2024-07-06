@@ -1,33 +1,31 @@
 LUAGUI_NAME = "1fm0Volume"
-LUAGUI_AUTH = "denhonator"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Volume 1 mutes the audio channel"
 
-local offset = 0x3A0606
-local BGM = 0x3D6ABC - offset
-local BGMJP = 0x3D6A9C - offset
-local minVolume = 0x14E5DB - offset
-local minVolumeMaster = 0x115076 - offset
-local minVolumeBGM = 0x114E88 - offset
-local minVolumeSFX = 0x1153CD - offset
-local minVolumeVoices = 0x115578 - offset
-local minSaveVolume = 0x14E50D - offset
+local posDebugString = 0x3EB158
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("KH1 detected, running script")
-		ConsolePrint("Requires LuaBackend 1.0 or higher")
-		if math.abs(ReadFloat(BGM) - 0.1) < 0.01 then
-			WriteFloat(BGM, 0)
-			ConsolePrint(string.format("Set BGM setting 1 to %.1f", ReadFloat(BGM)))
-		elseif math.abs(ReadFloat(BGMJP) - 0.1) < 0.01 then
-			WriteFloat(BGMJP, 0)
-			ConsolePrint(string.format("Set BGM setting 1 to %.1f", ReadFloat(BGMJP)))
+		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Epic Games Global version detected")
+				WriteFloat(0x3D9B24, 0)
+			else
+				ConsolePrint("Epic Games JP version detected")
+				WriteFloat(0x3D8B04, 0)
+			end
+		else
+			posDebugString = 0x3EA318
+			if ReadByte(posDebugString) == 0x58 then
+				ConsolePrint("Steam Global version detected")
+				WriteFloat(0x3D8AF4, 0)
+			else
+				ConsolePrint("Steam JP version detected")
+				WriteFloat(0x3D8A74, 0)
+			end
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
-end
-
-function _OnFrame()
-	
 end
