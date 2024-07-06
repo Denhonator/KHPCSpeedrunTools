@@ -1,5 +1,5 @@
 ## Disclaimer:
-At the time of this update mods are not aloud for use with runs submitted to speedrun.com
+At the time of this update mods are not allowed for use with runs submitted to speedrun.com
 
 ## How to use:
 - Get LuaBackend https://github.com/Sirius902/LuaBackend
