@@ -4,13 +4,11 @@ LUAGUI_DESC = "Speeds up camera movement and camera centering"
 
 local centerSpeed = 2
 local overallSpeed = 1.2
-local overallSpeedV = 1.2
 local accelerationSpeed = 0.001
 local accelerationSpeedV = 0.0014
 local deaccelerationSpeedV = -0.001
 local deaccelerationSpeed = -0.0016
 local canExecute = false
-local offset = 0x0
 
 local posDebugString = 0x3EB158
 
@@ -18,30 +16,12 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
-			ConsolePrint("Epic Games detected")
-			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Epic Games Global version detected")				
-			elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-				ConsolePrint("Epic Games JP version detected")
-				offset = 0x1000
-			end
-			curSpeedV = 0x25387D0 - offset
-			curSpeedH = 0x25387D4 - offset
-			cameraInputH = 0x2341360 - offset
-			cameraInputV = 0x2341364 - offset
-			cameraCenter = 0x2538A34 - offset
-			speed = 0x507AAC - offset
-			menuOpen = 0x232E900 - offset
-		else
-			ConsolePrint("Steam detected")
-			curSpeedV = 0x25380EC
-			curSpeedH = 0x25380F0
-			cameraInputH = 0x23407E0
-			cameraInputV = 0x23407E4
-			cameraCenter = 0x2537EEC
-			speed = 0x506CDC
-			menuOpen = 0x232DFA0
+		if ReadByte(posDebugString) == 0x58 then
+			vars = require("EpicGamesGlobal")
+		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+			vars = require("EpicGamesJP")
+		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
+			vars = require("SteamGlobal") -- Global and JP equal
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -49,31 +29,33 @@ function _OnInit()
 end
 
 function _OnFrame()
-	if canExecute and ReadByte(menuOpen) == 0 then
-		local currentSpeedH = ReadFloat(curSpeedH)
-		local currentSpeedV = ReadFloat(curSpeedV)
+	if canExecute and ReadByte(vars.menu) == 0 then
+		local currentSpeedH = ReadFloat(vars.curSpeedH)
+		local currentSpeedV = ReadFloat(vars.curSpeedV)
 		
-		if ReadFloat(cameraCenter) > 1 then
-			WriteFloat(cameraCenter, ReadFloat(cameraCenter)-centerSpeed)
+		if ReadFloat(vars.cameraCenter) > 1 then
+			WriteFloat(vars.cameraCenter, ReadFloat(vars.cameraCenter)-centerSpeed)
 		end
 		
-		if math.abs(ReadFloat(speed)) == 1.0 then -- This way it works for inverted camera
-			WriteFloat(speed, ReadFloat(speed) * overallSpeed)
-			WriteFloat(speed - 4, ReadFloat(speed - 4) * overallSpeedV)
+		if math.abs(ReadFloat(vars.speed)) == 1.0 then -- This way it works for inverted camera
+			WriteFloat(vars.speed, ReadFloat(vars.speed) * overallSpeed)
+			WriteFloat(vars.speed - 4, ReadFloat(vars.speed - 4) * overallSpeed)
 		end
 		
-		if ReadFloat(curSpeedH) ~= 0 then
-			if math.abs(ReadFloat(cameraInputH)) > 0.05 then
-				WriteFloat(curSpeedH, math.min(math.max(currentSpeedH + ReadFloat(cameraInputH) * accelerationSpeed, -0.44), 0.44))
+		if ReadFloat(vars.curSpeedH) ~= 0 then
+			if math.abs(ReadFloat(vars.cameraInputH)) > 0.05 then
+				maxH = math.max(vars.currentSpeedH + ReadFloat(vars.cameraInputH) * accelerationSpeed, -0.44)
+				WriteFloat(vars.curSpeedH, math.min(maxH, 0.44))
 			else
-				WriteFloat(curSpeedH, currentSpeedH * (1.0 - deaccelerationSpeed * 10))
+				WriteFloat(vars.curSpeedH, vars.currentSpeedH * (1.0 - deaccelerationSpeed * 10))
 			end
 		end
-		if ReadFloat(curSpeedV) ~= 0 then
-			if math.abs(ReadFloat(cameraInputV)) > 0.05 then
-				WriteFloat(curSpeedV, math.min(math.max(currentSpeedV - ReadFloat(cameraInputV) * accelerationSpeedV, -0.44), 0.44))
+		if ReadFloat(vars.curSpeedV) ~= 0 then
+			if math.abs(ReadFloat(vars.cameraInputV)) > 0.05 then
+				maxV = math.max(vars.currentSpeedV - ReadFloat(vars.cameraInputV) * accelerationSpeedV, -0.44)
+				WriteFloat(vars.curSpeedV, math.min(maxV, 0.44))
 			else
-				WriteFloat(curSpeedV, currentSpeedV * (1.0 - deaccelerationSpeedV * 10))
+				WriteFloat(vars.curSpeedV, vars.currentSpeedV * (1.0 - deaccelerationSpeedV * 10))
 			end
 		end
 	end

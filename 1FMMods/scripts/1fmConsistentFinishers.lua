@@ -9,31 +9,17 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
-			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Epic Games Global version detected")
-				zantHack = 0x2A4B08
-				gravBreak = 0x3ED378
-				zantValue = 48100
-			else
-				ConsolePrint("Epic Games JP version detected")
-				zantHack = 0x2A4948
-				gravBreak = 0x3EC358
-				zantValue = 44140
-			end
+		if ReadByte(posDebugString) == 0x58 then
+			vars = require("EpicGamesGlobal")
+		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+			vars = require("EpicGamesJP")
 		else
-			posDebugString = 0x3EA318
-			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Steam Global version detected")
-				zantHack = 0x2A6C98
-				gravBreak = 0x3EC538
-				zantValue = 35620
-			else
-				ConsolePrint("Steam JP version detected")
-				zantHack = 0x2A6A18
-				gravBreak = 0x3EC4B8
-				zantValue = 36132
-			end			
+			vars = require("SteamGlobal") -- Global and JP equal
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
+				vars.gravBreak = vars.gravBreak - 0x80
+				vars.zantHack = vars.zantHack - 0x280
+				vars.zantValue = vars.zantValue + 512
+			end
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -42,9 +28,9 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadShort(zantHack) ~= zantValue then
-			WriteFloat(gravBreak, -1.0)
-			WriteShort(zantHack, zantValue) -- 88 offset from original value
+		if ReadShort(vars.zantHack) ~= vars.zantValue then
+			WriteFloat(vars.gravBreak, -1.0)
+			WriteShort(vars.zantHack, vars.zantValue) -- 88 offset from original value
 		end
 	end
 end

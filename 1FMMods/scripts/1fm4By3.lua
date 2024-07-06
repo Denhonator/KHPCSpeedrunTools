@@ -9,22 +9,14 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
-			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Epic Games Global version detected")
-				height = 0x3B4594
-			else
-				ConsolePrint("Epic Games JP version detected")
-				height = 0x3B3574
-			end
+		if ReadByte(posDebugString) == 0x58 then
+			vars = require("EpicGamesGlobal")
+		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+			vars = require("EpicGamesJP")
 		else
-			posDebugString = 0x3EA318
-			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Steam Global version detected")
-				height = 0x3B3504
-			else
-				ConsolePrint("Steam JP version detected")
-				height = 0x3B3484
+			vars = require("SteamGlobal") -- Global and JP equal
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
+				vars.height = vars.height - 0x80
 			end
 		end
 	else
@@ -34,6 +26,6 @@ end
 
 function _OnFrame()
 	if canExecute then
-		WriteFloat(height, 12.0) -- Sets aspect ratio to 16:12 = 4:3
+		WriteFloat(vars.height, 12.0) -- Sets aspect ratio to 16:12 = 4:3
 	end
 end

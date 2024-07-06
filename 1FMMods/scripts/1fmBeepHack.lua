@@ -9,25 +9,17 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) == 0x58 or ReadByte(posDebugString - 0x1020) == 0x58 then
-			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Epic Games Global version detected")
-				beepHack = 0x26BD5C
-			else
-				ConsolePrint("Epic Games JP version detected")
-				beepHack = 0x26BB9C
-			end
+		if ReadByte(posDebugString) == 0x58 then
+			vars = require("EpicGamesGlobal")
+		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+			vars = require("EpicGamesJP")
 		else
-			posDebugString = 0x3EA318
-			if ReadByte(posDebugString) == 0x58 then
-				ConsolePrint("Steam Global version detected")
-				beepHack = 0x26DECC
-			else
-				ConsolePrint("Steam JP version detected")
-				beepHack = 0x26DC4C
+			vars = require("SteamGlobal") -- Global and JP equal
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
+				vars.beepHack = vars.beepHack - 0x280
 			end
 		end
-		WriteByte(beepHack, 1)
+		WriteByte(vars.beepHack, 1)
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
