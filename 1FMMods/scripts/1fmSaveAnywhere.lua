@@ -114,34 +114,34 @@ function _OnFrame()
 		-- Death condition check disable
 		if input == 2817 and ReadFloat(vars.soraHUD) > 0 and ReadByte(vars.soraHP) > 0
 						 and ReadByte(vars.blackFade) == 128 and ReadShort(vars.deathCheck) == 0x2E74 then
-			WriteByte(soraHP, 0)
-			WriteByte(stateFlag, 1)
-			WriteShort(deathCheck, 0x9090)
+			WriteByte(vars.soraHP, 0)
+			WriteByte(vars.stateFlag, 1)
+			WriteShort(vars.deathCheck, 0x9090)
 			revertCode = true
 		end
 		
 		if savemenuopen == 4 and addgummi==1 then
-			WriteByte(menuFunction, 3) --Unlock gummi
-			WriteByte(menuButtonCount, 5) --Set 5 buttons to save menu
-			WriteByte(menuMaxButtonCount, 5) --Set 5 buttons to save menu
-			WriteByte(menuItemSlotCount, 5) --Set 5 buttons to save menu
+			WriteByte(vars.menuFunction, 3) --Unlock gummi
+			WriteByte(vars.menuButtonCount, 5) --Set 5 buttons to save menu
+			WriteByte(vars.menuMaxButtonCount, 5) --Set 5 buttons to save menu
+			WriteByte(vars.menuItemSlotCount, 5) --Set 5 buttons to save menu
 			for i=0,4 do
-				WriteByte(buttonTypes + i * 4, i) --Set button types
+				WriteByte(vars.buttonTypes + i * 4, i) --Set button types
 			end
 		end
 		
 		addgummi = addgummi > 0 and addgummi-1 or addgummi
 		
 		lastInput = input
-		lastDeathPointer = ReadLong(deathPointer)
+		lastDeathPointer = ReadLong(vars.deathPointer)
 		
 		-- For boss rush comment this if block out as it writes to the auto save files as well
-		if ReadFloat(soraHUD) == 1 and prevHUD < 1  and not bossRush then
+		if ReadFloat(vars.soraHUD) == 1 and prevHUD < 1  and not bossRush then
 			local f = io.open("autosave.dat", "wb")
-			f:write(ReadString(continue, 0x16C00))
+			f:write(ReadString(vars.continue, 0x16C00))
 			f:close()
 			ConsolePrint("Wrote autosave")
 		end
-		prevHUD = ReadFloat(soraHUD)
+		prevHUD = ReadFloat(vars.soraHUD)
 	end
 end
