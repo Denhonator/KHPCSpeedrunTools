@@ -11,11 +11,11 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			vars = require("EpicGamesGlobal")
+			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			vars = require("EpicGamesJP")
+			require("EpicGamesJP")
 		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
-			vars = require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP equal
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -24,14 +24,14 @@ end
 
 function _OnFrame()
 	if canExecute then
-		attackInput = (ReadByte(vars.attInp)//(64-(32*ReadByte(vars.swapped))))%2 == 1
-		if ReadInt(vars.menu) == 1 or ReadInt(vars.dialog) == 0 then
+		attackInput = (ReadByte(attInp)//(64-(32*ReadByte(swapped))))%2 == 1
+		if ReadInt(menu) == 1 or ReadInt(dialog) == 0 then
 			cooldown = 20
 		elseif cooldown > 0 then
 			cooldown = cooldown - 1
 		end
-		autofireState = (attackInput and ReadByte(vars.attackCommand) and cooldown == 0) and 1 or 0
-		WriteInt(vars.fireState1, autofireState)
-		WriteInt(vars.fireState2, autofireState)
+		autofireState = (attackInput and ReadByte(attackCommand) and cooldown == 0) and 1 or 0
+		WriteInt(fireState1, autofireState)
+		WriteInt(fireState2, autofireState)
 	end
 end

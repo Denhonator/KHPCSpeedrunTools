@@ -14,7 +14,7 @@ Not all of these scripts are allowed in speedruns, the following are allowed:
 ## How to use:
 - Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend
 - Follow the instructions on those pages on how to set up the scripts
-- Copy the io_packages into the same folder as the .lua mods (this contains the actual addresses)
+- Create the io_packages folder inside the same folder as your .lua mods ie. scripts/kh1 and copy the appropriate .lua file from the repo side version of the folder for the version of the game you intend to play (Steam JP uses the same file as Steam Global).
 - You can have the scripts in a single folder to cover both Steam and Epic games (it will read from whatever you set it to for both)
 
 ## SaveAnywhere:

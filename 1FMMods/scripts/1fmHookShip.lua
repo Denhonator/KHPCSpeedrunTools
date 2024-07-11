@@ -10,16 +10,16 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			vars = require("EpicGamesGlobal")
+			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			posDebugString = posDebugString - 0x1020
-			vars = require("EpicGamesJP")
+			require("EpicGamesJP")
 		else
 			posDebugString = posDebugString - 0xE40
 			if ReadByte(posDebugString) ~= 0x58 then
 				posDebugString = posDebugString - 0x80 -- JP String
 			end
-			vars = require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP equal
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -28,20 +28,20 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadByte(vars.hookship) == 1 and ReadByte(vars.dest) == 13 and ReadByte(vars.neverland) == 2 then
-			WriteByte(vars.hookship, 0)
+		if ReadByte(hookship) == 1 and ReadByte(dest) == 13 and ReadByte(neverland) == 2 then
+			WriteByte(hookship, 0)
 			WriteString(posDebugString, "            Hook  ship  100%%!              ")
 		end
 		
-		if ReadByte(vars.dest) == 13 and ReadByte(vars.neverland) == 2 and ReadByte(vars.posDebug1) == 0 and ReadInt(vars.ingummi) == 0 then
-			WriteByte(vars.posDebug1, vars.debug1Value)
-			WriteByte(vars.posDebug2, 1)
+		if ReadByte(dest) == 13 and ReadByte(neverland) == 2 and ReadByte(posDebug1) == 0 and ReadInt(ingummi) == 0 then
+			WriteByte(posDebug1, debug1Value)
+			WriteByte(posDebug2, 1)
 			WriteString(posDebugString, "            Hook  ship  100%%               ")
 		end
 		
-		if (ReadByte(vars.neverland) ~= 2 or ReadByte(vars.dest) ~= 13) and ReadByte(vars.posDebug1) == vars.debug1Value then
-			WriteByte(vars.posDebug1, 0)
-			WriteByte(vars.posDebug2, 0)
+		if (ReadByte(neverland) ~= 2 or ReadByte(dest) ~= 13) and ReadByte(posDebug1) == debug1Value then
+			WriteByte(posDebug1, 0)
+			WriteByte(posDebug2, 0)
 			WriteString(posDebugString, "X : %4.2f  Y : %4.2f  Z : %4.2f  Dir : %4.2f")
 		end
 	end

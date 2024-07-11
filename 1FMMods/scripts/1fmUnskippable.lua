@@ -10,11 +10,11 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			vars = require("EpicGamesGlobal")
+			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			vars = require("EpicGamesJP")
+			require("EpicGamesJP")
 		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
-			vars = require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP equal
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -23,8 +23,8 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadInt(vars.cutscene) > 0 and (ReadByte(vars.world) == 4 or ReadByte(vars.world) == 15) and ReadInt(vars.summoning) == 0 then
-			WriteByte(vars.skippable, 1)
+		if ReadInt(cutscene) > 0 and (ReadByte(world) == 4 or ReadByte(world) == 15) and ReadInt(summoning) == 0 then
+			WriteByte(skippable, 1)
 		end
 	end
 end
