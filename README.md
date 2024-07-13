@@ -13,3 +13,7 @@ Note that using mods that affect a speedrun are not allowed unless specifically 
 
 ## Load removers
 Add scriptable auto splitter into your Livesplit layout, and select the .asl file for your game. Make sure you have a timer that shows game time. Some games do not support load removers, check your game and if it is not supported but you still want to make sure you have a timer that also shows real time for run validity.
+
+
+## Join the Action
+The speedrunning community for the series has a discord where these scripts, casual play and more are discussed, join us [here](https://discord.gg/BYtRzqdC) 

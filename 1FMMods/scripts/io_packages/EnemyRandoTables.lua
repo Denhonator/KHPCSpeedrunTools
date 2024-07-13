@@ -116,8 +116,6 @@ duo = {
 	"xa_ex_1150", "xa_ex_1030", "xa_ex_1040", "xa_tz_3020"
 }
 
-parasite = {"xa_he_1000"}
-
 pc1riku = {
 	"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010", 
 	"xa_ex_1030", "xa_ex_1040"
@@ -149,8 +147,6 @@ sabor = {
 	"xa_di_1030", "xa_al_3020", "xa_pc_3000", "xa_ex_1580",
 	"xa_ex_1160", "xa_ex_1030", "xa_ex_1040"
 }
-
-sabor = {"xa_tz_3000"}
 
 antisora = {
 	"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
@@ -228,3 +224,5 @@ dside = {
 	"xa_pp_3000", "xa_ew_2040", "xa_he_3000", "xa_tz_3000",
 	"xa_he_3020", "xa_lm_3030", "xa_ex_1160"
 }
+
+test = {"pc_6730.moa"}

@@ -1,7 +1,5 @@
 ## Update status
 All mods have been updated to work with Epic Games release 1.0.0.9 and Steam except:
-- Chaos
-- EnemyRando
 - RandoSomeLogic
 
 ## Disclaimer:
@@ -12,10 +10,19 @@ Not all of these scripts are allowed in speedruns, the following are allowed:
 - 4 by 3
 
 ## How to use:
-- Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend
+
+### LuaBackend
+- Get LuaBackend https://github.com/Sirius902/LuaBackend
 - Follow the instructions on those pages on how to set up the scripts
-- Create the io_packages folder inside the same folder as your .lua mods ie. scripts/kh1 and copy the appropriate .lua file from the repo side version of the folder for the version of the game you intend to play (Steam JP uses the same file as Steam Global).
-- You can have the scripts in a single folder to cover both Steam and Epic games (it will read from whatever you set it to for both)
+- Create or copy the `io_packages` folder (can be found inside scripts here) inside of your kh1 scripts folder from the previous install step. (Should have something like scripts/kh1/io_packages)
+- If you created the folder yourself copy the version lua files for your version from the repo into it, ie. `EpicGamesGlobal.lua` for English Epic Games.
+- As a note you do not need to have the scripts in more than one place if you are playing across both Epic and Steam
+
+### LuaFrontend
+- Get LuaFrontend https://github.com/TopazTK/LuaFrontend
+- Follow the instructions on those pages on how to set up the scripts
+- Create or copy the `io_packages` folder (can be found inside scripts here) inside of your LuaFrontend folder from the previous install step. (Should be on the same level as the `LuaFrontend.exe`)
+- If you created the folder yourself copy the version lua files for your version from the repo into it, ie. `EpicGamesGlobal.lua` for English Epic Games.
 
 ## SaveAnywhere:
 - In-game, press L1+L2+R2+Select (or equivalent on your input device)
