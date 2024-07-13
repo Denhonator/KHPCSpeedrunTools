@@ -1,5 +1,5 @@
 LUAGUI_NAME = "EnemyRando"
-LUAGUI_AUTH = "denhonator"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Randomizes enemies"
 
 local counter = 0
@@ -30,11 +30,8 @@ function _OnInit()
 			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
-		else
+		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
 			require("SteamGlobal") -- Global and JP equal
-			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
-				someDiff = 0
-			end
 		end
 		seedfile = io.open("randofiles/seed.txt", "r")
 		if seedfile ~= nil then
@@ -265,7 +262,7 @@ function BossAdjust(bossHP)
 	local endtime = 300
 	
 	--Herc cup
-	if w == 11 and r == 2 and ReadInt(inTournament) == 528 then
+	if w == 11 and r == 2 and ReadInt(inTournament) ~= oldTournament and oldTournament == 13 then
 		if ReadByte(OCseed) == 9 then
 			addr[1] = bossAdjustAddresses[12]
 			e[1] = addrs[11][enemyAddresses[90]]
@@ -617,7 +614,7 @@ function _OnFrame()
 		w = 21
 	end
 	
-	if canExecute and (ReadInt(blackFade) == 0 or ReadInt(white) == 128) and w > 0 then
+	if canExecute and (ReadInt(blackFade) == 0 or ReadInt(white) == 128) and w > 0 and w ~= 255 then
 		local s = ""
 		for addr, v in pairs(addrs[w]) do
 			if not Exceptions(addr) then
@@ -643,4 +640,5 @@ function _OnFrame()
 		lastBlack = ReadInt(blackFade)
 	end
 	Fixes()
+	oldTournament = ReadInt(inTournament)
 end
