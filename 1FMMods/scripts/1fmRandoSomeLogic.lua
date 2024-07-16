@@ -247,14 +247,14 @@ end
 function RArray(off, c)
 	local l = {}
 	for i=1, c do
-		l[i] = ReadByte(off+(i-1))
+		l[i] = ReadByte(off + (i - 1))
 	end
 	return l
 end
 
 function WArray(off, l, c)
 	for i=1, c do
-		WriteByte(off+(i-1), l[i])
+		WriteByte(off+(i - 1), l[i])
 	end
 end
 
@@ -274,7 +274,7 @@ function LoadRewards(fs, offs)
 				local loop = 1
 				for word in string.gmatch(line, "([^;]+)") do
 					details[loop] = word:gsub("^%s*(.-)%s*$", "%1")
-					loop = loop+1
+					loop = loop + 1
 				end
 				detailsTable[chestID] = details
 			end
@@ -297,7 +297,7 @@ function _OnInit()
 		if not f2 then
 			ConsoleLog("gummis.txt missing!")
 		else
-			for i=1,0x40 do
+			for i=1,64 do
 				gummiNames[i] = f2:read("*l")
 			end
 			f2:close()
@@ -323,13 +323,13 @@ function _OnInit()
 						end
 					end
 				elseif setting == "VanillaRewards" then
-					vanillaRewards[tonumber(word, 16)+1] = true
+					vanillaRewards[tonumber(word, 16) + 1] = true
 				elseif setting == "VanillaChests" then
-					vanillaChests[tonumber(word, 16)+1] = true
+					vanillaChests[tonumber(word, 16) + 1] = true
 				elseif setting == "ReplaceRewards" then
-					vanillaRewards[tonumber(word, 16)+1] = false
+					vanillaRewards[tonumber(word, 16) + 1] = false
 				elseif setting == "ReplaceChests" then
-					vanillaChests[tonumber(word, 16)+1] = false
+					vanillaChests[tonumber(word, 16) + 1] = false
 				elseif setting == "EarlyAbilities" then
 					earlyAbilities[#earlyAbilities + 1] = tonumber(word, 16)
 					ConsoleLog("Early ability: " .. word)
@@ -347,20 +347,20 @@ function _OnInit()
 			end
 		end
 
-		for i=1,0xFF do
+		for i=1, 255 do
 			itemids[i] = i
-			inventoryUpdater[i] = ReadByte(inventory+(i-1))
+			inventoryUpdater[i] = ReadByte(inventory + (i - 1))
 		end
 		
-		for i=1, 0x40 do
-			gummiUpdater[i] = ReadByte(gummiInventory+(i-1))
+		for i=1, 64 do
+			gummiUpdater[i] = ReadByte(gummiInventory + (i - 1))
 		end
 
 		for i=1, 7 do
 			magicUpdater[i] = 0
 		end
 		
-		trinityTable = {1,2,3,4,5}
+		trinityTable = {1, 2, 3, 4, 5}
 		reportUpdater = ReadShort(reports)
 		
 		seedfile = io.open("randofiles/seed.txt", "r")

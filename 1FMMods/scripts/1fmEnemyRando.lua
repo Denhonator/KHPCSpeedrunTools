@@ -25,7 +25,7 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("KH1 detected, running script")
 		canExecute = true
-		require("EnemyRandoTables")
+		require("Rando/EnemyRandoTables")
 		if ReadByte(posDebugString) == 0x58 then
 			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
