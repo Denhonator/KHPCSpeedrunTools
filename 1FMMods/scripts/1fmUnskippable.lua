@@ -13,7 +13,7 @@ function _OnInit()
 			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
-		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
+		else
 			require("SteamGlobal") -- Global and JP equal
 		end
 	else

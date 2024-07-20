@@ -25,12 +25,12 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("KH1 detected, running script")
 		canExecute = true
-		require("Rando/EnemyRandoTables")
+		require("Rando/enemyRandoTables")
 		if ReadByte(posDebugString) == 0x58 then
 			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
-		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
+		else
 			require("SteamGlobal") -- Global and JP equal
 		end
 		seedfile = io.open("randofiles/seed.txt", "r")
@@ -264,10 +264,10 @@ function BossAdjust(bossHP)
 	--Herc cup
 	if w == 11 and r == 2 and ReadInt(inTournament) ~= oldTournament and oldTournament == 13 then
 		if ReadByte(OCseed) == 9 then
-			addr[1] = bossAdjustAddresses[12]
+			addr[1] = bossAdjustAddresses[11]
 			e[1] = addrs[11][enemyAddresses[90]]
 		elseif ReadByte(OCseed) == 6 then
-			addr[1] = bossAdjustAddresses[14]
+			addr[1] = bossAdjustAddresses[13]
 			e[1] = addrs[11][enemyAddresses[83]]
 		end
 		heightAdjust = e[1] == "xa_ew_3020" and 1200 or 0
@@ -276,20 +276,20 @@ function BossAdjust(bossHP)
 			WriteFloat(addr[1] + 20, heightAdjust)
 		end
 	elseif w == 3 and r == 0 and ReadByte(cutsceneFlags + 4) == 23 then
-		addr[1] = bossAdjustAddresses[23]
+		addr[1] = bossAdjustAddresses[21]
 		e[1] = addrs[3][enemyAddresses[97]]
 		hp[1] = 120
 		str = 8
 		def = 8
 	elseif w == 4 and r == 1 and ReadByte(cutsceneFlags + 7) == 43 then
-		addr[1] = bossAdjustAddresses[22]
+		addr[1] = bossAdjustAddresses[20]
 		e[1] = addrs[4][enemyAddresses[62]]
 		hp[1] = 600
 		str = 9
 		def = 9
 		endArd = 196
 	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags + 5) == 63 then
-		addr[1] = bossAdjustAddresses[15]
+		addr[1] = theonActive
 		e[1] = addrs[5][enemyAddresses[75]]
 		hp[1] = 180
 		str = 12
@@ -301,8 +301,8 @@ function BossAdjust(bossHP)
 		WriteShort(ardOff, 387)
 		ConsolePrint("Progress cutscene")
 	elseif w == 8 and r == 16 and ReadByte(cutsceneFlags + 8) == 70 then
-		addr[1] = bossAdjustAddresses[16]
-		addr[2] = bossAdjustAddresses[17]
+		addr[1] = bossAdjustAddresses[14]
+		addr[2] = bossAdjustAddresses[15]
 		e[1] = addrs[8][enemyAddresses[24]]
 		e[2] = addrs[8][enemyAddresses[25]]
 		hp[1] = 500
@@ -314,14 +314,14 @@ function BossAdjust(bossHP)
 	elseif w == 8 and r == 16 and  ReadByte(ardOff) == 242 then
 		WriteByte(ardOff, 243)
 	elseif w == 12 and r == 4 and ReadByte(cutsceneFlags + 9) == 43 then
-		addr[1] = bossAdjustAddresses[11]
+		addr[1] = khamaActive
 		e[1] = addrs[12][enemyAddresses[51]]
 		hp[1] = 600
 		str =   20
 		def = 17
 		endArd = 84
 	elseif w == 13 and r == 6 and ReadByte(cutsceneFlags + 13) == 50 then
-		addr[1] = bossAdjustAddresses[18]
+		addr[1] = bossAdjustAddresses[16]
 		e[1] = addrs[13][enemyAddresses[35]]
 		hp[1] = 750
 		str = 27
@@ -334,7 +334,7 @@ function BossAdjust(bossHP)
 		end
 	elseif w == 13 and r == 8 and (ReadByte(cutsceneFlags + 13) == 80 or ReadByte(cutsceneFlags + 13) == 83)
 	and (ReadShort(ardOff) == 877 or ReadShort(ardOff) == 979) then
-		addr[1] = bossAdjustAddresses[21]
+		addr[1] = bossAdjustAddresses[19]
 		e[1] = addrs[13][enemyAddresses[53]]
 		hp[1] = 900
 		str = 27
@@ -345,7 +345,7 @@ function BossAdjust(bossHP)
 			ConsolePrint("Give reward")
 		end
 	elseif w == 15 and r == 4 and ReadByte(cutsceneFlags + 14) == 40 then
-		addr[1] = bossAdjustAddresses[24]
+		addr[1] = bossAdjustAddresses[22]
 		e[1] = addrs[15][enemyAddresses[60]]
 		hp[1] = 500
 		str = 31
@@ -353,14 +353,14 @@ function BossAdjust(bossHP)
 		endArd = 87
 		endtime = 200
 	elseif w == 15 and r == 11 and ReadByte(cutsceneFlags + 14) == 80 then
-		addr[1] = bossAdjustAddresses[15]
+		addr[1] = theonActive
 		e[1] = addrs[15][enemyAddresses[69]]
 		hp[1] = 900
 		str = 31
 		def = 24
 		endArd = 55
 	elseif w == 15 and r == 12 and ReadByte(cutsceneFlags + 14) == 60 then
-		addr[1] = bossAdjustAddresses[13]
+		addr[1] = bossAdjustAddresses[12]
 		e[1] = addrs[15][enemyAddresses[65]]
 		hp[1] = 1200
 		str = 31
@@ -380,15 +380,15 @@ function BossAdjust(bossHP)
 		end
 	elseif w == 15 and r == 14 and ReadByte(cutsceneFlags + 14) == 110
 	and ReadShort(ardOff) == 103 then
-		addr[1] = bossAdjustAddresses[19]
+		addr[1] = bossAdjustAddresses[17]
 		e[1] = addrs[15][enemyAddresses[102]]
 		hp[1] = 900
-		bossHPs[1] = bossAdjustAddresses[25]
+		bossHPs[1] = bossAdjustAddresses[23]
 		str = 31
 		def = 24
 		endArd = 104
 	elseif w == 15 and r == 15 and ReadByte(cutsceneFlags + 14) == 170 then
-		addr[1] = bossAdjustAddresses[11]
+		addr[1] = khamaActive
 		e[1] = addrs[15][enemyAddresses[47]]
 		hp[1] = 1350
 		str = 35
@@ -401,7 +401,7 @@ function BossAdjust(bossHP)
 			end
 		end
 	elseif w == 16 and r == 26 then
-		addr[1] = bossAdjustAddresses[11]
+		addr[1] = khamaActive
 		e[1] = addrs[16][enemyAddresses[22]]
 		hp[1] = 1500
 		str = 35
@@ -429,7 +429,7 @@ function BossAdjust(bossHP)
 		end
 	elseif w == 16 and r == 30 and ReadShort(ardOff) >= 213 then
 		if ReadShort(ardOff) == 213 and ReadByte(cutsceneFlags + 15) == 100 then
-			addr[1] = bossAdjustAddresses[20]
+			addr[1] = bossAdjustAddresses[18]
 			e[1] = addrs[16][enemyAddresses[100]]
 			endArd = 214
 			heightAdjust = e[1] == "xa_ew_3020" and 1200 or 0
@@ -440,9 +440,9 @@ function BossAdjust(bossHP)
 				-- WriteInt(bittestRender, 1873)
 			end
 		elseif ReadShort(ardOff) == 252 then
-			addr[1] = bossAdjustAddresses[18]
+			addr[1] = bossAdjustAddresses[16]
 			e[1] = addrs[17][enemyAddresses[101]]
-			bossHPs[1] = bossAdjustAddresses[26]
+			bossHPs[1] = bossAdjustAddresses[24]
 			endArd = 253
 			endtime = 400
 			if ReadShort(addr[1] + 1200) ~= 0 then
@@ -452,8 +452,8 @@ function BossAdjust(bossHP)
 				end
 			end
 		elseif ReadShort(ardOff) == 284 then
-			addr[1] = bossAdjustAddresses[22]
-			bossHPs[1] = bossAdjustAddresses[25]
+			addr[1] = bossAdjustAddresses[20]
+			bossHPs[1] = bossAdjustAddresses[23]
 			e[1] = addrs[17][enemyAddresses[100]]
 			endArd = 285
 			endtime = 200
@@ -476,17 +476,17 @@ function BossAdjust(bossHP)
 			e[1] = addrs[17][enemyAddresses[29]]
 			bossHPs[1] = soraHP
 		elseif ReadByte(worldFlagBase) == 1 then
-			addr[1] = bossAdjustAddresses[15]
+			addr[1] = theonActive
 			e[1] = addrs[18][enemyAddresses[29]]
-			bossHPs[1] = bossAdjustAddresses[28]
+			bossHPs[1] = bossAdjustAddresses[26]
 		elseif ReadByte(worldFlagBase) == 2 then
 			addr[1] = bossAdjustAddresses[9]
 			e[1] = addrs[19][enemyAddresses[29]]
-			bossHPs[1] = bossAdjustAddresses[25]
+			bossHPs[1] = bossAdjustAddresses[23]
 		elseif ReadByte(worldFlagBase) == 3 then
 			addr[1] = bossAdjustAddresses[9]
 			e[1] = addrs[20][enemyAddresses[29]]
-			bossHPs[1] = bossAdjustAddresses[25]
+			bossHPs[1] = bossAdjustAddresses[23]
 		elseif ReadByte(worldFlagBase) == 4 then
 			addr[1] = bossAdjustAddresses[8]
 			e[1] = addrs[21][enemyAddresses[29]]
@@ -579,12 +579,12 @@ function BossAdjust(bossHP)
 end
 
 function Fixes()
-	local bossHP = bossAdjustAddresses[26]
-	if ReadByte(bossAdjustAddresses[29]) == 255 and ReadByte(bossAdjustAddresses[30]) == 255 then
-		bossHP = bossAdjustAddresses[25]
+	local bossHP = bossAdjustAddresses[24]
+	if ReadByte(party1) == 255 and ReadByte(bossAdjustAddresses[27]) == 255 then
+		bossHP = bossAdjustAddresses[23]
 	end
 	if ReadByte(world) == 13 and ReadByte(room) == 8 then
-		bossHP = bossAdjustAddresses[27]
+		bossHP = bossAdjustAddresses[25]
 	end
 	
 	--Add Riku to PC1

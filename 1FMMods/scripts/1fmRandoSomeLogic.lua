@@ -2,147 +2,6 @@ LUAGUI_NAME = "1fmRandomizer"
 LUAGUI_AUTH = "denhonator"
 LUAGUI_DESC = "Use with InstantGummi"
 
--- If you want guaranteed abilities on first level ups, put the hex codes for unequipped abilities here.
--- Maximum 4 or they will replace other abilities.
--- Find ability codes here https://pastebin.com/ZH0L3XXi
--- Scroll down for the Not Equipped versions.
--- For example, early scan and dodge roll would be:
--- local earlyAbilities = {138, 150}
-
-local earlyAbilities = {}
-
--- Variable below determines how weapon stats will be randomized.
--- 0 = Not at all
--- 1 = Weak weapons buffed
--- 2 = Stats shuffled between keyblades (str and magic only)
--- 3 = Stats shuffled and weak stats buffed
-
-local weaponStatRando = 3
-
--- Stack abilities. Currently, you can sometimes get duplicate abilities.
--- This will determine if having multiple equipped is beneficial
--- 0 = No stacking. Vanilla. You just have excess abilities in the menu.
--- 1 = High Jump stacks: Jump higher the more you have.
--- 2 = High Jump, Glides, Mermaid Kick, Dodge Roll. First glide/superglide turns into glide, next into superglide and past that it gets faster.
--- 3 = Glide is also required for flight.
-
-local stackAbilities = 2
-
-local offset = 0x0
-local btltbl = 0x2D1F3C0 - offset
-local itemTable = btltbl+0x1A58
-local weaponTable = btltbl+0x94F8
-local soraStatTable = btltbl+0x3AC0
-local donaldStatTable = soraStatTable+0x3F8
-local goofyStatTable = donaldStatTable+0x198
-local soraAbilityTable = btltbl+0x3BF8
-local soraAbilityTable2 = soraAbilityTable-208
-local soraAbilityTable3 = soraAbilityTable-0x68
-local donaldAbilityTable = soraAbilityTable+0x328
-local goofyAbilityTable = donaldAbilityTable+0x198
-local rewardTable = btltbl+0xC6A8
-local chestTable = 0x5259E0 - offset
-local shopTableBase = 0x4FB374 - offset
-local synthRequirements = 0x544320 - offset
-local synthItems = synthRequirements + 0x1E0
-
-local chestsOpened = 0x2DE5E00 - offset
-local summonsReturned = 0x2DE66FC - offset
-local summons = 0x2DE61A0 - offset
-local inventory = 0x2DE5E6A - offset
-local poohProgress = 0x2DE7718 - offset
-local poohProgress2 = 0x2DE6DF0 - offset
-local emblemCount = 0x2DE787D - offset
-local slides = 0x2DE6BD7 - offset
-local slideActive = 0x2D3CA70 - offset
-local evidence = 0x2DE67D8 - offset
-local evidenceActiveForest = 0x2D39B90 - offset
-local evidenceActiveBizarre = 0x2D39230 - offset
-local khamaActive = 0x2D34730 - offset
-local theonActive = 0x2D35EA0 - offset
-local emblemDoor = 0x2DE788C - offset
-local gummiInventory = 0x2DF1848 - offset
-local reports = 0x2DE7390 - offset
-
-local worldWarps = 0x50B940 - offset
-local worldFlagBase = 0x2DE79D0+0x6C - offset
-local gummiFlagBase = 0x2DE78C0 - offset
-local worldMapLines = 0x2DE78E2 - offset
-local gummiselect = 0x503CEC - offset
-local inGummi = 0x504218 - offset
-local battleLevel = 0x2DE7394 - offset
-local unlockedWarps = 0x2DE78D6 - offset
-local warpCount = 0x50BA30 - offset
-local cutsceneFlags = 0x2DE65D0-0x200 - offset
-local libraryFlag = 0x2DE7AF3 - offset
-local scriptPointer = 0x23944B8 - offset
-local OCCupUnlock = 0x2DE77D0 - offset
-local OCCupDialog = 0x23966B0 - offset
-local ardoffset = 0x2394BB0 - offset
-local ardoffsetClock = 0x2394F10 - offset
-local textBox = 0x23D09E4 - offset
-local cupCurrentSeed = 0x2389480 - offset
-local waterwayGate = 0x2DE763D - offset
-local waterwayTrinity = 0x2DE7681 - offset
-local currentTerminus = 0x2392964 - offset
-local terminusTeleUsable = 0x23928A4 - offset --On: 0000111A Off: FFFFD8F0
-local terminusTeleVisible = 0x2674AC8 - offset --On: 4588D000 Off: C61C4000
-local sliderProgress = 0x2DE7709 - offset
-local savedFruits = 0x2DE770E - offset
-local minigameTimer = 0x232A684 - offset
-local collectedFruits = minigameTimer + 4
-local unequipBlacklist = 0x541FA0 - offset
-local tutorialFlag = 0x2DE7394 - offset
-local oppositeState = 0x2DE7688 - offset
-local oppositeTrigger = 0x2DE66ED - offset
-
-local chronicles = 0x2DE7367 - offset
-local journalCharacters = 0x2DE70B3 - offset
-
-local infoBoxNotVisible = 0x23D0890 - offset
-local blackfade = 0x4D93B8 - offset
-local enableRC = 0x2DE6244 - offset
-local lockMenu = 0x232A60C - offset
-local party1 = 0x2DE5E5F - offset
-local party2 = 0x2E1CBE5 - offset
-local soraHUD = 0x280EB1C - offset
-local stateFlag = 0x2863958 - offset
-local magicUnlock = 0x2DE5A44 - offset
-local magicLevels = magicUnlock + 0x41E
-local magicFlags = 0x2DE75EE - offset
-local shortcuts = 0x2DE6214 - offset
-local trinityUnlock = magicUnlock + 0x1BA7
-local world = 0x233CADC - offset
-local room = world + 0x68
-local soraCurAbilities = 0x2DE5A14 - offset
-local sharedAbilities = 0x2DE5F69 - offset
-local soraPointer = 0x2534680 - offset
-local jumpHeights = 0x2D1F46C - offset
-local mermaidKickSpeed = 0x3ED5FC - offset
-local soraHP = 0x2D592CC - offset
-local superglideSpeedHack = 0x2AE2B4 - offset
-
-local soraStats = 0x2DE59D0 - offset
-local experienceMult = 0x2D59180 - offset
-
-local closeMenu = 0x2E90820 - offset
-local menuCheck = 0x2E8EE98 - offset
-local input = 0x233D034 - offset
-local menuState = 0x2E8F268 - offset
-local report1 = 0x1D03584 - offset
-local language = 0x2E17BAB - offset
-local worldWarp = 0x233CB70 - offset
-local roomWarp = worldWarp + 4
-local roomWarpRead = 0x232A588 - offset
-local warpTrigger = 0x22E86DC - offset
-local warpType1 = 0x233C240 - offset
-local warpType2 = 0x22E86E0 - offset
-local warpDefinitions = 0x232A580 - offset
-local RCName = 0x2863390 - offset
-
-local itemDropID = 0x2849FC8 - offset
-local textsBase = 0x2EE03B0 - offset
-local textPointerBase = 0x2B98900 - offset
 local idFind = 0
 local idReplace = 0
 local textFind = ""
@@ -155,27 +14,23 @@ local trinityTexts = {"Blue Trinity", "Red Trinity", "Green Trinity", "Yellow Tr
 local abilityNames = {"High Jump", "Mermaid Kick", "Glide", "Superglide"}
 local infoBoxWas = 1
 
-local trinityTable = {}
+local trinityTable = {1, 2, 3, 4, 5}
 local magicShuffled = {}
 local perMagicShuffle = {}
 local magicUpdater = {}
 local inventoryUpdater = {}
 local gummiUpdater = {}
-local sliderSavedProg = {0, 0, 0, 0, 0}
 local dodgeDataAddr = 0
 local bufferRemove = 0
 local bufferRemoveTimer = 10
 local HUDWas = 0
 local menuWas = 0
 local removeBlackTimer = 0
-local prevBlack = 128
 local prevTTFlag = 0
 local OCTextFix = 0
 
 local important = {188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 205, 229}
 local shopPool = {}
-local vanillaChests = {}
-local vanillaRewards = {}
 local itemids = {}
 local rewards = {}
 local soraLevels = {}
@@ -205,8 +60,10 @@ local initDone = false
 local canExecute = false
 local loaded = false
 
-local checksDebug = {}
-local sets = {}
+function SetupError(msg)
+	errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
+	ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+end
 
 function RArray(off, c)
 	local l = {}
@@ -230,60 +87,40 @@ function _OnInit()
 		ConsolePrint("KH1 not detected, not running script")
 	end
 
+	require("SteamGlobal")
+	cutsceneFlags = cutsceneFlagBase - 1
 	if canExecute then
 		loaded = true
+		if not pcall(require, "Rando/settings") then
+			loaded = false
+			SetupError("settings.lua missing, get it from the GitHub!")
+		end
 		if not pcall(require, "Rando/itemNames") then
 			loaded = false
-			ConsolePrint("itemNames.lua missing, get it from the GitHub!")
+			SetupError("itemNames.lua missing, get it from the GitHub!")
 		end
 		if not pcall(require, "Rando/chests") then
 			loaded = false
-			ConsolePrint("chests.lua missing, get it from the GitHub!")
+			SetupError("chests.lua missing, get it from the GitHub!")
 		end
 		if not pcall(require, "Rando/rewards") then
 			loaded = false
-			ConsolePrint("rewards.lua missing, get it from the GitHub!")
+			SetupError("rewards.lua missing, get it from the GitHub!")
 		end
-
-		sets["RequiredSlides"] = 0
-		sets["RequiredEvidence"] = 0
-		for s in io.lines("randofiles/settings.txt") do
-			local setting = ""
-			for word in s:gmatch("%w+") do
-				if setting == "" then
-					setting = word
-				elseif setting == "Unrandomize" then
-					for i=1, #important do
-						if important[i] == tonumber(word, 16) then
-							table.remove(important, i)
-							ConsolePrint("Unrandomizing " .. itemNames[tonumber(word, 16)][1])
-							break
-						end
-					end
-				elseif setting == "VanillaRewards" then
-					vanillaRewards[tonumber(word, 16) + 1] = true
-				elseif setting == "VanillaChests" then
-					vanillaChests[tonumber(word, 16) + 1] = true
-				elseif setting == "ReplaceRewards" then
-					vanillaRewards[tonumber(word, 16) + 1] = false
-				elseif setting == "ReplaceChests" then
-					vanillaChests[tonumber(word, 16) + 1] = false
-				elseif setting == "EarlyAbilities" then
-					earlyAbilities[#earlyAbilities + 1] = tonumber(word, 16)
-					ConsolePrint("Early ability: " .. word)
-				elseif setting == "WeaponStatRando" then
-					weaponStatRando = tonumber(word)
-					ConsolePrint("WeaponStatRando: " .. word)
-				elseif setting == "StackAbilities" then
-					stackAbilities = tonumber(word)
-					ConsolePrint("StackAbilities: " .. word)
-				elseif tonumber(word) ~= nil then
-					sets[setting] = tonumber(word)
-				else
-					sets[setting] = word
+		for _, val in ipairs(unrandomize) do
+			for i=1, #important do
+				if important[i] == val then
+					table.remove(important, i)
+					ConsolePrint("Unrandomizing " .. itemNames[val][1])
+					break
 				end
 			end
 		end
+		for _, val in ipairs(earlyAbilities) do
+			ConsolePrint("Early ability: " .. val)
+		end
+		ConsolePrint("WeaponStatRando: " .. weaponStatRando)
+		ConsolePrint("StackAbilities: " .. stackAbilities)
 
 		for i=1, 255 do
 			itemids[i] = i
@@ -297,8 +134,6 @@ function _OnInit()
 		for i=1, 7 do
 			magicUpdater[i] = 0
 		end
-		
-		trinityTable = {1, 2, 3, 4, 5}
 		
 		seedfile = io.open("randofiles/seed.txt", "r")
 		if seedfile ~= nil then
@@ -325,7 +160,7 @@ function _OnInit()
 		seedfile:close()
 		
 		initDone = true
-		ConsolePrint("Init done.	")
+		ConsolePrint("Init done.")
 	end
 end
 
@@ -434,9 +269,9 @@ function MagicAccessible(s)
 		return false
 	end
 
-	magicRef = {"Fire","Blizzard","Thunder","Cure","Gravity","Stop","Aero"}
-	magicRef2 = {"Fira","Blizzara","Thundara","Cura","Gravira","Stopra","Aerora"}
-	magicRef3 = {"Firaga","Blizzaga","Thundaga","Curaga","Graviga","Stopga","Aeroga"}
+	magicRef = {"Fire", "Blizzard", "Thunder", "Cure", "Gravity", "Stop", "Aero"}
+	magicRef2 = {"Fira", "Blizzara", "Thundara", "Cura", "Gravira", "Stopra", "Aerora"}
+	magicRef3 = {"Firaga", "Blizzaga", "Thundaga", "Curaga", "Graviga", "Stopga", "Aeroga"}
 	
 	local a = true
 	for i=1, #magicRef do
@@ -543,8 +378,6 @@ function IsAccessible(t, i)
 			thisAccess = thisAccess or ItemAccessible(205, 1)
 		end
 		
-		checksDebug[t[i][k]] = true
-
 		canAccess = canAccess and thisAccess
 	end
 	return canAccess
@@ -826,8 +659,8 @@ function Randomize()
 			itemData[i][12] = price // 256
 		end
 		
-		if ItemType(i) ~= "" and not (i >= 200 and i <= 204) and sets["RandomShops"] ~= 0 and
-			(sets["RandomShops"] ~= 1 or ItemType(i) ~= "Important") then
+		if ItemType(i) ~= "" and not (i >= 200 and i <= 204) and randomShops ~= 0 and
+			(randomShops ~= 1 or ItemType(i) ~= "Important") then
 			shopPool[#shopPool + 1] = i
 		end
 	end
@@ -1066,8 +899,8 @@ function Randomize()
 			if weaponStatRando < 2 then
 				tablePos = (i - 81) * 88
 			end
-			weaponStr[i] = ReadByte(weaponTable + tablePos + 48)
-			weaponMag[i] = ReadByte(weaponTable + tablePos + 56)
+			weaponStr[i] = ReadByte(weaponTable + tablePos)
+			weaponMag[i] = ReadByte(weaponTable + tablePos + 8)
 			local magSigned = (weaponMag[i] > 127) and -(256 - weaponMag[i]) or weaponMag[i]
 			if weaponStatRando % 2 == 1 then
 				local randomPower = math.random(8) + 6
@@ -1184,19 +1017,20 @@ function ValidSeed()
 			abilitiesAvailable[i] = 0
 		end
 		
-		checksDebug = {}
-		
 		for j=1, 10 do
 			GetAvailability()
 			local HBWin = ItemAccessible(205, 1)
+			ConsolePrint(itemNames[205][1] .. ": " .."205" .. " = " .. itemsAvailable[205])
 			ConsolePrint(string.format("cd %s", tostring(ItemAccessible(205, 1))))
 			for i=188, 191 do
+				ConsolePrint(itemNames[i][1] .. ": " .. i .. " = " .. itemsAvailable[i])
 				ConsolePrint(string.format("%s %s", itemNames[i][1], tostring(ItemAccessible(i, 1))))
 				HBWin = HBWin and ItemAccessible(i, 1)
 			end
 			
 			local DIWin = true
 			for i=192, 199 do
+				ConsolePrint(itemNames[i][1] .. ": " .. i .. " = " .. itemsAvailable[i])
 				ConsolePrint(string.format("%s %s", itemNames[i][1], tostring(ItemAccessible(i, 1))))
 				DIWin = DIWin and ItemAccessible(i, 1)
 			end
@@ -1205,6 +1039,9 @@ function ValidSeed()
 				ConsolePrint(string.format("%s %s", itemNames[keyitems[i]][1], tostring(ItemAccessible(keyitems[i], 1))))
 			end
 			
+			ConsolePrint(itemNames[211][1] .. ": " .."211" .. " = " .. itemsAvailable[211])
+			ConsolePrint(itemNames[228][1] .. ": " .."228" .. " = " .. itemsAvailable[228])
+			ConsolePrint("Dalmations avail: " .. dalmatiansAvailable)
 			local misc = dalmatiansAvailable == 99 and ItemAccessible(228, 1) and ItemAccessible(211, 3)
 			
 			ConsolePrint(string.format("Complexity %d", j))
@@ -1561,8 +1398,8 @@ function ApplyRandomization()
 	for i=81, 133 do
 		if weaponStr[i] then
 			local tablePos = (i - 81) * 88
-			WriteByte(weaponTable + tablePos + 48, weaponStr[i])
-			WriteByte(weaponTable + tablePos + 56, weaponMag[i])
+			WriteByte(weaponTable + tablePos, weaponStr[i])
+			WriteByte(weaponTable + tablePos + 8, weaponMag[i])
 			WriteArray(itemTable + ((i - 1) * 20), itemData[itemids[i]])
 		end
 	end
@@ -1692,13 +1529,13 @@ function ReplaceTexts()
 		ConsolePrint("Replaced item drop")
 	end
 	
-	if textFind ~= "" and (infoBoxWas==0) then
+	if textFind ~= "" and (infoBoxWas == 0) then
 		local re = {}
 		for i=1,#textFind do
 			re[i] = CharToMem(string.byte(textFind, i, i))
 		end
 
-		local rewardText = ReadLong(textsBase + 8) + 1920000
+		local rewardText = ReadLong(textsBase) + 1920000
 		if MemStringSearch(65535, re) then
 			textFind = nextTextFind
 			textReplace = nextTextReplace
@@ -1953,8 +1790,8 @@ function GenerateSpoilers()
 				spoilers[#spoilers + 1] = string.format(
 					"Chest at\n%s:\n%s\n\n",
 					chestDetails[c][2], itemNames[it][1])
-			elseif itype == "Summon" or (itype == "Slide" and sets["RequiredSlides"] > 0) or
-					(itype == "Evidence" and sets["RequiredEvidence"] > 0) or itype == "Book"
+			elseif itype == "Summon" or (itype == "Slide" and requiredSlides > 0) or
+					(itype == "Evidence" and requiredEvidence > 0) or itype == "Book"
 					or it == 211 or it == 213 or it == 214 then
 				miscSpoilers[#miscSpoilers + 1] = string.format(
 					"Chest at\n%s:\n%s\n\n",
@@ -1977,8 +1814,8 @@ function GenerateSpoilers()
 				spoilers[#spoilers + 1] = string.format(
 					"Reward %s\n%s:\n%s\n\n", rewardDetails[r][1],
 					rewardDetails[r][2], itemNames[it][1])
-			elseif (itype == "Summon" or it == 211 or (itype == "Slide" and sets["RequiredSlides"] > 0) or
-					(itype == "Evidence" and sets["RequiredEvidence"] > 0) or itype == "Book")
+			elseif (itype == "Summon" or it == 211 or (itype == "Slide" and requiredSlides > 0) or
+					(itype == "Evidence" and requiredEvidence > 0) or itype == "Book")
 					and rewardDetails[r][2] ~= "Chest" then
 				miscSpoilers[#miscSpoilers + 1] = string.format(
 					"Reward %s\n%s:\n%s\n\n", rewardDetails[r][1],
@@ -1987,19 +1824,18 @@ function GenerateSpoilers()
 		end
 	end
 	
-	local hintLang = sets["HintLanguage"]
-	if hintLang == nil or hintLang == "auto" then
+	if hintLanguage == nil or hintLanguage == "auto" then
 		if ReadInt(language) == 1196904521 then
-			hintLang = "german"
+			hintLanguage = "german"
 		elseif ReadInt(language) == 1194000467 then
-			hintLang = "spanish"
+			hintLanguage = "spanish"
 		end
 	end
-	ConsolePrint(hintLang)
+	ConsolePrint(hintLanguage)
 	
 	local enwords = {}
 	local transwords = {}
-	local translation = io.open(string.format("randofiles/%s.txt", hintLang))
+	local translation = io.open(string.format("randofiles/%s.txt", hintLanguage))
 	if translation ~= nil then
 		while true do
 			local line = translation:read("*l")
@@ -2079,7 +1915,7 @@ end
 function ArrayReplace(source, f, r, offset)
 	index = 1
 	local newarray = {}
-	for i=offset,#source do
+	for i=offset, #source do
 		if source[i] == f[index] then
 			index = index + 1
 			if index > #f then
@@ -2139,21 +1975,20 @@ function UpdateReports(HUDNow)
 		end
 		WriteShort(reports, reportStatus)
 		if ReadShort(report1) == 513 then
-			local hintLang = sets["HintLanguage"]
-			if hintLang == nil or hintLang == "auto" then
+			if hintLanguage == nil or hintLanguage == "auto" then
 				if ReadInt(report1 + 2) == 1380796727 then
-					hintLang = "german"
+					hintLanguage = "german"
 				elseif ReadInt(report1 + 2) == 1263945014 then
-					hintLang = "spanish"
+					hintLanguage = "spanish"
 				elseif ReadInt(report1 + 2) == 1296396596 then
-					hintLang = "french"
+					hintLanguage = "french"
 				end
 			end
-			ConsolePrint(hintLang)
+			ConsolePrint(hintLanguage)
 			
 			local enwords = {}
 			local transwords = {}
-			local translation = io.open(string.format("randofiles/%s.txt", hintLang))
+			local translation = io.open(string.format("randofiles/%s.txt", hintLanguage))
 			if translation ~= nil then
 				while true do
 					local line = translation:read("*l")
@@ -2213,42 +2048,42 @@ function ReplaceMagic(HUDNow)
 	for j=0, 2 do
 		local s = ReadByte(shortcuts + j) + 1
 		if not isUnlocked[s] and s < 10 then
-			WriteByte(shortcuts+j, isUnlocked[perMagicShuffle[s]] and perMagicShuffle[s] - 1 or 255)
+			WriteByte(shortcuts + j, isUnlocked[perMagicShuffle[s]] and perMagicShuffle[s] - 1 or 255)
 		end
 	end
 end
 
 function ReplaceTrinity(HUDNow)
 	local unlock = 0
-	if ReadByte(cutsceneFlags + 2820) >= 49 then
+	if ReadByte(cutsceneFlags) >= 49 then
 		unlock = unlock + (2 ^ (trinityTable[1] - 1))
 	end
-	if ReadByte(chronicles + 12) == 32 then
+	if ReadByte(chronicles + 8) == 32 then
 		unlock = unlock + (2 ^ (trinityTable[2] - 1))
 	end
-	if ReadByte(chronicles + 16) == 32 then
+	if ReadByte(chronicles + 12) == 32 then
 		unlock = unlock + (2 ^ (trinityTable[3] - 1))
 	end
 	if ReadByte(OCCupUnlock + 2) == 1 then
 		unlock = unlock + (2 ^ (trinityTable[4] - 1))
 	end
-	if (ReadByte(journalCharacters + 1) // 8) % 2 == 1 then
+	if (ReadByte(characters) // 8) % 2 == 1 then
 		unlock = unlock + (2 ^ (trinityTable[5] - 1))
 	end
-	if ReadByte(worldFlagBase + 148) < 4 and ReadByte(world) == 11 and ReadByte(room) == 1 then
+	if ReadByte(worldFlagBase + 138) < 4 and ReadByte(world) == 11 and ReadByte(room) == 1 then
 		WriteByte(trinityUnlock, 0)
 	else
 		WriteByte(trinityUnlock, unlock)
 	end
 	if HUDNow < 1 then
 		i = 0
-		if ReadByte(cutsceneFlags + 2821) == 95 then
+		if ReadByte(cutsceneFlags + 1) == 95 then
 			i = 2
-		elseif ReadByte(cutsceneFlags + 2824) == 110 then
+		elseif ReadByte(cutsceneFlags + 4) == 110 then
 			i = 3
 		elseif ReadByte(OCCupUnlock + 2) == 1 and ReadByte(world) == 11 and ReadByte(room) == 1 then
 			i = 4
-		elseif ReadByte(cutsceneFlags + 2830) == 40 then
+		elseif ReadByte(cutsceneFlags + 10) == 40 then
 			i = 5
 		end
 		if i > 0 then
@@ -2292,7 +2127,7 @@ function StackAbilities()
 
 	WriteShort(jumpHeights + 2, jumpHeight)
 	if ReadByte(world) == 16 and countedAbilities[3] == 0 and stackAbilities == 3 and (ReadByte(room) == 33 or 
-			(ReadByte(cutsceneFlags + 2831) >= 110) and ReadFloat(soraHUD) > 0) then
+			(ReadByte(cutsceneFlags + 11) >= 110) and ReadFloat(soraHUD) > 0) then
 		WriteShort(jumpHeights, 390)
 		WriteShort(jumpHeights + 2, math.max(390, jumpHeight))
 	end
@@ -2309,9 +2144,7 @@ function StackAbilities()
 			end
 		end
 		
-		if ReadShort(superglideSpeedHack + 1) == 6131 then
-			WriteInt(superglideSpeedHack, 1569628 + math.max(countedAbilities[3] - 2, 0) * 4)
-		end
+		WriteInt(superglideSpeedHack, superglideBaseSpeed + math.max(countedAbilities[3] - 2, 0) * 4)
 		
 		WriteFloat(mermaidKickSpeed, 10 + (8 * countedAbilities[2]))
 		
@@ -2352,11 +2185,11 @@ function DodgeDataValid(a)
 end
 
 function GetDodgeDataAddr()
-	local halfPointers = 0x2EE03B0 - offset
-	local animHalfPointers = ReadLong(0x2866498 - offset) + 192
-	local ind = 0
-	while ReadInt(animHalfPointers+ind, true) > 0 do
-		local dodgePointer = ReadLong(halfPointers + 8) + ReadInt(animHalfPointers+ind, true) % 16777216
+	local halfPointers = ReadLong(halfPointersAddress)
+	local animHalfPointers = ReadLong(animHalfPointersAddress)
+	local ind = 192
+	while ReadInt(animHalfPointers + ind, true) > 0 do
+		local dodgePointer = halfPointers + ReadInt(animHalfPointers + ind, true) % 16777216
 		if DodgeDataValid(dodgePointer) then
 			ConsolePrint(string.format("Found dodge data at %x, dodge frames: %d", ind, ReadByte(dodgePointer + 4, true)))
 			return dodgePointer
@@ -2367,61 +2200,61 @@ function GetDodgeDataAddr()
 end
 
 function FlagFixes()
-	if ReadByte(world) == 0 and ReadByte(room) == 0 and ReadByte(cutsceneFlags + 2817) == 10 then
-		WriteByte(cutsceneFlags + 2817, 13)
+	if ReadByte(world) == 0 and ReadByte(room) == 0 and ReadByte(cutsceneFlags - 3) == 10 then
+		WriteByte(cutsceneFlags - 3, 13)
 		WriteByte(warpType1, 7)
 		WriteByte(warpType2, 6)
 		WriteByte(warpTrigger, 2)
-		WriteLong(0x25346D0-offset, 0) -- Fixes InstantGummi
+		WriteLong(instantGummiFix, 0) -- Fixes InstantGummi
 	end
 
-	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadInt(inGummi) == 0 then
+	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadInt(ingummi) == 0 then
 		WriteByte(party1, 255)
 		WriteByte(party1 + 1, 255)
 	end
 
 	-- Reset TT to avoid softlocks
-	if ReadByte(cutsceneFlags + 2820) < 20 and ReadByte(world) > 3 then
-		WriteByte(cutsceneFlags + 2820, 0)
-		WriteByte(worldFlagBase + 28, 2)
+	if ReadByte(cutsceneFlags) < 20 and ReadByte(world) > 3 then
+		WriteByte(cutsceneFlags, 0)
+		WriteByte(worldFlagBase + 18, 2)
 	end
 
 	-- Secret waterway Leon unmissable
-	if ReadByte(cutsceneFlags + 786) == 0 and ReadByte(cutsceneFlags + 2820) >= 49 then
-		WriteByte(cutsceneFlags + 2820, 49)
-		WriteByte(worldFlagBase + 50, 2)
+	if ReadByte(waterwayCutsceneFlag) == 0 and ReadByte(cutsceneFlags) >= 49 then
+		WriteByte(cutsceneFlags, 49)
+		WriteByte(worldFlagBase + 40, 2)
 	end
 	
 	-- Skip TT2
-	if ReadByte(cutsceneFlags + 2820) == 62 then
-		WriteByte(cutsceneFlags + 2820, 78)
-		WriteByte(worldFlagBase + 28, 5)
+	if ReadByte(cutsceneFlags) == 62 then
+		WriteByte(cutsceneFlags, 78)
+		WriteByte(worldFlagBase + 18, 5)
 	end
 	
-	if ReadByte(cutsceneFlags + 2820) ~= prevTTFlag then
-		ConsolePrint(string.format("%x, %x", prevTTFlag, ReadByte(cutsceneFlags + 2820)))
+	if ReadByte(cutsceneFlags) ~= prevTTFlag then
+		ConsolePrint(string.format("%x, %x", prevTTFlag, ReadByte(cutsceneFlags)))
 	end
 	-- Revert HB1 effect on TT story
-	if (ReadByte(cutsceneFlags + 2820) == 110 and ReadByte(worldFlagBase + 28) ~= 5)
-											or ReadByte(cutsceneFlags + 2820) == 150 then
-		WriteByte(cutsceneFlags + 2820, prevTTFlag)
+	if (ReadByte(cutsceneFlags) == 110 and ReadByte(worldFlagBase + 18) ~= 5)
+											or ReadByte(cutsceneFlags) == 150 then
+		WriteByte(cutsceneFlags, prevTTFlag)
 	end
 	
-	if ReadByte(cutsceneFlags + 2830) >= 160 and ReadByte(worldFlagBase + 28) == 5
-											and ReadByte(cutsceneFlags + 2820) < 110 then
-		WriteByte(cutsceneFlags + 2820, 110)
-		WriteByte(cutsceneFlags + 2816, math.max(190, ReadByte(cutsceneFlags + 2816)))
+	if ReadByte(cutsceneFlags + 10) >= 160 and ReadByte(worldFlagBase + 18) == 5
+											and ReadByte(cutsceneFlags) < 110 then
+		WriteByte(cutsceneFlags, 110)
+		WriteByte(cutsceneFlags - 4, math.max(190, ReadByte(cutsceneFlags - 4)))
 		ConsolePrint("Post HB TT")
 	end
 
-	prevTTFlag = ReadByte(cutsceneFlags + 2820)
+	prevTTFlag = ReadByte(cutsceneFlags)
 	
 	if ReadByte(oppositeState) >= 5 then
 		WriteByte(oppositeTrigger, 0)
 	end
 	
 	if ReadByte(world) == 3 and ReadByte(room) == 19 then
-		local simbaAddr = ReadLong(scriptPointer) + 78280
+		local simbaAddr = ReadLong(deathPointer) + 78280
 		local earthshine = -16955
 		if ReadInt(simbaAddr, true) == 1393098752 then
 			simbaAddr = simbaAddr + 1120 --Spanish
@@ -2435,7 +2268,7 @@ function FlagFixes()
 			local hasSummons = {}
 			local hasAll = true
 			for i=0, 5 do
-				hasSummons[ReadByte(summons+i)] = true
+				hasSummons[ReadByte(summons + i)] = true
 				hasAll = hasAll and ReadByte(summons + i) < 255
 			end
 			
@@ -2459,8 +2292,8 @@ function FlagFixes()
 		end
 	end
 	
-	if ReadByte(world) == 8 and ReadByte(room) == 18 and ReadShort(ardoffset) == 127 then
-		WriteShort(ardoffset, 209)
+	if ReadByte(world) == 8 and ReadByte(room) == 18 and ReadShort(ardOff) == 127 then
+		WriteShort(ardOff, 209)
 		ConsolePrint("Removed normal genie")
 	end
 	
@@ -2469,21 +2302,21 @@ function FlagFixes()
 		ConsolePrint("Removed normal tinker bell")
 	end
 
-	if ReadByte(cutsceneFlags + 2820) >= 49 then
-		WriteByte(worldFlagBase + 38, 2) -- Cid in accessory shop
-		WriteByte(worldFlagBase + 29, 3)
+	if ReadByte(cutsceneFlags) >= 49 then
+		WriteByte(worldFlagBase + 28, 2) -- Cid in accessory shop
+		WriteByte(worldFlagBase + 19, 3)
 	end
-	if ReadByte(cutsceneFlags + 2825) < 20 then -- Fix monstro DI cutscene softlock
-		WriteByte(cutsceneFlags + 2825, 20)
+	if ReadByte(cutsceneFlags + 5) < 20 then -- Fix monstro DI cutscene softlock
+		WriteByte(cutsceneFlags + 5, 20)
 	end
 
 	-- Shorten solo and time trial
 	if ReadByte(world) == 11 then
-		if (ReadShort(cupCurrentSeed) == 257 or ReadShort(cupCurrentSeed) == 2827)
-		and ReadFloat(soraHUD) > 0 and (ReadByte(party1) == 255 or ReadInt(minigameTimer) > 0) then
-			WriteShort(cupCurrentSeed, ReadShort(cupCurrentSeed) == 257 and 2313 or 4626)
+		if (ReadShort(OCseed) == 257 or ReadShort(OCseed) == 2827)
+		and ReadFloat(soraHUD) > 0 and (ReadByte(party1) == 255 or ReadInt(minitimer) > 0) then
+			WriteShort(OCseed, ReadShort(OCseed) == 257 and 2313 or 4626)
 		elseif ReadByte(world) == 11 and ReadByte(room) == 1 then
-			WriteInt(minigameTimer, 0)
+			WriteInt(minitimer, 0)
 		end
 
 		for i=0, 3 do
@@ -2502,8 +2335,8 @@ function FlagFixes()
 		end
 		
 		-- Require Entry Pass
-		if ReadByte(cutsceneFlags + 2822) == 10 then
-			WriteByte(worldFlagBase + 148, ReadByte(inventory + 228) > 0 and 3 or 2)
+		if ReadByte(cutsceneFlags + 2) == 10 then
+			WriteByte(worldFlagBase + 138, ReadByte(inventory + 228) > 0 and 3 or 2)
 		end
 	end
 
@@ -2515,40 +2348,40 @@ function FlagFixes()
 		WriteByte(waterwayTrinity, ReadByte(waterwayTrinity) + 32)
 	end
 	
-	if ReadByte(worldFlagBase + 54) >= 0 then
-		if (ReadByte(chestsOpened + 504) // 2) % 2 == 0 then
-			WriteByte(worldFlagBase + 54, 13)
-		elseif (ReadByte(chestsOpened + 504) // 4) % 2 == 0 then
-			WriteByte(worldFlagBase + 54, 14)
-		elseif (ReadByte(chestsOpened + 504) // 8) % 2 == 0 then
-			WriteByte(worldFlagBase + 54, 16)
+	if ReadByte(worldFlagBase + 44) >= 0 then
+		if (ReadByte(chestsOpened) // 2) % 2 == 0 then
+			WriteByte(worldFlagBase + 44, 13)
+		elseif (ReadByte(chestsOpened) // 4) % 2 == 0 then
+			WriteByte(worldFlagBase + 44, 14)
+		elseif (ReadByte(chestsOpened) // 8) % 2 == 0 then
+			WriteByte(worldFlagBase + 44, 16)
 		end
 	end
 	
-	if ReadByte(world) == 3 and ReadByte(room) == 2 and ReadByte(cutsceneFlags + 2820) == 35 then
-		WriteByte(unequipBlacklist, ReadByte(soraStats + 54))
+	if ReadByte(world) == 3 and ReadByte(room) == 2 and ReadByte(cutsceneFlags) == 35 then
+		WriteByte(unequipBlacklist, ReadByte(soraStats + 25))
 	else
 		for i=0, 3 do
 			WriteByte(unequipBlacklist + (i * 4), 0)
 		end
 	end
 
-	if ReadInt(inGummi) > 0 then
-		if ReadByte(gummiselect) == 3 then
-			WriteShort(worldWarps + 24, 1) -- Add DI warp
-			if (ReadByte(unlockedWarps - 7) // 8) % 2 == 0 then
-				WriteByte(unlockedWarps - 7, math.max(ReadByte(unlockedWarps - 7) + 8, 9))
+	if ReadInt(ingummi) > 0 then
+		if ReadByte(gummiSelect) == 3 then
+			WriteShort(worldWarps, 1) -- Add DI warp
+			if (ReadByte(unlockedWarps) // 8) % 2 == 0 then
+				WriteByte(unlockedWarps, math.max(ReadByte(unlockedWarps) + 8, 9))
 			end
-			WriteByte(warpCount + 4 * 3, 4)
+			WriteByte(warpCount, 4)
 		else
-			WriteShort(worldWarps + 24, 4) -- Revert to Wonderland
+			WriteShort(worldWarps, 4) -- Revert to Wonderland
 		end
 	
-		if ReadByte(gummiselect) == 3 and ReadByte(cutsceneFlags + 2820) < 49 then
+		if ReadByte(gummiSelect) == 3 and ReadByte(cutsceneFlags) < 49 then
 			WriteByte(party1, 255)
 			WriteByte(party1 + 1, 255)
-		elseif ReadByte(gummiselect) == 15 and ReadByte(cutsceneFlags + 2830) < 49
-											and ReadByte(cutsceneFlags + 2830) >= 30 then
+		elseif ReadByte(gummiSelect) == 15 and ReadByte(cutsceneFlags + 10) < 49
+											and ReadByte(cutsceneFlags + 10) >= 30 then
 			WriteByte(party1, 9)
 			WriteByte(party1 + 1, 255)
 			WriteByte(party2, 9)
@@ -2579,7 +2412,7 @@ function FlagFixes()
 	
 	-- Shop upgrades
 	local clearedWorlds = 0
-	for i=1, 9 do
+	for i=0, 8 do
 		if ReadByte(chronicles + (i * 4)) == 32 then
 			clearedWorlds = clearedWorlds + 1
 		end
@@ -2589,27 +2422,27 @@ function FlagFixes()
 		WriteInt(shopTableBase + (i * 212) - 4, baseCount + (clearedWorlds * 2))
 	end
 	
-	if ReadByte(world) == 1 and ReadByte(blackfade) > 0 and ReadByte(worldFlagBase + 10) == 2 then -- DI Day2 Warp to EotW
+	if ReadByte(world) == 1 and ReadByte(blackFade) > 0 and ReadByte(worldFlagBase) == 2 then -- DI Day2 Warp to EotW
 		RoomWarp(16, 66)
 		WriteByte(party1, 1)
 		WriteByte(party1 + 1, 2)
-		WriteByte(worldFlagBase + 10, 0)
-		if ReadByte(cutsceneFlags + 2831) >= 90 then
-			WriteByte(cutsceneFlags + 2831, 0)
+		WriteByte(worldFlagBase, 0)
+		if ReadByte(cutsceneFlags + 11) >= 90 then
+			WriteByte(cutsceneFlags + 11, 0)
 		end
 	end
 	
-	if ReadByte(cutsceneFlags + 2829) == 100 then
+	if ReadByte(cutsceneFlags + 9) == 100 then
 		RoomWarp(13, 39)
-		WriteByte(cutsceneFlags + 2829, 106)
+		WriteByte(cutsceneFlags + 9, 106)
 	end
 	
-	if ReadByte(cutsceneFlags + 2823) < 17 and ReadByte(world) == 4 then
+	if ReadByte(cutsceneFlags + 3) < 17 and ReadByte(world) == 4 then
 		local evidenceCount = 0
 		for i=222, 225 do
 			evidenceCount = evidenceCount + math.min(ReadByte(inventory + i), 1)
 		end
-		if evidenceCount >= sets["RequiredEvidence"] then
+		if evidenceCount >= requiredEvidence then
 			for i=0, 3 do
 				WriteByte(evidence + i, math.min(ReadByte(inventory + 222 + i), 1))
 			end
@@ -2618,7 +2451,7 @@ function FlagFixes()
 				WriteByte(evidence + i, 0)
 			end
 		end
-		if ReadByte(room) == 4 and evidenceCount < sets["RequiredEvidence"] then
+		if ReadByte(room) == 4 and evidenceCount < requiredEvidence then
 			local o = 0
 			while ReadInt(evidenceActiveForest + 4 + o * 1200) ~= 262163 and ReadInt(evidenceActiveForest + 4 + o * 1200) ~= 0 and o > -5 do
 				o = o - 1
@@ -2633,10 +2466,10 @@ function FlagFixes()
 				o = o - 1
 			end
 			if ReadLong(evidenceActiveBizarre + o * 1200) == 1125981511254019 then
-				if ReadByte(inventory + 223) > 0 or evidenceCount < sets["RequiredEvidence"] then
+				if ReadByte(inventory + 223) > 0 or evidenceCount < requiredEvidence then
 					WriteLong(evidenceActiveBizarre + o * 1200, 0)
 				end
-				if evidenceCount < sets["RequiredEvidence"] then
+				if evidenceCount < requiredEvidence then
 					WriteLong(evidenceActiveBizarre + (o + 1) * 1200, 0)
 				end
 			end
@@ -2660,13 +2493,13 @@ function FlagFixes()
 			WriteByte(collectedFruits, math.max(ReadByte(collectedFruits), (ReadByte(room) - 15) * 10))
 		end
 		
-		if ReadByte(cutsceneFlags + 2821) <= 26 then
+		if ReadByte(cutsceneFlags + 1) <= 26 then
 			if ReadByte(room) == 12 then
 				local slideCount = 0
 				for i=0, 5 do
 					slideCount = slideCount + math.min(ReadByte(inventory + 216 + i), 1)
 				end
-				if slideCount < sets["RequiredSlides"] then
+				if slideCount < requiredSlides then
 					local o = 0
 					while ReadInt(slideActive + o * 1200 + 4) ~= 262168 and ReadInt(slideActive + o * 1200 + 4) ~= 0 and o > -5 do
 						o = o-1
@@ -2691,30 +2524,30 @@ function FlagFixes()
 			WriteInt(poohProgress2 + 8, 131074) --5th area and 6th (4,9 final)
 		end
 		if ReadByte(collectedFruits) >= 100 and ReadByte(room) == 4 then
-			WriteInt(minigameTimer, 0)
+			WriteInt(minitimer, 0)
 		end
 	end
 	
 	--Early EotW, blocked until HB2
-	if ReadByte(cutsceneFlags + 2830) < 195 and ReadByte(world) == 16 then
+	if ReadByte(cutsceneFlags + 10) < 195 and ReadByte(world) == 16 then
 		if ReadByte(currentTerminus) == 9 then		--Hide teleporter to HB portal
 			WriteInt(terminusTeleUsable, 4294957296)
 			WriteInt(terminusTeleVisible, 3323740160)
 		end
-	elseif ReadByte(cutsceneFlags + 2830) >= 195 and ReadInt(inGummi) > 0 and ReadByte(unlockedWarps + 2) < 3 and sets["EotWSkip"] ~= 0 then
-		WriteByte(unlockedWarps + 2, 3)
-		WriteByte(cutsceneFlags + 2831, math.max(ReadByte(cutsceneFlags + 2831), 8))
-		WriteByte(worldFlagBase + 220, 13)
-		WriteByte(worldFlagBase + 223, 13)
+	elseif ReadByte(cutsceneFlags + 10) >= 195 and ReadInt(ingummi) > 0 and ReadByte(unlockedWarps + 9) < 3 and eotWSkip ~= 0 then
+		WriteByte(unlockedWarps + 9, 3)
+		WriteByte(cutsceneFlags + 11, math.max(ReadByte(cutsceneFlags + 11), 8))
+		WriteByte(worldFlagBase + 210, 13)
+		WriteByte(worldFlagBase + 213, 13)
 	end
 	
-	if ReadByte(battleLevel) % 2 == 1 and ReadByte(cutsceneFlags + 2830) < 140 then
+	if ReadByte(battleLevel) % 2 == 1 and ReadByte(cutsceneFlags + 10) < 140 then
 		WriteByte(battleLevel, ReadByte(battleLevel) - 1)
 	end
 	
 	-- Prevent issues in early HB exploration
-	if ReadByte(cutsceneFlags + 2830) <= 1 then
-		WriteByte(cutsceneFlags + 2830, 10)
+	if ReadByte(cutsceneFlags + 10) <= 1 then
+		WriteByte(cutsceneFlags + 10, 10)
 	end
 	
 	if ReadByte(world) == 15 then
@@ -2727,7 +2560,7 @@ function FlagFixes()
 		local canPlace = embCount == 4 or ReadByte(emblemDoor) > 0
 		
 		WriteByte(emblemCount, canPlace and 4 or 0)
-		if ReadByte(cutsceneFlags + 2830) > 50 and (ReadByte(room) ~= 4 or ReadByte(blackfade) == 0) then
+		if ReadByte(cutsceneFlags + 10) > 50 and (ReadByte(room) ~= 4 or ReadByte(blackFade) == 0) then
 			local doorClose = ReadByte(roomWarpRead) >= 16 and ReadByte(roomWarpRead) <= 19
 			WriteByte(emblemDoor, doorClose and 3 or 4)
 			WriteByte(emblemDoor + 3, doorClose and 1 or 5)
@@ -2743,7 +2576,7 @@ function FlagFixes()
 		end
 	end
 
-	if ReadByte(cutsceneFlags + 2816) == 220 then
+	if ReadByte(cutsceneFlags - 4) == 220 then
 		WriteByte(gummiFlagBase + 11, 3)
 	end
 
@@ -2758,7 +2591,7 @@ end
 function EquipmentFixes()
 	local expMult = 1.0
 	for p=0, 2 do
-		local accOff = (p * 116) + 29
+		local accOff = (p * 116)
 		for i=0, 3 do
 			local eqID = ReadByte(soraStats + accOff + i)
 			local eqName = ReadByte(itemTable + ((eqID - 1) * 20))
@@ -2789,86 +2622,78 @@ function RoomWarp(w, r)
 end
 
 function _OnFrame()
-	if not canExecute or not loaded then
-		goto done
-	end
-
-	local HUDNow = ReadFloat(soraHUD)
-	if not randomized and initDone then
-		if (ReadByte(soraHP) > 0 or ReadInt(0x7A8EE8-offset) == 1) and successfulRando then
-			Randomize()
-			while not isValidSeed and not ValidSeed() do
+	if canExecute and loaded then
+		local HUDNow = ReadFloat(soraHUD)
+		if not randomized and initDone then
+			if (ReadByte(soraHP) > 0 or ReadInt(randoInitCheck) == 1) and successfulRando then
 				Randomize()
+				ValidSeed()
+				-- while not isValidSeed and not ValidSeed() do
+				-- 	Randomize()
+				-- end
+				randomized = true
+				ApplyRandomization()
+			elseif not successfulRando then
+				ConsolePrint("Rando unsuccesful! Try restarting and rolling a new seed")
 			end
-			randomized = true
-			ApplyRandomization()
-		elseif not successfulRando then
-			ConsolePrint("Rando unsuccesful! Try restarting and rolling a new seed")
+		elseif randomized then
+			local menuNow = ReadByte(menuCheck)
+			UpdateInventory(HUDNow)
+			ReplaceTrinity(HUDNow)
+			UpdateReports(HUDNow)
+			if HUDNow < 1 then
+				ReplaceMagic(HUDNow)	
+			else
+				nextTextFind = ""
+				if HUDWas < 1 then
+					textFind = ""
+				end
+			end
+			ReplaceTexts()
+			if menuWas ~= menuNow then
+				MenuNameSwap(menuNow)
+			end
+			HUDWas = HUDNow
+			menuWas = menuNow
 		end
-	elseif randomized then
-		local menuNow = ReadByte(menuCheck)
-		UpdateInventory(HUDNow)
-		ReplaceTrinity(HUDNow)
-		UpdateReports(HUDNow)
-		if HUDNow < 1 then
-			ReplaceMagic(HUDNow)	
+
+		if stackAbilities > 0 and ReadLong(closeMenu) == 0 then
+			StackAbilities()
+		end
+		
+		EquipmentFixes()
+		
+		FlagFixes()
+
+		if ReadInt(blackFade) == 0 then
+			removeBlackTimer = removeBlackTimer+1
 		else
-			nextTextFind = ""
-			if HUDWas < 1 then
-				textFind = ""
+			removeBlackTimer = 0
+		end
+		
+		if removeBlackTimer > 300 and ReadByte(world) == 16 then
+			for i=0, 4 do
+				WriteByte(removeBlack + i * 4, 128) --Remove black screen
 			end
-		end
-		ReplaceTexts()
-		if menuWas ~= menuNow then
-			MenuNameSwap(menuNow)
-		end
-		HUDWas = HUDNow
-		menuWas = menuNow
-	end
-
-	if stackAbilities > 0 and ReadLong(closeMenu) == 0 then
-		StackAbilities()
-	end
-	
-	EquipmentFixes()
-	
-	FlagFixes()
-
-	if ReadInt(blackfade) == 0 then
-		removeBlackTimer = removeBlackTimer+1
-	else
-		removeBlackTimer = 0
-	end
-	
-	if removeBlackTimer > 300 and ReadByte(world) == 16 then
-		WriteInt(0x233C450-offset, 128) --Remove black screen
-		WriteInt(0x233C454-offset, 128)
-		WriteInt(0x233C458-offset, 128)
-		WriteInt(0x233C45C-offset, 128)
-		if removeBlackTimer > 300 then
 			ConsolePrint("Removed black screen")
 			removeBlackTimer = 0
 		end
-	end
-	
-	prevBlack = ReadByte(blackfade)
-
-	if ReadByte(0x232A604-offset) and ReadByte(0x2E1CB9C-offset) < 5 and ReadShort(menuState) == 62576 then
-		WriteByte(0x2E1CC28-offset, 3) --Unlock gummi
-		WriteByte(0x2E1CB9C-offset, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E8F450-offset, 5) --Set 5 buttons to save menu
-		WriteByte(0x2E8F452-offset, 5) --Set 5 buttons to save menu
-		for i=0, 4 do
-			WriteByte(0x2E1CBA0 + i * 4 - offset, i) --Set button types
+		
+		if ReadByte(saveOpenAddress) and ReadByte(menuButtonCount) < 5 and ReadShort(menuState) == 62576 then
+			WriteByte(menuFunction, 3) --Unlock gummi
+			WriteByte(menuButtonCount, 5) --Set 5 buttons to save menu
+			WriteByte(menuMaxButtonCount, 5) --Set 5 buttons to save menu
+			WriteByte(menuItemSlotCount, 5) --Set 5 buttons to save menu
+			for i=0, 4 do
+				WriteByte(buttonTypes + i * 4, i) --Set button types
+			end
+		end
+		
+		if ReadByte(RCName) ~= 54 and (warpAnywhere == 0 or
+			(warpAnywhere == 1 and (ReadByte(stateFlag) ~= 0 or HUDNow < 1))) then
+			WriteByte(menuFunction, 0)
+		elseif ReadByte(RCName) == 54 then
+			WriteByte(menuFunction, 3)
 		end
 	end
-	
-	if ReadByte(RCName) ~= 54 and (sets["WarpAnywhere"] == 0 or
-		(sets["WarpAnywhere"] == 1 and (ReadByte(stateFlag) ~= 0 or HUDNow < 1))) then
-		WriteByte(0x2E1CC28-offset, 0)
-	elseif ReadByte(RCName) == 54 then
-		WriteByte(0x2E1CC28-offset, 3)
-	end
-	
-	::done::
 end

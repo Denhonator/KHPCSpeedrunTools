@@ -84,8 +84,8 @@ function _OnFrame()
 				ConsolePrint("Loaded autosave")
 				WriteByte(closeMenu, 0)
 				InstantContinue()
-				WriteFloat(cam, -1.0 + ReadByte(config + 0x14) * 2)
-				WriteFloat(cam + 4, 1.0 - ReadByte(config + 0x18) * 2)
+				WriteFloat(cam, -1.0 + ReadByte(config + 20) * 2)
+				WriteFloat(cam + 4, 1.0 - ReadByte(config + 24) * 2)
 			end
 		end
 		
@@ -103,7 +103,7 @@ function _OnFrame()
 		
 		-- Reverts disabling death condition check (or it crashes)
 		if revertCode and ReadLong(deathPointer) ~= lastDeathPointer then
-			WriteShort(deathCheck, 0x2E74)
+			WriteShort(deathCheck, 11892)
 			removeWhite = 1000
 			revertCode = false
 		end
@@ -113,10 +113,10 @@ function _OnFrame()
 		-- State to combat
 		-- Death condition check disable
 		if input == 2817 and ReadFloat(soraHUD) > 0 and ReadByte(soraHP) > 0
-						 and ReadByte(blackFade) == 128 and ReadShort(deathCheck) == 0x2E74 then
+						 and ReadByte(blackFade) == 128 and ReadShort(deathCheck) == 11892 then
 			WriteByte(soraHP, 0)
 			WriteByte(stateFlag, 1)
-			WriteShort(deathCheck, 0x9090)
+			WriteShort(deathCheck, 37008)
 			revertCode = true
 		end
 		
@@ -138,7 +138,7 @@ function _OnFrame()
 		-- For boss rush comment this if block out as it writes to the auto save files as well
 		if ReadFloat(soraHUD) == 1 and prevHUD < 1  and not bossRush then
 			local f = io.open("autosave.dat", "wb")
-			f:write(ReadString(continue, 0x16C00))
+			f:write(ReadString(continue, 93184))
 			f:close()
 			ConsolePrint("Wrote autosave")
 		end

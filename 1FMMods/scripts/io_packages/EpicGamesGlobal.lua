@@ -39,6 +39,7 @@ textSpeed = 0x234055C
 hookship = 0xED751E
 dest = 0x508280
 neverland = 0x2DEBBD7
+monstro = 0x2DEBBDA
 posDebug1 = 0x232E6A0
 posDebug2 = 0x2538964
 ingummi = 0x5082AD
@@ -75,6 +76,15 @@ menuItemSlotCount = 0x2E93752
 buttonTypes = 0x2E20EA0
 volumeZero = 0x3D9B24
 
+-- shared Rando
+khamaActive = 0x2D38A30
+theonActive = 0x2D3A1A0
+party1 = 0x2DEA16F
+OCseed = 0x238D780
+worldWarp = 0x2340E70
+roomWarp = 0x2340E74
+ardOff = 0x2398EB0
+
 -- Chaos Rando
 musicSpeedHack = 0xA778B
 musicBaseSpeed = 36701
@@ -93,13 +103,9 @@ soraStats = 0x2DE9D16
 -- Enemy Rando
 cutsceneFlags = 0x2DEB1E0
 worldFlagBase = 0x2DEBE30
-ardOff = 0x2398EB0
-OCseed = 0x238D780
 inTournament = 0x238D77C
 bittestRender = 0x232E770
 combo = 0x2DE67B4
-worldWarp = 0x2340E70
-roomWarp = 0x2340E74
 glideBarrier = 0x5079D8
 floorStatus = 0x52997C
 wall = 0x6DC614
@@ -129,8 +135,98 @@ enemyAddresses = {
 bossAdjustAddresses = {
 	0x5079D8, 0x52997C, 0x52999C, 0x6DC5F4, 0x70D6CC,
 	0x70E284, 0x2340E94, 0x2D37C20, 0x2D380D0, 0x2D38580,
-	0x2D38A30, 0x2D38EF4, 0x2D39840, 0x2D39854, 0x2D3A1A0,
-	0x2D3AFB0, 0x2D3B460, 0x2D3B910, 0x2D3BDC0, 0x2D3D080,
-	0x2D3D9E0, 0x2D3E340, 0x2D42E40, 0x2D46B30, 0x2D5D6CC,
-	0x2D5D8CC, 0x2D5D9CC, 0x2D5DDCC, 0x2DEA16F, 0x2DEA170
+	0x2D38EF4, 0x2D39840, 0x2D39854, 0x2D3AFB0, 0x2D3B460,
+	0x2D3B910, 0x2D3BDC0, 0x2D3D080, 0x2D3D9E0, 0x2D3E340,
+	0x2D42E40, 0x2D46B30, 0x2D5D6CC, 0x2D5D8CC, 0x2D5D9CC,
+	0x2D5DDCC, 0x2DEA170
 }
+
+-- Some Logic Rando
+itemTable = 0x0
+weaponTable = 0x0
+soraStatTable = 0x0
+donaldStatTable = 0x0
+goofyStatTable = 0x0
+soraAbilityTable = 0x0
+soraAbilityTable2 = 0x0
+soraAbilityTable3 = 0x0
+donaldAbilityTable = 0x0
+goofyAbilityTable = 0x0
+rewardTable = 0x0
+chestTable = 0x0
+shopTableBase = 0x0
+synthRequirements = 0x0
+synthItems = 0x0
+chestsOpened = 0x0
+summonsReturned = 0x0
+summons = 0x0
+inventory = 0x0
+poohProgress = 0x0
+poohProgress2 = 0x0
+emblemCount = 0x0
+slideActive = 0x0
+evidence = 0x0
+evidenceActiveForest = 0x0
+evidenceActiveBizarre = 0x0
+emblemDoor = 0x0
+reports = 0x0
+worldWarps = 0x0
+worldFlagBase = 0x0
+gummiFlagBase = 0x0
+worldMapLines = 0x0
+battleLevel = 0x0
+unlockedWarps = 0x0
+warpCount = 0x0
+waterwayCutsceneFlag = 0x0
+libraryFlag = 0x0
+OCCupUnlock = 0x0
+OCCupDialog = 0x0
+ardoffsetClock = 0x0
+textBox = 0x0
+waterwayGate = 0x0
+waterwayTrinity = 0x0
+currentTerminus = 0x0
+terminusTeleUsable = 0x0 --On: 4378 Off: 4294957296
+terminusTeleVisible = 0x0 --On: 1166594048 Off: 3323740160
+sliderProgress = 0x0
+savedFruits = 0x0
+collectedFruits = 0x0
+unequipBlacklist = 0x0
+tutorialFlag = 0x0
+oppositeState = 0x0
+oppositeTrigger = 0x0
+chronicles = 0x0
+characters = 0x0
+infoBoxNotVisible = 0x0
+enableRC = 0x0
+lockMenu = 0x0
+party2 = 0x0
+magicLevels = 0x0
+magicFlags = 0x0
+shortcuts = 0x0
+trinityUnlock = 0x0
+sharedAbilities = 0x0
+jumpHeights = 0x0
+mermaidKickSpeed = 0x0
+superglideSpeedHack = 0x0
+soraStats = 0x0
+experienceMult = 0x0
+menuCheck = 0x0
+menuState = 0x0
+report1 = 0x0
+language = 0x0
+roomWarpRead = 0x0
+warpDefinitions = 0x0
+RCName = 0x0
+itemDropID = 0x0
+textsBase = 0x0
+textPointerBase = 0x0
+halfPointersAddress = 0x0
+animHalfPointersAddress = 0x0
+randoInitCheck = 0x0
+removeBlack = 0x0
+instantGummiFix = 0x0
+gummiInventory = 0x2DF5B5C
+magicUnlock = 0x2DE9D54
+soraCurAbilities = 0x2DE9D24
+superglideBaseSpeed = 1569628

@@ -39,6 +39,7 @@ textSpeed = 0x233F55C
 hookship = 0xED651E
 dest = 0x507280
 neverland = 0x2DEABD7
+monstro = 0x2DEABDA
 posDebug1 = 0x232D6A0
 posDebug2 = 0x2537964
 ingummi = 0x5072AD

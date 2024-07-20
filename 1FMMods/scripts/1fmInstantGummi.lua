@@ -13,7 +13,7 @@ function _OnInit()
 			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
-		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
+		else
 			require("SteamGlobal") -- Global and JP equal
 		end
 	else
@@ -36,6 +36,11 @@ function _OnFrame()
 			WriteByte(worldWarpBase + 2, deepJungleState and 0 or 45)
 			WriteByte(worldWarpBase2, neverlandState and 6 or 7)
 			WriteByte(worldWarpBase2 + 2, neverlandState and 24 or 37)
+			
+			-- Replace HT and Atlantica with Monstro at first
+			if ReadByte(monstro) < 2 and (selection == 10 or selection == 9) then
+				selection = selection == 9 and 18 or 17
+			end
 			
 			-- Change warp to Hollow Bastion
 			if selection == 25 then 
