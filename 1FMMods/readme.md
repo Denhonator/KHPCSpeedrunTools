@@ -1,6 +1,5 @@
 ## Update status
-All mods have been updated to work with Epic Games release 1.0.0.9 and Steam except:
-- RandoSomeLogic
+All mods have been updated to work with Epic Games release 1.0.0.9 and Steam
 
 ## Disclaimer:
 Not all of these scripts are allowed in speedruns, the following are allowed:
@@ -8,6 +7,7 @@ Not all of these scripts are allowed in speedruns, the following are allowed:
 - Save Anywhere (for soft resetting only)
 - Fast Camera
 - 4 by 3
+- Volume 0
 
 ## How to use:
 
@@ -74,6 +74,7 @@ Not all of these scripts are allowed in speedruns, the following are allowed:
 - Randomizes items, level ups, rewards, magic, trinities and chests
 - If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
 - randofiles folder should be placed in the same folder as the .dll when using Luabackend Hook by Sirius
+    - This now only includes the translations, seed, save, and spoilers. All other info is in .lua files located in `io_packages/Rando` and should be placed in the same location (inside their folders) as the script itself ie. rando mod is at `scripts/kh1/1fmRandoSomeLogic.lua` and the other data is `scripts/kh1/io_packages/Rando/chests.lua`
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
 ## EnemyRando:

@@ -33,7 +33,7 @@ function _OnInit()
 	lastDeathPointer = ReadLong(deathPointer)
 end
 
-function InstantContinue()
+local function InstantContinue()
 	if ReadByte(warpTrigger) == 0 then
 		ConsolePrint("Instant continue trigger")
 		WriteByte(warpType1, 5)
@@ -42,7 +42,7 @@ function InstantContinue()
 	end
 end
 
-function SoftReset()
+local function SoftReset()
 	ConsolePrint("Soft reset")
 	WriteByte(warpType1, 0)
 	WriteByte(warpType2, 0)
@@ -65,17 +65,17 @@ function _OnFrame()
 		local input = ReadInt(inputAddress)
 		local savemenuopen = ReadByte(saveOpenAddress)
 
-		if input == 1793 and lastInput ~= 1793 and savemenuopen ~=4 and ReadByte(saveAnywhere) == 0 then 
+		if input == 1793 and lastInput ~= 1793 and savemenuopen ~=4 and ReadByte(saveAnywhere) == 0 then
 			WriteByte(saveAnywhere, 1)
 			addgummi = 5
 		elseif input == 1793 and ReadByte(saveAnywhere) == 1 then
 			WriteLong(closeMenu, 0)
 		end
-		
+
 		if input == 3968 and lastInput ~= 3968 and ReadLong(closeMenu) == 0 then
 			InstantContinue()
 		end
-		
+
 		if input == 3872 and lastInput ~= 3872 and ReadLong(closeMenu) == 0 then
 			local f = io.open("autosave.dat", "rb")
 			if f ~= nil then
@@ -88,11 +88,11 @@ function _OnFrame()
 				WriteFloat(cam + 4, 1.0 - ReadByte(config + 24) * 2)
 			end
 		end
-		
+
 		if input == 3848 and lastInput ~= 3848 then
 			SoftReset()
 		end
-		
+
 		-- Remove white screen on death (it bugs out this way normally)
 		if removeWhite > 0 then
 			removeWhite = removeWhite - 1
@@ -100,14 +100,14 @@ function _OnFrame()
 				WriteByte(white, 0)
 			end
 		end
-		
+
 		-- Reverts disabling death condition check (or it crashes)
 		if revertCode and ReadLong(deathPointer) ~= lastDeathPointer then
 			WriteShort(deathCheck, 11892)
 			removeWhite = 1000
 			revertCode = false
 		end
-		
+
 		-- R1 R2 L2 Select
 		-- Sora HP to 0 (not necessary)
 		-- State to combat
@@ -119,7 +119,7 @@ function _OnFrame()
 			WriteShort(deathCheck, 37008)
 			revertCode = true
 		end
-		
+
 		if savemenuopen == 4 and addgummi==1 then
 			WriteByte(menuFunction, 3) --Unlock gummi
 			WriteByte(menuButtonCount, 5) --Set 5 buttons to save menu
@@ -129,12 +129,12 @@ function _OnFrame()
 				WriteByte(buttonTypes + i * 4, i) --Set button types
 			end
 		end
-		
+
 		addgummi = addgummi > 0 and addgummi-1 or addgummi
-		
+
 		lastInput = input
 		lastDeathPointer = ReadLong(deathPointer)
-		
+
 		-- For boss rush comment this if block out as it writes to the auto save files as well
 		if ReadFloat(soraHUD) == 1 and prevHUD < 1  and not bossRush then
 			local f = io.open("autosave.dat", "wb")

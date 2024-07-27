@@ -84,6 +84,7 @@ OCseed = 0x238D780
 worldWarp = 0x2340E70
 roomWarp = 0x2340E74
 ardOff = 0x2398EB0
+worldFlagBase = 0x2DEBE30
 
 -- Chaos Rando
 musicSpeedHack = 0xA778B
@@ -102,7 +103,6 @@ soraStats = 0x2DE9D16
 
 -- Enemy Rando
 cutsceneFlags = 0x2DEB1E0
-worldFlagBase = 0x2DEBE30
 inTournament = 0x238D77C
 bittestRender = 0x232E770
 combo = 0x2DE67B4
@@ -219,7 +219,6 @@ roomWarpRead = 0x0
 warpDefinitions = 0x0
 RCName = 0x0
 itemDropID = 0x0
-textsBase = 0x0
 textPointerBase = 0x0
 halfPointersAddress = 0x0
 animHalfPointersAddress = 0x0

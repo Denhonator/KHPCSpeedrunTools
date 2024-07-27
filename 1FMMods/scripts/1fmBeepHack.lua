@@ -2,12 +2,10 @@ LUAGUI_NAME = "1fmBeepHack"
 LUAGUI_AUTH = "deathofall84"
 LUAGUI_DESC = "Removes low health beeping noise, works up to max health of 41"
 
-local canExecute = false
 local posDebugString = 0x3EB158
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
 			require("EpicGamesGlobal")

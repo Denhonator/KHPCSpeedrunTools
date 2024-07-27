@@ -37,20 +37,20 @@ function _OnInit()
 				animsData[off + 1] = anim
 			end
 		end
-		
+
 		for i = 7, 52 do
 			if (i < 28) or (i > 30 and i < 39) or (i > 46) then
 				validCommands[i] = true
 			end
 		end
-		
+
 		local commsA = ReadLong(commandMenuPointer)
 		for i = 0, 99 do
 			if validCommands[i] then
 				commandData[i + 1] = ReadArray(commsA + (i * 16), 16, true)
 			end
 		end
-		
+
 		for i = 100, 157 do
 			if not ((i >= 106 and i <= 109) or (i >= 113 and i <= 115)
 			or (i >= 132 and i <= 139) or i == 126 or i == 142
@@ -59,15 +59,15 @@ function _OnInit()
 				musicExists[i] = true
 			end
 		end
-		
+
 		lastBlack = ReadByte(blackFade)
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
 end
 
-function Randomize()
-	pool = {}
+local function Randomize()
+	local pool = {}
 	for i = 0, 511 do
 		pool[(#pool) + 1] = animsData[i + 1]
 	end
@@ -89,7 +89,7 @@ function Randomize()
 		end
 	end
 
-	local commsA = ReadLong(commandMenuPointer)	
+	local commsA = ReadLong(commandMenuPointer)
 	for i = 0, 99 do
 		if commandData[i + 1] then
 			local command = table.remove(pool, math.random(#pool))
@@ -108,12 +108,12 @@ function Randomize()
 		WriteFloat(ReadLong(goofyPointer) + 64 + (i * 4), g, true)
 		WriteFloat(weaponSize + (i * 4), r)
 	end
-	
+
 	math.randomseed(baseSeed + ReadByte(world))
 	local musicA = ReadLong(musicPointer) + 8
 	local music1 = musics[math.random(#musics)]
 	local music2 = musics[math.random(#musics)]
-	for i = 1, 40 do
+	for _=1, 40 do
 		if musicExists[ReadInt(musicA, true)] then
 			WriteByte(musicA, music1, true)
 		end
@@ -122,7 +122,7 @@ function Randomize()
 		end
 		musicA = musicA + 32
 	end
-	
+
 	math.randomseed(baseSeed + ReadByte(room) + ReadByte(world) * 256 + ReadByte(soraStats) * 65536)
 	if ReadByte(musicSpeedHack) == 243 then
 		r = math.random(10)
@@ -137,7 +137,7 @@ function Randomize()
 		resist = soraResist + i * 4
 		WriteFloat(resist, ReadFloat(resist) + (math.random(20) * 0.1) - 1.0)
 	end
-	
+
 	WriteFloat(ReadLong(soraPointer) + 644, 0.7 + math.random(6) * 0.1, true)
 
 	local soraAirA = ReadLong(soraPointer) + 112
@@ -147,7 +147,7 @@ function Randomize()
 	end
 end
 
-function Revert()
+local function Revert()
 	local commsA = ReadLong(commandMenuPointer)
 	for i = 0, 511 do
 		if i < 3 then
@@ -169,14 +169,14 @@ function Revert()
 			WriteByte(anims + (i * 20), animsData[i + 1])
 		end
 	end
-	
+
 	if ReadByte(musicSpeedHack) == 243 then
 		WriteByte(musicSpeedHack + 4, musicBaseSpeed)
 	end
 
 	-- Movement speed
 	WriteFloat(moveSpeed, 8)
-	
+
 	WriteFloat(ReadLong(soraPointer) + 644, 1.0, true)
 end
 
@@ -192,12 +192,12 @@ function _OnFrame()
 				ConsolePrint("Chaos! Randomized animations among other things")
 			end
 		end
-		
+
 		-- if ReadByte(blackFade) < 128 and lastBlack == 128 then
 		-- 	Revert()
 		-- 	ConsolePrint("Reverted chaos to avoid crashes")
 		-- end
-		
+
 		lastBlack = ReadByte(blackFade)
 	end
 end

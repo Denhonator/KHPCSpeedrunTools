@@ -1,8 +1,8 @@
 -- Prevent select key items from being randomized
--- Item IDs are listed in items.txt
--- Available options: 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xCD, 0xE5
+-- Item IDs are listed in items.lua
+-- Available options: 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 206, 230
 -- For example, if you want to unrandomize Entry Pass and Navi-Gummi:
--- Unrandomize = {0xCD, 0xE5}
+-- Unrandomize = {206, 230}
 
 unrandomize = {}
 
@@ -38,7 +38,8 @@ weaponStatRando = 2
 -- This will determine if having multiple equipped is beneficial
 -- 0 = No stacking. Vanilla. You just have excess abilities in the menu.
 -- 1 = High Jump stacks: Jump higher the more you have.
--- 2 = High Jump, Glides, Mermaid Kick, Dodge Roll. First glide/superglide turns into glide, next into superglide and past that it gets faster.
+-- 2 = High Jump, Glides, Mermaid Kick, Dodge Roll.
+-- First glide/superglide turns into glide, next into superglide and past that it gets faster.
 
 stackAbilities = 2
 
@@ -67,21 +68,21 @@ eotWSkip = 1
 randomShops = 2
 
 -- Unrandomize rewards
--- List the reward IDs from Rewards.txt that you want to unrandomize
+-- List the reward IDs from Rewards.lua that you want to unrandomize
 -- List them in VanillaRewards and set them to true to keep it vanilla,
 -- or false to put in a potion and keep the reward in the pool
 -- For example, if you want to unrandomize Sephiroth and Unknown
--- VanillaRewards = {[0x95] = false, [0x97] = false}
+-- VanillaRewards = {[150] = false, [152] = false}
 
-vanillaRewards = {[0x95] = false, [0x97] = false}
+vanillaRewards = {[150] = false, [152] = false}
 
 -- Unrandomize chests
--- List the chest IDs from Chests.txt that you want to unrandomize
+-- List the chest IDs from Chests.lua that you want to unrandomize
 -- For example, if you want to unrandomize 100 acre wood chests
--- VanillaChests = {[0xA7] = false, [0xA8] = false, [0xA9] = false, [0xAA] = false}
+-- VanillaChests = {[168] = false, [169] = false, [170] = false, [171] = false}
 -- However note that if the chest contains a reward, you should unrandomize that reward as well,
 -- else whatever ends up on that reward will be inaccessible
--- So you should also include 0x4C, 0x9B, 0x4D in VanillaRewards set to false
+-- So you should also include 77, 156, 78 in VanillaRewards set to false
 
 vanillaChests = {}
 

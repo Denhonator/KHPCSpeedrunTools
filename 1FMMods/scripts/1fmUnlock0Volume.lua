@@ -22,3 +22,6 @@ function _OnInit()
 		ConsolePrint("KH1 not detected, not running script")
 	end
 end
+
+function _OnFrame()
+end

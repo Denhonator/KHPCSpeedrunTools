@@ -111,13 +111,13 @@ cloud = {
 	"xa_pc_3000", "xa_pi_3000", "xa_pp_3000", "xa_ex_1040",
 	"xa_ex_3000", "xa_ex_3010", "xa_tz_3020"
 }
-	  
+
 duo = {
 	"xa_ex_1150", "xa_ex_1030", "xa_ex_1040", "xa_tz_3020"
 }
 
 pc1riku = {
-	"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010", 
+	"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010",
 	"xa_ex_1030", "xa_ex_1040"
 }
 
@@ -134,7 +134,7 @@ genie = {
 	"xa_ex_1010", "xa_di_1030", "xa_di_1020", "xa_di_1010",
 	"xa_aw_1030"
 }
-  
+
 trick = {
 	"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000",
 	"xa_nm_3000", "xa_ew_2040", "xa_di_1010", "xa_di_1020",
@@ -149,14 +149,14 @@ sabor = {
 }
 
 antisora = {
-	"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
+	"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020",
 	"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
 	"xa_ex_1030", "xa_ex_1040", "xa_pp_3000", "xa_ew_2040",
 	"xa_al_3010"
 }
 
 hook = {
-	"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
+	"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020",
 	"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
 	"xa_ex_1030", "xa_ex_1040", "xa_pp_3030", "xa_ew_2040",
 	"xa_al_3010", "xa_pc_3000", "xa_di_3000", "xa_al_3020",
@@ -165,7 +165,7 @@ hook = {
 }
 
 mal = {
-	"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
+	"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020",
 	"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1580",
 	"xa_ex_1030", "xa_ex_1040", "xa_ew_2040", "xa_pc_3000",
 	"xa_di_3000", "xa_he_3000", "xa_ew_2050", "xa_pc_3020",
@@ -180,7 +180,7 @@ dragmal = {
 }
 
 chern = {
-	"xa_lm_3030", "xa_ex_3010", "xa_he_3000", "xa_pi_3000", 
+	"xa_lm_3030", "xa_ex_3010", "xa_he_3000", "xa_pi_3000",
 	"xa_ex_1040", "xa_pp_3000", "xa_ex_1580", "xa_ex_1030",
 	"xa_di_1010", "xa_di_1020", "xa_di_1030", "xa_ex_1010",
 	"xa_ex_1160", "xa_pc_3000", "xa_he_3020", "xa_al_3010",

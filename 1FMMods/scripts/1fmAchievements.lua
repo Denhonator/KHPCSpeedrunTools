@@ -4,7 +4,7 @@ LUAGUI_DESC = "Achievement tracker for plat% speedruns"
 
 local canExecute = false
 local prevAch = {0,0}
-local curAch = {0,0} 
+local curAch = {0,0}
 local posDebugString = 0x3EB158
 
 local achievementList = {
@@ -81,7 +81,7 @@ function _OnInit()
 	end
 end
 
-function Track(achID)
+local function Track(achID)
 	local f = io.open("achievements.txt")
 	if not f then
 		local fw = io.open("achievements.txt", "w")

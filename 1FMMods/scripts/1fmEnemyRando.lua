@@ -4,16 +4,10 @@ LUAGUI_DESC = "Randomizes enemies"
 
 local counter = 0
 local fallcounter = 0
-local monitor = 0
-local lastMonitor = 0
-local hasChanged = false
-local lastAddr = 0
-local replaced = false
-local lastBlack = 0
 local bossLastHP = {0,0,0,0,0}
 local endfightTimer = 0
 local antisorabeaten = false
-				
+
 local addrs = {}
 
 local used = {}
@@ -21,44 +15,7 @@ local used = {}
 local canExecute = false
 local posDebugString = 0x3EB158
 
-function _OnInit()
-	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		ConsolePrint("KH1 detected, running script")
-		canExecute = true
-		require("Rando/enemyRandoTables")
-		if ReadByte(posDebugString) == 0x58 then
-			require("EpicGamesGlobal")
-		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			require("EpicGamesJP")
-		else
-			require("SteamGlobal") -- Global and JP equal
-		end
-		seedfile = io.open("randofiles/seed.txt", "r")
-		if seedfile ~= nil then
-			text = seedfile:read()
-			seedstring = text
-			seed = tonumber(text)
-			if seed == nil then
-				seed = Djb2(text)
-			end
-			math.randomseed(seed)
-			ConsolePrint("Found existing seed")
-		else
-			seedfile = io.open("randofiles/seed.txt", "w")
-			local newseed = os.time()
-			math.randomseed(newseed)
-			seedstring = string.format("%d", newseed)
-			seedfile:write(newseed)
-			ConsolePrint("Wrote new seed")
-		end
-		seedfile:close()
-		AddAddrs()
-	else
-		ConsolePrint("KH1 not detected, not running script")
-	end
-end
-
-function Djb2(str)
+local function Djb2(str)
 	hash = 5381
 
 	for c in string.gmatch(str, '.') do
@@ -68,18 +25,9 @@ function Djb2(str)
 	return hash
 end
 
-function RoomWarp(w, r)
-	WriteByte(soraHP, ReadByte(soraHP + 4))
-	WriteByte(warpType1, 5)
-	WriteByte(warpType2, 10)
-	WriteByte(worldWarp, w)
-	WriteByte(roomWarp, r)
-	WriteByte(warpTrigger, 2)
-end
-
-function PickRandom(t)
+local function PickRandom(t)
 	local s = ""
-	for i=1,10 do
+	for _=1,10 do
 		local s1 = t[math.random(#t)]
 		if used[s1] == nil or s == "" or used[s1] < used[s] then
 			s = s1
@@ -96,7 +44,7 @@ function PickRandom(t)
 	return s
 end
 
-function AddAddrs()
+local function AddAddrs()
 	for i=0,32 do
 		addrs[i + 1] = {}
 	end
@@ -208,9 +156,9 @@ function AddAddrs()
 	addrs[20][enemyAddresses[29]] = PickRandom(ansem4) --ansem3
 	addrs[21][enemyAddresses[29]] = PickRandom(ansem3) --ansem3
 
-	
+
 	local logfile = io.open("randofiles/enemyrandolog.txt", "w+")
-	for i=0,32 do
+	for i=0, 32 do
 		for key, value in pairs(addrs[i + 1]) do
 			ConsolePrint(string.format("Put %s at %x", value, key))
 			logfile:write(string.format("%x : %s\n", key, value))
@@ -219,9 +167,55 @@ function AddAddrs()
 	logfile:close()
 end
 
-function WriteString(addr, s)
+function _OnInit()
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		ConsolePrint("KH1 detected, running script")
+		canExecute = true
+		require("Rando/enemyRandoTables")
+		if ReadByte(posDebugString) == 0x58 then
+			require("EpicGamesGlobal")
+		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+			require("EpicGamesJP")
+		else
+			require("SteamGlobal") -- Global and JP equal
+		end
+		seedfile = io.open("randofiles/seed.txt", "r")
+		if seedfile ~= nil then
+			text = seedfile:read()
+			seedstring = text
+			seed = tonumber(text)
+			if seed == nil then
+				seed = Djb2(text)
+			end
+			math.randomseed(seed)
+			ConsolePrint("Found existing seed")
+		else
+			seedfile = io.open("randofiles/seed.txt", "w")
+			local newseed = os.time()
+			math.randomseed(newseed)
+			seedstring = string.format("%d", newseed)
+			seedfile:write(newseed)
+			ConsolePrint("Wrote new seed")
+		end
+		seedfile:close()
+		AddAddrs()
+	else
+		ConsolePrint("KH1 not detected, not running script")
+	end
+end
+
+local function RoomWarp(w, r)
+	WriteByte(soraHP, ReadByte(soraHP + 4))
+	WriteByte(warpType1, 5)
+	WriteByte(warpType2, 10)
+	WriteByte(worldWarp, w)
+	WriteByte(roomWarp, r)
+	WriteByte(warpTrigger, 2)
+end
+
+local function WriteString(addr, s)
 	local existed = true
-	for i=0,#s-1 do
+	for i=0, #s - 1 do
 		if ReadByte(addr + i) ~= string.byte(s, i + 1) then
 			existed = false
 		end
@@ -230,7 +224,7 @@ function WriteString(addr, s)
 	return existed
 end
 
-function Exceptions(addr)
+local function Exceptions(addr)
 	local input = ReadInt(inputAddress)
 	if input == 8 then
 		return true
@@ -248,19 +242,19 @@ function Exceptions(addr)
 	return not (ReadByte(addr) == 120 and ReadByte(addr + 1) == 97)
 end
 
-function BossAdjust(bossHP)
+local function BossAdjust(bossHP)
 	local w = ReadByte(world)
 	local r = ReadByte(room)
 	local addr = {0, 0, 0, 0, 0}
 	local e = {"", "", "", "", ""}
-	local heightAdjust = 0
+	local heightAdjust
 	local hp = {0, 0, 0, 0, 0}
 	local bossHPs = {bossHP, 0, 0, 0, 0}
 	local str = 0
 	local def = 0
 	local endArd = 0
 	local endtime = 300
-	
+
 	--Herc cup
 	if w == 11 and r == 2 and ReadInt(inTournament) ~= oldTournament and oldTournament == 13 then
 		if ReadByte(OCseed) == 9 then
@@ -296,8 +290,8 @@ function BossAdjust(bossHP)
 		def = 11
 		endArd = 340
 		endtime = 500
-	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags + 5) == 66 
-	and ReadShort(ardOff) == 386 and ReadByte(inCutscene) == 3 then
+	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags + 5) == 66
+				  and ReadShort(ardOff) == 386 and ReadByte(inCutscene) == 3 then
 		WriteShort(ardOff, 387)
 		ConsolePrint("Progress cutscene")
 	elseif w == 8 and r == 16 and ReadByte(cutsceneFlags + 8) == 70 then
@@ -333,7 +327,7 @@ function BossAdjust(bossHP)
 			antisorabeaten = false
 		end
 	elseif w == 13 and r == 8 and (ReadByte(cutsceneFlags + 13) == 80 or ReadByte(cutsceneFlags + 13) == 83)
-	and (ReadShort(ardOff) == 877 or ReadShort(ardOff) == 979) then
+				   and (ReadShort(ardOff) == 877 or ReadShort(ardOff) == 979) then
 		addr[1] = bossAdjustAddresses[19]
 		e[1] = addrs[13][enemyAddresses[53]]
 		hp[1] = 900
@@ -376,10 +370,10 @@ function BossAdjust(bossHP)
 		heightAdjust = e[1] == "xa_pc_3020" and 900 or heightAdjust
 		if heightAdjust > 0 and ReadFloat(addr[1] + 20) == 0 then
 			WriteFloat(addr[1] + 20, heightAdjust)
-			-- WriteInt(bittestRender, 4194304)
+			WriteInt(bittestRender, 4194304)
 		end
 	elseif w == 15 and r == 14 and ReadByte(cutsceneFlags + 14) == 110
-	and ReadShort(ardOff) == 103 then
+				   and ReadShort(ardOff) == 103 then
 		addr[1] = bossAdjustAddresses[17]
 		e[1] = addrs[15][enemyAddresses[102]]
 		hp[1] = 900
@@ -437,7 +431,7 @@ function BossAdjust(bossHP)
 			if heightAdjust > 0 and ReadFloat(addr[1] + 20) == -160 then
 				WriteFloat(addr[1] + 20, heightAdjust)
 				WriteFloat(addr[1] + 16, 200)
-				-- WriteInt(bittestRender, 1873)
+				WriteInt(bittestRender, 1873)
 			end
 		elseif ReadShort(ardOff) == 252 then
 			addr[1] = bossAdjustAddresses[16]
@@ -514,7 +508,7 @@ function BossAdjust(bossHP)
 		str = 40
 		def = 30
 	end
-	
+
 	if ReadInt(bossAdjustAddresses[7]) == 20224 then
 		for i=1,5 do
 			if hp[i] > 0 then
@@ -522,31 +516,32 @@ function BossAdjust(bossHP)
 			end
 		end
 	end
-	
+
 	local kills = 0
 	for i=1,5 do
 		if hp[i] == 0 then
 			break
 		end
-		
+
 		if string.find(e[i], "xa_di_") or string.find(e[i], "xa_ex_1010") then
 			hp[i] = hp[i] * 0.5
 		elseif string.find(e[i], "xa_pp_3010") ~= nil then
 			hp[i] = hp[i] * 0.3
 		end
-		
+
 		if hp[i] > 0 and ReadShort(bossHPs[i] + 4) ~= hp[i] then
 			WriteShort(bossHPs[i], hp[i])
 			WriteShort(bossHPs[i] + 4, hp[i])
 			WriteShort(bossHPs[i] + 16, str) --str
 			WriteShort(bossHPs[i] + 20, def) --def
 		end
+
 		if hp[i] > 0 and ReadInt(bossHPs[i]) == 0 and ReadByte(stateFlag) & 1 == 1 then
 			kills = kills + 1
 		end
-		
-		if string.find(e[i], "xa_di_1") ~= nil 
-		and ReadByte(combo) > 4 and ReadShort(bossHPs[i]) < bossLastHP[i] then
+
+		if ReadByte(combo) > 4 and string.find(e[i], "xa_di_1") ~= nil
+							   and ReadShort(bossHPs[i]) < bossLastHP[i] then
 			WriteFloat(addr[i] + 652, 0)
 		end
 		bossLastHP[i] = ReadShort(bossHPs[i])
@@ -578,7 +573,7 @@ function BossAdjust(bossHP)
 	end
 end
 
-function Fixes()
+local function Fixes()
 	local bossHP = bossAdjustAddresses[24]
 	if ReadByte(party1) == 255 and ReadByte(bossAdjustAddresses[27]) == 255 then
 		bossHP = bossAdjustAddresses[23]
@@ -586,7 +581,7 @@ function Fixes()
 	if ReadByte(world) == 13 and ReadByte(room) == 8 then
 		bossHP = bossAdjustAddresses[25]
 	end
-	
+
 	--Add Riku to PC1
 	if ReadByte(world) == 12 and ReadByte(worldFlagBase - 70) == 2 then
 		WriteByte(worldFlagBase - 70, 0)
@@ -601,7 +596,7 @@ end
 
 function _OnFrame()
 	local w = ReadByte(world)
-	
+
 	if w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 0 then
 		w = 17
 	elseif w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 1 then
@@ -613,12 +608,13 @@ function _OnFrame()
 	elseif w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 4 then
 		w = 21
 	end
-	
+
 	if canExecute and (ReadInt(blackFade) == 0 or ReadInt(white) == 128) and w > 0 and w ~= 255 then
 		local s = ""
 		for addr, v in pairs(addrs[w]) do
 			if not Exceptions(addr) then
-				local existed = WriteString(addr, v)
+				local existed
+				WriteString(addr, v)
 				if addr == enemyAddresses[93] then
 					existed = WriteString(addr + 192, v)
 				else
@@ -637,7 +633,6 @@ function _OnFrame()
 			heightAdjust = string.find(s, "xa_pc_3020") ~= nil and 900 or heightAdjust
 			ConsolePrint(s)
 		end
-		lastBlack = ReadInt(blackFade)
 	end
 	Fixes()
 	oldTournament = ReadInt(inTournament)

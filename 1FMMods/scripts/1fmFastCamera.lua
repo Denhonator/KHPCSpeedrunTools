@@ -32,16 +32,16 @@ function _OnFrame()
 	if canExecute and ReadByte(menu) == 0 then
 		local currentSpeedH = ReadFloat(curSpeedH)
 		local currentSpeedV = ReadFloat(curSpeedV)
-		
+
 		if ReadFloat(cameraCenter) > 1 then
 			WriteFloat(cameraCenter, ReadFloat(cameraCenter)-centerSpeed)
 		end
-		
+
 		if math.abs(ReadFloat(speed)) == 1.0 then -- This way it works for inverted camera
 			WriteFloat(speed, ReadFloat(speed) * overallSpeed)
 			WriteFloat(speed - 4, ReadFloat(speed - 4) * overallSpeed)
 		end
-		
+
 		if ReadFloat(curSpeedH) ~= 0 then
 			if math.abs(ReadFloat(cameraInputH)) > 0.05 then
 				maxH = math.max(currentSpeedH + ReadFloat(cameraInputH) * accelerationSpeed, -0.44)

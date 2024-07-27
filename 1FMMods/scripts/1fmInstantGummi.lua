@@ -23,12 +23,12 @@ end
 
 function _OnFrame()
 	if canExecute then
-		selection = ReadInt(gummiSelect)
-		curDest = ReadInt(dest)
+		local selection = ReadInt(gummiSelect)
+		local curDest = ReadInt(dest)
 		if curDest >= 40 then
 			WriteInt(gummiStart, selection)
 		else
-			
+
 			deepJungleState = ReadByte(cutsceneFlagBase) < 16
 			neverlandState = ReadByte(cutsceneFlagBase + 8) < 20
 
@@ -36,14 +36,14 @@ function _OnFrame()
 			WriteByte(worldWarpBase + 2, deepJungleState and 0 or 45)
 			WriteByte(worldWarpBase2, neverlandState and 6 or 7)
 			WriteByte(worldWarpBase2 + 2, neverlandState and 24 or 37)
-			
+
 			-- Replace HT and Atlantica with Monstro at first
 			if ReadByte(monstro) < 2 and (selection == 10 or selection == 9) then
 				selection = selection == 9 and 18 or 17
 			end
-			
+
 			-- Change warp to Hollow Bastion
-			if selection == 25 then 
+			if selection == 25 then
 				selection = 15
 				WriteInt(gummiSelect, selection)
 			end
@@ -53,7 +53,7 @@ function _OnFrame()
 				selection = 8
 				WriteInt(gummiSelect, selection)
 			end
-			
+
 			selection = selection > 20 and 0 or selection
 			WriteInt(dest, selection)
 			WriteInt(gummiStart, selection)

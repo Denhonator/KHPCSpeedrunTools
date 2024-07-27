@@ -32,13 +32,13 @@ function _OnFrame()
 			WriteByte(hookship, 0)
 			WriteString(posDebugString, "            Hook  ship  100%%!              ")
 		end
-		
+
 		if ReadByte(dest) == 13 and ReadByte(neverland) == 2 and ReadByte(posDebug1) == 0 and ReadInt(ingummi) == 0 then
 			WriteByte(posDebug1, debug1Value)
 			WriteByte(posDebug2, 1)
 			WriteString(posDebugString, "            Hook  ship  100%%               ")
 		end
-		
+
 		if (ReadByte(neverland) ~= 2 or ReadByte(dest) ~= 13) and ReadByte(posDebug1) == debug1Value then
 			WriteByte(posDebug1, 0)
 			WriteByte(posDebug2, 0)
