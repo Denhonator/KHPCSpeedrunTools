@@ -1,5 +1,5 @@
 LUAGUI_NAME = "1fmRandomizer"
-LUAGUI_AUTH = "denhonator"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Use with InstantGummi"
 
 local idFind = 0
