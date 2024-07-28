@@ -15,7 +15,7 @@ function _OnInit()
 			require("EpicGamesJP")
 		else
 			require("SteamGlobal") -- Global and JP equal
-			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
 				gravBreak = gravBreak - 0x80
 				zantHack = zantHack - 0x280
 				zantValue = zantValue + 512

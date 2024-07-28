@@ -16,7 +16,7 @@ function _OnInit()
             require("EpicGamesJP")
         else
             require("SteamGlobal") -- Global and JP equal
-            if ReadByte(posDebugString - 0xE40) ~= 0x58 then
+            if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
                 skipArray1 = skipArray1 - 0x280
                 skipArray2 = skipArray2 - 0x280
             end

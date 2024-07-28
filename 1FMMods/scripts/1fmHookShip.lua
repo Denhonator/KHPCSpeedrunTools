@@ -16,8 +16,8 @@ function _OnInit()
 			require("EpicGamesJP")
 		else
 			posDebugString = posDebugString - 0xE40
-			if ReadByte(posDebugString) ~= 0x58 then
-				posDebugString = posDebugString - 0x80 -- JP String
+			if ReadByte(posDebugString) ~= 0x58 then -- Steam JP specific changes
+				posDebugString = posDebugString - 0x80
 			end
 			require("SteamGlobal") -- Global and JP equal
 		end

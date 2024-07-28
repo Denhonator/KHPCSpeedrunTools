@@ -15,7 +15,7 @@ function _OnInit()
 			require("EpicGamesJP")
 		else
 			require("SteamGlobal") -- Global and JP equal
-			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
 				height = height - 0x80
 			end
 		end

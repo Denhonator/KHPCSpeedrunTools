@@ -242,6 +242,11 @@ function _OnInit()
 			require("EpicGamesJP")
 		else
 			require("SteamGlobal") -- Global and JP equal
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
+				superglideBaseSpeed = 1561532
+				superglideSpeedHack = superglideSpeedHack - 0x280
+				mermaidKickSpeed = mermaidKickSpeed - 0x80
+			end
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
