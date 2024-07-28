@@ -1,8 +1,5 @@
 ## Update status
-All mods have been updated to work with Epic Games release 1.0.0.9 and Steam except:
-- Chaos
-- EnemyRando
-- RandoSomeLogic
+All mods have been updated to work with Epic Games release 1.0.0.9 and Steam
 
 ## Disclaimer:
 Not all of these scripts are allowed in speedruns, the following are allowed:
@@ -10,12 +7,22 @@ Not all of these scripts are allowed in speedruns, the following are allowed:
 - Save Anywhere (for soft resetting only)
 - Fast Camera
 - 4 by 3
+- Volume 0
 
 ## How to use:
-- Get LuaBackend https://github.com/Sirius902/LuaBackend or LuaFrontend https://github.com/TopazTK/LuaFrontend
+
+### LuaBackend
+- Get LuaBackend https://github.com/Sirius902/LuaBackend
 - Follow the instructions on those pages on how to set up the scripts
-- Copy the io_packages into the same folder as the .lua mods (this contains the actual addresses)
-- You can have the scripts in a single folder to cover both Steam and Epic games (it will read from whatever you set it to for both)
+- Create or copy the `io_packages` folder (can be found inside scripts here) inside of your kh1 scripts folder from the previous install step. (Should have something like scripts/kh1/io_packages)
+- If you created the folder yourself copy the version lua files for your version from the repo into it, ie. `EpicGamesGlobal.lua` for English Epic Games.
+- As a note you do not need to have the scripts in more than one place if you are playing across both Epic and Steam
+
+### LuaFrontend
+- Get LuaFrontend https://github.com/TopazTK/LuaFrontend
+- Follow the instructions on those pages on how to set up the scripts
+- Create or copy the `io_packages` folder (can be found inside scripts here) inside of your LuaFrontend folder from the previous install step. (Should be on the same level as the `LuaFrontend.exe`)
+- If you created the folder yourself copy the version lua files for your version from the repo into it, ie. `EpicGamesGlobal.lua` for English Epic Games.
 
 ## SaveAnywhere:
 - In-game, press L1+L2+R2+Select (or equivalent on your input device)
@@ -67,6 +74,7 @@ Not all of these scripts are allowed in speedruns, the following are allowed:
 - Randomizes items, level ups, rewards, magic, trinities and chests
 - If seed.txt exists, it will try to use it. Otherwise, the file will be created with a random seed.
 - randofiles folder should be placed in the same folder as the .dll when using Luabackend Hook by Sirius
+    - This now only includes the translations, seed, save, and spoilers. All other info is in .lua files located in `io_packages/Rando` and should be placed in the same location (inside their folders) as the script itself ie. rando mod is at `scripts/kh1/1fmRandoSomeLogic.lua` and the other data is `scripts/kh1/io_packages/Rando/chests.lua`
 - Combine with SaveAnywhere and InstantGummi to get to world map right away. Everything will be open.
 
 ## EnemyRando:

@@ -17,11 +17,11 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			vars = require("EpicGamesGlobal")
+			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			vars = require("EpicGamesJP")
-		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
-			vars = require("SteamGlobal") -- Global and JP equal
+			require("EpicGamesJP")
+		else
+			require("SteamGlobal") -- Global and JP equal
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -29,33 +29,33 @@ function _OnInit()
 end
 
 function _OnFrame()
-	if canExecute and ReadByte(vars.menu) == 0 then
-		local currentSpeedH = ReadFloat(vars.curSpeedH)
-		local currentSpeedV = ReadFloat(vars.curSpeedV)
-		
-		if ReadFloat(vars.cameraCenter) > 1 then
-			WriteFloat(vars.cameraCenter, ReadFloat(vars.cameraCenter)-centerSpeed)
+	if canExecute and ReadByte(menu) == 0 then
+		local currentSpeedH = ReadFloat(curSpeedH)
+		local currentSpeedV = ReadFloat(curSpeedV)
+
+		if ReadFloat(cameraCenter) > 1 then
+			WriteFloat(cameraCenter, ReadFloat(cameraCenter)-centerSpeed)
 		end
-		
-		if math.abs(ReadFloat(vars.speed)) == 1.0 then -- This way it works for inverted camera
-			WriteFloat(vars.speed, ReadFloat(vars.speed) * overallSpeed)
-			WriteFloat(vars.speed - 4, ReadFloat(vars.speed - 4) * overallSpeed)
+
+		if math.abs(ReadFloat(speed)) == 1.0 then -- This way it works for inverted camera
+			WriteFloat(speed, ReadFloat(speed) * overallSpeed)
+			WriteFloat(speed - 4, ReadFloat(speed - 4) * overallSpeed)
 		end
-		
-		if ReadFloat(vars.curSpeedH) ~= 0 then
-			if math.abs(ReadFloat(vars.cameraInputH)) > 0.05 then
-				maxH = math.max(currentSpeedH + ReadFloat(vars.cameraInputH) * accelerationSpeed, -0.44)
-				WriteFloat(vars.curSpeedH, math.min(maxH, 0.44))
+
+		if ReadFloat(curSpeedH) ~= 0 then
+			if math.abs(ReadFloat(cameraInputH)) > 0.05 then
+				maxH = math.max(currentSpeedH + ReadFloat(cameraInputH) * accelerationSpeed, -0.44)
+				WriteFloat(curSpeedH, math.min(maxH, 0.44))
 			else
-				WriteFloat(vars.curSpeedH, currentSpeedH * (1.0 - deaccelerationSpeed * 10))
+				WriteFloat(curSpeedH, currentSpeedH * (1.0 - deaccelerationSpeed * 10))
 			end
 		end
-		if ReadFloat(vars.curSpeedV) ~= 0 then
-			if math.abs(ReadFloat(vars.cameraInputV)) > 0.05 then
-				maxV = math.max(currentSpeedV - ReadFloat(vars.cameraInputV) * accelerationSpeedV, -0.44)
-				WriteFloat(vars.curSpeedV, math.min(maxV, 0.44))
+		if ReadFloat(curSpeedV) ~= 0 then
+			if math.abs(ReadFloat(cameraInputV)) > 0.05 then
+				maxV = math.max(currentSpeedV - ReadFloat(cameraInputV) * accelerationSpeedV, -0.44)
+				WriteFloat(curSpeedV, math.min(maxV, 0.44))
 			else
-				WriteFloat(vars.curSpeedV, currentSpeedV * (1.0 - deaccelerationSpeedV * 10))
+				WriteFloat(curSpeedV, currentSpeedV * (1.0 - deaccelerationSpeedV * 10))
 			end
 		end
 	end

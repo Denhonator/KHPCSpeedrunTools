@@ -10,13 +10,13 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			vars = require("EpicGamesGlobal")
+			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			vars = require("EpicGamesJP")
+			require("EpicGamesJP")
 		else
-			vars = require("SteamGlobal") -- Global and JP equal
-			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
-				vars.height = vars.height - 0x80
+			require("SteamGlobal") -- Global and JP equal
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
+				height = height - 0x80
 			end
 		end
 	else
@@ -26,6 +26,6 @@ end
 
 function _OnFrame()
 	if canExecute then
-		WriteFloat(vars.height, 12.0) -- Sets aspect ratio to 16:12 = 4:3
+		WriteFloat(height, 12.0) -- Sets aspect ratio to 16:12 = 4:3
 	end
 end

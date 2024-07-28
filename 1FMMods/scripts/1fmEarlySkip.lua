@@ -11,34 +11,34 @@ function _OnInit()
         canExecute = true
         ConsolePrint("KH1 detected, running script")
         if ReadByte(posDebugString) == 0x58 then
-            vars = require("EpicGamesGlobal")
+            require("EpicGamesGlobal")
         elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-            vars = require("EpicGamesJP")
+            require("EpicGamesJP")
         else
-            vars = require("SteamGlobal") -- Global and JP equal
-            if ReadByte(posDebugString - 0xE40) ~= 0x58 then
-                vars.skipArray1 = vars.skipArray1 - 0x280
-                vars.skipArray2 = vars.skipArray2 - 0x280
+            require("SteamGlobal") -- Global and JP equal
+            if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
+                skipArray1 = skipArray1 - 0x280
+                skipArray2 = skipArray2 - 0x280
             end
         end
-        WriteInt(vars.skipArray1, 3284180495)
-        WriteInt(vars.skipArray2, 3682930804)
+        WriteInt(skipArray1, 3284180495)
+        WriteInt(skipArray2, 3682930804)
     else
         ConsolePrint("KH1 not detected, not running script")
     end
 end
 
 function _OnFrame()
-    if canExecute and ReadInt(vars.cutscene) == 1 then
-        curFade = math.min(ReadInt(vars.fadeBase) + 20, 128)
+    if canExecute and ReadInt(cutscene) == 1 then
+        curFade = math.min(ReadInt(fadeBase) + 20, 128)
         if curFade - 30 > 0 and lastFade < curFade then
-            WriteInt(vars.white, 0) --white screen off
+            WriteInt(white, 0) --white screen off
             for i=0,3 do
-                WriteInt(vars.fadeBase + (i * 4), curFade) --canskip
+                WriteInt(fadeBase + (i * 4), curFade) --canskip
             end
-            WriteInt(vars.skipFlag1, 0) --canskip
-            WriteInt(vars.skipFlag2, 0) --canskip
-            WriteInt(vars.skipFlag2 + 4, 0) --canskip
+            WriteInt(skipFlag1, 0) --canskip
+            WriteInt(skipFlag2, 0) --canskip
+            WriteInt(skipFlag2 + 4, 0) --canskip
         end
         lastFade = curFade
     end

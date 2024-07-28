@@ -4,7 +4,7 @@ LUAGUI_DESC = "Achievement tracker for plat% speedruns"
 
 local canExecute = false
 local prevAch = {0,0}
-local curAch = {0,0} 
+local curAch = {0,0}
 local posDebugString = 0x3EB158
 
 local achievementList = {
@@ -70,18 +70,18 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			vars = require("EpicGamesGlobal")
+			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			vars = require("EpicGamesJP")
-		elseif ReadByte(posDebugString - 0xE40) == 0x58 then
-			vars = require("SteamGlobal") -- Global and JP equal
+			require("EpicGamesJP")
+		else
+			require("SteamGlobal") -- Global and JP equal
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
 end
 
-function Track(achID)
+local function Track(achID)
 	local f = io.open("achievements.txt")
 	if not f then
 		local fw = io.open("achievements.txt", "w")
@@ -109,8 +109,8 @@ end
 
 function _OnFrame()
 	if canExecute then
-		curAch[1] = ReadInt(vars.ach)
-		curAch[2] = ReadInt(vars.ach+4)
+		curAch[1] = ReadInt(ach)
+		curAch[2] = ReadInt(ach+4)
 
 		for i=1,2 do
 			local dif = curAch[i] - prevAch[i]

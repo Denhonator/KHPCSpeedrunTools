@@ -10,15 +10,15 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			vars = require("EpicGamesGlobal")
+			require("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			vars = require("EpicGamesJP")
+			require("EpicGamesJP")
 		else
-			vars = require("SteamGlobal") -- Global and JP equal
-			if ReadByte(posDebugString - 0xE40) ~= 0x58 then
-				vars.gravBreak = vars.gravBreak - 0x80
-				vars.zantHack = vars.zantHack - 0x280
-				vars.zantValue = vars.zantValue + 512
+			require("SteamGlobal") -- Global and JP equal
+			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
+				gravBreak = gravBreak - 0x80
+				zantHack = zantHack - 0x280
+				zantValue = zantValue + 512
 			end
 		end
 	else
@@ -28,9 +28,9 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadShort(vars.zantHack) ~= vars.zantValue then
-			WriteFloat(vars.gravBreak, -1.0)
-			WriteShort(vars.zantHack, vars.zantValue) -- 88 offset from original value
+		if ReadShort(zantHack) ~= zantValue then
+			WriteFloat(gravBreak, -1.0)
+			WriteShort(zantHack, zantValue) -- 88 offset from original value
 		end
 	end
 end

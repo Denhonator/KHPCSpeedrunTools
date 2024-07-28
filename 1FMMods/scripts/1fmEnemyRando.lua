@@ -1,226 +1,184 @@
 LUAGUI_NAME = "EnemyRando"
-LUAGUI_AUTH = "denhonator"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Randomizes enemies"
 
-local offset = 0x3A0606
-local world = 0x233CADC - offset
-local room = world + 0x68
-local blackfade = 0x4D93B8 - offset
-local whitefade = 0x233C49C - offset
-local cutsceneFlags = 0x2DE65D0-0x200 - offset
-local worldFlagBase = 0x2DE79D0+0x6C - offset
-local ardOff = 0x2394BB0 - offset
-local OCard = 0x23A23B0 - offset
-local OCseed = 0x2389480 - offset
-local state = 0x2863958 - offset
-local bittestRender = 0x232A470 - offset
-local combo = 0x2DE24B4 - offset
-local soraHP = 0x2D592CC - offset
-local soraPointer = 0x2534680 - offset
-local bossPointer = 0x2D338D0 - offset
-local malPointer = 0x2D338A8 - offset
-local warpTrigger = 0x22E86DC - offset
-local warpType1 = 0x233C240 - offset
-local warpType2 = 0x22E86E0 - offset
-local worldWarp = 0x233CB70 - offset
-local inCutscene = 0x2378B60 - offset
-local roomWarp = worldWarp + 4
 local counter = 0
 local fallcounter = 0
-local monitor = 0
-local lastMonitor = 0
-local hasChanged = false
-local lastAddr = 0
-local replaced = false
-local lastBlack = 0
 local bossLastHP = {0,0,0,0,0}
 local endfightTimer = 0
 local antisorabeaten = false
 
-local normal = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
-				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
-				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
-				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
-				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
-				"xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2230", "xa_ex_2250", "xa_ex_2270",
-				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330", "xa_ex_2340",
-				"xa_pp_3020"}
-				
-local powerwild = {"xa_ew_2010", "xa_ew_2020",
-				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
-				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
-				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
-				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
-				"xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2230", "xa_ex_2250", "xa_ex_2270",
-				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330", "xa_ex_2340",
-				"xa_pp_3020"}
-				
-local lite = {"xa_ew_2010", "xa_ew_2020",
-				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
-				"xa_ex_2060", "xa_ex_2080", "xa_ex_2090",
-				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
-				"xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
-				"xa_ex_2200", "xa_ex_2210", "xa_ex_2220", "xa_ex_2250",
-				"xa_ex_2290", "xa_ex_2320"}
-				
-local shadows = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
-				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
-				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
-				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
-				"xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
-				"xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2230", "xa_ex_2240",
-				"xa_ex_2250", "xa_ex_2270",
-				"xa_ex_2290", "xa_ex_2320", "xa_ex_2330",
-				"xa_ex_2340", "xa_ex_2350", "xa_pp_3020"}
-				
-local bandit = {"xa_ew_2010", "xa_ew_2020", "xa_ew_2030",
-				"xa_ex_2010", "xa_ex_2020", "xa_ex_2030", "xa_ex_2040",
-				"xa_ex_2050", "xa_ex_2060", "xa_ex_2070", "xa_ex_2080", "xa_ex_2090",
-				"xa_ex_2100", "xa_ex_2110", "xa_ex_2120", "xa_ex_2130", "xa_ex_2140",
-				"xa_ex_2150", "xa_ex_2160", "xa_ex_2170", "xa_ex_2180",
-				"xa_ex_2200", "xa_ex_2210",
-				"xa_ex_2220", "xa_ex_2230", "xa_ex_2250", "xa_ex_2270",
-				"xa_ex_2290", "xa_ex_2320", "xa_ex_2340",
-				"xa_pp_3020"}
-				
-local boss = {"xa_he_3020", "xa_di_3000", "xa_ew_3020", "xa_al_3010", "xa_nm_3000",
-			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_ex_1630", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
-			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_ex_1040",
-			  "xa_ex_3000", "xa_ex_3010", "xa_pc_3020", "xa_tz_3020"}
-			  
-local herc = {"xa_he_3020", "xa_di_3000", "xa_al_3010", "xa_nm_3000",
-			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_ex_1630", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
-			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_ex_1040",
-			  "xa_ex_3000", "xa_ex_3010", "xa_tz_3020"}
-			  
-local ansem1 = {"xa_he_3020", "xa_ew_3020", "xa_al_3010", "xa_nm_3000", "xa_di_1020",
-			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010", "xa_di_1010",
-			  "xa_pi_3000", "xa_pp_3000", "xa_pp_3030", "xa_ex_1040", "xa_di_1030",
-			  "xa_ex_3010", "xa_pc_3020"}
-			  
-local ansem2 = {"xa_he_3020", "xa_nm_3000","xa_ex_1010", "xa_di_1010", "xa_pp_3030",
-			  "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
-			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
-			  "xa_ex_3000", "xa_ex_3010", "xa_pc_3020", "xa_pp_3010"}
-			  
-local ansem3 = {"xa_he_3020", "xa_nm_3000","xa_ex_1010", "xa_di_1010",
-			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
-			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
-			  "xa_ex_3000", "xa_pc_3020", "xa_pp_3010"}
-			  
-local ansem4 = {"xa_nm_3000","xa_ex_1010", "xa_di_1010",
-			  "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_he_1010", "xa_he_3000", "xa_pc_3000", "xa_ex_1010",
-			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040", "xa_di_1020", "xa_di_1030",
-			  "xa_pc_3020", "xa_pp_3010"}
-
-local cloud = {"xa_he_3020", "xa_di_3000", "xa_al_3010", "xa_nm_3000",
-			  "xa_al_3050", "xa_ex_1580", "xa_ex_1160", "xa_ex_1150", "xa_ex_1030",
-			  "xa_ex_1630", "xa_he_1010", "xa_he_3000", "xa_pc_3000",
-			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040",
-			  "xa_ex_3000", "xa_ex_3010", "xa_tz_3020"}
-	  
-local duo = {"xa_ex_1150", "xa_ex_1030", "xa_ex_1040", "xa_tz_3020"}
-			  
-local parasite = {"xa_he_1000"}
-local pc1riku = {"xa_ex_1160", "xa_di_1010", "xa_di_1030", "xa_ex_1010", 
-				"xa_ex_1030", "xa_ex_1040"}
-
-local jafar = {"xa_di_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020",
-			  "xa_ex_1160", "xa_ex_1150", "xa_ex_1030", "xa_di_1030",
-			  "xa_pc_3000", "xa_he_1030", "xa_ex_1010",
-			  "xa_pi_3000", "xa_pp_3000", "xa_ex_1040"}
-			  
-local genie = {"xa_ex_1150", "xa_ex_1030", "xa_tz_3000",
-			  "xa_he_1030", "xa_pi_3000", "xa_ex_1040", "xa_ex_4010",
-			  "xa_ex_2310", "xa_ex_1010", "xa_di_1030", "xa_di_1020",
-			  "xa_di_1010", "xa_aw_1030"}
-  
-local trick = {"xa_he_3020", "xa_ex_2310", "xa_he_3000", "xa_pi_3000", "xa_nm_3000",
-				"xa_ew_2040", "xa_di_1010", "xa_di_1020", "xa_di_1030", "xa_al_3020"}
-				
-local sabor = {"xa_he_3020", "xa_he_3000", "xa_pi_3000", "xa_nm_3000", "xa_ex_1010",
-				"xa_ew_2040", "xa_di_1010", "xa_di_1020", "xa_di_1030", "xa_al_3020",
-				"xa_pc_3000", "xa_ex_1580", "xa_ex_1160", "xa_ex_1030", "xa_ex_1040"}
-				
-sabor = {"xa_tz_3000"}
-				
-local antisora = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
-					"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
-					"xa_ex_1030", "xa_ex_1040", "xa_pp_3000", "xa_ew_2040",
-					"xa_al_3010"}
-					
-local hook = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
-				"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1150",
-				"xa_ex_1030", "xa_ex_1040", "xa_pp_3030", "xa_ew_2040",
-				"xa_al_3010", "xa_pc_3000", "xa_di_3000", "xa_al_3020",
-				"xa_ew_2050", "xa_he_1010", "xa_pc_3020", "xa_tz_3000",
-				"xa_pp_3010", "xa_lm_3030", "xa_ex_1580"}
-				
-local mal = {"xa_pi_3000", "xa_nm_3000", "xa_di_1010", "xa_di_1020", 
-				"xa_di_1030", "xa_ex_1010", "xa_ex_1160", "xa_ex_1580",
-				"xa_ex_1030", "xa_ex_1040", "xa_ew_2040",
-				"xa_pc_3000", "xa_di_3000", "xa_he_3000",
-				"xa_ew_2050", "xa_pc_3020", "xa_tz_3000",
-				"xa_pp_3010", "xa_lm_3030", "xa_ex_1010"}
-				
-local dragmal = {"xa_ex_3010", "xa_ex_1040", "xa_ex_1580",
-				"xa_he_3000", "xa_nm_3000", "xa_pp_3000", "xa_di_3000",
-				"xa_di_1020", "xa_pc_3020", "xa_ex_1030", "xa_ex_1160", 
-				"xa_di_1010", "xa_lm_3030", "xa_pi_3000", "xa_ex_1010",
-				"xa_di_1030"}
-				
-local chern = {"xa_lm_3030", "xa_ex_3010", "xa_he_3000", "xa_pi_3000", 
-				"xa_ex_1040", "xa_pp_3000", "xa_ex_1580", "xa_ex_1030",
-				"xa_di_1010", "xa_di_1020", "xa_di_1030", "xa_ex_1010",
-				"xa_ex_1160", "xa_pc_3000", "xa_he_3020", "xa_al_3010",
-				"xa_ew_2040", "xa_ew_2050"}
-		
-local behe = {"xa_lm_3030", "xa_ew_2040", "xa_ex_2310"}
-					
-local lsb = {"xa_ex_2010", "xa_ex_2030", "xa_ex_2070", "xa_ex_2090", "xa_ex_2100"}
-
-local riku1 = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
-				"xa_ex_1030", "xa_ex_1040", "xa_pi_3000",
-				"xa_pp_3000", "xa_ew_2040", "xa_ew_2050", "xa_he_3000",
-				"xa_tz_3000", "xa_ex_1580"}
-				
-local riku2 = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
-				"xa_ex_1030", "xa_ex_1040", "xa_ex_1150", "xa_pi_3000",
-				"xa_pp_3000", "xa_ew_2040", "xa_ew_2050", "xa_he_3000",
-				"xa_tz_3000", "xa_ex_1160", "xa_ex_3010", "xa_lm_3030",
-				"xa_al_3010"}
-
-local leon = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
-				"xa_ex_1160", "xa_ex_1040", "xa_pi_3000",
-				"xa_pp_3000", "xa_ew_2040", "xa_ew_2050", "xa_he_3000",
-				"xa_tz_3000", "xa_he_3020", "xa_lm_3030", "xa_ex_1580"}
-				
-local dside = {"xa_ex_1010", "xa_di_1010", "xa_di_1020", "xa_di_1030",
-				"xa_ex_1040", "xa_pi_3000", "xa_ex_1580", "xa_ex_1030",
-				"xa_pp_3000", "xa_ew_2040", "xa_he_3000",
-				"xa_tz_3000", "xa_he_3020", "xa_lm_3030", "xa_ex_1160"}
-
-local test = {"pc_6730.moa"}
-				
 local addrs = {}
 
 local used = {}
 
 local canExecute = false
+local posDebugString = 0x3EB158
+
+local function Djb2(str)
+	hash = 5381
+
+	for c in string.gmatch(str, '.') do
+		hash = ((hash << 5) + hash) + string.byte(c)
+	end
+
+	return hash
+end
+
+local function PickRandom(t)
+	local s = ""
+	for _=1,10 do
+		local s1 = t[math.random(#t)]
+		if used[s1] == nil or s == "" or used[s1] < used[s] then
+			s = s1
+		end
+		if used[s] == nil then
+			break
+		end
+	end
+	if used[s] == nil then
+		used[s] = 1
+	else
+		used[s] = used[s] + 1
+	end
+	return s
+end
+
+local function AddAddrs()
+	for i=0,32 do
+		addrs[i + 1] = {}
+	end
+	--addrs[3][enemyAddresses[82]] = PickRandom(normal) --2nd district yellow
+	--addrs[3][enemyAddresses[81]] = PickRandom(normal) --2nd district blue
+	--addrs[3][enemyAddresses[80]] = PickRandom(normal) --2nd district red
+	addrs[3][enemyAddresses[78]] = PickRandom(lite) --2nd district shadow
+	addrs[3][enemyAddresses[97]] = PickRandom(leon) --tt leon
+	--addrs[3][enemyAddresses[79]] = PickRandom(normal) --2nd district soldier
+	addrs[3][enemyAddresses[77]] = PickRandom(lite) --alleyway shadow
+	addrs[3][enemyAddresses[76]] = PickRandom(lite) --alleyway soldier
+	addrs[3][enemyAddresses[96]] = PickRandom(normal) --1st district shadow
+	addrs[3][enemyAddresses[94]] = PickRandom(normal) --3rd district shadow
+	addrs[3][enemyAddresses[93]] = PickRandom(lite) --3rd district soldier
+	addrs[3][enemyAddresses[48]] = PickRandom(normal) --gizmo shadow
+	--addrs[3][enemyAddresses[95]] = test[math.random(#test)] --guard armor
+	--addrs[5][enemyAddresses[67]] = boss[math.random(#boss)] --treehouse sabor
+	addrs[5][enemyAddresses[61]] = PickRandom(powerwild) --camp powerwild
+	addrs[5][enemyAddresses[59]] = PickRandom(powerwild) --climbing trees powerwild
+	addrs[5][enemyAddresses[66]] = PickRandom(lite) --treehouse powerwild
+	addrs[5][enemyAddresses[30]] = PickRandom(powerwild) --cliffs powerwild
+	addrs[5][enemyAddresses[74]] = PickRandom(lite) --bamboo powerwild
+	addrs[5][enemyAddresses[75]] = PickRandom(sabor) --bamboo sabor
+	--addrs[5][enemyAddresses[31]] = boss[math.random(#boss)] --cliff clayton
+	--addrs[5][enemyAddresses[32]] = test[math.random(#test)] --cliff clayton & stealth sneak
+	--addrs[4][enemyAddresses[3]] = PickRandom(normal) --rabbithole shadow
+	--addrs[4][enemyAddresses[10]] = PickRandom(normal) --lotus forest soldier
+	addrs[4][enemyAddresses[62]] = PickRandom(trick) --trickmaster
+	--addrs[11][enemyAddresses[85]] = PickRandom(normal) --oc shadow
+	addrs[11][enemyAddresses[83]] = PickRandom(cloud) --oc cloud
+	addrs[11][enemyAddresses[90]] = PickRandom(herc) --oc herc
+	addrs[11][enemyAddresses[20]] = PickRandom(duo) --oc leon
+	addrs[11][enemyAddresses[21]] = PickRandom(duo) --oc yuffie
+	--addrs[11][enemyAddresses[91]] = cerb[math.random(#cerb)] --oc cerb
+	--addrs[11][enemyAddresses[84]] = PickRandom(normal) --oc soldier
+	--addrs[11][enemyAddresses[86]] = PickRandom(normal) --oc large body
+	--addrs[11][enemyAddresses[87]] = PickRandom(normal) --oc red
+	--addrs[11][enemyAddresses[88]] = PickRandom(normal) --oc blue
+	--addrs[11][enemyAddresses[89]] = PickRandom(normal) --oc blue
+	addrs[8][enemyAddresses[19]] = PickRandom(bandit) --alley bandit
+	addrs[8][enemyAddresses[16]] = PickRandom(lite) --mainstreet bandit
+	addrs[8][enemyAddresses[73]] = PickRandom(bandit) --plaza bandit
+	addrs[8][enemyAddresses[57]] = PickRandom(lite) --desert: cave bandit
+	addrs[8][enemyAddresses[12]] = PickRandom(bandit) --bazaar bandit
+	--addrs[8][enemyAddresses[44]] = test[math.random(#test)] --pot cent 1
+	--addrs[8][enemyAddresses[45]] = test[math.random(#test)] --pot cent 2
+	--addrs[8][enemyAddresses[43]] = test[math.random(#test)] --pot cent pot spider
+	--addrs[8][enemyAddresses[46]] = test[math.random(#test)] --pot cent pot spider
+	--addrs[8][enemyAddresses[58]] = test[math.random(#test)] --tiger head
+	--addrs[8][enemyAddresses[40]] = PickRandom(lite) --cave entrance bandit
+	--addrs[8][enemyAddresses[39]] = PickRandom(bandit) --cave hall air soldier
+	--addrs[8][enemyAddresses[23]] = PickRandom(lite) --bottomless shadow
+	addrs[8][enemyAddresses[24]] = PickRandom(jafar) --jafar
+	addrs[8][enemyAddresses[25]] = PickRandom(genie) --genie
+	--addrs[8][enemyAddresses[34]] = test[math.random(#test)] --genie jafar
+	--addrs[12][enemyAddresses[26]] = PickRandom(normal) --chamber 1 ghost
+	--addrs[12][enemyAddresses[54]] = PickRandom(normal) --chamber 2 airsoldier
+	--addrs[12][enemyAddresses[55]] = PickRandom(normal) --chamber 5 ghost
+	addrs[12][enemyAddresses[50]] = PickRandom(parasite) --pc1
+	addrs[12][enemyAddresses[51]] = PickRandom(pc1riku) --pc1 riku
+	--addrs[12][enemyAddresses[49]] = test[math.random(#test)] --pc2
+	--addrs[10][enemyAddresses[72]] = PickRandom(lite) --square ghost
+	--addrs[10][enemyAddresses[64]] = PickRandom(lite) --graveyard ghost
+	--addrs[10][enemyAddresses[68]] = PickRandom(normal) --moonlight hill whight
+	--addrs[10][enemyAddresses[38]] = PickRandom(normal) --bridge whight
+	--addrs[10][enemyAddresses[98]] = PickRandom(lite) --manor whight
+	--addrs[10][enemyAddresses[4]] = test[math.random(#test)] --lock
+	--addrs[10][enemyAddresses[5]] = test[math.random(#test)] --shock
+	--addrs[10][enemyAddresses[6]] = test[math.random(#test)] --barrel
+	--addrs[10][enemyAddresses[37]] = test[math.random(#test)] --oogie
+	--addrs[10][enemyAddresses[36]] = test[math.random(#test)] --oogie gargoyles
+	addrs[13][enemyAddresses[33]] = PickRandom(normal) --ship hold anti sora
+	addrs[13][enemyAddresses[17]] = PickRandom(normal) --ship hold anti sora
+	addrs[13][enemyAddresses[18]] = PickRandom(normal) --ship hold anti sora
+	addrs[13][enemyAddresses[42]] = PickRandom(normal) --ship galley anti sora
+	addrs[13][enemyAddresses[35]] = PickRandom(antisora) --anti sora
+	--addrs[13][enemyAddresses[52]] = PickRandom(normal) --ship pirate
+	addrs[13][enemyAddresses[53]] = PickRandom(hook) --hook
+	addrs[15][enemyAddresses[60]] = PickRandom(riku1) --riku1
+	addrs[15][enemyAddresses[56]] = PickRandom(normal) --tower wyvern
+	addrs[15][enemyAddresses[15]] = PickRandom(normal) --gates wyvern
+	addrs[15][enemyAddresses[14]] = PickRandom(normal) --base level darkball
+	addrs[15][enemyAddresses[99]] = PickRandom(normal) --waterway defender
+	--addrs[15][enemyAddresses[41]] = PickRandom(normal) --lift stop defender
+	addrs[15][enemyAddresses[69]] = PickRandom(mal) --maleficent
+	addrs[15][enemyAddresses[65]] = PickRandom(dragmal) --dragon maleficent
+	addrs[15][enemyAddresses[102]] = PickRandom(riku2) --riku2
+	addrs[15][enemyAddresses[47]] = PickRandom(behe) --HB behemoth
+	addrs[16][enemyAddresses[71]] = PickRandom(normal) --EotW Invisible
+	addrs[16][enemyAddresses[70]] = PickRandom(normal) --EotW Darkball
+	addrs[16][enemyAddresses[92]] = PickRandom(normal) --TT Terminal Solider
+	addrs[16][enemyAddresses[1]] = PickRandom(normal) --WL Terminal Wizard
+	addrs[16][enemyAddresses[7]] = PickRandom(normal) --OC Terminal Air Solider
+	addrs[16][enemyAddresses[9]] = PickRandom(normal) --DJ Terminal Powerwild
+	addrs[16][enemyAddresses[11]] = PickRandom(normal) --AG Terminal Bandit
+	addrs[16][enemyAddresses[63]] = PickRandom(normal) --AT Terminal Neon
+	addrs[16][enemyAddresses[8]] = PickRandom(normal) --HT Terminal Ghost
+	addrs[16][enemyAddresses[13]] = PickRandom(normal) --NL Terminal Pirate
+	addrs[16][enemyAddresses[2]] = PickRandom(normal) --HB Terminal Invisible
+	addrs[16][enemyAddresses[22]] = PickRandom(chern) --chernabog
+	addrs[16][enemyAddresses[100]] = PickRandom(ansem1) --ansem1
+	addrs[17][enemyAddresses[100]] = PickRandom(ansem2) --ansem2
+	addrs[17][enemyAddresses[101]] = PickRandom(dside) --darkside
+	--addrs[17][enemyAddresses[27]] = PickRandom(normal) --artillery
+	--addrs[17][enemyAddresses[28]] = PickRandom(normal) --face
+	addrs[17][enemyAddresses[29]] = PickRandom(ansem3) --ansem3
+	addrs[18][enemyAddresses[29]] = PickRandom(ansem4) --ansem3
+	addrs[19][enemyAddresses[29]] = PickRandom(ansem4) --ansem3
+	addrs[20][enemyAddresses[29]] = PickRandom(ansem4) --ansem3
+	addrs[21][enemyAddresses[29]] = PickRandom(ansem3) --ansem3
+
+
+	local logfile = io.open("randofiles/enemyrandolog.txt", "w+")
+	for i=0, 32 do
+		for key, value in pairs(addrs[i + 1]) do
+			ConsolePrint(string.format("Put %s at %x", value, key))
+			logfile:write(string.format("%x : %s\n", key, value))
+		end
+	end
+	logfile:close()
+end
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("KH1 detected, running script")
 		canExecute = true
+		require("Rando/enemyRandoTables")
+		if ReadByte(posDebugString) == 0x58 then
+			require("EpicGamesGlobal")
+		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+			require("EpicGamesJP")
+		else
+			require("SteamGlobal") -- Global and JP equal
+		end
 		seedfile = io.open("randofiles/seed.txt", "r")
 		if seedfile ~= nil then
 			text = seedfile:read()
@@ -246,18 +204,8 @@ function _OnInit()
 	end
 end
 
-function Djb2(str)
-	hash = 5381
-
-	for c in string.gmatch(str, '.') do
-		hash = ((hash << 5) + hash) + string.byte(c)
-	end
-
-	return hash
-end
-
-function RoomWarp(w, r)
-	WriteByte(soraHP, ReadByte(soraHP+4))
+local function RoomWarp(w, r)
+	WriteByte(soraHP, ReadByte(soraHP + 4))
 	WriteByte(warpType1, 5)
 	WriteByte(warpType2, 10)
 	WriteByte(worldWarp, w)
@@ -265,480 +213,336 @@ function RoomWarp(w, r)
 	WriteByte(warpTrigger, 2)
 end
 
-function PickRandom(t)
-	local s = ""
-	for i=1,10 do
-		local s1 = t[math.random(#t)]
-		if used[s1] == nil or s == "" or used[s1] < used[s] then
-			s = s1
-		end
-		if used[s] == nil then
-			break
-		end
-	end
-	if used[s] == nil then
-		used[s] = 1
-	else
-		used[s] = used[s] + 1
-	end
-	return s
-end
-
-function AddAddrs()
-	for i=1,0x21 do
-		addrs[i] = {}
-	end
-	--addrs[3][0xAC0980-offset] = PickRandom(normal) --2nd district yellow
-	--addrs[3][0xAC0940-offset] = PickRandom(normal) --2nd district blue
-	--addrs[3][0xAC0900-offset] = PickRandom(normal) --2nd district red
-	addrs[3][0xAC0800-offset] = PickRandom(lite) --2nd district shadow
-	addrs[3][0xB17240-offset] = PickRandom(leon) --tt leon
-	--addrs[3][0xAC0840-offset] = PickRandom(normal) --2nd district soldier
-	addrs[3][0xA97840-offset] = PickRandom(lite) --alleyway shadow
-	addrs[3][0xA97800-offset] = PickRandom(lite) --alleyway soldier
-	addrs[3][0xB16D80-offset] = PickRandom(normal) --1st district shadow
-	addrs[3][0xB0AC00-offset] = PickRandom(normal) --3rd district shadow
-	addrs[3][0xB0ABC0-offset] = PickRandom(lite) --3rd district soldier
-	addrs[3][0x9CAB80-offset] = PickRandom(normal) --gizmo shadow
-	--addrs[3][0xB0ACA0-offset] = test[math.random(#test)] --guard armor
-	--addrs[5][0xA20480-offset] = boss[math.random(#boss)] --treehouse sabor
-	addrs[5][0x9F4600-offset] = PickRandom(powerwild) --camp powerwild
-	addrs[5][0x9E3820-offset] = PickRandom(powerwild) --climbing trees powerwild
-	addrs[5][0xA20400-offset] = PickRandom(lite) --treehouse powerwild
-	addrs[5][0x992F00-offset] = PickRandom(powerwild) --cliffs powerwild
-	addrs[5][0xA8CF80-offset] = PickRandom(lite) --bamboo powerwild
-	addrs[5][0xA8D0C0-offset] = PickRandom(sabor) --bamboo sabor
-	--addrs[5][0x992F40-offset] = boss[math.random(#boss)] --cliff clayton
-	--addrs[5][0x992F80-offset] = test[math.random(#test)] --cliff clayton & stealth sneak
-	--addrs[4][0x851EC0-offset] = PickRandom(normal) --rabbithole shadow
-	--addrs[4][0x8E0E40-offset] = PickRandom(normal) --lotus forest soldier
-	addrs[4][0x9F8100-offset] = PickRandom(trick) --trickmaster
-	--addrs[11][0xAD05C0-offset] = PickRandom(normal) --oc shadow
-	addrs[11][0xAD0540-offset] = PickRandom(cloud) --oc cloud
-	addrs[11][0xAD0800-offset] = PickRandom(herc) --oc herc
-	addrs[11][0x95CDC0-offset] = PickRandom(duo) --oc leon
-	addrs[11][0x95CE80-offset] = PickRandom(duo) --oc yuffie
-	--addrs[11][0xAD08A0-offset] = cerb[math.random(#cerb)] --oc cerb
-	--addrs[11][0xAD0580-offset] = PickRandom(normal) --oc soldier
-	--addrs[11][0xAD0600-offset] = PickRandom(normal) --oc large body
-	--addrs[11][0xAD0640-offset] = PickRandom(normal) --oc red
-	--addrs[11][0xAD0680-offset] = PickRandom(normal) --oc blue
-	--addrs[11][0xAD06C0-offset] = PickRandom(normal) --oc blue
-	addrs[8][0x95C2C0-offset] = PickRandom(bandit) --alley bandit
-	addrs[8][0x953940-offset] = PickRandom(lite) --mainstreet bandit
-	addrs[8][0xA826C0-offset] = PickRandom(bandit) --plaza bandit
-	addrs[8][0x9E0180-offset] = PickRandom(lite) --desert: cave bandit
-	addrs[8][0x91ABC0-offset] = PickRandom(bandit) --bazaar bandit
-	--addrs[8][0x9C4440-offset] = test[math.random(#test)] --pot cent 1
-	--addrs[8][0x9C4480-offset] = test[math.random(#test)] --pot cent 2
-	--addrs[8][0x9C43C0-offset] = test[math.random(#test)] --pot cent pot spider
-	--addrs[8][0x9C44C0-offset] = test[math.random(#test)] --pot cent pot spider
-	--addrs[8][0x9E0240-offset] = test[math.random(#test)] --tiger head
-	--addrs[8][0x9B32C0-offset] = PickRandom(lite) --cave entrance bandit
-	--addrs[8][0x9ACC40-offset] = PickRandom(bandit) --cave hall air soldier
-	--addrs[8][0x972C40-offset] = PickRandom(lite) --bottomless shadow
-	addrs[8][0x97BBC0-offset] = PickRandom(jafar) --jafar
-	addrs[8][0x97BC00-offset] = PickRandom(genie) --genie
-	--addrs[8][0x99C3C0-offset] = test[math.random(#test)] --genie jafar
-	--addrs[12][0x9800C0-offset] = PickRandom(normal) --chamber 1 ghost
-	--addrs[12][0x9D2BC0-offset] = PickRandom(normal) --chamber 2 airsoldier
-	--addrs[12][0x9D78C0-offset] = PickRandom(normal) --chamber 5 ghost
-	addrs[12][0x9CF300-offset] = PickRandom(parasite) --pc1
-	addrs[12][0x9CF440-offset] = PickRandom(pc1riku) --pc1 riku
-	--addrs[12][0x9CB700-offset] = test[math.random(#test)] --pc2
-	--addrs[10][0xA62BC0-offset] = PickRandom(lite) --square ghost
-	--addrs[10][0xA01FC0-offset] = PickRandom(lite) --graveyard ghost
-	--addrs[10][0xA22500-offset] = PickRandom(normal) --moonlight hill whight
-	--addrs[10][0x9A8440-offset] = PickRandom(normal) --bridge whight
-	--addrs[10][0xB195C0-offset] = PickRandom(lite) --manor whight
-	--addrs[10][0x8A4E40-offset] = test[math.random(#test)] --lock
-	--addrs[10][0x8A4E80-offset] = test[math.random(#test)] --shock
-	--addrs[10][0x8A4EC0-offset] = test[math.random(#test)] --barrel
-	--addrs[10][0x9A5280-offset] = test[math.random(#test)] --oogie
-	--addrs[10][0x9A5200-offset] = test[math.random(#test)] --oogie gargoyles
-	addrs[13][0x993B00-offset] = PickRandom(normal) --ship hold anti sora
-	addrs[13][0x959A40-offset] = PickRandom(normal) --ship hold anti sora
-	addrs[13][0x959C40-offset] = PickRandom(normal) --ship hold anti sora
-	addrs[13][0x9C0900-offset] = PickRandom(normal) --ship galley anti sora
-	addrs[13][0x9A4B20-offset] = PickRandom(antisora) --anti sora
-	--addrs[13][0x9D1580-offset] = PickRandom(normal) --ship pirate
-	addrs[13][0x9D18E0-offset] = PickRandom(hook) --hook
-	addrs[15][0x9F33C0-offset] = PickRandom(riku1) --riku1
-	addrs[15][0x9DE6A0-offset] = PickRandom(normal) --tower wyvern
-	addrs[15][0x950640-offset] = PickRandom(normal) --gates wyvern
-	addrs[15][0x94DD00-offset] = PickRandom(normal) --base level darkball
-	addrs[15][0xB5AAC0-offset] = PickRandom(normal) --waterway defender
-	--addrs[15][0x9B8AC0-offset] = PickRandom(normal) --lift stop defender
-	addrs[15][0xA2AAC0-offset] = PickRandom(mal) --maleficent
-	addrs[15][0xA07040-offset] = PickRandom(dragmal) --dragon maleficent
-	addrs[15][0xBB0BC0-offset] = PickRandom(riku2) --riku2
-	addrs[15][0x9CA840-offset] = PickRandom(behe) --HB behemoth
-	addrs[16][0xA54540-offset] = PickRandom(normal) --EotW Invisible
-	addrs[16][0xA48740-offset] = PickRandom(normal) --EotW Darkball
-	addrs[16][0xAE5C80-offset] = PickRandom(normal) --TT Terminal Solider
-	addrs[16][0x7E10C0-offset] = PickRandom(normal) --WL Terminal Wizard
-	addrs[16][0x8C7100-offset] = PickRandom(normal) --OC Terminal Air Solider
-	addrs[16][0x8D1100-offset] = PickRandom(normal) --DJ Terminal Powerwild
-	addrs[16][0x914B40-offset] = PickRandom(normal) --AG Terminal Bandit
-	addrs[16][0x9FA700-offset] = PickRandom(normal) --AT Terminal Neon
-	addrs[16][0x8CF9C0-offset] = PickRandom(normal) --HT Terminal Ghost
-	addrs[16][0x922D80-offset] = PickRandom(normal) --NL Terminal Pirate
-	addrs[16][0x8357C0-offset] = PickRandom(normal) --HB Terminal Invisible
-	addrs[16][0x96CE40-offset] = PickRandom(chern) --chernabog
-	addrs[16][0xB5C240-offset] = PickRandom(ansem1) --ansem1
-	addrs[17][0xB5C240-offset] = PickRandom(ansem2) --ansem2
-	addrs[17][0xB5C500-offset] = PickRandom(dside) --darkside
-	--addrs[17][0x988980-offset] = PickRandom(normal) --artillery
-	--addrs[17][0x9889C0-offset] = PickRandom(normal) --face
-	addrs[17][0x988A00-offset] = PickRandom(ansem3) --ansem3
-	addrs[18][0x988A00-offset] = PickRandom(ansem4) --ansem3
-	addrs[19][0x988A00-offset] = PickRandom(ansem4) --ansem3
-	addrs[20][0x988A00-offset] = PickRandom(ansem4) --ansem3
-	addrs[21][0x988A00-offset] = PickRandom(ansem3) --ansem3
-	
-	local logfile = io.open("randofiles/enemyrandolog.txt", "w+")
-	for i=1,0x21 do
-		for key, value in pairs(addrs[i]) do
-			ConsolePrint(string.format("Put %s at %x", value, key+offset))
-			logfile:write(string.format("%x : %s\n", key+offset, value))
-		end
-	end
-	logfile:close()
-end
-
-function WriteString(addr, s)
+local function WriteString(addr, s)
 	local existed = true
-	for i=0,#s-1 do
-		if ReadByte(addr+i) ~= string.byte(s, i+1) then
+	for i=0, #s - 1 do
+		if ReadByte(addr + i) ~= string.byte(s, i + 1) then
 			existed = false
 		end
-		WriteByte(addr+i, string.byte(s, i+1))
+		WriteByte(addr + i, string.byte(s, i + 1))
 	end
 	return existed
 end
 
-function Exceptions(addr)
-	local input = ReadInt(0x233D034-offset)
+local function Exceptions(addr)
+	local input = ReadInt(inputAddress)
 	if input == 8 then
 		return true
-	elseif ReadByte(cutsceneFlags+0xB05) >= 0x49 and addr == 0x992F00-offset then
+	elseif ReadByte(cutsceneFlags + 5) >= 73 and addr == enemyAddresses[30] then
 		return true
-	elseif addr == 0xA54540-offset and (ReadByte(room) == 5 or ReadByte(room) == 11) then
+	elseif addr == enemyAddresses[71] and (ReadByte(room) == 5 or ReadByte(room) == 11) then
 		return true
-	elseif (addr == 0xA97800-offset and ReadByte(cutsceneFlags+0xB04) < 0x20) or
-		(addr == 0xA97840-offset and ReadByte(cutsceneFlags+0xB04) >= 0x20) then
+	elseif (addr == enemyAddresses[76] and ReadByte(cutsceneFlags + 4) < 32) or
+		(addr == enemyAddresses[77] and ReadByte(cutsceneFlags + 4) >= 32) then
 		return true
-	elseif (addr == 0xB0AC00-offset and ReadByte(cutsceneFlags+0xB04) >= 0x20) or
-		(addr == 0xB0ABC0-offset and ReadByte(cutsceneFlags+0xB04) < 0x20) then
+	elseif (addr == enemyAddresses[94] and ReadByte(cutsceneFlags + 4) >= 32) or
+		(addr == enemyAddresses[93] and ReadByte(cutsceneFlags + 4) < 32) then
 		return true
 	end
-	return not (ReadByte(addr) == 120 and ReadByte(addr+1) == 97)
+	return not (ReadByte(addr) == 120 and ReadByte(addr + 1) == 97)
 end
 
-function BossAdjust(bossHP)
+local function BossAdjust(bossHP)
 	local w = ReadByte(world)
 	local r = ReadByte(room)
 	local addr = {0, 0, 0, 0, 0}
 	local e = {"", "", "", "", ""}
-	local heightAdjust = 0
+	local heightAdjust
 	local hp = {0, 0, 0, 0, 0}
 	local bossHPs = {bossHP, 0, 0, 0, 0}
 	local str = 0
 	local def = 0
 	local endArd = 0
 	local endtime = 300
-	
+
 	--Herc cup
-	if w == 11 and r == 2 and ReadInt(OCseed-8) == 0x210 then
-		if ReadInt(OCseed) == 0x0909 then
-			addr[1] = 0x2D34BF4 - offset
-			e[1] = addrs[11][0xAD0800-offset]
-		elseif ReadInt(OCseed) == 0x0606 then
-			addr[1] = 0x2D35554 - offset
-			e[1] = addrs[11][0xAD0540-offset]
+	if w == 11 and r == 2 and ReadInt(inTournament) ~= oldTournament and oldTournament == 13 then
+		if ReadByte(OCseed) == 9 then
+			addr[1] = bossAdjustAddresses[11]
+			e[1] = addrs[11][enemyAddresses[90]]
+		elseif ReadByte(OCseed) == 6 then
+			addr[1] = bossAdjustAddresses[13]
+			e[1] = addrs[11][enemyAddresses[83]]
 		end
 		heightAdjust = e[1] == "xa_ew_3020" and 1200 or 0
 		heightAdjust = e[1] == "xa_pc_3020" and 900 or heightAdjust
-		if heightAdjust > 0 and ReadFloat(addr[1]+0x14) == -20 and ReadInt(bossHP) > 1000 then
-			WriteFloat(addr[1]+0x14, heightAdjust)
+		if heightAdjust > 0 and ReadFloat(addr[1] + 20) == -20 and ReadInt(bossHP) > 1000 then
+			WriteFloat(addr[1] + 20, heightAdjust)
 		end
-	elseif w == 3 and r == 0 and ReadByte(cutsceneFlags+0xB04) == 0x17 then
-		addr[1] = 0x2D3EB40 - offset
-		e[1] = addrs[3][0xB17240-offset]
+	elseif w == 3 and r == 0 and ReadByte(cutsceneFlags + 4) == 23 then
+		addr[1] = bossAdjustAddresses[21]
+		e[1] = addrs[3][enemyAddresses[97]]
 		hp[1] = 120
 		str = 8
 		def = 8
-	elseif w == 4 and r == 1 and ReadByte(cutsceneFlags+0xB07) == 0x2B then
-		addr[1] = 0x2D3A040 - offset
-		e[1] = addrs[4][0x9F8100-offset]
+	elseif w == 4 and r == 1 and ReadByte(cutsceneFlags + 7) == 43 then
+		addr[1] = bossAdjustAddresses[20]
+		e[1] = addrs[4][enemyAddresses[62]]
 		hp[1] = 600
 		str = 9
 		def = 9
-		endArd = 0xC4
-	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags+0xB05) == 0x3F then
-		addr[1] = 0x2D35EA0 - offset
-		e[1] = addrs[5][0xA8D0C0-offset]
+		endArd = 196
+	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags + 5) == 63 then
+		addr[1] = theonActive
+		e[1] = addrs[5][enemyAddresses[75]]
 		hp[1] = 180
-		str = 0xC
-		def = 0xB
-		endArd = 0x154
+		str = 12
+		def = 11
+		endArd = 340
 		endtime = 500
-	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags+0xB05) == 0x42 
-	and ReadShort(ardOff) == 0x182 and ReadByte(inCutscene) == 3 then
-		WriteShort(ardOff, 0x183)
+	elseif w == 5 and r == 2 and ReadByte(cutsceneFlags + 5) == 66
+				  and ReadShort(ardOff) == 386 and ReadByte(inCutscene) == 3 then
+		WriteShort(ardOff, 387)
 		ConsolePrint("Progress cutscene")
-	elseif w == 8 and r == 0x10 and ReadByte(cutsceneFlags+0xB08) == 0x46 then
-		addr[1] = 0x2D36CB0 - offset
-		addr[2] = 0x2D37160 - offset
-		e[1] = addrs[8][0x97BBC0-offset]
-		e[2] = addrs[8][0x97BC00-offset]
+	elseif w == 8 and r == 16 and ReadByte(cutsceneFlags + 8) == 70 then
+		addr[1] = bossAdjustAddresses[14]
+		addr[2] = bossAdjustAddresses[15]
+		e[1] = addrs[8][enemyAddresses[24]]
+		e[2] = addrs[8][enemyAddresses[25]]
 		hp[1] = 500
 		hp[2] = 500
-		bossHPs[2] = bossHPs[1]+0x100
-		str = 0x11
-		def = 0xF
-		endArd = 0xC8
-	elseif w == 8 and r == 0x10 and  ReadByte(ardOff) == 0xF2 then
-		WriteByte(ardOff, 0xF3)
-	elseif w == 0xC and r == 4 and ReadByte(cutsceneFlags+0xB09) == 0x2B then
-		addr[1] = 0x2D34730 - offset
-		e[1] = addrs[12][0x9CF440-offset]
+		bossHPs[2] = bossHPs[1] + 256
+		str = 17
+		def = 15
+		endArd = 200
+	elseif w == 8 and r == 16 and  ReadByte(ardOff) == 242 then
+		WriteByte(ardOff, 243)
+	elseif w == 12 and r == 4 and ReadByte(cutsceneFlags + 9) == 43 then
+		addr[1] = khamaActive
+		e[1] = addrs[12][enemyAddresses[51]]
 		hp[1] = 600
-		str = 0x14
-		def = 0x11
-		endArd = 0x54
-	elseif w == 0xD and r == 6 and ReadByte(cutsceneFlags+0xB0D) == 0x32 then
-		addr[1] = 0x2D37610 - offset
-		e[1] = addrs[13][0x9A4B20-offset]
+		str =   20
+		def = 17
+		endArd = 84
+	elseif w == 13 and r == 6 and ReadByte(cutsceneFlags + 13) == 50 then
+		addr[1] = bossAdjustAddresses[16]
+		e[1] = addrs[13][enemyAddresses[35]]
 		hp[1] = 750
-		str = 0x1B
-		def = 0x15
-		endArd = 0x42
-		if antisorabeaten and ReadByte(ardOff) == 0x8C then
-			WriteByte(ardOff, 0xC3)
+		str = 27
+		def = 21
+		endArd = 66
+		if antisorabeaten and ReadByte(ardOff) == 140 then
+			WriteByte(ardOff, 195)
 			ConsolePrint("Cutscene start")
 			antisorabeaten = false
 		end
-	elseif w == 0xD and r == 8 and (ReadByte(cutsceneFlags+0xB0D) == 0x50 or ReadByte(cutsceneFlags+0xB0D) == 0x53)
-	and (ReadShort(ardOff) == 0x36D or ReadShort(ardOff) == 0x3D3) then
-		addr[1] = 0x2D396E0 - offset
-		e[1] = addrs[13][0x9D18E0-offset]
+	elseif w == 13 and r == 8 and (ReadByte(cutsceneFlags + 13) == 80 or ReadByte(cutsceneFlags + 13) == 83)
+				   and (ReadShort(ardOff) == 877 or ReadShort(ardOff) == 979) then
+		addr[1] = bossAdjustAddresses[19]
+		e[1] = addrs[13][enemyAddresses[53]]
 		hp[1] = 900
-		str = 0x1B
-		def = 0x15
-		endArd = 0x389
-		if ReadShort(ardOff) == 0x3D3 then
-			WriteByte(ardOff, 0x3D4)
+		str = 27
+		def = 21
+		endArd = 905
+		if ReadShort(ardOff) == 979 then
+			WriteByte(ardOff, 980)
 			ConsolePrint("Give reward")
 		end
-	elseif w == 0xF and r == 4 and ReadByte(cutsceneFlags+0xB0E) == 0x28 then
-		addr[1] = 0x2D42830 - offset
-		e[1] = addrs[15][0x9F33C0-offset]
+	elseif w == 15 and r == 4 and ReadByte(cutsceneFlags + 14) == 40 then
+		addr[1] = bossAdjustAddresses[22]
+		e[1] = addrs[15][enemyAddresses[60]]
 		hp[1] = 500
-		str = 0x1F
-		def = 0x18
-		endArd = 0x57
+		str = 31
+		def = 24
+		endArd = 87
 		endtime = 200
-	elseif w == 0xF and r == 0xB and ReadByte(cutsceneFlags+0xB0E) == 0x50 then
-		addr[1] = 0x2D35EA0 - offset
-		e[1] = addrs[15][0xA2AAC0-offset]
+	elseif w == 15 and r == 11 and ReadByte(cutsceneFlags + 14) == 80 then
+		addr[1] = theonActive
+		e[1] = addrs[15][enemyAddresses[69]]
 		hp[1] = 900
-		str = 0x1F
-		def = 0x18
-		endArd = 0x55
-	elseif w == 0xF and r == 0xC and ReadByte(cutsceneFlags+0xB0E) == 0x5A then
-		addr[1] = 0x2D35540 - offset
-		e[1] = addrs[15][0xA07040-offset]
+		str = 31
+		def = 24
+		endArd = 55
+	elseif w == 15 and r == 12 and ReadByte(cutsceneFlags + 14) == 60 then
+		addr[1] = bossAdjustAddresses[12]
+		e[1] = addrs[15][enemyAddresses[65]]
 		hp[1] = 1200
-		str = 0x1F
-		def = 0x18
-		endArd = 0x50
-		if ReadShort(addr[1]+0x4B0) == 32768 then
+		str = 31
+		def = 24
+		endArd = 80
+		if ReadShort(addr[1] + 1200) == 32768 then
 			ConsolePrint("Disabling collision")
 			for i=1,45 do --disable collision
-				WriteShort(addr[1]+0x4B0*i, 0)
+				WriteShort(addr[1] + 1200 * i, 0)
 			end
 		end
 		heightAdjust = e[1] == "xa_ew_3020" and 1200 or 0
 		heightAdjust = e[1] == "xa_pc_3020" and 900 or heightAdjust
-		if heightAdjust > 0 and ReadFloat(addr[1]+0x14) == 0 then
-			WriteFloat(addr[1]+0x14, heightAdjust)
-			WriteInt(bittestRender, 0x00400000)
+		if heightAdjust > 0 and ReadFloat(addr[1] + 20) == 0 then
+			WriteFloat(addr[1] + 20, heightAdjust)
+			WriteInt(bittestRender, 4194304)
 		end
-	elseif w == 0xF and r == 0xE and ReadByte(cutsceneFlags+0xB0E) == 0x6E
-	and ReadShort(ardOff) == 0x67 then
-		addr[1] = 0x2D37AC0 - offset
-		e[1] = addrs[15][0xBB0BC0-offset]
+	elseif w == 15 and r == 14 and ReadByte(cutsceneFlags + 14) == 110
+				   and ReadShort(ardOff) == 103 then
+		addr[1] = bossAdjustAddresses[17]
+		e[1] = addrs[15][enemyAddresses[102]]
 		hp[1] = 900
-		bossHPs[1] = 0x2D593CC - offset
-		str = 0x1F
-		def = 0x18
-		endArd = 0x68
-	elseif w == 0xF and r == 0xF and ReadByte(cutsceneFlags+0xB0E) == 0xAA then
-		addr[1] = 0x2D34730 - offset
-		e[1] = addrs[15][0x9CA840-offset]
+		bossHPs[1] = bossAdjustAddresses[23]
+		str = 31
+		def = 24
+		endArd = 104
+	elseif w == 15 and r == 15 and ReadByte(cutsceneFlags + 14) == 170 then
+		addr[1] = khamaActive
+		e[1] = addrs[15][enemyAddresses[47]]
 		hp[1] = 1350
-		str = 0x23
-		def = 0x1B
-		endArd = 0x4B
-		if ReadShort(addr[1]+0x4B0) == 32768 then
+		str = 35
+		def = 27
+		endArd = 75
+		if ReadShort(addr[1] + 1200) == 32768 then
 			ConsolePrint("Disabling collision")
 			for i=1,24 do --disable collision
-				WriteShort(addr[1]+0x4B0*i, 0)
+				WriteShort(addr[1] + 1200*i, 0)
 			end
 		end
-	elseif w == 0x10 and r == 0x1A then
-		addr[1] = 0x2D34730 - offset
-		e[1] = addrs[16][0x96CE40-offset]
+	elseif w == 16 and r == 26 then
+		addr[1] = khamaActive
+		e[1] = addrs[16][enemyAddresses[22]]
 		hp[1] = 1500
-		str = 0x23
-		def = 0x1B
-		endArd = 0x58
-		if ReadShort(addr[1]+0x4B0) == 32768 then
+		str = 35
+		def = 27
+		endArd = 88
+		if ReadShort(addr[1] + 1200) == 32768 then
 			ConsolePrint("Disabling collision")
 			for i=1,15 do --disable collision
-				WriteShort(addr[1]+0x4B0*i, 0)
+				WriteShort(addr[1] + 1200 * i, 0)
 			end
-			local glideBarrier = 0x503948 - offset
-			local floorStatus = 0x5258FC - offset
 			WriteFloat(glideBarrier, 2000)
 			for i=0,3 do
-				WriteByte(floorStatus+i*12, 0)
+				WriteByte(floorStatus + i * 12, 0)
 			end
 		end
-		local wall = 0x6D8374 - offset
-		if ReadByte(wall) == 0x18 then
-			WriteByte(wall, 0x19)
+		if ReadByte(wall) == 24 then
+			WriteByte(wall, 25)
 		end
-		if ReadByte(addr[1]+0x70) == 2 then
+		if ReadByte(addr[1] + 112) == 2 then
 			fallcounter = fallcounter + 1
 			if fallcounter > 120 then
 				fallcounter = 0
-				WriteByte(addr[1]+0x70, 0)
+				WriteByte(addr[1] + 112, 0)
 			end
 		end
-	elseif w == 0x10 and r == 0x1E and ReadShort(ardOff) >= 0xD5 then
-		if ReadShort(ardOff) == 0xD5 and ReadByte(cutsceneFlags+0xB0F) == 0x64 then
-			addr[1] = 0x2D38D80 - offset
-			e[1] = addrs[16][0xB5C240-offset]
-			endArd = 0xD6
+	elseif w == 16 and r == 30 and ReadShort(ardOff) >= 213 then
+		if ReadShort(ardOff) == 213 and ReadByte(cutsceneFlags + 15) == 100 then
+			addr[1] = bossAdjustAddresses[18]
+			e[1] = addrs[16][enemyAddresses[100]]
+			endArd = 214
 			heightAdjust = e[1] == "xa_ew_3020" and 1200 or 0
 			heightAdjust = e[1] == "xa_pc_3020" and 950 or heightAdjust
-			if heightAdjust > 0 and ReadFloat(addr[1]+0x14) == -160 then
-				WriteFloat(addr[1]+0x14, heightAdjust)
-				WriteFloat(addr[1]+0x10, 200)
-				WriteInt(bittestRender, 0x751)
+			if heightAdjust > 0 and ReadFloat(addr[1] + 20) == -160 then
+				WriteFloat(addr[1] + 20, heightAdjust)
+				WriteFloat(addr[1] + 16, 200)
+				WriteInt(bittestRender, 1873)
 			end
-		elseif ReadShort(ardOff) == 0xFC then
-			addr[1] = 0x2D37610 - offset
-			e[1] = addrs[17][0xB5C500-offset]
-			bossHPs[1] = 0x2D595CC - offset
-			endArd = 0xFD
+		elseif ReadShort(ardOff) == 252 then
+			addr[1] = bossAdjustAddresses[16]
+			e[1] = addrs[17][enemyAddresses[101]]
+			bossHPs[1] = bossAdjustAddresses[24]
+			endArd = 253
 			endtime = 400
-			if ReadShort(addr[1]+0x4B0) ~= 0 then
+			if ReadShort(addr[1] + 1200) ~= 0 then
 				ConsolePrint("Disabling collision")
 				for i=1,10 do --disable collision
-					WriteShort(addr[1]+0x4B0*(i+0), 0)
+					WriteShort(addr[1] + 1200 * i, 0)
 				end
 			end
-		elseif ReadShort(ardOff) == 0x11C then
-			addr[1] = 0x2D3A040 - offset
-			bossHPs[1] = 0x2D593CC - offset
-			e[1] = addrs[17][0xB5C240-offset]
-			endArd = 0x11D
+		elseif ReadShort(ardOff) == 284 then
+			addr[1] = bossAdjustAddresses[20]
+			bossHPs[1] = bossAdjustAddresses[23]
+			e[1] = addrs[17][enemyAddresses[100]]
+			endArd = 285
 			endtime = 200
 			heightAdjust = e[1] == "xa_ew_3020" and 1200 or 0
 			heightAdjust = e[1] == "xa_pc_3020" and 900 or heightAdjust
-			if heightAdjust > 0 and ReadFloat(addr[1]+0x14) == 40 then
-				WriteFloat(addr[1]+0x14, heightAdjust)
+			if heightAdjust > 0 and ReadFloat(addr[1] + 20) == 40 then
+				WriteFloat(addr[1] + 20, heightAdjust)
 			end
 		end
 		hp[1] = 1500
-		str = 0x28
-		def = 0x1E
-		if ReadShort(ardOff) >= 0xFC and ReadFloat(addr[1]+0x10) > -1300 then
-			WriteFloat(addr[1]+0x10, -1400)
+		str = 40
+		def = 30
+		if ReadShort(ardOff) >= 252 and ReadFloat(addr[1] + 16) > -1300 then
+			WriteFloat(addr[1] + 16, -1400)
 		end
-	elseif w == 0x10 and r == 0x21 then
+	elseif w == 16 and r == 33 then
 		endtime = 100
-		if ReadByte(worldFlagBase+0xE4) == 0 then
-			addr[1] = 0x2D34280 - offset
-			e[1] = addrs[17][0x988A00-offset]
-			bossHPs[1] = 0x2D592CC - offset
-		elseif ReadByte(worldFlagBase+0xE4) == 1 then
-			addr[1] = 0x2D35EA0 - offset
-			e[1] = addrs[18][0x988A00-offset]
-			bossHPs[1] = 0x2D59ACC - offset
-		elseif ReadByte(worldFlagBase+0xE4) == 2 then
-			addr[1] = 0x2D33DD0 - offset
-			e[1] = addrs[19][0x988A00-offset]
-			bossHPs[1] = 0x2D593CC - offset
-		elseif ReadByte(worldFlagBase+0xE4) == 3 then
-			addr[1] = 0x2D33DD0 - offset
-			e[1] = addrs[20][0x988A00-offset]
-			bossHPs[1] = 0x2D593CC - offset
-		elseif ReadByte(worldFlagBase+0xE4) == 4 then
-			addr[1] = 0x2D33920 - offset
-			e[1] = addrs[21][0x988A00-offset]
-			bossHPs[1] = 0x2D592CC - offset
+		if ReadByte(worldFlagBase) == 0 then
+			addr[1] = bossAdjustAddresses[10]
+			e[1] = addrs[17][enemyAddresses[29]]
+			bossHPs[1] = soraHP
+		elseif ReadByte(worldFlagBase) == 1 then
+			addr[1] = theonActive
+			e[1] = addrs[18][enemyAddresses[29]]
+			bossHPs[1] = bossAdjustAddresses[26]
+		elseif ReadByte(worldFlagBase) == 2 then
+			addr[1] = bossAdjustAddresses[9]
+			e[1] = addrs[19][enemyAddresses[29]]
+			bossHPs[1] = bossAdjustAddresses[23]
+		elseif ReadByte(worldFlagBase) == 3 then
+			addr[1] = bossAdjustAddresses[9]
+			e[1] = addrs[20][enemyAddresses[29]]
+			bossHPs[1] = bossAdjustAddresses[23]
+		elseif ReadByte(worldFlagBase) == 4 then
+			addr[1] = bossAdjustAddresses[8]
+			e[1] = addrs[21][enemyAddresses[29]]
+			bossHPs[1] = soraHP
 		end
-		if ReadShort(addr[1]+0x4B0*4) ~= 0 then
+		if ReadShort(addr[1] + 4800) ~= 0 then
 			ConsolePrint("Disabling collision")
 			for i=1,50 do --disable collision
-				WriteShort(addr[1]+0x4B0*(i+3), 0)
+				WriteShort(addr[1] + 1200 * (i + 3), 0)
 			end
 		end
-		local floorStatus = 0x5258FC - offset
 		for i=0,3 do
-			WriteByte(floorStatus+i*12, 0)
+			WriteByte(floorStatus + i * 12, 0)
 		end
-		if ReadByte(0x70944C-offset) == 0x10 then
+		if ReadByte(bossAdjustAddresses[5]) == 16 then
 			for i=0,101 do
-				WriteByte(0x70944C+0x14*i-offset, 0x11)
+				WriteByte(bossAdjustAddresses[5] + 20 * i, 17)
 			end
 			for i=0,87 do
-				WriteByte(0x70A004+0x14*i-offset, 0x19)
+				WriteByte(bossAdjustAddresses[6] + 20 * i, 25)
 			end
 		end
-		WriteFloat(0x52591C-offset, 25000)
+		WriteFloat(bossAdjustAddresses[3], 25000)
 		hp[1] = 1500
-		str = 0x28
-		def = 0x1E
+		str = 40
+		def = 30
 	end
-	
-	if ReadInt(0x233D034-offset) == 20224 then
+
+	if ReadInt(bossAdjustAddresses[7]) == 20224 then
 		for i=1,5 do
 			if hp[i] > 0 then
 				WriteShort(bossHPs[i], 1)
 			end
 		end
 	end
-	
+
 	local kills = 0
 	for i=1,5 do
 		if hp[i] == 0 then
 			break
 		end
-		
+
 		if string.find(e[i], "xa_di_") or string.find(e[i], "xa_ex_1010") then
-			hp[i] = hp[i]*0.5
+			hp[i] = hp[i] * 0.5
 		elseif string.find(e[i], "xa_pp_3010") ~= nil then
-			hp[i] = hp[i]*0.3
+			hp[i] = hp[i] * 0.3
 		end
-		
-		if hp[i] > 0 and ReadShort(bossHPs[i]+4) ~= hp[i] then
+
+		if hp[i] > 0 and ReadShort(bossHPs[i] + 4) ~= hp[i] then
 			WriteShort(bossHPs[i], hp[i])
-			WriteShort(bossHPs[i]+4, hp[i])
-			WriteShort(bossHPs[i]+0x10, str) --str
-			WriteShort(bossHPs[i]+0x14, def) --def
+			WriteShort(bossHPs[i] + 4, hp[i])
+			WriteShort(bossHPs[i] + 16, str) --str
+			WriteShort(bossHPs[i] + 20, def) --def
 		end
-		if hp[i] > 0 and ReadInt(bossHPs[i]) == 0 and ReadByte(state) & 1 == 1 then
-			kills = kills+1
+
+		if hp[i] > 0 and ReadInt(bossHPs[i]) == 0 and ReadByte(stateFlag) & 1 == 1 then
+			kills = kills + 1
 		end
-		
-		if string.find(e[i], "xa_di_1") ~= nil 
-		and ReadByte(combo) > 4 and ReadShort(bossHPs[i]) < bossLastHP[i] then
-			WriteFloat(addr[i]+0x28C, 0)
+
+		if ReadByte(combo) > 4 and string.find(e[i], "xa_di_1") ~= nil
+							   and ReadShort(bossHPs[i]) < bossLastHP[i] then
+			WriteFloat(addr[i] + 652, 0)
 		end
 		bossLastHP[i] = ReadShort(bossHPs[i])
 	end
@@ -746,20 +550,20 @@ function BossAdjust(bossHP)
 		endfightTimer = endfightTimer + 1
 		if endfightTimer > endtime then
 			if w == 3 and r == 0 then
-				WriteByte(cutsceneFlags+0xB04, 0x1A)
-				RoomWarp(3, 0x21)
-			elseif w == 0x10 and r == 0x21 and ReadByte(worldFlagBase+0xE4) < 3 then
-				WriteByte(worldFlagBase+0xE7+ReadByte(worldFlagBase+0xE4), 0xD)
-				RoomWarp(0x10, 0x43+ReadByte(worldFlagBase+0xE4))
-			elseif w == 0x10 and r == 0x21 and ReadByte(worldFlagBase+0xE4) == 3 then
-				WriteByte(worldFlagBase+0xE4, 4)
-				RoomWarp(0x10, 0x3F)
+				WriteByte(cutsceneFlags + 4, 26)
+				RoomWarp(3, 33)
+			elseif w == 16 and r == 33 and ReadByte(worldFlagBase) < 3 then
+				WriteByte(worldFlagBase + 3 + ReadByte(worldFlagBase), 13)
+				RoomWarp(16, 67 + ReadByte(worldFlagBase))
+			elseif w == 16 and r == 33 and ReadByte(worldFlagBase) == 3 then
+				WriteByte(worldFlagBase, 4)
+				RoomWarp(16, 63)
 			else
 				WriteByte(ardOff, endArd)
 			end
-			if w == 0xD and r == 6 then
+			if w == 13 and r == 6 then
 				antisorabeaten = true
-				WriteByte(cutsceneFlags+0xB0D, 0x28)
+				WriteByte(cutsceneFlags + 13, 40)
 			end
 			endfightTimer = 0
 			ConsolePrint("Fight end")
@@ -769,18 +573,18 @@ function BossAdjust(bossHP)
 	end
 end
 
-function Fixes()
-	local bossHP = 0x2D595CC - offset
-	if ReadByte(0x2DE5E5F - offset) == 0xFF and ReadByte(0x2DE5E60 - offset) == 0xFF then
-		bossHP = 0x2D593CC - offset
+local function Fixes()
+	local bossHP = bossAdjustAddresses[24]
+	if ReadByte(party1) == 255 and ReadByte(bossAdjustAddresses[27]) == 255 then
+		bossHP = bossAdjustAddresses[23]
 	end
-	if ReadByte(world) == 0xD and ReadByte(room) == 8 then
-		bossHP = 0x2D596CC - offset
+	if ReadByte(world) == 13 and ReadByte(room) == 8 then
+		bossHP = bossAdjustAddresses[25]
 	end
-	
+
 	--Add Riku to PC1
-	if ReadByte(world) == 0xC and ReadByte(worldFlagBase+0x9E) == 2 then
-		WriteByte(worldFlagBase+0x9E, 0)
+	if ReadByte(world) == 12 and ReadByte(worldFlagBase - 70) == 2 then
+		WriteByte(worldFlagBase - 70, 0)
 	end
 
 	BossAdjust(bossHP)
@@ -792,31 +596,32 @@ end
 
 function _OnFrame()
 	local w = ReadByte(world)
-	
-	if w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 0 then
+
+	if w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 0 then
 		w = 17
-	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 1 then
+	elseif w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 1 then
 		w = 18
-	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 2 then
+	elseif w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 2 then
 		w = 19
-	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 3 then
+	elseif w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 3 then
 		w = 20
-	elseif w == 16 and ReadByte(cutsceneFlags+0xB0F) > 0x64 and ReadByte(worldFlagBase+0xE4) == 4 then
+	elseif w == 16 and ReadByte(cutsceneFlags + 15) > 100 and ReadByte(worldFlagBase) == 4 then
 		w = 21
 	end
-	
-	if canExecute and (ReadInt(blackfade) == 0 or ReadInt(whitefade) == 0x80) and w > 0 then
+
+	if canExecute and (ReadInt(blackFade) == 0 or ReadInt(white) == 128) and w > 0 and w ~= 255 then
 		local s = ""
 		for addr, v in pairs(addrs[w]) do
 			if not Exceptions(addr) then
-				local existed = WriteString(addr, v)
-				if addr == 0xB0ABC0-offset then
-					existed = WriteString(addr+0xC0, v)
+				local existed
+				WriteString(addr, v)
+				if addr == enemyAddresses[93] then
+					existed = WriteString(addr + 192, v)
 				else
-					existed = WriteString(addr+0x20, v)
+					existed = WriteString(addr + 32, v)
 				end
 				if not existed then
-					s = s .. string.format("Replaced with %s at %x\n", v, addr+offset)
+					s = s .. string.format("Replaced with %s at %x\n", v, addr)
 				end
 			end
 		end
@@ -828,7 +633,7 @@ function _OnFrame()
 			heightAdjust = string.find(s, "xa_pc_3020") ~= nil and 900 or heightAdjust
 			ConsolePrint(s)
 		end
-		lastBlack = ReadInt(blackfade)
 	end
 	Fixes()
+	oldTournament = ReadInt(inTournament)
 end
