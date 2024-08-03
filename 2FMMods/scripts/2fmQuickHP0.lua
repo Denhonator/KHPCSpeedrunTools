@@ -7,16 +7,13 @@ local canExecute = false
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
         canExecute = true
-		if ReadInt(0x80) ==  then --EGS Gloabl
-			ConsolePrint('Epic Global Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --EGS JP
-			ConsolePrint('Epic JP Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --Steam Global
+		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
+			ConsolePrint('Epic Games Version Detected')
+			require("EpicGamesGlobal") -- Both versions share addresses
+		elseif ReadByte(0x660E74) == 106 then -- Steam Global
 			ConsolePrint('Steam Global Version Detected')
 			require("SteamGlobal")
-		elseif ReadInt(0x80) ==  then --Steam JP
+		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
 			ConsolePrint('Steam JP Version Detected')
 			require("SteamJP")
 		end
@@ -24,8 +21,9 @@ function _OnInit()
 end
 
 function _OnFrame()
-	if canExecute then		
-		if ReadByte(input) == 3 and ReadInt(soraHP) ~= 0 then
+	if canExecute then
+		-- shoulders
+		if ReadByte(input) == 768 and ReadInt(soraHP) ~= 0 then
 			WriteInt(soraHP, 0)
 		end
 	end

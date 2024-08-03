@@ -31,16 +31,13 @@ local canOpenTable = {
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
         canExecute = true
-		if ReadInt(0x80) ==  then --EGS Gloabl
-			ConsolePrint('Epic Global Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --EGS JP
-			ConsolePrint('Epic JP Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --Steam Global
+		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
+			ConsolePrint('Epic Games Version Detected')
+			require("EpicGamesGlobal") -- Both versions share addresses
+		elseif ReadByte(0x660E74) == 106 then -- Steam Global
 			ConsolePrint('Steam Global Version Detected')
 			require("SteamGlobal")
-		elseif ReadInt(0x80) ==  then --Steam JP
+		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
 			ConsolePrint('Steam JP Version Detected')
 			require("SteamJP")
 		end
@@ -201,7 +198,8 @@ function LoadSaveMenu()
 			WriteShort(menu + 2, 1) -- 1 Pause Menu Slot
 			WriteInt(menu + 4, loadFunc) -- Slot 1: Load Game
 		elseif ReadByte(btlTyp) == 0 then -- Out-of-Battle (When Status Menu can be opened)
-			if ReadByte(input) == 2 then -- Hold R2 and press Start
+			-- R2
+			if ReadShort(inputAddress) == 512 then -- Hold R2 and press Start
 				WriteByte(menu, 1) -- Pause with Slots
 				WriteInt(menu + 24, 0) -- No Pause Text
 				WriteShort(menu + 2, 2) -- 2 Pause Menu Slots

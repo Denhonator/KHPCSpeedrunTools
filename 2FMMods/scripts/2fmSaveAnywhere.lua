@@ -14,16 +14,13 @@ local counter = 30
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
         canExecute = true
-		if ReadInt(0x80) ==  then --EGS Gloabl
-			ConsolePrint('Epic Global Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --EGS JP
-			ConsolePrint('Epic JP Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --Steam Global
+		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
+			ConsolePrint('Epic Games Version Detected')
+			require("EpicGamesGlobal") -- Both versions share addresses
+		elseif ReadByte(0x660E74) == 106 then -- Steam Global
 			ConsolePrint('Steam Global Version Detected')
 			require("SteamGlobal")
-		elseif ReadInt(0x80) ==  then --Steam JP
+		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
 			ConsolePrint('Steam JP Version Detected')
 			require("SteamJP")
 		end
@@ -32,17 +29,17 @@ end
 
 function _OnFrame()
 	if canExecute then
-		local input = ReadShort(0x29F8AC0-offset)
-		if (input == 2816) then 
+		-- L2 R2 R1
+		if ReadShort(inputAddress) == 2816 then 
 			if valor == "" then
-				valor = ReadString(valorAddr, 46)
-				save = ReadString(saveAddr, 46)
+				valor = ReadString(valorAddress, 46)
+				save = ReadString(saveAddress, 46)
 			end
 			
 			if not hold then
 				savedHP = ReadByte(soraHP)
 				savedAbilities = ReadByte(abilities)
-				WriteString(valorAddr, save)
+				WriteString(valorAddress, save)
 			end
 			
 			counter = 30
@@ -53,15 +50,15 @@ function _OnFrame()
 			end
 			
 			hold = true
-		elseif ReadByte(valorAddr) == 0x37 then
-			WriteString(valorAddr, valor)
+		elseif ReadByte(valorAddress) == 0x37 then
+			WriteString(valorAddress, valor)
 			WriteByte(soraHP, savedHP)
 			WriteByte(abilities, savedAbilities)
 			hold = false
 		end
 		
 		if counter > 0 then
-			WriteByte(allowGummi, 0)
+			WriteByte(saveMenuSlot, 0)
 			counter = counter - 1
 		end
 	end

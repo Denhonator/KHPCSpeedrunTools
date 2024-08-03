@@ -15,16 +15,13 @@ local loadCount = 0
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
         canExecute = true
-		if ReadInt(0x80) ==  then --EGS Gloabl
-			ConsolePrint('Epic Global Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --EGS JP
-			ConsolePrint('Epic JP Version Detected')
-			require("EpicGamesGlobal")
-		elseif ReadInt(0x80) ==  then --Steam Global
+		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
+			ConsolePrint('Epic Games Version Detected')
+			require("EpicGamesGlobal") -- Both versions share addresses
+		elseif ReadByte(0x660E74) == 106 then -- Steam Global
 			ConsolePrint('Steam Global Version Detected')
 			require("SteamGlobal")
-		elseif ReadInt(0x80) ==  then --Steam JP
+		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
 			ConsolePrint('Steam JP Version Detected')
 			require("SteamJP")
 		end
@@ -32,7 +29,7 @@ function _OnInit()
 end
 
 function _OnFrame()
-	local SVE = ReadString(saveAddress, 4)
+	local SVE = ReadString(autoSaveAddress, 4)
 	for i = 1, 11 do
 		if SVE ~= blacklist[i] then
 			blacklisted = false
@@ -44,24 +41,25 @@ function _OnFrame()
 		end
 	end
 	if canExecute then
-		local input = ReadInt(inputAddress)
+		local input = ReadShort(inputAddress)
 
 		--reset loadCount
 		if ReadByte(loadMenu) == 3 then
 			loadCount = 0
-			local inputCheck = input == 8192 or input == 196608
+			-- touchpad (left side or share for steam) / L2 R2
+			local inputCheck = input == 1 or input == 768
 			if inputCheck then
 				WriteFloat(loadingIndicator, 90)
 			end
 			if ReadInt(saveSelect) == 0 and ReadInt(save1 + 12) ~= prevSave and inputCheck then
 				local f = io.open("KH2autosave.dat", "rb")
-				if input == 196608 then
+				if input == 768 then
 					f = io.open("KH2autosave2.dat", "rb")
 				end
 				if f ~= nil then
 					WriteString(save1, f:read("*a"))
 					f:close()
-					if input == 8192 then
+					if input == 1 then
 						ConsolePrint("Loaded autosave")
 					else
 						ConsolePrint("Loaded backup autosave")
