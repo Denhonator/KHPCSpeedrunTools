@@ -1,94 +1,91 @@
-local GameVersion = 0
+LUAGUI_NAME = "2fmAutoSave"
+LUAGUI_AUTH = "Sonicshadowsilver2 (edited by deathofall84)"
+LUAGUI_DESC = "Auto save and load auto saves"
+
 local canExecute = false
 local prevBlack = 0
 local prevContinue = 0
-local blacklist = {"es01", "bb05", "eh20", "eh22", "eh23", "eh24", "eh25", "eh26", "eh27", "eh28", "eh29"}
+local blacklist = {
+	"es01", "bb05", "eh20", "eh22", "eh23", "eh24",
+	"eh25", "eh26", "eh27", "eh28", "eh29"
+}
 local blacklisted = false
+local loadCount = 0
 
 function _OnInit()
-	GameVersion = 0
-end
-
-function GetVersion() --Define anchor addresses
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
-		if ReadString(0x09A92F0,4) == 'KH2J' then --EGS
-			GameVersion = 2
-			print('[2fmAutoSave] - Epic Version Detected')
-			continue = 0x29FAFC0
-			save1 = 0x9A92F0
-			saveselect = 0x2616D60
-			sveAddr = 0x9BA370
-			inputAddr = 0x29FAD30
-			LoadingIndicator = 0x8EBFF0
-			loadmenu = 0x743350
-			writeLogic = 0x713438
-            canExecute = true
-		elseif ReadString(0x09A9830,4) == 'KH2J' then --Steam Global
-			GameVersion = 3
-			print('[2fmAutoSave] - Steam Global Version Detected')
-			continue = 0x29FB500
-			save1 = 0x9A9830
-			saveselect = 0x2617460
-			sveAddr = 0x9BA8B0
-			inputAddr = 0xBF3120
-			LoadingIndicator = 0x8EC540
-			loadmenu = 0x7435D0
-			writeLogic = 0x7134A0
-            canExecute = true
-		elseif ReadString(0x09A8830,4) == 'KH2J' then --Steam JP
-			GameVersion = 4
-			print('[2fmAutoSave] - Steam JP Version Detected')
-			continue = 0x29FA500
-			save1 = 0x9A8830
-			saveselect = 0x2616460
-			sveAddr = 0x9B98B0
-			inputAddr = 0xBF2120
-			LoadingIndicator = 0x8EB540
-			loadmenu = 0x7425D0
-			writeLogic = 0x7124A0
-            canExecute = true
+        canExecute = true
+		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
+			ConsolePrint('Epic Games Version Detected')
+			require("EpicGamesGlobal") -- Both versions share addresses
+		elseif ReadByte(0x660E74) == 106 then -- Steam Global
+			ConsolePrint('Steam Global Version Detected')
+			require("SteamGlobal")
+		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
+			ConsolePrint('Steam JP Version Detected')
+			require("SteamJP")
 		end
 	end
 end
 
 function _OnFrame()
-	if GameVersion == 0 then --Get anchor addresses
-		GetVersion()
-		return
-	end
-	
-	SVE = ReadString(sveAddr, 4)
+	local SVE = ReadString(autoSaveAddress, 4)
 	for i = 1, 11 do
 		if SVE ~= blacklist[i] then
-		blacklisted = false
+			blacklisted = false
 		end
 	end
 	for i = 1, 11 do
 		if SVE == blacklist[i] then
-		blacklisted = true
+			blacklisted = true
 		end
 	end
 	if canExecute then
-		local input = ReadInt(inputAddr)
-		if input & 8192 == 8192 and ReadByte(loadmenu) == 0x03 then
-			WriteFloat(LoadingIndicator, 90)
-		end
-		if (input & 8192 == 8192 and ReadInt(saveselect) == 0 and ReadInt(save1+0xC) ~= prevSave) then 
-			local f = io.open("KH2autosave.dat", "rb")
-			if f ~= nil then
-				WriteString(save1, f:read("*a"))
-				f:close()
-				print("Loaded autosave")
+		local input = ReadShort(inputAddress)
+
+		--reset loadCount
+		if ReadByte(loadMenu) == 3 then
+			loadCount = 0
+			-- touchpad (left side or share for steam) / L2 R2
+			local inputCheck = input == 1 or input == 768
+			if inputCheck then
+				WriteFloat(loadingIndicator, 90)
+			end
+			if ReadInt(saveSelect) == 0 and ReadInt(save1 + 12) ~= prevSave and inputCheck then
+				local f = io.open("KH2autosave.dat", "rb")
+				if input == 768 then
+					f = io.open("KH2autosave2.dat", "rb")
+				end
+				if f ~= nil then
+					WriteString(save1, f:read("*a"))
+					f:close()
+					if input == 1 then
+						ConsolePrint("Loaded autosave")
+					else
+						ConsolePrint("Loaded backup autosave")
+					end
+				end
 			end
 		end
-		if ReadInt(continue+0xC) ~= prevContinue and ReadByte(writeLogic) == 0 and blacklisted == false then
+
+		if ReadInt(continue + 12) ~= prevContinue and ReadByte(writeLogic) == 0 and blacklisted == false then
+			if loadCount > 1 then
+				local r = io.open("KH2autosave.dat", "rb")
+				local f2 = io.open("KH2autosave2.dat", "wb")
+				f2:write(r:read("*a"))
+				ConsolePrint("Copying Backup")
+				f2:close()
+				r:close()
+			end
+			
 			local f = io.open("KH2autosave.dat", "wb")
-			f:write(ReadString(continue, 0x10FC0))
+			f:write(ReadString(continue, 69568))
 			f:close()
-			print("Wrote autosave")
+			ConsolePrint("Wrote autosave")
+
+			loadCount = loadCount + 1
 		end
-		prevInput = input
-		prevSave = ReadInt(save1+0xC)
-		prevContinue = ReadInt(continue+0xC)
+		prevSave = ReadInt(save1 + 12)
+		prevContinue = ReadInt(continue + 12)
 	end
 end

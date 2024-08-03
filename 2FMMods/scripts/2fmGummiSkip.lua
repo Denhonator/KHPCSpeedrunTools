@@ -1,6 +1,6 @@
-LUAGUI_NAME = "2fmAutoSave"
+LUAGUI_NAME = "2fmGummiSkip"
 LUAGUI_AUTH = "denhonator (edited by deathofall84)"
-LUAGUI_DESC = "Hold attack to combo"
+LUAGUI_DESC = "Skip gummi missions"
 
 local canExecute = false
 
@@ -22,15 +22,15 @@ end
 
 function _OnFrame()
 	if canExecute then
-		local input = ReadShort(inputAddress) == 16384
-		local command = ReadByte(commandMenuItem) == 0
-		local dialog = ReadByte(inDialogue) == 0
-		local inCombat = ReadByte(btlTyp) & 3 > 0
-
-		if input and command and dialog and inCombat then
-			WriteByte(autoAttack, 1)
-		else
-			WriteByte(autoAttack, 0)
+		for i=0, 16 do
+			if ReadByte(gummiSkip + (i * 4)) >= 2 then
+				WriteByte(gummiSkip + (i * 4), 0)
+			end
+		end
+		for i=353, 361 do
+			if ReadByte(gummiSkip + i) == 1 then
+				WriteByte(gummiSkip + i, 2)
+			end
 		end
 	end
 end
