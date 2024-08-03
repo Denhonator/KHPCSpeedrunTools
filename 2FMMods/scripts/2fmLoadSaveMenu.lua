@@ -174,9 +174,9 @@ function LoadSaveMenu()
 	if canOpen() then
 		-- Set Save Menu Slots
 		if showWorldMap() then
-			WriteByte(saveMenuSlot, 3) --3 Save Menu Slots (With World Map)
+			WriteByte(saveMenuSlot, 3) -- 3 Save Menu Slots (With World Map)
 		-- else
-		-- 	WriteByte(saveMenuSlot, 2) --2 Save Menu Slots (Without World Map)
+		-- 	WriteByte(saveMenuSlot, 2) -- 2 Save Menu Slots (Without World Map)
 		end
 		-- Pause HUD Pop-Up
 		if ReadByte(menu + 22) ~= 15 then

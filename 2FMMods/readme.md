@@ -17,7 +17,7 @@ Not all of these scripts are allowed in speedruns
 - If you created the folder yourself copy the version lua files for your version from the repo into it, ie. `EpicGamesGlobal.lua` for English Epic Games.
 
 ### AutoAttack:
-- Allows physically attacking continuously by holding attack button.
+- Allows physically attacking continuously by holding attack button in combat.
 
 ### Autosave:
 - Automatically saves the latest continue state to a local file
@@ -39,7 +39,7 @@ Not all of these scripts are allowed in speedruns
 - Normally opens with just start, during x opens with start + R2 (or equivalent on your input device)
 
 ### QuickHP0:
-- Instantly set your HP to 0 forcing a continue screen
+- Instantly set your HP to 0
 - Trigger with L2 + R2 (or equivalent on your input device)
 
 ### SaveAnywhere:

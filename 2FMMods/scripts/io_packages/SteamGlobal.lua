@@ -3,6 +3,7 @@ inputAddress = 0xBF31F0
 saveMenuSlot = 0xBEDE10
 soraHP = 0x2A23518
 location  = 0x717008
+btlTyp = 0x2A11384
 
 -- gummi skip
 gummiSkip = 0x9AD827
@@ -29,7 +30,6 @@ spawns = 0x2AE5CF8
 -- load save menu
 save = 0x9AB503
 menu = 0x2A114E0
-btlTyp = 0x2A11384
 loading = 0x8EC5A3
 cutscene = 0x728440
 
@@ -38,3 +38,8 @@ xemnasHP = 0x2A23028
 
 -- credit skip
 pause = 0xABB7F8
+
+-- auto attack
+commandMenuItem = 0x2A1063C
+inDialogue = 0x2A16290
+autoAttack = 0x2A5C916
