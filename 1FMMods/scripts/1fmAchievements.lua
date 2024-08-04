@@ -8,61 +8,75 @@ local curAch = {0,0}
 local posDebugString = 0x3EB158
 
 local achievementList = {
-"Proud Player         ",
-"Final Mix Master     ",
-"Novice Player        ",
-"Unchanging Armor     ",
-"Undefeated           ",
-"Speedster            ",
-"He Who Doesn't Exist ",
-"The Cloaked Shadow   ",
-"The Sandy Blade      ",
-"Novice Hero          ",
-"Artisan Hero         ",
-"Hero of the Coliseum ",
-"Coliseum Champion    ",
-"The Frosty Giant     ",
-"One-Winged Angel     ",
-"Supreme Soloist      ",
-"Time Attacker        ",
-"Level Master         ",
-"Treasure Hunter      ",
-"From Rags to Riches  ",
-"Heartless Hunter     ",
-"Where the Bells Toll ",
-"The Rabbit Hole      ",
-"Junior Hero          ",
-"Member of the Tribe  ",
-"Magic Lamp           ",
-"Honest Soul          ",
-"Master of the Seas   ",
-"Pumpkin Prince       ",
-"Pixie Dust           ",
-"End of the World     ",
-"Pooh's Friend        ",
-"Record Keeper        ",
-"Storyteller          ",
-"Searcher             ",
-"Professor            ",
-"Top Dog              ",
-"Best Friend          ",
-"Mini-game Maniac     ",
-"Synthesis Master     ",
-"First Synthesis      ",
-"Synthesis Novice     ",
-"Synthesis Amateur    ",
-"Synthesis Vet        ",
-"Gummi Ship Collector ",
-"Flying Ace           ",
-"Customizer           ",
-"Top Gun              ",
-"Test Pilot           ",
-"Veteran Pilot        ",
-"Ace Pilot            ",
-"Oathkeeper           ",
-"Blade Master         ",
-"Master Magician      ",
-"Master Defender      "}
+	"Proud Player         ",
+	"Final Mix Master     ",
+	"Novice Player        ",
+	"Unchanging Armor     ",
+	"Undefeated           ",
+	"Speedster            ",
+	"He Who Doesn't Exist ",
+	"The Cloaked Shadow   ",
+	"The Sandy Blade      ",
+	"Novice Hero          ",
+	"Artisan Hero         ",
+	"Hero of the Coliseum ",
+	"Coliseum Champion    ",
+	"The Frosty Giant     ",
+	"One-Winged Angel     ",
+	"Supreme Soloist      ",
+	"Time Attacker        ",
+	"Level Master         ",
+	"Treasure Hunter      ",
+	"From Rags to Riches  ",
+	"Heartless Hunter     ",
+	"Where the Bells Toll ",
+	"The Rabbit Hole      ",
+	"Junior Hero          ",
+	"Member of the Tribe  ",
+	"Magic Lamp           ",
+	"Honest Soul          ",
+	"Master of the Seas   ",
+	"Pumpkin Prince       ",
+	"Pixie Dust           ",
+	"End of the World     ",
+	"Pooh's Friend        ",
+	"Record Keeper        ",
+	"Storyteller          ",
+	"Searcher             ",
+	"Professor            ",
+	"Top Dog              ",
+	"Best Friend          ",
+	"Mini-game Maniac     ",
+	"Synthesis Master     ",
+	"First Synthesis      ",
+	"Synthesis Novice     ",
+	"Synthesis Amateur    ",
+	"Synthesis Vet        ",
+	"Gummi Ship Collector ",
+	"Flying Ace           ",
+	"Customizer           ",
+	"Top Gun              ",
+	"Test Pilot           ",
+	"Veteran Pilot        ",
+	"Ace Pilot            ",
+	"Oathkeeper           ",
+	"Blade Master         ",
+	"Master Magician      ",
+	"Master Defender      "
+}
+
+local function importVars(file)
+	if not pcall(require, file) then
+		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
+		local msg = ""
+		local slashIdx = string.find(file, "/")
+		if slashIdx then
+			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+		else
+			msg = string.format("%s.lua missing, get it from the Github!", file)
+		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+	end
+end
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
@@ -70,11 +84,11 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			require("EpicGamesGlobal")
+			importVars("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			require("EpicGamesJP")
+			importVars("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP equal
+			importVars("SteamGlobal") -- Global and JP version addresses are shared
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")

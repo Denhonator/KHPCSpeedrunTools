@@ -28,24 +28,34 @@ local canOpenTable = {
 	{2574, 72} -- Gift Wrapping (Wrap Over 150 Presents)
 }
 
+local function importVars(file)
+	if not pcall(require, file) then
+		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
+		local msg = ""
+		local slashIdx = string.find(file, "/")
+		if slashIdx then
+			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+		else
+			msg = string.format("%s.lua missing, get it from the Github!", file)
+		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+	end
+end
+
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
         canExecute = true
 		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
-			ConsolePrint('Epic Games Version Detected')
-			require("EpicGamesGlobal") -- Both versions share addresses
+			importVars("EpicGamesGlobal") -- Global and JP version addresses are shared
 		elseif ReadByte(0x660E74) == 106 then -- Steam Global
-			ConsolePrint('Steam Global Version Detected')
-			require("SteamGlobal")
+			importVars("SteamGlobal")
 		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
-			ConsolePrint('Steam JP Version Detected')
-			require("SteamJP")
+			importVars("SteamJP")
 		end
 	end
 end
 
 -- Check for world, room, door, map, btl, and evt
-function event(w, r, d, m, b, e)
+local function event(w, r, d, m, b, e)
 	return (
 		(world == w or not w) and
 		(room == r or not r) and
@@ -56,12 +66,12 @@ function event(w, r, d, m, b, e)
 	)
 end
 
-function isBit(address, bit)
+local function isBit(address, bit)
 	return ReadByte(address) & bit == bit
 end
 
 -- Check if the Load/Save Menu can be opened
-function canOpen()
+local function canOpen()
 	if ReadByte(loading) ~= 0 then -- Loading
 		return false
 	elseif ReadByte(cutscene) == 1 then -- Cutscene
@@ -79,7 +89,7 @@ function canOpen()
 end
 
 --Check the Menu Type (Load Game/Save or Load Only)
-function MenuType()
+local function MenuType()
 	if world == 2 and isBit(save, 4) and not isBit(save + 1, 16) then -- New Game ~ Before Chasing Dusk
 		return 'Load'
 	elseif world == 2 and isBit(save + 1, 16) and not isBit(save + 1, 32) then -- Chasing Dusk
@@ -133,43 +143,59 @@ function MenuType()
 end
 
 -- Check if World Map should be shown in Save Menu
-function showWorldMap()
-	if world == 15 then -- World Map
+local function showWorldMap()
+	-- World Map
+	if world == 15 then
 		return false
-	elseif not isBit(save + 61, 64) then -- Before visiting Merlin's House for the first time
+	-- Before visiting Merlin's House for the first time
+	elseif not isBit(save + 61, 64) then
 		return false
-	elseif event(8, 5, nil, 1, 0, 0) then -- TLoD1 (Village Cave after Cave Battle)
+	-- TLoD1 (Village Cave after Cave Battle)
+	elseif event(8, 5, nil, 1, 0, 0) then
 		return false
-	elseif world == 8 and isBit(save + 196, 8) and not isBit(save + 196, 16) then -- TLoD1 (Summit ~ Village after Summit Battle)
+	-- TLoD1 (Summit ~ Village after Summit Battle)
+	elseif world == 8 and isBit(save + 196, 8) and not isBit(save + 196, 16) then
 		return false
-	elseif event(6, 0, nil, 0, 0, 4) then -- OC1 (Talking Hercules in The Coliseum)
+	-- OC1 (Talking Hercules in The Coliseum)
+	elseif event(6, 0, nil, 0, 0, 4) then
 		return false
-	elseif (world == 4 or world == 9) and isBit(save + 67, 8) and not isBit(save + 68, 8) then -- First 100 Acre Wood events
+	-- First 100 Acre Wood events
+	elseif (world == 4 or world == 9) and isBit(save + 67, 8) and not isBit(save + 68, 8) then
 		return false
-	elseif event(14, 2, nil, 5, 0, 21) then -- HT1 (Graveyard (1st Arrival))
+	-- HT1 (Graveyard (1st Arrival))
+	elseif event(14, 2, nil, 5, 0, 21) then
 		return false
-	elseif world == 2 and isBit(save + 19, 2) and not isBit(save + 19, 128) and	not isBit(save + 546, 128) then -- TT2 (Before clearing or entering The Usual Spot)
+	-- TT2 (Before clearing or entering The Usual Spot)
+	elseif world == 2 and isBit(save + 19, 2) and not isBit(save + 19, 128) and	not isBit(save + 546, 128) then
 		return false
-	elseif world == 4 and isBit(save + 62, 4) and not isBit(save + 62, 32) then -- HB2 (Before visiting Merlin's House)
+	-- HB2 (Before visiting Merlin's House)
+	elseif world == 4 and isBit(save + 62, 4) and not isBit(save + 62, 32) then
 		return false
-	elseif (world == 4 or world == 17) and isBit(save + 63, 2) and not isBit(save + 63, 32) then -- HB2/SP1 (Entering Ansem's Study ~ Going back to Research Lab from Pit Cell)
+	-- HB2/SP1 (Entering Ansem's Study ~ Going back to Research Lab from Pit Cell)
+	elseif (world == 4 or world == 17) and isBit(save + 63, 2) and not isBit(save + 63, 32) then
 		return false
-	elseif event(17, 5, nil, 0, 0, 3) then -- SP1 (Before going back to Research Lab after Hostile Program Battle)
+	-- SP1 (Before going back to Research Lab after Hostile Program Battle)
+	elseif event(17, 5, nil, 0, 0, 3) then
 		return false
-	elseif world == 5 and isBit(save + 96, 2) and not isBit(save + 96, 128) and not isBit(save + 541, 128) and not isBit(save + 542, 1) and not isBit(save + 542, 4) then -- BC2 (Before entering Beast's Room or any Savepoint areas)
+	-- BC2 (Before entering Beast's Room or any Savepoint areas)
+	elseif world == 5 and isBit(save + 96, 2) and not isBit(save + 96, 128) and not isBit(save + 541, 128)
+					  and not isBit(save + 542, 1) and not isBit(save + 542, 4) then
 		return false
-	elseif world == 5 and isBit(save + 96, 128) and not isBit(save + 97, 2) then -- BC2 (Before leaving The West Wing after entering Beast's Room)
+	-- BC2 (Before leaving The West Wing after entering Beast's Room)
+	elseif world == 5 and isBit(save + 96, 128) and not isBit(save + 97, 2) then
 		return false
-	elseif world == 10 and isBit(save + 256, 4) and not isBit(save + 545, 16) then -- PR2 (Before entering Stone Hollow)
+	-- PR2 (Before entering Stone Hollow)
+	elseif world == 10 and isBit(save + 256, 4) and not isBit(save + 545, 16) then
 		return false
-	elseif world == 4 and isBit(save + 73, 8) and not isBit(save + 73, 64) then -- HB3 (Before entering Merlin's House)
+	-- HB3 (Before entering Merlin's House)
+	elseif world == 4 and isBit(save + 73, 8) and not isBit(save + 73, 64) then
 		return false
 	end
 	return true
 end
 
 -- Load/Save Menu
-function LoadSaveMenu()
+local function LoadSaveMenu()
 	-- Open Pause Menu
 	if canOpen() then
 		-- Set Save Menu Slots

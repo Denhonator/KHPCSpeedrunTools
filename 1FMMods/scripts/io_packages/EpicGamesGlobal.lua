@@ -1,82 +1,42 @@
+-- shared
 beepHack = 0x26BD5C
 maxHP = 0x2DE9CE6
-height = 0x3B4594
-ach = 0x21AB8A8
-swapped = 0x22DAF7E
 menu = 0x232E900
 dialog = 0x299C488
-attackCommand = 0x52960C
-attInp = 0x2341335
-fireState1 = 0x23D4900
-fireState2 = 0x232E744
-zantHack = 0x2A4B08
-gravBreak = 0x3ED378
-zantValue = 48100
-skipArray1 = 0x1783BC
-skipArray2 = 0x17D203
+blackFade = 0x4DD3F8
+world = 0x2340E4C
+room = 0x2340E44
+soraHUD = 0x2812E1C
 cutscene = 0x233F174
 white = 0x234079C
 fadeBase = 0x2340750
-skipFlag1 = 0x23408B8
-skipFlag2 = 0x2340DA0
-curSpeedV = 0x25387D0
-curSpeedH = 0x25387D4
-cameraInputH = 0x2341360
-cameraInputV = 0x2341364
-cameraCenter = 0x2538A34
-speed = 0x507AAC
-soraHUD = 0x2812E1C
 inCutscene = 0x237CE60
 skippable = 0x23987E4
 summoning = 0x2D6192C
-world = 0x2340E4C
-room = 0x2340E44
 minitimer = 0x232E984
 animSpeed = 0x234054C
-textProg = 0x232E8F4
-textTrans = 0x22ECA44
-textSpeed = 0x234055C
-hookship = 0xED751E
 dest = 0x508280
-neverland = 0x2DEBBD7
-monstro = 0x2DEBBDA
-posDebug1 = 0x232E6A0
-posDebug2 = 0x2538964
-ingummi = 0x5082AD
-debug1Value = 1
-gummiStart = 0x507C90
+inGummi = 0x5082AD
 gummiSelect = 0x507D7C
-worldWarpBase = 0x50F9FA
-worldWarpBase2 = 0x50FA6A
-normalDrive = 0x268A1EC
+gummiStart = 0x507C90
 cutsceneFlagBase = 0x2DEB1E5
-deathCheck = 0x299BE0
 soraHP = 0x2D5D5CC
 stateFlag = 0x2867C58
-blackFade = 0x4DD3F8
 closeMenu = 0x2E94B20
 deathPointer = 0x23987B8
 warpTrigger = 0x22EC9DC
 warpType1 = 0x2340540
 warpType2 = 0x22EC9E0
-title = 0x2340DB8
-continue = 0x2E008E0
-config = 0x2E000E0
-cam = 0x507AA8
-titlescreenpicture = 0x2EE55EC
-titlescreenamvtimer = 0x2EE98D4
-cutSceneAspect = 0x4DE242
 inputAddress = 0x2341334
 saveOpenAddress = 0x232E904
-saveAnywhere = 0x23551D4
 menuFunction = 0x2E20F28
 menuButtonCount = 0x2E20E9C
 menuMaxButtonCount = 0x2E93750
 menuItemSlotCount = 0x2E93752
 buttonTypes = 0x2E20EA0
-volumeZero = 0x3D9B24
 
--- shared Rando
+-- rando shared
+soraStats = 0x2DE9D16
 khamaActive = 0x2D38A30
 theonActive = 0x2D3A1A0
 party1 = 0x2DEA16F
@@ -86,22 +46,45 @@ roomWarp = 0x2340E74
 ardOff = 0x2398EB0
 worldFlagBase = 0x2DEBE30
 
--- Chaos Rando
-musicSpeedHack = 0xA778B
-musicBaseSpeed = 36701
-weaponSize = 0xD2EF20
-musicPointer = 0x232E890
-soraPointer = 0x2538990
-attackElement = 0x2D28238
+-- 4:3
+height = 0x3B4594
+
+-- achievements
+ach = 0x21AB8A8
+
+-- auto attack
+attInp = 0x2341335
+swapped = 0x22DAF7E
+attackCommand = 0x52960C
+fireState1 = 0x23D4900
+fireState2 = 0x232E744
+
+-- rando chaos
 anims = 0x2D2E0B0
 commandMenuPointer = 0x2D376D0
+attackElement = 0x2D28238
+soraPointer = 0x2538990
 donaldPointer = 0x2D37C08
 goofyPointer = 0x2D37C10
+weaponSize = 0xD2EF20
+musicPointer = 0x232E890
+musicSpeedHack = 0xA778B
+musicBaseSpeed = 36701
 moveSpeed = 0x2D5D498
 soraResist = 0x2D5D508
-soraStats = 0x2DE9D16
 
--- Enemy Rando
+-- consistent finishers
+zantHack = 0x2A4B08
+gravBreak = 0x3ED378
+zantValue = 48100
+
+-- early skip
+skipArray1 = 0x1783BC
+skipArray2 = 0x17D203
+skipFlag1 = 0x23408B8
+skipFlag2 = 0x2340DA0
+
+-- rando enemy
 cutsceneFlags = 0x2DEB1E0
 inTournament = 0x238D77C
 bittestRender = 0x232E770
@@ -141,7 +124,33 @@ bossAdjustAddresses = {
 	0x2D5DDCC, 0x2DEA170
 }
 
--- Some Logic Rando
+-- fast camera
+curSpeedV = 0x25387D0
+curSpeedH = 0x25387D4
+cameraCenter = 0x2538A34
+speed = 0x507AAC
+cameraInputH = 0x2341360
+cameraInputV = 0x2341364
+
+-- faster dialogue
+textTrans = 0x22ECA44
+textProg = 0x232E8F4
+textSpeed = 0x234055C
+
+-- hook ship
+hookship = 0xED751E
+neverland = 0x2DEBBD7
+posDebug1 = 0x232E6A0
+posDebug2 = 0x2538964
+debug1Value = 1
+
+-- instant gummi
+worldWarpBase = 0x50F9FA
+worldWarpBase2 = 0x50FA6A
+monstro = 0x2DEBBDA
+normalDrive = 0x268A1EC
+
+-- rando some logic
 superglideBaseSpeed = 1573500
 superglideSpeedHack = 0x2B05B4
 mermaidKickSpeed = 0x3F081C
@@ -158,15 +167,14 @@ warpDefinitions = 0x232E880
 roomWarpRead = 0x232E888
 lockMenu = 0x232E90C
 collectedFruits = 0x232E988
-removeBlack = 0x2340750
-terminusTeleUsable = 0x2396BA4 --On: 4378 Off: 4294957296
+terminusTeleUsable = 0x2396BA4 -- On: 4378 Off: 4294957296
 currentTerminus = 0x2396C64
 ardoffsetClock = 0x2399210
 OCCupDialog = 0x239A9B0
 infoBoxNotVisible = 0x23D4B90
 textBox = 0x23D4364
 instantGummiFix = 0x2538058
-terminusTeleVisible = 0x2678DC8 --On: 1166594048 Off: 3323740160
+terminusTeleVisible = 0x2678DC8 -- On: 1166594048 Off: 3323740160
 itemDropID = 0x284E2C8
 RCName = 0x2867690
 animHalfPointersAddress = 0x286A798
@@ -225,7 +233,21 @@ menuCheck = 0x2E93198
 menuState = 0x2E93568
 halfPointersAddress = 0x2EE46B0
 
--- Some Logic Rando - used in ASL
+-- rando some logic - used in ASL
 gummiInventory = 0x2DF5B5C
 magicUnlock = 0x2DE9D54
 soraCurAbilities = 0x2DE9D24
+
+-- save anywhere
+deathCheck = 0x299BE0
+title = 0x2340DB8
+continue = 0x2E008E0
+config = 0x2E000E0
+cam = 0x507AA8
+titlescreenpicture = 0x2EE55EC
+titlescreenamvtimer = 0x2EE98D4
+cutSceneAspect = 0x4DE242
+saveAnywhere = 0x23551D4
+
+-- unlock 0 volume
+volumeZero = 0x3D9B24

@@ -5,7 +5,8 @@ LUAGUI_DESC = "Randomizes many things in a chaotic way"
 local lastBlack = 0
 local airStatuses = {0, 8, 24}
 local validCommands = {
-	[75]=true,[87]=true,[88]=true,[90]=true, [94]=true,[98]=true,[99]=true
+	[75] = true, [87] = true, [88] = true, [90] = true,
+	[94] = true, [98] = true, [99] = true
 }
 local musics = {184}
 local musicExists = {[184] = true}
@@ -17,16 +18,29 @@ local baseSeed = 0
 local canExecute = false
 local posDebugString = 0x3EB158
 
+local function importVars(file)
+	if not pcall(require, file) then
+		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
+		local msg = ""
+		local slashIdx = string.find(file, "/")
+		if slashIdx then
+			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+		else
+			msg = string.format("%s.lua missing, get it from the Github!", file)
+		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+	end
+end
+
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			require("EpicGamesGlobal")
+			importVars("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			require("EpicGamesJP")
+			importVars("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP equal
+			importVars("SteamGlobal") -- Global and JP version addresses are shared
 			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
 				musicBaseSpeed = 32797
 			end

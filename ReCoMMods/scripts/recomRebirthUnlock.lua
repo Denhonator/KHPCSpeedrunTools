@@ -4,18 +4,31 @@ LUAGUI_DESC = "Unlock Reverse Rebirth"
 
 local canExecute = false
 
+local function importVars(file)
+	if not pcall(require, file) then
+		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
+		local msg = ""
+		local slashIdx = string.find(file, "/")
+		if slashIdx then
+			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+		else
+			msg = string.format("%s.lua missing, get it from the Github!", file)
+		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+	end
+end
+
 function _OnInit()
 	if GAME_ID == 0x9E3134F5 and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("Re:CoM detected")
 		canExecute = true
-		epic_gl = ReadByte(0x3A2FD9)
-		epic_jp = ReadByte(0x3A2E19)
-		if epic_gl == 117 or epic_gl == 115 or epic_jp == 117 or epic_jp == 115 then
-			gamecomplete = 0x87AA90
-			ConsolePrint("Epic Version")
+		if ReadByte(0x7050E8) == 106 then
+			importVars("EpicGamesGlobal")
+		elseif ReadByte(0x7050C8) == 106 then
+			importVars("EpicGamesJP")
+		elseif ReadByte(0x7051E8) == 106 then
+			importVars("SteamGlobal")
 		else
-			gamecomplete = 0x87B190
-			ConsolePrint("Steam Version")
+			importVars("SteamJP")
 		end
 	end
 end
