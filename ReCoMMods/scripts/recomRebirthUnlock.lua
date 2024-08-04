@@ -8,14 +8,14 @@ function _OnInit()
 	if GAME_ID == 0x9E3134F5 and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("Re:CoM detected")
 		canExecute = true
-		epic_gl = ReadByte(0x3A2FD9)
-		epic_jp = ReadByte(0x3A2E19)
-		if epic_gl == 117 or epic_gl == 115 or epic_jp == 117 or epic_jp == 115 then
-			gamecomplete = 0x87AA90
-			ConsolePrint("Epic Version")
+		if ReadByte(0x7050E8) == 106 then
+			require("EpicGamesGlobal")
+		else if ReadByte(0x7050C8) == 106 then
+			require("EpicGamesJP")
+		else if ReadByte(0x7051E8) == 106 then
+			require("SteamGlobal")
 		else
-			gamecomplete = 0x87B190
-			ConsolePrint("Steam Version")
+			require("SteamJP")
 		end
 	end
 end

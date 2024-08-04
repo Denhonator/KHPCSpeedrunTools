@@ -6,19 +6,14 @@ local canExecute = false
 
 function _OnInit()
 	if GAME_ID == 0xBED4B944 and ENGINE_TYPE == "BACKEND" then
-		ConsolePrint("Birth by Sleep detected")
 		canExecute = true
-		if ReadByte(0x7262E4) == 0x6A or ReadByte(0x7252E4) == 0x6A then
-			if ReadByte(0x7262E4) == 0x6A then
-				ConsolePrint("Epic Games Global Version")
-				unlock = 0x10FB2DF9
-			else
-				ConsolePrint("Epic Games JP Version")
-				unlock = 0x10FB1DF9
-			end
+		ConsolePrint("Birth by Sleep detected")
+		if ReadByte(0x7262E4) == 106 then
+			require("EpicGamesGlobal")
+		elseif ReadByte(0x7252E4) == 106 then
+			require("EpicGamesJP")
 		else
-			ConsolePrint("Steam Version")
-			unlock = 0x10FB1679
+			require("SteamGlobal") -- Global and JP version addresses are shared
 		end
 	else
 		ConsolePrint("Birth by Sleep not detected, not running script")

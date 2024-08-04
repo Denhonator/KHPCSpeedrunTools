@@ -12,7 +12,7 @@ function _OnInit()
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP version addresses are shared
 			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
 				volumeZero = volumeZero - 0x80
 			end

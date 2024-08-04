@@ -4,7 +4,7 @@ LUAGUI_DESC = "Randomizes enemies"
 
 local counter = 0
 local fallcounter = 0
-local bossLastHP = {0,0,0,0,0}
+local bossLastHP = {0, 0, 0, 0, 0}
 local endfightTimer = 0
 local antisorabeaten = false
 
@@ -27,7 +27,7 @@ end
 
 local function PickRandom(t)
 	local s = ""
-	for _=1,10 do
+	for _=1, 10 do
 		local s1 = t[math.random(#t)]
 		if used[s1] == nil or s == "" or used[s1] < used[s] then
 			s = s1
@@ -45,116 +45,116 @@ local function PickRandom(t)
 end
 
 local function AddAddrs()
-	for i=0,32 do
+	for i=0, 32 do
 		addrs[i + 1] = {}
 	end
-	--addrs[3][enemyAddresses[82]] = PickRandom(normal) --2nd district yellow
-	--addrs[3][enemyAddresses[81]] = PickRandom(normal) --2nd district blue
-	--addrs[3][enemyAddresses[80]] = PickRandom(normal) --2nd district red
-	addrs[3][enemyAddresses[78]] = PickRandom(lite) --2nd district shadow
-	addrs[3][enemyAddresses[97]] = PickRandom(leon) --tt leon
-	--addrs[3][enemyAddresses[79]] = PickRandom(normal) --2nd district soldier
-	addrs[3][enemyAddresses[77]] = PickRandom(lite) --alleyway shadow
-	addrs[3][enemyAddresses[76]] = PickRandom(lite) --alleyway soldier
-	addrs[3][enemyAddresses[96]] = PickRandom(normal) --1st district shadow
-	addrs[3][enemyAddresses[94]] = PickRandom(normal) --3rd district shadow
-	addrs[3][enemyAddresses[93]] = PickRandom(lite) --3rd district soldier
-	addrs[3][enemyAddresses[48]] = PickRandom(normal) --gizmo shadow
-	--addrs[3][enemyAddresses[95]] = test[math.random(#test)] --guard armor
-	--addrs[5][enemyAddresses[67]] = boss[math.random(#boss)] --treehouse sabor
-	addrs[5][enemyAddresses[61]] = PickRandom(powerwild) --camp powerwild
-	addrs[5][enemyAddresses[59]] = PickRandom(powerwild) --climbing trees powerwild
-	addrs[5][enemyAddresses[66]] = PickRandom(lite) --treehouse powerwild
-	addrs[5][enemyAddresses[30]] = PickRandom(powerwild) --cliffs powerwild
-	addrs[5][enemyAddresses[74]] = PickRandom(lite) --bamboo powerwild
-	addrs[5][enemyAddresses[75]] = PickRandom(sabor) --bamboo sabor
-	--addrs[5][enemyAddresses[31]] = boss[math.random(#boss)] --cliff clayton
-	--addrs[5][enemyAddresses[32]] = test[math.random(#test)] --cliff clayton & stealth sneak
-	--addrs[4][enemyAddresses[3]] = PickRandom(normal) --rabbithole shadow
-	--addrs[4][enemyAddresses[10]] = PickRandom(normal) --lotus forest soldier
-	addrs[4][enemyAddresses[62]] = PickRandom(trick) --trickmaster
-	--addrs[11][enemyAddresses[85]] = PickRandom(normal) --oc shadow
-	addrs[11][enemyAddresses[83]] = PickRandom(cloud) --oc cloud
-	addrs[11][enemyAddresses[90]] = PickRandom(herc) --oc herc
-	addrs[11][enemyAddresses[20]] = PickRandom(duo) --oc leon
-	addrs[11][enemyAddresses[21]] = PickRandom(duo) --oc yuffie
-	--addrs[11][enemyAddresses[91]] = cerb[math.random(#cerb)] --oc cerb
-	--addrs[11][enemyAddresses[84]] = PickRandom(normal) --oc soldier
-	--addrs[11][enemyAddresses[86]] = PickRandom(normal) --oc large body
-	--addrs[11][enemyAddresses[87]] = PickRandom(normal) --oc red
-	--addrs[11][enemyAddresses[88]] = PickRandom(normal) --oc blue
-	--addrs[11][enemyAddresses[89]] = PickRandom(normal) --oc blue
-	addrs[8][enemyAddresses[19]] = PickRandom(bandit) --alley bandit
-	addrs[8][enemyAddresses[16]] = PickRandom(lite) --mainstreet bandit
-	addrs[8][enemyAddresses[73]] = PickRandom(bandit) --plaza bandit
-	addrs[8][enemyAddresses[57]] = PickRandom(lite) --desert: cave bandit
-	addrs[8][enemyAddresses[12]] = PickRandom(bandit) --bazaar bandit
-	--addrs[8][enemyAddresses[44]] = test[math.random(#test)] --pot cent 1
-	--addrs[8][enemyAddresses[45]] = test[math.random(#test)] --pot cent 2
-	--addrs[8][enemyAddresses[43]] = test[math.random(#test)] --pot cent pot spider
-	--addrs[8][enemyAddresses[46]] = test[math.random(#test)] --pot cent pot spider
-	--addrs[8][enemyAddresses[58]] = test[math.random(#test)] --tiger head
-	--addrs[8][enemyAddresses[40]] = PickRandom(lite) --cave entrance bandit
-	--addrs[8][enemyAddresses[39]] = PickRandom(bandit) --cave hall air soldier
-	--addrs[8][enemyAddresses[23]] = PickRandom(lite) --bottomless shadow
-	addrs[8][enemyAddresses[24]] = PickRandom(jafar) --jafar
-	addrs[8][enemyAddresses[25]] = PickRandom(genie) --genie
-	--addrs[8][enemyAddresses[34]] = test[math.random(#test)] --genie jafar
-	--addrs[12][enemyAddresses[26]] = PickRandom(normal) --chamber 1 ghost
-	--addrs[12][enemyAddresses[54]] = PickRandom(normal) --chamber 2 airsoldier
-	--addrs[12][enemyAddresses[55]] = PickRandom(normal) --chamber 5 ghost
-	addrs[12][enemyAddresses[50]] = PickRandom(parasite) --pc1
-	addrs[12][enemyAddresses[51]] = PickRandom(pc1riku) --pc1 riku
-	--addrs[12][enemyAddresses[49]] = test[math.random(#test)] --pc2
-	--addrs[10][enemyAddresses[72]] = PickRandom(lite) --square ghost
-	--addrs[10][enemyAddresses[64]] = PickRandom(lite) --graveyard ghost
-	--addrs[10][enemyAddresses[68]] = PickRandom(normal) --moonlight hill whight
-	--addrs[10][enemyAddresses[38]] = PickRandom(normal) --bridge whight
-	--addrs[10][enemyAddresses[98]] = PickRandom(lite) --manor whight
-	--addrs[10][enemyAddresses[4]] = test[math.random(#test)] --lock
-	--addrs[10][enemyAddresses[5]] = test[math.random(#test)] --shock
-	--addrs[10][enemyAddresses[6]] = test[math.random(#test)] --barrel
-	--addrs[10][enemyAddresses[37]] = test[math.random(#test)] --oogie
-	--addrs[10][enemyAddresses[36]] = test[math.random(#test)] --oogie gargoyles
-	addrs[13][enemyAddresses[33]] = PickRandom(normal) --ship hold anti sora
-	addrs[13][enemyAddresses[17]] = PickRandom(normal) --ship hold anti sora
-	addrs[13][enemyAddresses[18]] = PickRandom(normal) --ship hold anti sora
-	addrs[13][enemyAddresses[42]] = PickRandom(normal) --ship galley anti sora
-	addrs[13][enemyAddresses[35]] = PickRandom(antisora) --anti sora
-	--addrs[13][enemyAddresses[52]] = PickRandom(normal) --ship pirate
-	addrs[13][enemyAddresses[53]] = PickRandom(hook) --hook
-	addrs[15][enemyAddresses[60]] = PickRandom(riku1) --riku1
-	addrs[15][enemyAddresses[56]] = PickRandom(normal) --tower wyvern
-	addrs[15][enemyAddresses[15]] = PickRandom(normal) --gates wyvern
-	addrs[15][enemyAddresses[14]] = PickRandom(normal) --base level darkball
-	addrs[15][enemyAddresses[99]] = PickRandom(normal) --waterway defender
-	--addrs[15][enemyAddresses[41]] = PickRandom(normal) --lift stop defender
-	addrs[15][enemyAddresses[69]] = PickRandom(mal) --maleficent
-	addrs[15][enemyAddresses[65]] = PickRandom(dragmal) --dragon maleficent
-	addrs[15][enemyAddresses[102]] = PickRandom(riku2) --riku2
-	addrs[15][enemyAddresses[47]] = PickRandom(behe) --HB behemoth
-	addrs[16][enemyAddresses[71]] = PickRandom(normal) --EotW Invisible
-	addrs[16][enemyAddresses[70]] = PickRandom(normal) --EotW Darkball
-	addrs[16][enemyAddresses[92]] = PickRandom(normal) --TT Terminal Solider
-	addrs[16][enemyAddresses[1]] = PickRandom(normal) --WL Terminal Wizard
-	addrs[16][enemyAddresses[7]] = PickRandom(normal) --OC Terminal Air Solider
-	addrs[16][enemyAddresses[9]] = PickRandom(normal) --DJ Terminal Powerwild
-	addrs[16][enemyAddresses[11]] = PickRandom(normal) --AG Terminal Bandit
-	addrs[16][enemyAddresses[63]] = PickRandom(normal) --AT Terminal Neon
-	addrs[16][enemyAddresses[8]] = PickRandom(normal) --HT Terminal Ghost
-	addrs[16][enemyAddresses[13]] = PickRandom(normal) --NL Terminal Pirate
-	addrs[16][enemyAddresses[2]] = PickRandom(normal) --HB Terminal Invisible
-	addrs[16][enemyAddresses[22]] = PickRandom(chern) --chernabog
-	addrs[16][enemyAddresses[100]] = PickRandom(ansem1) --ansem1
-	addrs[17][enemyAddresses[100]] = PickRandom(ansem2) --ansem2
-	addrs[17][enemyAddresses[101]] = PickRandom(dside) --darkside
-	--addrs[17][enemyAddresses[27]] = PickRandom(normal) --artillery
-	--addrs[17][enemyAddresses[28]] = PickRandom(normal) --face
-	addrs[17][enemyAddresses[29]] = PickRandom(ansem3) --ansem3
-	addrs[18][enemyAddresses[29]] = PickRandom(ansem4) --ansem3
-	addrs[19][enemyAddresses[29]] = PickRandom(ansem4) --ansem3
-	addrs[20][enemyAddresses[29]] = PickRandom(ansem4) --ansem3
-	addrs[21][enemyAddresses[29]] = PickRandom(ansem3) --ansem3
+	-- addrs[3][enemyAddresses[82]] = PickRandom(normal) -- 2nd district yellow
+	-- addrs[3][enemyAddresses[81]] = PickRandom(normal) -- 2nd district blue
+	-- addrs[3][enemyAddresses[80]] = PickRandom(normal) -- 2nd district red
+	addrs[3][enemyAddresses[78]] = PickRandom(lite) -- 2nd district shadow
+	addrs[3][enemyAddresses[97]] = PickRandom(leon) -- tt leon
+	-- addrs[3][enemyAddresses[79]] = PickRandom(normal) -- 2nd district soldier
+	addrs[3][enemyAddresses[77]] = PickRandom(lite) -- alleyway shadow
+	addrs[3][enemyAddresses[76]] = PickRandom(lite) -- alleyway soldier
+	addrs[3][enemyAddresses[96]] = PickRandom(normal) -- 1st district shadow
+	addrs[3][enemyAddresses[94]] = PickRandom(normal) -- 3rd district shadow
+	addrs[3][enemyAddresses[93]] = PickRandom(lite) -- 3rd district soldier
+	addrs[3][enemyAddresses[48]] = PickRandom(normal) -- gizmo shadow
+	-- addrs[3][enemyAddresses[95]] = test[math.random(#test)] -- guard armor
+	-- addrs[5][enemyAddresses[67]] = boss[math.random(#boss)] -- treehouse sabor
+	addrs[5][enemyAddresses[61]] = PickRandom(powerwild) -- camp powerwild
+	addrs[5][enemyAddresses[59]] = PickRandom(powerwild) -- climbing trees powerwild
+	addrs[5][enemyAddresses[66]] = PickRandom(lite) -- treehouse powerwild
+	addrs[5][enemyAddresses[30]] = PickRandom(powerwild) -- cliffs powerwild
+	addrs[5][enemyAddresses[74]] = PickRandom(lite) -- bamboo powerwild
+	addrs[5][enemyAddresses[75]] = PickRandom(sabor) -- bamboo sabor
+	-- addrs[5][enemyAddresses[31]] = boss[math.random(#boss)] -- cliff clayton
+	-- addrs[5][enemyAddresses[32]] = test[math.random(#test)] -- cliff clayton & stealth sneak
+	-- addrs[4][enemyAddresses[3]] = PickRandom(normal) -- rabbithole shadow
+	-- addrs[4][enemyAddresses[10]] = PickRandom(normal) -- lotus forest soldier
+	addrs[4][enemyAddresses[62]] = PickRandom(trick) -- trickmaster
+	-- addrs[11][enemyAddresses[85]] = PickRandom(normal) -- oc shadow
+	addrs[11][enemyAddresses[83]] = PickRandom(cloud) -- oc cloud
+	addrs[11][enemyAddresses[90]] = PickRandom(herc) -- oc herc
+	addrs[11][enemyAddresses[20]] = PickRandom(duo) -- oc leon
+	addrs[11][enemyAddresses[21]] = PickRandom(duo) -- oc yuffie
+	-- addrs[11][enemyAddresses[91]] = cerb[math.random(#cerb)] -- oc cerb
+	-- addrs[11][enemyAddresses[84]] = PickRandom(normal) -- oc soldier
+	-- addrs[11][enemyAddresses[86]] = PickRandom(normal) -- oc large body
+	-- addrs[11][enemyAddresses[87]] = PickRandom(normal) -- oc red
+	-- addrs[11][enemyAddresses[88]] = PickRandom(normal) -- oc blue
+	-- addrs[11][enemyAddresses[89]] = PickRandom(normal) -- oc blue
+	addrs[8][enemyAddresses[19]] = PickRandom(bandit) -- alley bandit
+	addrs[8][enemyAddresses[16]] = PickRandom(lite) -- mainstreet bandit
+	addrs[8][enemyAddresses[73]] = PickRandom(bandit) -- plaza bandit
+	addrs[8][enemyAddresses[57]] = PickRandom(lite) -- desert: cave bandit
+	addrs[8][enemyAddresses[12]] = PickRandom(bandit) -- bazaar bandit
+	-- addrs[8][enemyAddresses[44]] = test[math.random(#test)] -- pot cent 1
+	-- addrs[8][enemyAddresses[45]] = test[math.random(#test)] -- pot cent 2
+	-- addrs[8][enemyAddresses[43]] = test[math.random(#test)] -- pot cent pot spider
+	-- addrs[8][enemyAddresses[46]] = test[math.random(#test)] -- pot cent pot spider
+	-- addrs[8][enemyAddresses[58]] = test[math.random(#test)] -- tiger head
+	-- addrs[8][enemyAddresses[40]] = PickRandom(lite) -- cave entrance bandit
+	-- addrs[8][enemyAddresses[39]] = PickRandom(bandit) -- cave hall air soldier
+	-- addrs[8][enemyAddresses[23]] = PickRandom(lite) -- bottomless shadow
+	addrs[8][enemyAddresses[24]] = PickRandom(jafar) -- jafar
+	addrs[8][enemyAddresses[25]] = PickRandom(genie) -- genie
+	-- addrs[8][enemyAddresses[34]] = test[math.random(#test)] -- genie jafar
+	-- addrs[12][enemyAddresses[26]] = PickRandom(normal) -- chamber 1 ghost
+	-- addrs[12][enemyAddresses[54]] = PickRandom(normal) -- chamber 2 airsoldier
+	-- addrs[12][enemyAddresses[55]] = PickRandom(normal) -- chamber 5 ghost
+	addrs[12][enemyAddresses[50]] = PickRandom(parasite) -- pc1
+	addrs[12][enemyAddresses[51]] = PickRandom(pc1riku) -- pc1 riku
+	-- addrs[12][enemyAddresses[49]] = test[math.random(#test)] -- pc2
+	-- addrs[10][enemyAddresses[72]] = PickRandom(lite) -- square ghost
+	-- addrs[10][enemyAddresses[64]] = PickRandom(lite) -- graveyard ghost
+	-- addrs[10][enemyAddresses[68]] = PickRandom(normal) -- moonlight hill whight
+	-- addrs[10][enemyAddresses[38]] = PickRandom(normal) -- bridge whight
+	-- addrs[10][enemyAddresses[98]] = PickRandom(lite) -- manor whight
+	-- addrs[10][enemyAddresses[4]] = test[math.random(#test)] -- lock
+	-- addrs[10][enemyAddresses[5]] = test[math.random(#test)] -- shock
+	-- addrs[10][enemyAddresses[6]] = test[math.random(#test)] -- barrel
+	-- addrs[10][enemyAddresses[37]] = test[math.random(#test)] -- oogie
+	-- addrs[10][enemyAddresses[36]] = test[math.random(#test)] -- oogie gargoyles
+	addrs[13][enemyAddresses[33]] = PickRandom(normal) -- ship hold anti sora
+	addrs[13][enemyAddresses[17]] = PickRandom(normal) -- ship hold anti sora
+	addrs[13][enemyAddresses[18]] = PickRandom(normal) -- ship hold anti sora
+	addrs[13][enemyAddresses[42]] = PickRandom(normal) -- ship galley anti sora
+	addrs[13][enemyAddresses[35]] = PickRandom(antisora) -- anti sora
+	-- addrs[13][enemyAddresses[52]] = PickRandom(normal) -- ship pirate
+	addrs[13][enemyAddresses[53]] = PickRandom(hook) -- hook
+	addrs[15][enemyAddresses[60]] = PickRandom(riku1) -- riku1
+	addrs[15][enemyAddresses[56]] = PickRandom(normal) -- tower wyvern
+	addrs[15][enemyAddresses[15]] = PickRandom(normal) -- gates wyvern
+	addrs[15][enemyAddresses[14]] = PickRandom(normal) -- base level darkball
+	addrs[15][enemyAddresses[99]] = PickRandom(normal) -- waterway defender
+	-- addrs[15][enemyAddresses[41]] = PickRandom(normal) -- lift stop defender
+	addrs[15][enemyAddresses[69]] = PickRandom(mal) -- maleficent
+	addrs[15][enemyAddresses[65]] = PickRandom(dragmal) -- dragon maleficent
+	addrs[15][enemyAddresses[102]] = PickRandom(riku2) -- riku2
+	addrs[15][enemyAddresses[47]] = PickRandom(behe) -- HB behemoth
+	addrs[16][enemyAddresses[71]] = PickRandom(normal) -- EotW Invisible
+	addrs[16][enemyAddresses[70]] = PickRandom(normal) -- EotW Darkball
+	addrs[16][enemyAddresses[92]] = PickRandom(normal) -- TT Terminal Solider
+	addrs[16][enemyAddresses[1]] = PickRandom(normal) -- WL Terminal Wizard
+	addrs[16][enemyAddresses[7]] = PickRandom(normal) -- OC Terminal Air Solider
+	addrs[16][enemyAddresses[9]] = PickRandom(normal) -- DJ Terminal Powerwild
+	addrs[16][enemyAddresses[11]] = PickRandom(normal) -- AG Terminal Bandit
+	addrs[16][enemyAddresses[63]] = PickRandom(normal) -- AT Terminal Neon
+	addrs[16][enemyAddresses[8]] = PickRandom(normal) -- HT Terminal Ghost
+	addrs[16][enemyAddresses[13]] = PickRandom(normal) -- NL Terminal Pirate
+	addrs[16][enemyAddresses[2]] = PickRandom(normal) -- HB Terminal Invisible
+	addrs[16][enemyAddresses[22]] = PickRandom(chern) -- chernabog
+	addrs[16][enemyAddresses[100]] = PickRandom(ansem1) -- ansem1
+	addrs[17][enemyAddresses[100]] = PickRandom(ansem2) -- ansem2
+	addrs[17][enemyAddresses[101]] = PickRandom(dside) -- darkside
+	-- addrs[17][enemyAddresses[27]] = PickRandom(normal) -- artillery
+	-- addrs[17][enemyAddresses[28]] = PickRandom(normal) -- face
+	addrs[17][enemyAddresses[29]] = PickRandom(ansem3) -- ansem3
+	addrs[18][enemyAddresses[29]] = PickRandom(ansem4) -- ansem3
+	addrs[19][enemyAddresses[29]] = PickRandom(ansem4) -- ansem3
+	addrs[20][enemyAddresses[29]] = PickRandom(ansem4) -- ansem3
+	addrs[21][enemyAddresses[29]] = PickRandom(ansem3) -- ansem3
 
 
 	local logfile = io.open("randofiles/enemyrandolog.txt", "w+")
@@ -177,7 +177,7 @@ function _OnInit()
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP version addresses are shared
 		end
 		seedfile = io.open("randofiles/seed.txt", "r")
 		if seedfile ~= nil then
@@ -255,7 +255,7 @@ local function BossAdjust(bossHP)
 	local endArd = 0
 	local endtime = 300
 
-	--Herc cup
+	-- Herc cup
 	if w == 11 and r == 2 and ReadInt(inTournament) ~= oldTournament and oldTournament == 13 then
 		if ReadByte(OCseed) == 9 then
 			addr[1] = bossAdjustAddresses[11]
@@ -362,7 +362,7 @@ local function BossAdjust(bossHP)
 		endArd = 80
 		if ReadShort(addr[1] + 1200) == 32768 then
 			ConsolePrint("Disabling collision")
-			for i=1,45 do --disable collision
+			for i=1, 45 do -- disable collision
 				WriteShort(addr[1] + 1200 * i, 0)
 			end
 		end
@@ -390,8 +390,8 @@ local function BossAdjust(bossHP)
 		endArd = 75
 		if ReadShort(addr[1] + 1200) == 32768 then
 			ConsolePrint("Disabling collision")
-			for i=1,24 do --disable collision
-				WriteShort(addr[1] + 1200*i, 0)
+			for i=1, 24 do -- disable collision
+				WriteShort(addr[1] + 1200 * i, 0)
 			end
 		end
 	elseif w == 16 and r == 26 then
@@ -403,11 +403,11 @@ local function BossAdjust(bossHP)
 		endArd = 88
 		if ReadShort(addr[1] + 1200) == 32768 then
 			ConsolePrint("Disabling collision")
-			for i=1,15 do --disable collision
+			for i=1, 15 do -- disable collision
 				WriteShort(addr[1] + 1200 * i, 0)
 			end
 			WriteFloat(glideBarrier, 2000)
-			for i=0,3 do
+			for i=0, 3 do
 				WriteByte(floorStatus + i * 12, 0)
 			end
 		end
@@ -441,7 +441,7 @@ local function BossAdjust(bossHP)
 			endtime = 400
 			if ReadShort(addr[1] + 1200) ~= 0 then
 				ConsolePrint("Disabling collision")
-				for i=1,10 do --disable collision
+				for i=1, 10 do -- disable collision
 					WriteShort(addr[1] + 1200 * i, 0)
 				end
 			end
@@ -488,18 +488,18 @@ local function BossAdjust(bossHP)
 		end
 		if ReadShort(addr[1] + 4800) ~= 0 then
 			ConsolePrint("Disabling collision")
-			for i=1,50 do --disable collision
+			for i=1, 50 do -- disable collision
 				WriteShort(addr[1] + 1200 * (i + 3), 0)
 			end
 		end
-		for i=0,3 do
+		for i=0, 3 do
 			WriteByte(floorStatus + i * 12, 0)
 		end
 		if ReadByte(bossAdjustAddresses[5]) == 16 then
-			for i=0,101 do
+			for i=0, 101 do
 				WriteByte(bossAdjustAddresses[5] + 20 * i, 17)
 			end
-			for i=0,87 do
+			for i=0, 87 do
 				WriteByte(bossAdjustAddresses[6] + 20 * i, 25)
 			end
 		end
@@ -510,7 +510,7 @@ local function BossAdjust(bossHP)
 	end
 
 	if ReadInt(bossAdjustAddresses[7]) == 20224 then
-		for i=1,5 do
+		for i=1, 5 do
 			if hp[i] > 0 then
 				WriteShort(bossHPs[i], 1)
 			end
@@ -518,7 +518,7 @@ local function BossAdjust(bossHP)
 	end
 
 	local kills = 0
-	for i=1,5 do
+	for i=1, 5 do
 		if hp[i] == 0 then
 			break
 		end
@@ -532,8 +532,8 @@ local function BossAdjust(bossHP)
 		if hp[i] > 0 and ReadShort(bossHPs[i] + 4) ~= hp[i] then
 			WriteShort(bossHPs[i], hp[i])
 			WriteShort(bossHPs[i] + 4, hp[i])
-			WriteShort(bossHPs[i] + 16, str) --str
-			WriteShort(bossHPs[i] + 20, def) --def
+			WriteShort(bossHPs[i] + 16, str) -- str
+			WriteShort(bossHPs[i] + 20, def) -- def
 		end
 
 		if hp[i] > 0 and ReadInt(bossHPs[i]) == 0 and ReadByte(stateFlag) & 1 == 1 then
@@ -582,7 +582,7 @@ local function Fixes()
 		bossHP = bossAdjustAddresses[25]
 	end
 
-	--Add Riku to PC1
+	-- Add Riku to PC1
 	if ReadByte(world) == 12 and ReadByte(worldFlagBase - 70) == 2 then
 		WriteByte(worldFlagBase - 70, 0)
 	end
@@ -625,7 +625,7 @@ function _OnFrame()
 				end
 			end
 		end
-		if s~="" then
+		if s ~= "" then
 			addBreakout = string.find(s, "xa_di_") ~= nil
 			hpScale = string.find(s, "xa_pp_3010") ~= nil and 0.4 or 1
 			hpScale = (addBreakout or string.find(s, "xa_ex_1010")) ~= nil and 0.6 or hpScale

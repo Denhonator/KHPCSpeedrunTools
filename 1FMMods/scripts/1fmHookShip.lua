@@ -19,7 +19,7 @@ function _OnInit()
 			if ReadByte(posDebugString) ~= 0x58 then -- Steam JP specific changes
 				posDebugString = posDebugString - 0x80
 			end
-			require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP version addresses are shared
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -33,7 +33,7 @@ function _OnFrame()
 			WriteString(posDebugString, "            Hook  ship  100%%!              ")
 		end
 
-		if ReadByte(dest) == 13 and ReadByte(neverland) == 2 and ReadByte(posDebug1) == 0 and ReadInt(ingummi) == 0 then
+		if ReadByte(dest) == 13 and ReadByte(neverland) == 2 and ReadByte(posDebug1) == 0 and ReadInt(inGummi) == 0 then
 			WriteByte(posDebug1, debug1Value)
 			WriteByte(posDebug2, 1)
 			WriteString(posDebugString, "            Hook  ship  100%%               ")

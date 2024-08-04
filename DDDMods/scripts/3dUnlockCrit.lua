@@ -6,12 +6,10 @@ function _OnInit()
 	if GAME_ID == 0xE86A2A90 and ENGINE_TYPE == "BACKEND" then
 		ConsolePrint("Dream Drop Distance deteceted")
 		canExecute = true
-		if ReadByte(0x8A9046) == 0x6A then
-			ConsolePrint("Epic Games Version")
-			unlock = 0xA72CF3
+		if ReadByte(0x8A9046) == 106 then
+			require("EpicGamesGlobal") -- JP has not been checked or found
 		else
-			ConsolePrint("Steam Version")
-			unlock = 0xA73473
+			require("SteamGlobal") -- Global and JP version addresses are shared
 		end
 	end
 end

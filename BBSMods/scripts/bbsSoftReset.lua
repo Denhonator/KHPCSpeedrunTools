@@ -6,30 +6,14 @@ local canExecute = false
 
 function _OnInit()
 	if GAME_ID == 0xBED4B944 and ENGINE_TYPE == "BACKEND" then
-		ConsolePrint("Birth by Sleep detected")
 		canExecute = true
-		if ReadByte(0x7262E4) == 0x6A or ReadByte(0x7252E4) == 0x6A then
-			if ReadByte(0x7262E4) == 0x6A then
-				ConsolePrint("Epic Games Global Version")
-				offset = 0x0
-			else
-				ConsolePrint("Epic Games JP Version")
-				offset = 0x1000
-			end
-			softreset = 0x86749C - offset
-			location = 0x819120 - offset
-			input = 0x8F65030 - offset
-			title_skip_1 = 0x42BB59
-			title_skip_2 = 0x3EE25F
-			title_skip_3 = 0x3EE241
+		ConsolePrint("Birth by Sleep detected")
+		if ReadByte(0x7262E4) == 106 then
+			require("EpicGamesGlobal")
+		elseif ReadByte(0x7252E4) == 106 then
+			require("EpicGamesJP")
 		else
-			softreset = 0x865D1C
-			input = 0x8F638B0
-			location = 0x817120
-			title_skip_1 = 0x42C319
-			title_skip_2 = 0x3EE59F
-			title_skip_3 = 0x3EE581
-			ConsolePrint("Steam Version")
+			require("SteamGlobal") -- Global and JP version addresses are shared
 		end
 	else
 		ConsolePrint("Birth by Sleep not detected, not running script")
@@ -39,11 +23,11 @@ end
 
 function _OnFrame()
 	if canExecute then
-		WriteByte(title_skip_1, 0x73)
-		WriteByte(title_skip_2, 0x73)
-		WriteByte(title_skip_3, 0x73)
+		WriteByte(titleSkip1, 115)
+		WriteByte(titleSkip2, 115)
+		WriteByte(titleSkip3, 115)
 		if ReadInt(input) == 3848 then
-			WriteInt(location, 0xFFFFFF)
+			WriteInt(location, 16777215)
 			WriteByte(softreset, 1)
 		end
 	end

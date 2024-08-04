@@ -5,7 +5,8 @@ LUAGUI_DESC = "Randomizes many things in a chaotic way"
 local lastBlack = 0
 local airStatuses = {0, 8, 24}
 local validCommands = {
-	[75]=true,[87]=true,[88]=true,[90]=true, [94]=true,[98]=true,[99]=true
+	[75] = true, [87] = true, [88] = true, [90] = true,
+	[94] = true, [98] = true, [99] = true
 }
 local musics = {184}
 local musicExists = {[184] = true}
@@ -26,7 +27,7 @@ function _OnInit()
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP version addresses are shared
 			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
 				musicBaseSpeed = 32797
 			end

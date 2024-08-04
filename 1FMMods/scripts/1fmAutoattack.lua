@@ -15,7 +15,7 @@ function _OnInit()
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP version addresses are shared
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
@@ -24,7 +24,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		attackInput = (ReadByte(attInp)//(64-(32*ReadByte(swapped))))%2 == 1
+		attackInput = (ReadByte(attInp) // (64 - (32 * ReadByte(swapped)))) % 2 == 1
 		if ReadInt(menu) == 1 or ReadInt(dialog) == 0 then
 			cooldown = 20
 		elseif cooldown > 0 then

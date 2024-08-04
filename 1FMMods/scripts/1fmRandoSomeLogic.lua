@@ -241,7 +241,7 @@ function _OnInit()
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			require("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP equal
+			require("SteamGlobal") -- Global and JP version addresses are shared
 			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
 				superglideBaseSpeed = 1561532
 				superglideSpeedHack = superglideSpeedHack - 0x280
@@ -2143,7 +2143,7 @@ local function FlagFixes()
 		WriteLong(instantGummiFix, 0) -- Fixes InstantGummi
 	end
 
-	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadInt(ingummi) == 0 then
+	if ReadByte(world) == 1 and ReadFloat(soraHUD) > 0 and ReadInt(inGummi) == 0 then
 		WriteByte(party1, 255)
 		WriteByte(party1 + 1, 255)
 	end
@@ -2299,7 +2299,7 @@ local function FlagFixes()
 		end
 	end
 
-	if ReadInt(ingummi) > 0 then
+	if ReadInt(inGummi) > 0 then
 		if ReadByte(gummiSelect) == 3 then
 			WriteShort(worldWarps, 1) -- Add DI warp
 			if (ReadByte(unlockedWarps) // 8) % 2 == 0 then
@@ -2469,7 +2469,7 @@ local function FlagFixes()
 			WriteInt(terminusTeleUsable, 4294957296)
 			WriteInt(terminusTeleVisible, 3323740160)
 		end
-	elseif ReadInt(ingummi) > 0 and eotWSkip ~= 0 and ReadByte(unlockedWarps + 9) < 3
+	elseif ReadInt(inGummi) > 0 and eotWSkip ~= 0 and ReadByte(unlockedWarps + 9) < 3
 								and ReadByte(cutsceneFlags + 10) >= 195 then
 		WriteByte(unlockedWarps + 9, 3)
 		WriteByte(cutsceneFlags + 11, math.max(ReadByte(cutsceneFlags + 11), 8))
@@ -2592,7 +2592,7 @@ function _OnFrame()
 
 		if removeBlackTimer > 300 and ReadByte(world) == 16 then
 			for i=0, 4 do
-				WriteByte(removeBlack + i * 4, 128) --Remove black screen
+				WriteByte(fadeBase + i * 4, 128) --Remove black screen
 			end
 			ConsolePrint("Removed black screen")
 			removeBlackTimer = 0
