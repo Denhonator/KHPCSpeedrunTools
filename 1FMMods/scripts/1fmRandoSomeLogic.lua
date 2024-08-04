@@ -80,9 +80,17 @@ local function Djb2(str)
 	return hash
 end
 
-local function SetupError(msg)
-	local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
-	ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+local function importVars(file)
+	if not pcall(require, file) then
+		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
+		local msg = ""
+		local slashIdx = string.find(file, "/")
+		if slashIdx then
+			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+		else
+			msg = string.format("%s.lua missing, get it from the Github!", file)
+		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+	end
 end
 
 local function ArrayReplace(source, f, r, offset)
@@ -237,11 +245,11 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			require("EpicGamesGlobal")
+			importVars("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
-			require("EpicGamesJP")
+			importVars("EpicGamesJP")
 		else
-			require("SteamGlobal") -- Global and JP version addresses are shared
+			importVars("SteamGlobal") -- Global and JP version addresses are shared
 			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
 				superglideBaseSpeed = 1561532
 				superglideSpeedHack = superglideSpeedHack - 0x280
@@ -255,18 +263,10 @@ function _OnInit()
 	if canExecute then
 		cutsceneFlags = cutsceneFlagBase - 1
 		worldFlagBase = worldFlagBase - 218
-		if not pcall(require, "Rando/settings") then
-			SetupError("settings.lua missing, get it from the GitHub!")
-		end
-		if not pcall(require, "Rando/itemNames") then
-			SetupError("itemNames.lua missing, get it from the GitHub!")
-		end
-		if not pcall(require, "Rando/chests") then
-			SetupError("chests.lua missing, get it from the GitHub!")
-		end
-		if not pcall(require, "Rando/rewards") then
-			SetupError("rewards.lua missing, get it from the GitHub!")
-		end
+		importVars("Rando/settings")
+		importVars("Rando/itemNames")
+		importVars("Rando/chests")
+		importVars("Rando/rewards")
 		loaded = true
 		for _, val in ipairs(unrandomize) do
 			for i=1, #important do

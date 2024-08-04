@@ -5,21 +5,34 @@ LUAGUI_DESC = "Makes Hook Ship always appear when conditions are met"
 local canExecute = false
 local posDebugString = 0x3EB158
 
+local function importVars(file)
+	if not pcall(require, file) then
+		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
+		local msg = ""
+		local slashIdx = string.find(file, "/")
+		if slashIdx then
+			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+		else
+			msg = string.format("%s.lua missing, get it from the Github!", file)
+		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
+	end
+end
+
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		if ReadByte(posDebugString) == 0x58 then
-			require("EpicGamesGlobal")
+			importVars("EpicGamesGlobal")
 		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
 			posDebugString = posDebugString - 0x1020
-			require("EpicGamesJP")
+			importVars("EpicGamesJP")
 		else
 			posDebugString = posDebugString - 0xE40
 			if ReadByte(posDebugString) ~= 0x58 then -- Steam JP specific changes
 				posDebugString = posDebugString - 0x80
 			end
-			require("SteamGlobal") -- Global and JP version addresses are shared
+			importVars("SteamGlobal") -- Global and JP version addresses are shared
 		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
