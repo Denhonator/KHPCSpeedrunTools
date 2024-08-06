@@ -15,6 +15,7 @@ local function importVars(file)
             msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
         else
             msg = string.format("%s.lua missing, get it from the Github!", file)
+        end
         ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
     end
 end
