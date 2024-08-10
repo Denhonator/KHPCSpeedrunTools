@@ -53,7 +53,7 @@ state("KINGDOM HEARTS FINAL MIX", "Steam")
     byte white : 0x233FE1C;
     byte in_gummi : 0x5075AD;
     byte magic_unlock_val : 0x2DE93D4;
-    byte arch_behemoth_kills : 0x2DE9B8A;
+    byte arch_behemoth_kills : 0x2DE9B9A;
 
     byte8 collected_items_1 : 0x2DE9802;
     byte102 collected_items_2 : 0x2DE9891;  
