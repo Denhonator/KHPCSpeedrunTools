@@ -226,3 +226,5 @@ dside = {
 }
 
 test = {"pc_6730.moa"}
+
+parasite = {"xa_he_1000"}
