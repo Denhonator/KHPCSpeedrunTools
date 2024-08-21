@@ -51,7 +51,7 @@ state("KINGDOM HEARTS FINAL MIX", "Steam")
     ushort scene : 0x233FE90;
     ushort world : 0x233FE94;
     byte white : 0x233FE1C;
-    byte in_gummi : 0x5075AD;
+    byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
     byte magic_unlock_val : 0x2DE93D4;
     byte arch_behemoth_kills : 0x2DE9B9A;
 
