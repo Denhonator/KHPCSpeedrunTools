@@ -1,4 +1,26 @@
-state("KINGDOM HEARTS II FINAL MIX", "EPIC-GLOBAL")
+state("KINGDOM HEARTS II FINAL MIX", "EPIC-1.0.0.10")
+{
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC053;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABAE47;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE0D4;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8E40;
+	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x713438;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23018;
+	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22DA0;
+	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F4C8;
+	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F5BA;
+	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B9594;
+	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x25901D4;
+	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF8;
+	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DF9;
+	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFC;
+	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x716DFE;
+	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x716E00;
+	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE1A8;
+	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE1B0;
+}
+
+state("KINGDOM HEARTS II FINAL MIX", "EPIC-1.0.0.9")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EBFF3;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABAE07;
@@ -20,7 +42,7 @@ state("KINGDOM HEARTS II FINAL MIX", "EPIC-GLOBAL")
 	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE0F0;
 }
 
-state("KINGDOM HEARTS II FINAL MIX", "STEAM-GLOBAL")
+state("KINGDOM HEARTS II FINAL MIX", "STEAM-1.0.0.9")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC543;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB347;
@@ -42,7 +64,29 @@ state("KINGDOM HEARTS II FINAL MIX", "STEAM-GLOBAL")
 	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE6B0;
 }
 
-state("KINGDOM HEARTS II FINAL MIX", "STEAM-JP")
+state("KINGDOM HEARTS II FINAL MIX", "STEAM-1.0.0.10")
+{
+	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC5B3;
+	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB3C7;
+	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE654;
+	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD93C0;
+	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x7169B4;
+	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23598;
+	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23320;
+	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0FA48;
+	short soraGauge: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0FB3A;
+	short medalTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0x25B9C74;
+	byte marluxiaHitCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2590914;
+	byte worldID: "KINGDOM HEARTS II FINAL MIX.exe", 0x717008;
+	byte roomID: "KINGDOM HEARTS II FINAL MIX.exe", 0x717009;
+	byte eventID1: "KINGDOM HEARTS II FINAL MIX.exe", 0x71700C;
+	byte eventID2: "KINGDOM HEARTS II FINAL MIX.exe", 0x71700E;
+	byte eventID3: "KINGDOM HEARTS II FINAL MIX.exe", 0x717010;
+	byte newgame: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE728;
+	int tempMemBank: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE730;
+}
+
+state("KINGDOM HEARTS II FINAL MIX", "STEAM-1.0.0.9JP")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EB543;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABA347;
@@ -70,17 +114,26 @@ init
 	vars.splitTimer = 0;
 	vars.startCounter = 0;
 	Thread.Sleep(2000);
-	var gb = modules.First().BaseAddress;
-    if (modules.First().ModuleMemorySize == 46313472) { 
-        if (memory.ReadValue<int>(gb + 0x9A92F0) == 0x4A32484B) {
-            version = "EPIC-GLOBAL";
-		} else if (memory.ReadValue<int>(gb + 0x9A9830) == 0x4A32484B){
-            version = "STEAM-GLOBAL";
-        }
-	} else if (modules.First().ModuleMemorySize == 46309376) {
-		if (memory.ReadValue<int>(gb + 0x9A8830) == 0x4A32484B){
-			version = "STEAM-JP";
-		}
+    var scanner = new SignatureScanner (game, modules.First().BaseAddress, modules.First().ModuleMemorySize);
+	var target = new SigScanTarget(0, "4B 48 32 4A 3A"); //KH2J:
+	var result = scanner.Scan(target).ToString();
+	switch (result){
+		case "140697389208368": //Epic 1.0.0.10
+			version = "EPIC-1.0.0.10";
+			break;
+		case "140697389208426": //Steam 1.0.0.10
+		case "140694664419504": //Steam 1.0.0.10_JP
+			version = "STEAM-1.0.0.10";
+			break;
+		case "140697389208298": //Steam 1.0.0.9
+			version = "STEAM-1.0.0.9";
+			break;
+		case "140694664419424": // Steam 1.0.0.9_JP
+			version = "STEAM-1.0.0.9JP";
+			break;
+		default:
+		print("VERSION NOT FOUND: " +result);
+		break;
 	}
 	//print("The Game's base address is:"+modules.First().BaseAddress.ToString()+" and "+ modules.First().ModuleMemorySize.ToString());
 	print(version);
