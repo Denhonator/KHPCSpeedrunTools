@@ -114,14 +114,14 @@ init
 	vars.splitTimer = 0;
 	vars.startCounter = 0;
 	Thread.Sleep(2000);
-    var scanner = new SignatureScanner (game, modules.First().BaseAddress, modules.First().ModuleMemorySize);
+	var scanner = new SignatureScanner (game, modules.First().BaseAddress, modules.First().ModuleMemorySize);
 	var target = new SigScanTarget(0, "4B 48 32 4A 3A"); //KH2J:
 	var result = scanner.Scan(target).ToString();
 	switch (result){
 		case "140697389208368": //Epic 1.0.0.10
 			version = "EPIC-1.0.0.10";
 			break;
-		case "140697389208426": //Steam 1.0.0.10
+		case "140700172654768": //Steam 1.0.0.10
 		case "140694664419504": //Steam 1.0.0.10_JP
 			version = "STEAM-1.0.0.10";
 			break;
