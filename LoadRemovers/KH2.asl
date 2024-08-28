@@ -113,30 +113,32 @@ init
 	timer.IsGameTimePaused = false;
 	vars.splitTimer = 0;
 	vars.startCounter = 0;
-	Thread.Sleep(2000);
+	Thread.Sleep(4000);
 	var scanner = new SignatureScanner (game, modules.First().BaseAddress, modules.First().ModuleMemorySize);
-	var target = new SigScanTarget(0, "4B 48 32 4A 3A"); //KH2J:
-	var result = scanner.Scan(target).ToString();
-	switch (result){
-		case "140697389208368": //Epic 1.0.0.10
+	var target = new SigScanTarget(0, "4B 48 32 4A 3A"); //"KH2J:"
+	var offset = scanner.Scan(target).ToInt64() - modules.First().BaseAddress.ToInt64();
+	switch (offset.ToString("X")){
+		case "9A9330": //Epic 1.0.0.10
 			version = "EPIC-1.0.0.10";
 			break;
-		case "140700172654768": //Steam 1.0.0.10
-		case "140694664419504": //Steam 1.0.0.10_JP
-			version = "STEAM-1.0.0.10";
+		case "9A92F0": //Epic 1.0.0.9
+			version = "EPIC-1.0.0.9";
 			break;
-		case "140697389208298": //Steam 1.0.0.9
-			version = "STEAM-1.0.0.9";
+		case "9A98B0": //Steam 1.0.0.2 or Steam 1.0.0.2_JP
+			version = "STEAM-1.0.0.2";
 			break;
-		case "140694664419424": // Steam 1.0.0.9_JP
-			version = "STEAM-1.0.0.9JP";
+		case "9A9830": //Steam 1.0.0.1
+			version = "STEAM-1.0.0.1";
+			break;
+		case "9A8830": // Steam 1.0.0.1_JP
+			version = "STEAM-1.0.0.1JP";
 			break;
 		default:
-		print("VERSION NOT FOUND: " +result);
+		version = "!VNF! "+ offset.ToString("X");
 		break;
 	}
 	//print("The Game's base address is:"+modules.First().BaseAddress.ToString()+" and "+ modules.First().ModuleMemorySize.ToString());
-	print(version);
+	print(version+" "+offset.ToString("X"));
 }
 
 startup
