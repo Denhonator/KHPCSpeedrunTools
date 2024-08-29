@@ -1,5 +1,5 @@
 -- shared
-beepHack = 0x26DECC
+beepHack = 0x26E20C
 maxHP = 0x2DE9366
 menu = 0x232DFA0
 dialog = 0x299BB08
@@ -47,7 +47,7 @@ ardOff = 0x2382C60
 worldFlagBase = 0x2DEB4B0
 
 -- 4:3
-height = 0x3B3504
+height = 0x3B3514
 
 -- achievements
 ach = 0x21AAE28
@@ -68,19 +68,19 @@ donaldPointer = 0x2D37288
 goofyPointer = 0x2D37290
 weaponSize = 0xD2E4C0
 musicPointer = 0x232DF20
-musicSpeedHack = 0xA771B
-musicBaseSpeed = 32925
+musicSpeedHack = 0xA7A5B
+musicBaseSpeed = 36701
 moveSpeed = 0x2D5CB18
 soraResist = 0x2D5CB88
 
 -- consistent finishers
-zantHack = 0x2A6C98
-gravBreak = 0x3EC538
-zantValue = 35620
+zantHack = 0x2A6FD8
+gravBreak = 0x3EC5A8
+zantValue = 48100
 
 -- early skip
-skipArray1 = 0x17A49C
-skipArray2 = 0x17F323
+skipArray1 = 0x17A7DC
+skipArray2 = 0x17F663
 skipFlag1 = 0x233FEE8
 skipFlag2 = 0x23404D0
 
@@ -151,9 +151,9 @@ monstro = 0x2DEB25A
 normalDrive = 0x268986C
 
 -- rando some logic
-superglideBaseSpeed = 1561020
-superglideSpeedHack = 0x2B2744
-mermaidKickSpeed = 0x3EF9DC
+superglideBaseSpeed = 1573500
+superglideSpeedHack = 0x2B2A84
+mermaidKickSpeed = 0x3EFA4C
 shopTableBase = 0x4FEE04
 worldWarps = 0x50ABA8
 warpCount = 0x50AC8C
@@ -167,14 +167,14 @@ warpDefinitions = 0x232DF10
 roomWarpRead = 0x232DF18
 lockMenu = 0x232DF80
 collectedFruits = 0x232E004
-terminusTeleUsable = 0x2380954 --On: 4378 Off: 4294957296
+terminusTeleUsable = 0x2380954 -- On: 4378 Off: 4294957296
 currentTerminus = 0x2380A14
 ardoffsetClock = 0x2382FC0
 OCCupDialog = 0x2384760
 infoBoxNotVisible = 0x23D41F0
 textBox = 0x23D4364
 instantGummiFix = 0x2538058
-terminusTeleVisible = 0x2678448 --On: 1166594048 Off: 3323740160
+terminusTeleVisible = 0x2678448 -- On: 1166594048 Off: 3323740160
 itemDropID = 0x284D948
 RCName = 0x2866D10
 animHalfPointersAddress = 0x2869E18
@@ -239,7 +239,7 @@ magicUnlock = 0x2DE93D4
 soraCurAbilities = 0x2DE93A4
 
 -- save anywhere
-deathCheck = 0x29BD70
+deathCheck = 0x29C0B0
 title = 0x23404E8
 continue = 0x2DFFF60
 config = 0x2DFF760
@@ -250,4 +250,4 @@ cutSceneAspect = 0x4DD562
 saveAnywhere = 0x2354854
 
 -- unlock 0 volume
-volumeZero = 0x3D8AF4
+volumeZero = 0x3D8B64
