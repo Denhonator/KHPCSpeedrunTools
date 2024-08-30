@@ -1,50 +1,73 @@
-state("KINGDOM HEARTS FINAL MIX", "EG Global")
+state("KINGDOM HEARTS FINAL MIX", "EG Global") // 1.0.0.10
 {
     // location info
-    ushort room : 0x2340E44;
-    ushort scene : 0x2340E48;
-    ushort world : 0x2340E4C;
-    byte white : 0x234079C;
-    byte in_gummi : 0x5082AD;
-    byte magic_unlock_val : 0x2DE9D54;
-    byte arch_behemoth_kills : 0x2DEA51A;
+    ushort room : 0x2340EC4;
+    ushort scene : 0x2340EC8;
+    ushort world : 0x2340ECC;
+    byte white : 0x234081C;
+    byte in_gummi : 0x50832D;
+    byte magic_unlock_val : 0x2DE9DD4;
+    byte arch_behemoth_kills : 0x2DEA59A;
 
-    byte8 collected_items_1 : 0x2DEA182;
-    byte102 collected_items_2 : 0x2DEA211;  
-    byte33 power_wild_gummis : 0x2DF5B5C;
-    byte42 equips : 0x2DEA1B3;
-    byte225 magic_levels : 0x2D23570;
-    byte96 enemies_defeated : 0x2DEA4BA;
-    byte torn_page_count : 0x2DEB0E0;
-    byte6 trinity_counts : 0x2DEB946;
-    ushort puppy_count : 0x2E9DAA8;
-    ushort mini_game_count : 0x2E9DCF4;
+    byte8 collected_items_1 : 0x2DEA202;
+    byte102 collected_items_2 : 0x2DEA291;  
+    byte33 power_wild_gummis : 0x2DF5BDC;
+    byte42 equips : 0x2DEA233;
+    byte225 magic_levels : 0x2D235F0;
+    byte96 enemies_defeated : 0x2DEA53A;
+    byte torn_page_count : 0x2DEB160;
+    byte6 trinity_counts : 0x2DEB9C6;
+    ushort puppy_count : 0x2E9DB28;
+    ushort mini_game_count : 0x2E9DD74;
 }
 
-state("KINGDOM HEARTS FINAL MIX", "EG JP")
+state("KINGDOM HEARTS FINAL MIX", "EG JP") // 1.0.0.10
 {
     // location info
-    ushort room : 0x233FE44;
-    ushort scene : 0x233FE48;
-    ushort world : 0x233FE4C;
-    byte white : 0x233F79C;
-    byte in_gummi : 0x5072AD;
-    byte magic_unlock_val : 0x2DE8D54;
-    byte arch_behemoth_kills : 0x2DE951A;
+    ushort room : 0x2340EC4;
+    ushort scene : 0x2340EC8;
+    ushort world : 0x2340ECC;
+    byte white : 0x234081C;
+    byte in_gummi : 0x50832D;
+    byte magic_unlock_val : 0x2DE9DD4;
+    byte arch_behemoth_kills : 0x2DEA59A;
 
-    byte8 collected_items_1 : 0x2DE9182;
-    byte102 collected_items_2 : 0x2DE9211;  
-    byte33 power_wild_gummis : 0x2DF4B5C;
-    byte42 equips : 0x2DE91B3;
-    byte225 magic_levels : 0x2D22580;
-    byte96 enemies_defeated : 0x2DE94BA;
-    byte torn_page_count : 0x2DEA0E0;
-    byte6 trinity_counts : 0x2DEA946;
-    ushort puppy_count : 0x2E9CAA8;
-    ushort mini_game_count : 0x2E9CCF4;
+    byte8 collected_items_1 : 0x2DEA202;
+    byte102 collected_items_2 : 0x2DEA291;  
+    byte33 power_wild_gummis : 0x2DF5BDC;
+    byte42 equips : 0x2DEA233;
+    byte225 magic_levels : 0x2D235F0;
+    byte96 enemies_defeated : 0x2DEA53A;
+    byte torn_page_count : 0x2DEB160;
+    byte6 trinity_counts : 0x2DEB9C6;
+    ushort puppy_count : 0x2E9DB28;
+    ushort mini_game_count : 0x2E9DD74;
 }
 
-state("KINGDOM HEARTS FINAL MIX", "Steam")
+state("KINGDOM HEARTS FINAL MIX", "Steam Global") // 1.0.0.2
+{
+    // location info
+    ushort room : 0x233FE8C;
+    ushort scene : 0x233FE90;
+    ushort world : 0x233FE94;
+    byte white : 0x233FE1C;
+    byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
+    byte magic_unlock_val : 0x2DE93D4;
+    byte arch_behemoth_kills : 0x2DE9B9A;
+
+    byte8 collected_items_1 : 0x2DE9802;
+    byte102 collected_items_2 : 0x2DE9891;  
+    byte33 power_wild_gummis : 0x2DF51DC;
+    byte42 equips : 0x2DE9833;
+    byte225 magic_levels : 0x2D22BF0;
+    byte96 enemies_defeated : 0x2DE9B3A;
+    byte torn_page_count : 0x2DEA760;
+    byte6 trinity_counts : 0x2DEAFC6;
+    ushort puppy_count : 0x2E9D148;
+    ushort mini_game_count : 0x2E9D394;
+}
+
+state("KINGDOM HEARTS FINAL MIX", "Steam JP") // 1.0.0.2
 {
     // location info
     ushort room : 0x233FE8C;
@@ -1057,17 +1080,11 @@ split
                         return settings["phil_cup"] && vars.completed_splits.Add("phil_cup");
                     }
                     if(current.room == 2 && current.scene == 7){
-                        int party_address = version == "Steam" ? 0x2DE97EF : 0x2DEA16F - vars.offset;
                         if(memory.ReadValue<ushort>(modules.First().BaseAddress + party_address) == 65535){
                             // split when next available ability slot becomes combo plus in OC room 2 scene 7
                             int byte_count = 48 - vars.next_ability_slot_idx;
                             int ability_slot_address = 0x0;
-                            int abilities_address = version == "Steam" ? 0x2DE93A4 : 0x2DE9D24 - vars.offset;
-                            if (version == "Steam") {
-                                ability_slot_address = abilities_address + vars.next_ability_slot_idx;
-                            } else {
-                                ability_slot_address = abilities_address + vars.next_ability_slot_idx - vars.offset;
-                            }
+                            ability_slot_address = abilities_address + vars.next_ability_slot_idx - vars.offset;
                             var next_ability_slot = memory.ReadValue<byte>(modules.First().BaseAddress + ability_slot_address);
                             if(next_ability_slot == 134){
                                 return vars.completed_splits.Add("phil_cup_solo") && settings["phil_cup_solo"];
@@ -1273,7 +1290,6 @@ split
         }
         // gummi splits
         if(current.in_gummi){
-            int gummi_kills_address = version == "Steam" ? 0x2DF5298 : 0x2DF5C18 - vars.offset;
             vars.gummi_kills = memory.ReadValue<uint>(modules.First().BaseAddress + gummi_kills_address);            
         }
         if(vars.gummi_kills >= 2500){
@@ -1351,59 +1367,70 @@ init
 {
     // game base address
     var gb = modules.First().BaseAddress;
-    if (memory.ReadValue<byte>(gb + 0x3EB158) == 0x58 || memory.ReadValue<byte>(gb + 0x3EA138) == 0x58) {
-        if (memory.ReadValue<byte>(gb + 0x3EB158) == 0x58) {
+    vars.offset = 0x0;
+    vars.watchers = new Dictionary<string, MemoryWatcher>{};
+    if (memory.ReadValue<byte>(gb + 0x46A822) == 106 || memory.ReadValue<byte>(gb + 0x46A802) == 106) {
+        if (memory.ReadValue<byte>(gb + 0x46A822) == 106) {
             version = "EG Global";
-            vars.offset = 0x0;
         } else {
             version = "EG JP";
-            vars.offset = 0x1000;
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
-            { "black_inv", new MemoryWatcher<bool>(gb + 0x4DD3F8 - vars.offset) },
-            { "cutscene", new MemoryWatcher<bool>(gb + 0x233F174 - vars.offset) },
-            { "load", new MemoryWatcher<bool>(gb + 0x232E668 - vars.offset) },
-            { "load_2", new MemoryWatcher<bool>(gb + 0x233F1B0 - vars.offset) },
-            { "paused", new MemoryWatcher<bool>(gb + 0x232E93C - vars.offset) },
-            { "party_load", new MemoryWatcher<bool>(gb + 0x2E1FDFC - vars.offset) },
-            { "save_load", new MemoryWatcher<bool>(gb + 0x2E20EB8 - vars.offset) },
-            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54C88 - vars.offset) },
-            { "newgame", new MemoryWatcher<byte>(gb + 0x2E9CB24 - vars.offset) },
-            { "fightend", new MemoryWatcher<byte>(gb + 0x2D543B8 - vars.offset) },
-            { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED751E - vars.offset) },
-            { "text_progress", new MemoryWatcher<byte>(gb + 0x232E8F4 - vars.offset) },
-            { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEB1ED - vars.offset) },
-            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DEA8EC - vars.offset) },
-            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E0010C - vars.offset) },
-            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5D5CC - vars.offset) },
-            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507C90 - vars.offset) },
-            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x508280 - vars.offset) },
-            { "docked_world", new MemoryWatcher<ushort>(gb + 0x526A40 - vars.offset) },
+            { "black_inv", new MemoryWatcher<bool>(gb + 0x4DD3F8) },
+            { "cutscene", new MemoryWatcher<bool>(gb + 0x233F1F4) },
+            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E0018C) },
+            { "docked_world", new MemoryWatcher<ushort>(gb + 0x526AC0) },
+            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DEA96C) },
+            { "fightend", new MemoryWatcher<byte>(gb + 0x2D54438) },
+            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x508280) },
+            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507C90) },
+            { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED759E) },
+            { "load", new MemoryWatcher<bool>(gb + 0x232E6E8) },
+            { "load_2", new MemoryWatcher<bool>(gb + 0x233F230) },
+            { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEB26D) },
+            { "newgame", new MemoryWatcher<byte>(gb + 0x2E9CBA4) },
+            { "party_load", new MemoryWatcher<bool>(gb + 0x2E1FE7C) },
+            { "paused", new MemoryWatcher<bool>(gb + 0x232E9BC) },
+            { "save_load", new MemoryWatcher<bool>(gb + 0x2E20F38) },
+            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5D64C) },
+            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54D08) },
+            { "text_progress", new MemoryWatcher<byte>(gb + 0x232E974) },
         };
-    } else {
-        version = "Steam";
+    } else if (memory.ReadValue<byte>(gb + 0x4698D2) == 106 || memory.ReadValue<byte>(gb + 0x469872) == 106) {
+        if (memory.ReadValue<byte>(gb + 0x4698D2) == 106) {
+            version = "Steam Global";
+        } else {
+            version = "Steam JP";
+        }
+        vars.offset = 0xA00;
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DC718) },
-            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x506F90) },
-            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x507580) },
+            { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
+            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFF78C) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x525D60) }, 
+            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE9F6C) },
+            { "fightend", new MemoryWatcher<byte>(gb + 0x2D53A38) },
+            { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x507580) },
+            { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x506F90) },
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED6A1E) },
             { "load", new MemoryWatcher<bool>(gb + 0x232DCE8) },
-            { "text_progress", new MemoryWatcher<byte>(gb + 0x232DF74) },
-            { "paused", new MemoryWatcher<bool>(gb + 0x232DFC0) },
-            { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
             { "load_2", new MemoryWatcher<bool>(gb + 0x233E830) },
-            { "fightend", new MemoryWatcher<byte>(gb + 0x2D53A38) },
-            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54308) },
-            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5CC4C) }, 
-            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE9F6C) },
             { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEA86D) },
-            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFF78C) },
-            { "party_load", new MemoryWatcher<bool>(gb + 0x2E1F4E8) },
-            { "save_load", new MemoryWatcher<bool>(gb + 0x2E20564) },
             { "newgame", new MemoryWatcher<byte>(gb + 0x2E9C1C8) },
+            { "party_load", new MemoryWatcher<bool>(gb + 0x2E1F4E8) },
+            { "paused", new MemoryWatcher<bool>(gb + 0x232DFC0) },
+            { "save_load", new MemoryWatcher<bool>(gb + 0x2E20564) },
+            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5CC4C) }, 
+            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54308) },
+            { "text_progress", new MemoryWatcher<byte>(gb + 0x232DF74) },
         };
+    } else {
+        print("No matching version found");
     }
+    int party_address = 0x2DEA1EF - vars.offset;
+    int abilities_address = 0x2DE9DA4 - vars.offset;
+    int gummi_kills_address = 0x2DF5C98 - vars.offset;
+    int level_address = 0x2DE9D64 - vars.offset;
     // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)
     // puppies sets are multiples of 3 by sets found
     vars.revisit_info = new Dictionary<int, Dictionary<int, int[]>>{
@@ -1515,7 +1542,6 @@ init
                 current.mini_game_count,
                 current.torn_page_count
             };
-            int level_address = version == "Steam" ? 0x2DE9364 : 0x2DE9CE4 - vars.offset;
             int level = memory.ReadValue<byte>(modules.First().BaseAddress + level_address);
             vars.cons_met = 0;
             if(level == 1){
