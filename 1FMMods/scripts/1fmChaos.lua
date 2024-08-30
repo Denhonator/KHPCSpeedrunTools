@@ -16,7 +16,6 @@ local lastRoom = 99
 local baseSeed = 0
 
 local canExecute = false
-local posDebugString = 0x3EB158
 
 local function importVars(file)
 	if not pcall(require, file) then
@@ -36,15 +35,17 @@ function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
-		if ReadByte(posDebugString) == 0x58 then
+		importVars("VersionCheck")
+		if ReadByte(EGSGlobalVersion) == 106 then
 			importVars("EpicGamesGlobal")
-		elseif ReadByte(posDebugString - 0x1020) == 0x58 then
+		elseif ReadByte(EGSJPVersion) == 106 then
 			importVars("EpicGamesJP")
+		elseif ReadByte(SteamGlobalVersion) == 106 then
+			importVars("SteamGlobal")
+		elseif ReadByte(SteamJPVersion) == 106 then
+			importVars("SteamJP")
 		else
-			importVars("SteamGlobal") -- Global and JP version addresses are shared
-			if ReadByte(posDebugString - 0xE40) ~= 0x58 then -- Steam JP specific changes
-				musicBaseSpeed = 32797
-			end
+			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
 		end
 		for off = 0, 511 do
 			local anim = ReadArray(anims + (off * 20), 20)

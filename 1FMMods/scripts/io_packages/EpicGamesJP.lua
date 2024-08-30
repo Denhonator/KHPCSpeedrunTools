@@ -138,6 +138,7 @@ textProg = 0x232E974
 textSpeed = 0x23405DC
 
 -- hook ship
+posDebugString = 0x3EB1A8
 hookship = 0xED759E
 neverland = 0x2DEBC57
 posDebug1 = 0x232E720
