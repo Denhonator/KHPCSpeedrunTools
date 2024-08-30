@@ -1080,10 +1080,12 @@ split
                         return settings["phil_cup"] && vars.completed_splits.Add("phil_cup");
                     }
                     if(current.room == 2 && current.scene == 7){
+                        int party_address = vars.party_address;
                         if(memory.ReadValue<ushort>(modules.First().BaseAddress + party_address) == 65535){
                             // split when next available ability slot becomes combo plus in OC room 2 scene 7
                             int byte_count = 48 - vars.next_ability_slot_idx;
                             int ability_slot_address = 0x0;
+                            int abilities_address = vars.abilities_address;
                             ability_slot_address = abilities_address + vars.next_ability_slot_idx - vars.offset;
                             var next_ability_slot = memory.ReadValue<byte>(modules.First().BaseAddress + ability_slot_address);
                             if(next_ability_slot == 134){
@@ -1290,6 +1292,7 @@ split
         }
         // gummi splits
         if(current.in_gummi){
+            int gummi_kills_address = vars.gummi_kills_address;
             vars.gummi_kills = memory.ReadValue<uint>(modules.First().BaseAddress + gummi_kills_address);            
         }
         if(vars.gummi_kills >= 2500){
@@ -1427,9 +1430,9 @@ init
     } else {
         print("No matching version found");
     }
-    int party_address = 0x2DEA1EF - vars.offset;
-    int abilities_address = 0x2DE9DA4 - vars.offset;
-    int gummi_kills_address = 0x2DF5C98 - vars.offset;
+    vars.party_address = 0x2DEA1EF - vars.offset;
+    vars.abilities_address = 0x2DE9DA4 - vars.offset;
+    vars.gummi_kills_address = 0x2DF5C98 - vars.offset;
     int level_address = 0x2DE9D64 - vars.offset;
     // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)
     // puppies sets are multiples of 3 by sets found
@@ -1582,7 +1585,7 @@ update
     vars.watchers["cutscene"].Update(game);
     vars.watchers["text_progress"].Update(game);
     vars.watchers["load"].Update(game);
-    // vars.watchers["load_2"].Update(game);
+    vars.watchers["load_2"].Update(game);
     vars.watchers["party_load"].Update(game);
     vars.watchers["paused"].Update(game);
     vars.watchers["save_load"].Update(game);
@@ -1610,7 +1613,7 @@ update
 isLoading
 {
     var load = vars.watchers["load"];
-    // var load_2 = vars.watchers["load_2"]; was part of death loading may need to go back?
+    var load_2 = vars.watchers["load_2"];
     var black = vars.watchers["black_inv"];
     var cutscene = vars.watchers["cutscene"];
     var paused = vars.watchers["paused"];
