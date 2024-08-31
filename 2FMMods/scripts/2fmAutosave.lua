@@ -11,29 +11,21 @@ local blacklist = {
 local blacklisted = false
 local loadCount = 0
 
-local function importVars(file)
-	if not pcall(require, file) then
-		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
-		local msg = ""
-		local slashIdx = string.find(file, "/")
-		if slashIdx then
-			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
-		else
-			msg = string.format("%s.lua missing, get it from the Github!", file)
-		end
-		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
-	end
-end
-
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
         canExecute = true
-		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
-			importVars("EpicGamesGlobal") -- Global and JP version addresses are shared
-		elseif ReadByte(0x660E74) == 106 then -- Steam Global
+		require("VersionCheck")
+		if ReadByte(EGSGlobalVersion) == 106 then
+			importVars("EpicGamesGlobal")
+		elseif ReadByte(EGSJPVersion) == 106 then
+			importVars("EpicGamesJP")
+		elseif ReadByte(SteamGlobalVersion) == 106 then
 			importVars("SteamGlobal")
-		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
+		elseif ReadByte(SteamJPVersion) == 106 then
 			importVars("SteamJP")
+		else
+			canExecute = false
+			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
 		end
 	end
 end
@@ -61,13 +53,13 @@ function _OnFrame()
 			if inputCheck then
 				WriteFloat(loadingIndicator, 90)
 			end
-			if ReadInt(saveSelect) == 0 and ReadInt(save1 + 12) ~= prevSave and inputCheck then
+			if ReadInt(saveSelect) == 0 and ReadInt(save + 12) ~= prevSave and inputCheck then
 				local f = io.open("KH2autosave.dat", "rb")
 				if input == 768 then
 					f = io.open("KH2autosave2.dat", "rb")
 				end
 				if f ~= nil then
-					WriteString(save1, f:read("*a"))
+					WriteString(save, f:read("*a"))
 					f:close()
 					if input == 1 then
 						ConsolePrint("Loaded autosave")
@@ -95,7 +87,7 @@ function _OnFrame()
 
 			loadCount = loadCount + 1
 		end
-		prevSave = ReadInt(save1 + 12)
+		prevSave = ReadInt(save + 12)
 		prevContinue = ReadInt(continue + 12)
 	end
 end
