@@ -4,29 +4,21 @@ LUAGUI_DESC = "Soft reset"
 
 local canExecute = false
 
-local function importVars(file)
-	if not pcall(require, file) then
-		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
-		local msg = ""
-		local slashIdx = string.find(file, "/")
-		if slashIdx then
-			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
-		else
-			msg = string.format("%s.lua missing, get it from the Github!", file)
-		end
-		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
-	end
-end
-
 function _OnInit()
 	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
         canExecute = true
-		if ReadByte(0x660E04) == 106 or ReadByte(0x660DC4) == 106 then --EGS
-			importVars("EpicGamesGlobal") -- Global and JP version addresses are shared
-		elseif ReadByte(0x660E74) == 106 then -- Steam Global
+		require("VersionCheck")
+		if ReadByte(EGSGlobalVersion) == 106 then
+			importVars("EpicGamesGlobal")
+		elseif ReadByte(EGSJPVersion) == 106 then
+			importVars("EpicGamesJP")
+		elseif ReadByte(SteamGlobalVersion) == 106 then
 			importVars("SteamGlobal")
-		elseif ReadByte(0x65FDF4) == 106 then -- Steam JP
+		elseif ReadByte(SteamJPVersion) == 106 then
 			importVars("SteamJP")
+		else
+			canExecute = false
+			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
 		end
 	end
 end

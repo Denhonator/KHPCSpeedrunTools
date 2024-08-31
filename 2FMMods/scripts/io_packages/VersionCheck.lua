@@ -1,8 +1,9 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
-EGSGlobalVersion = 0x46A822
-EGSJPVersion = 0x46A802
-SteamGlobalVersion = 0x4698D2
-SteamJPVersion = 0x469872
+-- Global and JP versions currently match
+EGSGlobalVersion = 0x660E44
+EGSJPVersion = 0x660E44
+SteamGlobalVersion = 0x660E74
+SteamJPVersion = 0x660E74
 
 function importVars(file)
 	if not pcall(require, file) then

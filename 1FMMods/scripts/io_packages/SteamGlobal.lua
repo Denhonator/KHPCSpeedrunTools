@@ -1,3 +1,4 @@
+-- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 -- shared
 beepHack = 0x26E20C
 maxHP = 0x2DE9366
