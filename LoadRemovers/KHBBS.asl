@@ -1,4 +1,4 @@
-state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - Global")
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - Global") // 1.0.0.10
 {
     // location info
     byte world : 0x819120;
@@ -19,7 +19,28 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - Global")
     byte urns_score : 0x10FB0D18;
 }
 
-state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - JP")
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - JP") // 1.0.0.10
+{
+    // location info
+    byte world : 0x819120;
+    byte room : 0x819121;
+    byte scene : 0x819122;
+
+    // game state info
+    byte text_box : 0x8F65180;
+    byte char_select_confirm_1 : 0x8F7E000;
+    byte char_select_confirm_2 : 0x10F8BAA8;
+    byte state_1 : 0x10FB56A8;  
+    byte state_2 : 0x10FB56E8;
+
+    byte max_hp : 0x10FA6950;
+
+    // mini games
+    byte dwarf_count : 0x10FA4144;
+    byte urns_score : 0x10FB0D18;
+}
+
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam Global") // 1.0.0.2 - done
 {
     // location info
     byte world : 0x818120;
@@ -27,20 +48,20 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - JP")
     byte scene : 0x818122;
 
     // game state info
-    byte text_box : 0x8F64180;
-    byte char_select_confirm_1 : 0x8F7D000;
-    byte char_select_confirm_2 : 0x10F8AAA8;
-    byte state_1 : 0x10FB46A8;  
-    byte state_2 : 0x10FB46E8;
+    byte text_box : 0x8F64A80;
+    byte char_select_confirm_1 : 0x8F7D900;
+    byte char_select_confirm_2 : 0x10F8B3A8;
+    byte state_1 : 0x10FB4FA8;  
+    byte state_2 : 0x10FB4FE8;
 
-    byte max_hp : 0x10FA5950;
+    byte max_hp : 0x10FA6250;
 
     // mini games
-    byte dwarf_count : 0x10FA3144;
-    byte urns_score : 0x10FAFD18;
+    byte dwarf_count : 0x10FA3A44;
+    byte urns_score : 0x10FB0618;
 }
 
-state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam")
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam JP") // 1.0.0.2
 {
     // location info
     byte world : 0x817120;
@@ -48,17 +69,17 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam")
     byte scene : 0x817122;
 
     // game state info
-    byte text_box : 0x8F63A00;
-    byte char_select_confirm_1 : 0x8F7C880;
-    byte char_select_confirm_2 : 0x10F8A328;
-    byte state_1 : 0x10FB3F28;  
-    byte state_2 : 0x10FB3F68;
+    byte text_box : 0x8F63A80;
+    byte char_select_confirm_1 : 0x8F7C900;
+    byte char_select_confirm_2 : 0x10F8A3A8;
+    byte state_1 : 0x10FB3FA8;  
+    byte state_2 : 0x10FB3FE8;
 
-    byte max_hp : 0x10FA51D0;
+    byte max_hp : 0x10FA5250;
 
     // mini games
-    byte dwarf_count : 0x10FA29C4;
-    byte urns_score : 0x10FAF598;
+    byte dwarf_count : 0x10FA2A44;
+    byte urns_score : 0x10FAF618;
 }
 
 startup
@@ -149,7 +170,7 @@ startup
 
 start
 {
-    if (current.char_select_confirm_1 == 2 && old.char_select_confirm_1 == 1 && current.char_select_confirm_2 == vars.confirm_val) {
+    if (current.char_select_confirm_1 == 2 && old.char_select_confirm_1 == 1 && current.char_select_confirm_2 == 192) {
         vars.character_select_load = true;
         vars.completed_splits = new HashSet<string>();
         return true;
@@ -470,43 +491,37 @@ init
     // game base address
     var gb = modules.First().BaseAddress;
     int character_address = 0x0;
-    int epic_gl = memory.ReadValue<byte>(gb + 0x7262E4);
-    int epic_jp = memory.ReadValue<byte>(gb + 0x7252E4);
-    int steam_gl = memory.ReadValue<byte>(gb + 0x7253E4);
-    if (epic_gl == 0x6A || epic_jp == 0x6A) {
-        int offset = 0x0;
-        if (epic_gl == 0x6A) {
+    int offset = 0x0;
+    int epic_gl = memory.ReadValue<byte>(gb + 0x726364);
+    int epic_jp = memory.ReadValue<byte>(gb + 0x726344);
+    int steam_gl = memory.ReadValue<byte>(gb + 0x726464);
+    int steam_jp = memory.ReadValue<byte>(gb + 0x7253E4);
+    if (epic_gl == 106 || epic_jp == 106) {
+        if (epic_gl == 106) {
             version = "Epic Games - Global";
             character_address = 0xCFC02D;
         } else {
             version = "Epic Games - JP";
-            offset = 0x1000;
-            character_address = 0xD1702D;
+            character_address = 0xD1802D;
         }
-        vars.watchers = new Dictionary<string, MemoryWatcher>{
-            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51 - offset) },
-            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5D53 - offset) },
-            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB07D4 - offset) },
-            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB081C - offset) },
-            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB2CBC - offset) },
-        };
-        vars.confirm_val = 192;
-    } else {
-        version = "Steam";
-        if (steam_gl == 0x6A) {
-            character_address = 0xCFA8AD;
+    } else if (steam_gl == 106 || steam_jp == 106) {
+        if (steam_gl == 106) {
+            version = "Steam Global";
+            offset = 0x1780;
+            character_address = 0xCFB92D;
         } else {
-            character_address = 0xD168AD;
+            version = "Steam JP";
+            offset = 0x1700;
+            character_address = 0xD1692D;
         }
-        vars.watchers = new Dictionary<string, MemoryWatcher>{
-            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA45D1) },
-            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA45D3) },
-            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FAF054) },
-            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FAF09C) },
-            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB153C) },
-        };
-        vars.confirm_val = 64;
     }
+    vars.watchers = new Dictionary<string, MemoryWatcher>{
+        { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51 - offset) },
+        { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5D53 - offset) },
+        { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB07D4 - offset) },
+        { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB081C - offset) },
+        { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB2CBC - offset) },
+    };
     vars.watchers["character"] = new MemoryWatcher<byte>(gb + character_address);
     vars.completed_splits = new HashSet<string>();
 
