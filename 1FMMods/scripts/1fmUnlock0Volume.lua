@@ -16,7 +16,6 @@ function _OnInit()
 			importVars("SteamJP")
 		else
 			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
-			break
 		end
 		WriteFloat(volumeZero, 0)
 	else
