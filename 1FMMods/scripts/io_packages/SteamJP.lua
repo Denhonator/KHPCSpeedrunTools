@@ -144,7 +144,7 @@ hookship = 0xED6A1E
 neverland = 0x2DEB257
 posDebug1 = 0x232DD20
 posDebug2 = 0x2537E40
-debug1Value = 1
+debug1Value = 2
 
 -- instant gummi
 worldWarpBase = 0x50ABBA
