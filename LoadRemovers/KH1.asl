@@ -1387,7 +1387,7 @@ init
             { "fightend", new MemoryWatcher<byte>(gb + 0x2D54438) },
             { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x508280) },
             { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507C90) },
-            { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED759E) },
+            { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED751E) },
             { "load", new MemoryWatcher<bool>(gb + 0x232E6E8) },
             { "load_2", new MemoryWatcher<bool>(gb + 0x233F230) },
             { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEB26D) },

@@ -25,9 +25,9 @@ soraHP = 0x2D5D64C
 stateFlag = 0x2867CD8
 closeMenu = 0x2E94BA0
 deathPointer = 0x2398838
-warpTrigger = 0x22ECA5C
+warpTrigger = 0x22ECA8C
 warpType1 = 0x23405C0
-warpType2 = 0x22ECA60
+warpType2 = 0x22ECA90
 inputAddress = 0x23413B4
 saveOpenAddress = 0x232E984
 menuFunction = 0x2E20FA8
@@ -140,15 +140,15 @@ textSpeed = 0x23405DC
 
 -- hook ship
 posDebugString = 0x3EB1C8
-hookship = 0xED759E
+hookship = 0xED751E
 neverland = 0x2DEBC57
 posDebug1 = 0x232E720
 posDebug2 = 0x25389E4
 debug1Value = 1
 
 -- instant gummi
-worldWarpBase = 0x50FA7A
-worldWarpBase2 = 0x50FAEA
+worldWarpBase = 0x50F9FA
+worldWarpBase2 = 0x50FA6A
 monstro = 0x2DEBC5A
 normalDrive = 0x268A26C
 
