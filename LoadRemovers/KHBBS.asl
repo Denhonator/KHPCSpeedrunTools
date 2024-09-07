@@ -544,5 +544,5 @@ update
 
 isLoading
 {
-    return current.state_2 > 1 && current.state_2 < 5 && current.world != 17 && !vars.character_select_load;
+    return current.state_2 > 1 && !vars.character_select_load && ((current.world == 17 && current.state_2 < 4) || (current.world != 17 && current.state_2 < 5));
 }
