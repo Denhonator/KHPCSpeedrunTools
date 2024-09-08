@@ -357,7 +357,7 @@ split
         }
 
         if (current.world == 8 && current.room == 4) {
-            if (aquaConfirm){
+            if (aquaConfirm) {
                 if (vars.completed_splits.TryGetValue("aqua_tournament", out output_catch)) {
                     return vars.completed_splits.Add("aqua_zack") && settings["aqua_zack"];
                 } else {
@@ -391,14 +391,14 @@ split
         }
     }
     if (current.world == 6 && current.room == 6 && old.room == 6) {
-        if (venConfirm){
+        if (venConfirm) {
             return vars.completed_splits.Add("vrg_grind_meld") && settings["vrg_grind_meld"];
         } else if (terraConfirm) {
             return vars.completed_splits.Add("get_to_trinity") && settings["get_to_trinity"];            
         }
     }
     if (aquaConfirm) {
-        if (current.world == 6 && current.room == 10 && old.room == 9){
+        if (current.world == 6 && current.room == 10 && old.room == 9) {
             return vars.completed_splits.Add("aqua_abound") && settings["aqua_abound"];
         }
         // breaks if you go out of CoD more than once before finishing grind but after getting to mickey in RG
@@ -455,7 +455,7 @@ split
         }
         // will need updates if route changes
         if (current.world == 17 && old.world == 6) {
-            if (!vars.completed_splits.TryGetValue("ven_abound", out output_catch)){
+            if (!vars.completed_splits.TryGetValue("ven_abound", out output_catch)) {
                 return vars.completed_splits.Add("ven_abound") && settings["ven_abound"];
             } else {
                 return vars.completed_splits.Add("leave_rg") && settings["leave_rg"];
