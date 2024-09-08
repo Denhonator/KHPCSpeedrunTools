@@ -1,9 +1,9 @@
 -- rebirth unlock
-gamecomplete = 0x87AA90
+gamecomplete = 0x87AB90
 
 -- soft reset
-reset = 0xAC3E00
-input = 0xC7D594
+reset = 0xAC3F00
+input = 0xC7D5B4
 kbinput = 0x822178
-copyright_skip_1 = 0x3A2FD9
-copyright_skip_2 = 0x3A30D0
+copyright_skip_1 = 0x3A3319
+copyright_skip_2 = 0x3A3410
