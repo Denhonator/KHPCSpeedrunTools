@@ -1,23 +1,46 @@
-state("KINGDOM HEARTS Dream Drop Distance", "Epic Games")
+state("KINGDOM HEARTS Dream Drop Distance", "EG Global") // 1.0.0.10
 {
-    byte in_game : 0xA9962C;
-    byte reset : 0xAC9058;
+    byte in_game : 0xA9966C;
+    byte reset : 0xAC9098;
     byte world : 0x9CF720;
     byte room : 0x9CF721;
     byte scene : 0x9CF722;
-    byte fightend : 0x9E66E1;
-    byte loading : 0x14C89B28;
+    byte fightend : 0x9E96E1;
+    byte loading : 0x14C89B68;
 }
 
-state("KINGDOM HEARTS Dream Drop Distance", "Steam")
+// This is not verified as I do not own the Epic Version for JP
+// state("KINGDOM HEARTS Dream Drop Distance", "EG JP")
+// {
+//     byte in_game : 0xA9962C;
+//     byte reset : 0xAC9058;
+//     byte world : 0x9CF720;
+//     byte room : 0x9CF721;
+//     byte scene : 0x9CF722;
+//     byte fightend : 0x9E66E1;
+//     byte loading : 0x14C89B28;
+// }
+
+state("KINGDOM HEARTS Dream Drop Distance", "Steam Global") // 1.0.0.2
 {
-    byte in_game : 0xA99DAC;
-    byte reset : 0xAC97D8;
+    byte in_game : 0xA99DEC;
+    byte reset : 0xAC9818;
     byte world : 0x9CF730;
     byte room : 0x9CF731;
     byte scene : 0x9CF732;
     byte fightend : 0x9E96F1;
-    byte loading : 0x14C8A2A8;
+    byte loading : 0x14C8A2E8;
+}
+
+state("KINGDOM HEARTS Dream Drop Distance", "Steam JP") // 1.0.0.2
+{
+    byte in_game : 0xA99DEC;
+    byte reset : 0xAC9818;
+    byte world : 0x9CF730;
+    byte room : 0x9CF731;
+    byte scene : 0x9CF732;
+    byte fightend : 0x9E96F1;
+    byte loading : 0x14C8A2E8;
 }
 
 startup
@@ -242,10 +265,25 @@ exit
 init
 {
     var gb = modules.First().BaseAddress;
-    if (memory.ReadValue<byte>(gb + 0x8A9046) == 0x6A) {
-        version = "Epic Games";
-    } else {
-        version = "Steam";
+    int epic_gl = memory.ReadValue<byte>(gb + 0x8A90A6);
+    // This is not verified as I do not own the Epic Version for JP
+    // int epic_jp = memory.ReadValue<byte>(gb + 0x8A90A6);
+    int steam_gl = memory.ReadValue<byte>(gb + 0x8A9103);
+    int steam_jp = memory.ReadValue<byte>(gb + 0x8A90A3);
+    // if (epic_gl == 106 || epic_jp == 106) {
+    if (epic_gl == 106) {
+        if (epic_gl == 106) {
+            version = "EG Global";
+        // } else {
+        //     version = "EG JP";
+        //     character_address = 0xD1802D;
+        }
+    } else if (steam_gl == 106 || steam_jp == 106) {
+        if (steam_gl == 106) {
+            version = "Steam Global";
+        } else {
+            version = "Steam JP";
+        }
     }
     vars.completed_splits = new HashSet<string>();
     timer.IsGameTimePaused = false;

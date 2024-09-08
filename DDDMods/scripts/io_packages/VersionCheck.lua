@@ -1,8 +1,9 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 EGSGlobalVersion = 0x8A90A6
+-- This is not verified as I do not own the Epic Version for JP
 -- EGSJPVersion = 0x8A90A6
-SteamGlobalVersion = 0x0
-SteamJPVersion = 0x0
+SteamGlobalVersion = 0x8A9103
+SteamJPVersion = 0x8A90A3
 
 function importVars(file)
 	local slashIdx = string.find(file, "/")
