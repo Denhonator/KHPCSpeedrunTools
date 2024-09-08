@@ -1,25 +1,49 @@
-state("KINGDOM HEARTS Re_Chain of Memories", "Epic")
+state("KINGDOM HEARTS Re_Chain of Memories", "EG Global")
 {
-    byte character : 0x87B145;
-    byte state : 0x87B100;
-    byte scene : 0x87B160;
-    byte world : 0x87B162;
-    byte title : 0xAC6F00;
-    byte new_game : 0xAC3E20;
-    byte loading : 0xAF69CA;
-    byte brawl_scene_change : 0xC43FB8;
+    byte character : 0x87B245;
+    byte state : 0x87B200;
+    byte scene : 0x87B260;
+    byte world : 0x87B262;
+    byte title : 0x8832B1;
+    byte new_game : 0xAC3F20;
+    byte loading : 0xAF6ACA;
+    byte brawl_scene_change : 0xC440E8;
 }
 
-state("KINGDOM HEARTS Re_Chain of Memories", "Steam")
+state("KINGDOM HEARTS Re_Chain of Memories", "EG Global")
+{
+    byte character : 0x87B245;
+    byte state : 0x87B200;
+    byte scene : 0x87B260;
+    byte world : 0x87B262;
+    byte title : 0x882FF1;
+    byte new_game : 0xAC3F20;
+    byte loading : 0xAF6ACA;
+    byte brawl_scene_change : 0xC440E8;
+}
+
+state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global")
 {
     byte character : 0x87B845;
     byte state : 0x87B800;
     byte scene : 0x87B860;
     byte world : 0x87B862;
-    byte title : 0x883964;
+    byte title : 0x8838B1;
     byte new_game : 0xAC4494;
-    byte loading : 0xAF69CA;
-    byte brawl_scene_change : 0xC443F8;
+    byte loading : 0xAF70CA;
+    byte brawl_scene_change : 0xC44428;
+}
+
+state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP")
+{
+    byte character : 0x87B845;
+    byte state : 0x87B800;
+    byte scene : 0x87B860;
+    byte world : 0x87B862;
+    byte title : 0x8835F1;
+    byte new_game : 0xAC4494;
+    byte loading : 0xAF70CA;
+    byte brawl_scene_change : 0xC44428;
 }
 
 startup
@@ -275,18 +299,24 @@ init
     vars.completed_splits = new HashSet<string>();
     timer.IsGameTimePaused = false;
     var gb = modules.First().BaseAddress;
-    int epic_global = memory.ReadValue<byte>(gb + 0x3A2FD9);
-    int epic_jp = memory.ReadValue<byte>(gb + 0x3A2E19);
-    if (epic_global == 117 || epic_jp == 117 || epic_global == 115 || epic_jp == 115) {
-        version = "Epic";
-    } else {
-        version = "Steam"
+    int epic_gl = memory.ReadValue<byte>(gb + 0x705148);
+    int epic_jp = memory.ReadValue<byte>(gb + 0x705128);
+    int steam_gl = memory.ReadValue<byte>(gb + 0x705248);
+    int steam_jp = memory.ReadValue<byte>(gb + 0x7051E8);
+    if (epic_global == 106) {
+        version = "EG Global";
+    } else if (epic_jp == 106) {
+        version = "EG JP"
+    } else if (steam_gl == 106) {
+        version = "Steam Global";
+    } else if (steam_jp == 106) {
+        version = "Steam JP";
     }
 }
 
 reset
 {
-    return current.new_game == 15 && old.new_game != 16 && !settings["all_stories"] && current.title == 1;
+    return current.title == 3;
 }
 
 update
@@ -295,5 +325,5 @@ update
 
 isLoading
 {
-    return current.loading == 255 && (!settings["all_stories"] || (current.title == 1 && settings["all_stories"]));
+    return current.loading == 255;
 }

@@ -1,4 +1,4 @@
-state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - Global") // 1.0.0.10
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "EG Global") // 1.0.0.10
 {
     // location info
     byte world : 0x819120;
@@ -19,7 +19,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - Global") // 1.0.0
     byte urns_score : 0x10FB0D18;
 }
 
-state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Epic Games - JP") // 1.0.0.10
+state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "EG JP") // 1.0.0.10
 {
     // location info
     byte world : 0x819120;
@@ -498,10 +498,10 @@ init
     int steam_jp = memory.ReadValue<byte>(gb + 0x7253E4);
     if (epic_gl == 106 || epic_jp == 106) {
         if (epic_gl == 106) {
-            version = "Epic Games - Global";
+            version = "EG Global";
             character_address = 0xCFC02D;
         } else {
-            version = "Epic Games - JP";
+            version = "EG JP";
             character_address = 0xD1802D;
         }
     } else if (steam_gl == 106 || steam_jp == 106) {
