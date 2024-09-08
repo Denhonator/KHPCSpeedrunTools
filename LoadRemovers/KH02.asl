@@ -1,29 +1,57 @@
-state("KINGDOM HEARTS 0.2 Birth by Sleep", "Epic Games")
+state("KINGDOM HEARTS 0.2 Birth by Sleep", "EG Global") // 1.0.0.10
 {
-	byte world : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4490604;
-	byte hints : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x449C439;
-	byte start : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44F708D;
-	byte fightend : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44F7165;
-	byte finisher : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44F7748;
-	byte loading : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4509394;
-	byte gear_kill : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x453178D;
-	byte scene : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x466C64C;
-	byte title : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x47CD35D;
-	byte loading_2 : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4893D94;
+	byte world : 0x4490604;
+	byte hints : 0x449C439;
+	byte start : 0x44F708D;
+	byte fightend : 0x44F7165;
+	byte finisher : 0x44F7748;
+	byte loading : 0x4509394;
+	byte gear_kill : 0x453178D;
+	byte scene : 0x466C64C;
+	byte title : 0x47CD35D;
+	byte loading_2 : 0x4893D94;
 }
 
-state("KINGDOM HEARTS 0.2 Birth by Sleep", "Steam")
+// state("KINGDOM HEARTS 0.2 Birth by Sleep", "EG JP") // 1.0.0.10
+// {
+// 	byte world : 0x4490604;
+// 	byte hints : 0x449C439;
+// 	byte start : 0x44F708D;
+// 	byte fightend : 0x44F7165;
+// 	byte finisher : 0x44F7748;
+// 	byte loading : 0x4509394;
+// 	byte gear_kill : 0x453178D;
+// 	byte scene : 0x466C64C;
+// 	byte title : 0x47CD35D;
+// 	byte loading_2 : 0x4893D94;
+// }
+
+state("KINGDOM HEARTS 0.2 Birth by Sleep", "Steam Global") // 1.0.0.2
 {
-	byte world : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x44BD854;
-	byte start : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x452452D;
-	byte fightend : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4524605;
-	byte finisher : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4524BED;
-	byte loading : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4536724;
-	byte gear_kill : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x455EB05;
-	byte scene : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x46999CC;
-	byte title : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x47FA6DD;
-	byte hints : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x4834A51;
-	byte loading_2 : "KINGDOM HEARTS 0.2 Birth by Sleep.exe", 0x48C1014;
+	byte world : 0x44BD854;
+	byte start : 0x452452D;
+	byte fightend : 0x4524605;
+	byte finisher : 0x4524BED;
+	byte loading : 0x4536724;
+	byte gear_kill : 0x455EB05;
+	byte scene : 0x46999CC;
+	byte title : 0x47FA6DD;
+	byte hints : 0x4834A51;
+	byte loading_2 : 0x48C1014;
+}
+
+state("KINGDOM HEARTS 0.2 Birth by Sleep", "Steam JP") // 1.0.0.2
+{
+	byte world : 0x44BD854;
+	byte start : 0x452452D;
+	byte fightend : 0x4524605;
+	byte finisher : 0x4524BED;
+	byte loading : 0x4536724;
+	byte gear_kill : 0x455EB05;
+	byte scene : 0x46999CC;
+	byte title : 0x47FA6DD;
+	byte hints : 0x4834A51;
+	byte loading_2 : 0x48C1014;
 }
 
 startup
@@ -120,23 +148,28 @@ init
 	vars.cutscene_count = 0;
 	vars.hint_count = 0;
     var gb = modules.First().BaseAddress;
-	if (memory.ReadValue<byte>(gb + 0x444DD30) == 0x54) { // epic global
+	int epic_gl = memory.ReadValue<byte>(gb + 0x444DD30);
+    // int epic_jp = memory.ReadValue<byte>(gb + 0x0);
+    int steam_gl = memory.ReadValue<byte>(gb + 0x447B680);
+    int steam_jp = memory.ReadValue<byte>(gb + 0x447B680);
+	if (epic_gl == 84) { // epic global
 		vars.loading = 0x4509394;
 		vars.hints = 0x449C439;
 		vars.hint_val = 11;
 		vars.hint_start_val = 15;
-		version = "Epic Games";
-	} else if (memory.ReadValue<byte>(gb + 0x447B680) == 0x54 || memory.ReadValue<byte>(gb + 0x447B700) == 0x54) {
+		version = "EG Global";
+	} else if (steam_gl == 84 || steam_jp == 84) {
 		vars.loading = 0x4536724;
 		vars.hints = 0x4834A51;
-		if (memory.ReadValue<byte>(gb + 0x447B680) == 0x54) { // Global
+		if (steam_gl == 84) { // Global
 			vars.hint_val = 13;
 			vars.hint_start_val = 16;
+			version = "Steam Global";
 		} else { // JP
 			vars.hint_val = 15;
 			vars.hint_start_val = 17;
+			version = "Steam JP";
 		}
-		version = "Steam";
 	}
 }
 
