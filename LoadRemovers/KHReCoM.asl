@@ -1,4 +1,4 @@
-state("KINGDOM HEARTS Re_Chain of Memories", "EG Global")
+state("KINGDOM HEARTS Re_Chain of Memories", "EG Global") // 1.0.0.10
 {
     byte character : 0x87B245;
     byte state : 0x87B200;
@@ -10,7 +10,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG Global")
     byte brawl_scene_change : 0xC440E8;
 }
 
-state("KINGDOM HEARTS Re_Chain of Memories", "EG Global")
+state("KINGDOM HEARTS Re_Chain of Memories", "EG Global") // 1.0.0.10
 {
     byte character : 0x87B245;
     byte state : 0x87B200;
@@ -22,7 +22,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG Global")
     byte brawl_scene_change : 0xC440E8;
 }
 
-state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global")
+state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global") // 1.0.0.2
 {
     byte character : 0x87B845;
     byte state : 0x87B800;
@@ -34,7 +34,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global")
     byte brawl_scene_change : 0xC44428;
 }
 
-state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP")
+state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP") // 1.0.0.2
 {
     byte character : 0x87B845;
     byte state : 0x87B800;
