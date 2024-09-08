@@ -115,7 +115,8 @@ startup
         settings.Add("shadows_1", false, "Shadows 1 (first full group)", "optional_splits");
         settings.Add("shadows_2", false, "Shadows 2 (post save point cutscene)", "optional_splits");
         settings.Add("day_1", false, "Destiny Islands Day One", "optional_splits");
-        settings.Add("destiny", false, "Destiny Islands Day Two", "optional_splits");
+        settings.Add("destiny", false, "Destiny Islands Day Two (on raft supplies claimed)", "optional_splits");
+        settings.Add("destiny_opt", false, "Destiny Islands Day Two (on transition)", "optional_splits");
         settings.Add("leon", true, "Leon", "optional_splits");
         settings.Add("crank", true, "Crank Tower - Fight End", "optional_splits");
         settings.Add("crank_alt", true, "Crank Tower - Post Fight Cutscene", "optional_splits");
@@ -318,7 +319,7 @@ start
             base_path = @":\Users\chuds\Desktop\KH Current\KH_1.5_2.5";
         }
         foreach (char drive in drives) {
-            if(Directory.Exists(drive + base_path)) {
+            if (Directory.Exists(drive + base_path)) {
                 vars.autosavedst = drive + base_path + @"\autosave.dat";
                 break;
             } 
@@ -348,29 +349,29 @@ split
     vars.summon_timer = summon_load.Current ? vars.summon_timer + (paused.Current ? 0 : 1) : 0;
 
     // Final fight split always goes
-    if(fight_complete && current_world == 16 && current.room == 33 && current.scene == 4){
+    if (fight_complete && current_world == 16 && current.room == 33 && current.scene == 4){
         if (settings["boss_rush"]) {
             File.Copy(@"Boss Rush\001_Darkside 1.dat", vars.autosavedst, true);
         }
         return true;
     }
 
-    if(settings["main"]){
-        if(death){
+    if (settings["main"]){
+        if (death){
             // death abuse splits
-            if(current_world == 0 && current.room == 4){
+            if (current_world == 0 && current.room == 4){
                 if (settings["boss_rush"]) {
                     File.Copy(@"Boss Rush\002_Darkside 2.dat", vars.autosavedst, true);
                 }
                 return settings["ds1"];
             }
         }
-        if(fight_complete){
+        if (fight_complete){
             // fight win splits
             switch (current_world){
                 // station of awakening
                 case 0:
-                    if(current.room == 4){
+                    if (current.room == 4){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\002_Darkside 2.dat", vars.autosavedst, true);
                         }
@@ -379,7 +380,7 @@ split
                     break;
                 // destiny islands
                 case 1:
-                    if(current.room == 8){
+                    if (current.room == 8){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\003_Leon.dat", vars.autosavedst, true);
                         }
@@ -388,19 +389,19 @@ split
                     break;
                 // traverse town
                 case 3:
-                    if(current.room == 2){
+                    if (current.room == 2){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\005_Crank Tower.dat", vars.autosavedst, true);
                         }
                         return settings["guard"];
                     }
-                    if(current.room == 1){
-                        if(!settings["optional_splits"] && !vars.fake_guard){
+                    if (current.room == 1){
+                        if (!settings["optional_splits"] && !vars.fake_guard){
                             vars.back_split = "fake";
                             vars.fake_guard = true;
                             return false;
                         }
-                        if(vars.fake_guard){
+                        if (vars.fake_guard){
                             vars.back_split = "";
                             if (settings["boss_rush"]) {
                                 File.Copy(@"Boss Rush\021_Riku 1.dat", vars.autosavedst, true);
@@ -411,7 +412,7 @@ split
                     break;
                 // wonderland
                 case 4:
-                    if(current.room == 1){
+                    if (current.room == 1){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\007_Sabor 2.dat", vars.autosavedst, true);
                         }
@@ -420,13 +421,13 @@ split
                     break;
                 // deep jungle
                 case 5:
-                    if(current.room == 11){
-                        if(!settings["optional_splits"] && !vars.clayton_1){
+                    if (current.room == 11){
+                        if (!settings["optional_splits"] && !vars.clayton_1){
                             vars.back_split = "clay1";
                             vars.clayton_1 = true;
                             return false;
                         }
-                        if(vars.clayton_1){
+                        if (vars.clayton_1){
                             vars.back_split = "";
                             if (settings["boss_rush"]) {
                                 File.Copy(@"Boss Rush\009_Pot Centipede.dat", vars.autosavedst, true);
@@ -437,7 +438,7 @@ split
                     break;
                 // agrabah
                 case 8:
-                    if(current.room == 17){
+                    if (current.room == 17){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\013_Parasite Cage 1.dat", vars.autosavedst, true);
                         }
@@ -446,7 +447,7 @@ split
                     break;
                 // halloween town
                 case 10:
-                    if(current.room == 8){
+                    if (current.room == 8){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\018_Anti Sora.dat", vars.autosavedst, true);
                         }
@@ -455,7 +456,7 @@ split
                     break;
                 // monstro
                 case 12:
-                    if(current.room == 2){
+                    if (current.room == 2){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\015_Lock Shock Barrel.dat", vars.autosavedst, true);
                         }
@@ -464,7 +465,7 @@ split
                     break;
                 // neverland
                 case 13:
-                    if(current.room == 8){
+                    if (current.room == 8){
                         vars.back_split = "";
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\020_Opposite Armor.dat", vars.autosavedst, true);
@@ -474,13 +475,13 @@ split
                     break;
                 // hollow bastion
                 case 15:
-                    if(current.room == 14){
+                    if (current.room == 14){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\025_Behemoth.dat", vars.autosavedst, true);
                         }
                         return settings["riku2"];
                     }
-                    if(current.room == 15){
+                    if (current.room == 15){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\026_Arch Behemoth.dat", vars.autosavedst, true);
                         }
@@ -489,22 +490,22 @@ split
                     break;
                 // end of world
                 case 16:
-                    if(current.room == 26){
+                    if (current.room == 26){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\028_Ansem 1.dat", vars.autosavedst, true);
                         }
                         return settings["cher"];
                     }
                     eow_scene.Update(game); 
-                    if(current.room == 30 && eow_scene.Current == 257){
-                        if(!settings["optional_splits"]){
-                            if(!vars.ds3){
+                    if (current.room == 30 && eow_scene.Current == 257){
+                        if (!settings["optional_splits"]){
+                            if (!vars.ds3){
                                 vars.back_split = "ds3";
                                 vars.ds3 = true;
                                 return false;
                             }
                         }
-                        if(vars.ds3){
+                        if (vars.ds3){
                             vars.back_split = "";
                             if (settings["boss_rush"]) {
                                 File.Copy(@"Boss Rush\030_Ansem 3.dat", vars.autosavedst, true);
@@ -517,13 +518,13 @@ split
         }
     }
 
-    if(settings["optional_splits"]){
+    if (settings["optional_splits"]){
         // fight win splits
-        if(fight_complete){
+        if (fight_complete){
             switch (current_world){
                 // traverse town
                 case 3:
-                    if(current.room == 1 && !vars.fake_guard){
+                    if (current.room == 1 && !vars.fake_guard){
                         vars.back_split = "fake";
                         vars.fake_guard = true;
                         return settings["fake_guard"];
@@ -531,7 +532,7 @@ split
                     break;
                 // wonderland
                 case 4:
-                    if(current.room == 3){
+                    if (current.room == 3){
                         vars.completed_fights.Add("crank");
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\006_Trickmaster.dat", vars.autosavedst, true);
@@ -541,13 +542,13 @@ split
                     break;
                 // deep jungle
                 case 5:
-                    if(current.room == 2){
+                    if (current.room == 2){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\008_Clayton.dat", vars.autosavedst, true);
                         }
                         return settings["sabor_2"];
                     }
-                    if(current.room == 11 && !vars.clayton_1){
+                    if (current.room == 11 && !vars.clayton_1){
                         vars.back_split = "clay1";
                         vars.clayton_1 = true;
                         return settings["clayton_1"];
@@ -555,19 +556,19 @@ split
                     break;
                 // agrabah splits
                 case 8:
-                    if(current.room == 19){
+                    if (current.room == 19){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\010_Tiger Head.dat", vars.autosavedst, true);
                         }
                         return settings["pot"];
                     }
-                    if(current.room == 1){
+                    if (current.room == 1){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\011_Jafar.dat", vars.autosavedst, true);
                         }
                         return settings["tiger"];
                     }
-                    if(current.room == 16){
+                    if (current.room == 16){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\012_Genie Jafar.dat", vars.autosavedst, true);
                         }
@@ -576,13 +577,13 @@ split
                     break;
                 // halloween town
                 case 10:
-                    if(current.room == 9){
+                    if (current.room == 9){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\016_Oogie Boogie.dat", vars.autosavedst, true);
                         }
                         return settings["lsb"];
                     }
-                    if(current.room == 7){
+                    if (current.room == 7){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\017_Oogie Manor.dat", vars.autosavedst, true);
                         }
@@ -591,7 +592,7 @@ split
                     break;
                 // monstro
                 case 12:
-                    if(current.room == 4){
+                    if (current.room == 4){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\014_Parasite Cage 2.dat", vars.autosavedst, true);
                         }
@@ -600,32 +601,32 @@ split
                     break;
                 // neverland
                 case 13:
-                    if(current.room == 6){
+                    if (current.room == 6){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\019_Hook.dat", vars.autosavedst, true);
                         }
                         return settings["anti"];
                     }
-                    if(vars.pre_hook && !vars.hook && !settings["hook"] && current.room == 8){
+                    if (vars.pre_hook && !vars.hook && !settings["hook"] && current.room == 8){
                         vars.back_split = "";
                         vars.hook = true;
                     }
                     break;
                 // hollow bastion
                 case 15:
-                    if(current.room == 4){
+                    if (current.room == 4){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\022_Maleficent.dat", vars.autosavedst, true);
                         }
                         return settings["riku"];
                     }
-                    if(current.room == 11){
+                    if (current.room == 11){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\023_Dragon Maleficent.dat", vars.autosavedst, true);
                         }
                         return settings["mal"];
                     }
-                    if(current.room == 12 && current.scene == 0){
+                    if (current.room == 12 && current.scene == 0){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\024_Riku Ansem.dat", vars.autosavedst, true);
                         }
@@ -635,41 +636,41 @@ split
                 // end of world
                 case 16:
                     eow_scene.Update(game); 
-                    if(current.room == 30 && eow_scene.Current == 256){
+                    if (current.room == 30 && eow_scene.Current == 256){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\029_Ansem 2.dat", vars.autosavedst, true);
                         }
                         return settings["a1"];
                     }
-                    if(!vars.ds3 && current.room == 30){
+                    if (!vars.ds3 && current.room == 30){
                         vars.ds3 = true;
                         vars.back_split = "ds3";
                         return settings["ds3"];
                     }
-                    if(current.room == 33){
-                        if(current.scene == 0){
+                    if (current.room == 33){
+                        if (current.scene == 0){
                             if (settings["boss_rush"]) {
                                 File.Copy(@"Boss Rush\031_World of Chaos Face.dat", vars.autosavedst, true);
                             }
                             return settings["a3"];
                         }
-                        if(current.scene == 2){
+                        if (current.scene == 2){
                             if (settings["boss_rush"]) {
                                 File.Copy(@"Boss Rush\032_Ansem 4.dat", vars.autosavedst, true);
                             }
                             return settings["face"];
                         }
-                        if(current.scene == 3){
+                        if (current.scene == 3){
                             return settings["mc"];
                         }
                     }
-                    if(current.room == 36){
+                    if (current.room == 36){
                         return settings["sc"];
                     }
-                    if(current.room == 37){
+                    if (current.room == 37){
                         return settings["dbc"];
                     }
-                    if(current.room == 38){
+                    if (current.room == 38){
                         return settings["invc"];
                     }
                     break;
@@ -679,53 +680,56 @@ split
             switch (current_world){
                 // station of awakening
                 case 0:
-                    if(current.enemies_defeated[0] >= 5 && cutscene.Current){
+                    if (current.enemies_defeated[0] >= 5 && cutscene.Current){
                         return vars.completed_splits.Add("shadows_1") && settings["shadows_1"];
                     }
                     // shadows killed
-                    if(current.enemies_defeated[0] >= 9 && text_progress.Current > 0 && text_progress.Old == 0){
+                    if (current.enemies_defeated[0] >= 9 && text_progress.Current > 0 && text_progress.Old == 0){
                         return vars.completed_splits.Add("shadows_2") && settings["shadows_2"];
                     }
                     break;
                 // destiny islands
                 case 1:
                     // logs 
-                    if(current.collected_items_2[40] < old.collected_items_2[40]){
+                    if (current.collected_items_2[40] < old.collected_items_2[40]){
                         return settings["day_1"];
                     }
                     // coconuts
-                    if(current.collected_items_2[46] < old.collected_items_2[46]){
+                    if (current.collected_items_2[46] < old.collected_items_2[46]){
                         return settings["destiny"];
+                    }
+                    if (old.room == 2 && current.room == 3 && current.scene == 2){
+                        return vars.completed_splits.Add("destiny_opt") && settings["destiny_opt"];                        
                     }
                     break;
                 // traverse town
                 case 3:
-                    if(current.room == 0 && current.scene == 3 && ((death) || (current.white > 0 && old.white == 0))){
+                    if (current.room == 0 && current.scene == 3 && ((death) || (current.white > 0 && old.white == 0))){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\004_Guard Armor.dat", vars.autosavedst, true);
                         }
                         return vars.completed_splits.Add("leon") && settings["leon"];
                     }
-                    if(current.room == 10 && current.scene == 11 && current.in_gummi > 0){
+                    if (current.room == 10 && current.scene == 11 && current.in_gummi > 0){
                         return vars.completed_splits.Add("tt_2") && settings["tt_2"];
                     }
                     // oath keeper
-                    if(current.scene == 0 && current.room == 10 && current.in_gummi > 0 && current.equips[38] == 1){
+                    if (current.scene == 0 && current.room == 10 && current.in_gummi > 0 && current.equips[38] == 1){
                         return vars.completed_splits.Add("tt_4") && settings["tt_4"];
                     }
                     break;
                 // wonderland
                 case 4:
-                    if(current.room == 3 && vars.completed_fights.TryGetValue("crank", out output_catch) && cutscene.Current){
+                    if (current.room == 3 && vars.completed_fights.TryGetValue("crank", out output_catch) && cutscene.Current){
                         return vars.completed_splits.Add("crank_alt") && settings["crank_alt"];
                     }
                     break;
                 // deep jungle
                 case 5:
-                    if(current.room == 0 && current.scene == 0 && ((death) || (current.white > 0 && old.white == 0))){
+                    if (current.room == 0 && current.scene == 0 && ((death) || (current.white > 0 && old.white == 0))){
                         return vars.completed_splits.Add("sabor_1") && settings["sabor_1"];
                     }
-                    if(
+                    if (
                         // house gummi
                         (current.room == 0 && current.scene == 3 && current.power_wild_gummis[13] != old.power_wild_gummis[13]) ||
                         // bamboo gummi
@@ -739,31 +743,31 @@ split
                     ){
                         vars.pw_gummis += 1;
                     }
-                    if(vars.pw_gummis == 5){
+                    if (vars.pw_gummis == 5){
                         vars.pw_gummis = 0;
                         return vars.completed_splits.Add("power_wilds") && settings["power_wilds"];
                     }
-                    if(current.room == 10 && current.scene == 0){
+                    if (current.room == 10 && current.scene == 0){
                         return vars.completed_splits.Add("wfc") && settings["wfc"];
                     }
                     break;
                 // agrabah
                 case 8:
-                    if(current.room == 0 && current.scene == 4){
+                    if (current.room == 0 && current.scene == 4){
                         return vars.completed_splits.Add("save_al") && settings["save_al"];
                     }
-                    if(current.room == 1 && current.scene == 4){
+                    if (current.room == 1 && current.scene == 4){
                         return vars.completed_splits.Add("carpet_escape") && settings["carpet_escape"];
                     }
                     break;
                 // halloween town
                 case 10:
                     // forget me not
-                    if(current.room == 10 && current.collected_items_2[75] == 0 && old.collected_items_2[75] == 1){
+                    if (current.room == 10 && current.collected_items_2[75] == 0 && old.collected_items_2[75] == 1){
                         return settings["fmn"];
                     }
                     // jack in the box
-                    if(current.room == 10 && current.collected_items_2[76] == 0 && old.collected_items_2[76] == 1){
+                    if (current.room == 10 && current.collected_items_2[76] == 0 && old.collected_items_2[76] == 1){
                         return settings["jb"];
                     }
                     break;
@@ -771,58 +775,58 @@ split
                 case 13:
                     var neverland_scene = vars.watchers["neverland_scene"];
                     neverland_scene.Update(game);
-                    if(!vars.pre_hook && current.room == 8 && current.scene == 1 && neverland_scene.Current == 80){
+                    if (!vars.pre_hook && current.room == 8 && current.scene == 1 && neverland_scene.Current == 80){
                         vars.back_split = "pre_hook";
                         vars.pre_hook = true;
                         return settings["pre_hook"];
                     }
-                    if(cutscene.Current && gummi_destination_world.Current == 13 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)){
+                    if (cutscene.Current && gummi_destination_world.Current == 13 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)){
                         return vars.completed_splits.Add("ship") && settings["ship"];
                     }
                     break;
                 // hollow bastion
                 case 15:
-                    if(old.room == 11 && current.room == 4 && current.scene == 13){
+                    if (old.room == 11 && current.room == 4 && current.scene == 13){
                         return settings["emblem"];
                     }
-                    if(current.room == 3 && current.scene == 13 && summon_load.Current && vars.summon_timer > 30){
+                    if (current.room == 3 && current.scene == 13 && summon_load.Current && vars.summon_timer > 30){
                         return vars.completed_splits.Add("dumbo_1") && settings["dumbo_1"];
                     }
-                    if(current.room == 1 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30){
+                    if (current.room == 1 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30){
                         return vars.completed_splits.Add("dumbo_2") && settings["dumbo_2"];
                     }
-                    if(current.room == 3 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30){
+                    if (current.room == 3 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30){
                         return vars.completed_splits.Add("dumbo_3") && settings["dumbo_3"];
                     }
                     break;
                 // end of world
                 case 16:
 
-                    if(current.room == 12 && current.scene == 13 && current.arch_behemoth_kills > old.arch_behemoth_kills){
+                    if (current.room == 12 && current.scene == 13 && current.arch_behemoth_kills > old.arch_behemoth_kills){
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\027_Chernabog.dat", vars.autosavedst, true);
                         }
                         return settings["arch"];
                     }
-                    if(old.room == 18 && current.room == 15){
+                    if (old.room == 18 && current.room == 15){
                         return vars.completed_splits.Add("oc_portal") && settings["oc_portal"];
                     }
-                    if(old.room == 21 && current.room == 15){
+                    if (old.room == 21 && current.room == 15){
                         return vars.completed_splits.Add("atl_portal") && settings["atl_portal"];
                     }
-                    if(old.room == 25 && current.room == 15){
+                    if (old.room == 25 && current.room == 15){
                         return settings["hbp"];
                     }
-                    if(!vars.behemoth_3 && current.room == 28 && current.arch_behemoth_kills > old.arch_behemoth_kills){
+                    if (!vars.behemoth_3 && current.room == 28 && current.arch_behemoth_kills > old.arch_behemoth_kills){
                         vars.behemoth_3 = true;
                         vars.back_split = "be3";
                         return settings["behemoth_3"];
                     }
-                    if(current.room == 29){
+                    if (current.room == 29){
                         vars.back_split = "";
                         return vars.completed_splits.Add("final_rest") && settings["final_rest"];
                     }
-                    if(old.room == 33 && current.room == 37){
+                    if (old.room == 33 && current.room == 37){
                         return settings["artillery"];
                     }
                     break;
@@ -831,34 +835,34 @@ split
         
         var ship = vars.watchers["hook_ship_flag"];
         ship.Update(game);
-        if(gummi_destination_world.Current == 13 && ship.Current == 37 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)){
+        if (gummi_destination_world.Current == 13 && ship.Current == 37 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)){
             return vars.completed_splits.Add("ship_early") && settings["ship_early"];
         }
     }
 
-    if(settings["all_worlds_splits"]){
-        if(fight_complete){
+    if (settings["all_worlds_splits"]){
+        if (fight_complete){
             // fight win splits
             switch (current_world){
                 // atlantica
                 case 9:
-                    if(current.room == 12 && current.scene == 2){
+                    if (current.room == 12 && current.scene == 2){
                         return settings["urs_1"];
                     }
-                    if(current.room == 16){
+                    if (current.room == 16){
                         return settings["urs_2"];
                     }
                     break;
                 // olympus coliseum
                 case 11:
-                    if(current.room == 2 && current.scene == 0){
+                    if (current.room == 2 && current.scene == 0){
                         return settings["cloud_1"];
                     }
-                    if(current.room == 2 && current.scene == 1){
+                    if (current.room == 2 && current.scene == 1){
                         return settings["cerb_1"];
                     }
-                    if(current.room == 2 && current.scene == 9){
-                        if(!vars.cloud_2){
+                    if (current.room == 2 && current.scene == 9){
+                        if (!vars.cloud_2){
                             vars.back_split = "cloud2";
                             vars.cloud_2 = true;
                             return settings["cloud_2"];
@@ -875,37 +879,37 @@ split
             switch (current_world){
                 // traverse town
                 case 3:
-                    if(old_world == 6 && vars.completed_splits.TryGetValue("torn_page_power", out output_catch)){
+                    if (old_world == 6 && vars.completed_splits.TryGetValue("torn_page_power", out output_catch)){
                         return vars.completed_splits.Add("power_boost") && settings["power_boost"];
                     }
-                    if(vars.completed_splits.TryGetValue("torn_page_5", out output_catch) && old.room == 9 && current.room == 19){
+                    if (vars.completed_splits.TryGetValue("torn_page_5", out output_catch) && old.room == 9 && current.room == 19){
                         return settings["seal_100_aw"];
                     }
                     break;
                 // 100 acre wood
                 case 6:
                     // power boost
-                    if(current.collected_items_2[0] > old.collected_items_2[0]){
+                    if (current.collected_items_2[0] > old.collected_items_2[0]){
                         vars.completed_splits.Add("torn_page_power");
                     }
                     // nature spark
-                    if(current.collected_items_2[55] == 1 && old.collected_items_2[55] == 0){
+                    if (current.collected_items_2[55] == 1 && old.collected_items_2[55] == 0){
                         return settings["torn_page_1"];
                     }
                     // mythril shard
-                    if(current.collected_items_2[100] > old.collected_items_2[100]){
+                    if (current.collected_items_2[100] > old.collected_items_2[100]){
                         return vars.completed_splits.Add("torn_page_2") && settings["torn_page_2"];
                     }
                     // stop level
-                    if(current.magic_levels[168] > old.magic_levels[168]){
+                    if (current.magic_levels[168] > old.magic_levels[168]){
                         return settings["torn_page_3"];
                     }
                     // mythril
-                    if(current.collected_items_2[101] > old.collected_items_2[101]){
+                    if (current.collected_items_2[101] > old.collected_items_2[101]){
                         return vars.completed_splits.Add("torn_page_4") && settings["torn_page_4"];
                     }
                     // exp ring
-                    if(current.equips[0] > old.equips[0]){
+                    if (current.equips[0] > old.equips[0]){
                         return vars.completed_splits.Add("torn_page_5") && settings["torn_page_5"];
                     }
                     break;
@@ -913,14 +917,14 @@ split
                 case 9:
                     var docked_world = vars.watchers["docked_world"];
                     docked_world.Update(game);
-                    if(docked_world.Current == 9){
+                    if (docked_world.Current == 9){
                         return vars.completed_splits.Add("atl_dock") && settings["atl_dock"];
                     }
                     break;
                 // olympus coliseum
                 case 11:
                     // thunder unlocked
-                    if(current.in_gummi > 0 && (
+                    if (current.in_gummi > 0 && (
                         current.magic_unlock_val == 5 ||
                         current.magic_unlock_val == 7 ||
                         current.magic_unlock_val == 15
@@ -932,40 +936,40 @@ split
         }
     }
 
-    if(settings["jj_splits"]){
-        if(fight_complete){
+    if (settings["jj_splits"]){
+        if (fight_complete){
             // fight win splits
             switch (current_world){
                 // agrabah
                 case 8:
-                    if(current.room == 0 && current.scene == 13){
+                    if (current.room == 0 && current.scene == 13){
                         return settings["kurt"];
                     }
                     break;
                 // olympus coliseum
                 case 11:
-                    if(current.room == 5 && current.scene == 0){
+                    if (current.room == 5 && current.scene == 0){
                         return settings["pg_cup"];
                     }
-                    if(current.room == 2 && current.scene == 11){
+                    if (current.room == 2 && current.scene == 11){
                         return settings["hades_seed_39"];
                     }
-                    if(current.room == 6 && current.scene == 4){
+                    if (current.room == 6 && current.scene == 4){
                         return settings["hades_seed_19"];
                     }
-                    if(current.room == 5 && current.scene == 13){
+                    if (current.room == 5 && current.scene == 13){
                         return settings["hades_seed_9"];
                     }
-                    if(current.room == 6 && current.scene == 5){
+                    if (current.room == 6 && current.scene == 5){
                         return vars.completed_splits.Add("ice_titan") && settings["ice_titan"];
                     }
-                    if(current.room == 6 && current.scene == 6){
+                    if (current.room == 6 && current.scene == 6){
                         return vars.completed_splits.Add("seph") && settings["seph"];
                     }
                     break;
                 // neverland
                 case 13:
-                    if(current.room == 9 && current.scene == 1){
+                    if (current.room == 9 && current.scene == 1){
                         return settings["nap_time"];
                     }
                     break;
@@ -975,9 +979,9 @@ split
             switch (current_world){
                 // wonderland
                 case 4:
-                    if(settings["wl_2"]){
-                        if(vars.completed_splits.TryGetValue("wl_1", out output_catch)){
-                            if(!vars.wl_counts){
+                    if (settings["wl_2"]){
+                        if (vars.completed_splits.TryGetValue("wl_1", out output_catch)){
+                            if (!vars.wl_counts){
                                 vars.wl_counts = true;
                                 vars.puppies = current.puppy_count;
                                 vars.green = current.trinity_counts[3];
@@ -998,9 +1002,9 @@ split
                     break;
                 // deep jungle
                 case 5:
-                    if(settings["dj_2"]){
-                        if(vars.completed_splits.TryGetValue("dj_1", out output_catch)){
-                            if(!vars.dj_counts){
+                    if (settings["dj_2"]){
+                        if (vars.completed_splits.TryGetValue("dj_1", out output_catch)){
+                            if (!vars.dj_counts){
                                 vars.dj_counts = true;
                                 vars.mini = current.mini_game_count;
                                 vars.green = current.trinity_counts[3];
@@ -1021,9 +1025,9 @@ split
                     break;
                 // agrabah
                 case 8:
-                    if(settings["ag_2"]){
-                        if(vars.completed_splits.TryGetValue("ag_1", out output_catch)){
-                            if(!vars.ag_counts){
+                    if (settings["ag_2"]){
+                        if (vars.completed_splits.TryGetValue("ag_1", out output_catch)){
+                            if (!vars.ag_counts){
                                 vars.ag_counts = true;
                                 vars.puppies = current.puppy_count;
                                 vars.green = current.trinity_counts[3];
@@ -1044,18 +1048,18 @@ split
                     break;
                 // atlantica
                 case 9:
-                    if(current.torn_page_count > old.torn_page_count){
+                    if (current.torn_page_count > old.torn_page_count){
                         vars.atl_torn_page = true;
                     }
-                    if(vars.atl_torn_page && current.in_gummi > 0){
+                    if (vars.atl_torn_page && current.in_gummi > 0){
                         return vars.completed_splits.Add("atlantica_1") && settings["atlantica_1"];
                     }
                     break;
                 // halloween town
                 case 10:
-                    if(settings["ht_2"]){
-                        if(vars.completed_splits.TryGetValue("ht_1", out output_catch)){
-                            if(!vars.ht_counts){
+                    if (settings["ht_2"]){
+                        if (vars.completed_splits.TryGetValue("ht_1", out output_catch)){
+                            if (!vars.ht_counts){
                                 vars.ht_counts = true;
                                 vars.puppies = current.puppy_count;
                                 vars.red = current.trinity_counts[2];
@@ -1076,26 +1080,26 @@ split
                 // olympus coliseum
                 case 11:
                     // gravity level
-                    if(current.magic_levels[112] > old.magic_levels[112]){
+                    if (current.magic_levels[112] > old.magic_levels[112]){
                         return settings["phil_cup"] && vars.completed_splits.Add("phil_cup");
                     }
-                    if(current.room == 2 && current.scene == 7){
+                    if (current.room == 2 && current.scene == 7){
                         int party_address = vars.party_address;
-                        if(memory.ReadValue<ushort>(modules.First().BaseAddress + party_address) == 65535){
+                        if (memory.ReadValue<ushort>(modules.First().BaseAddress + party_address) == 65535){
                             // split when next available ability slot becomes combo plus in OC room 2 scene 7
                             int byte_count = 48 - vars.next_ability_slot_idx;
                             int ability_slot_address = 0x0;
                             int abilities_address = vars.abilities_address;
                             ability_slot_address = abilities_address + vars.next_ability_slot_idx - vars.offset;
                             var next_ability_slot = memory.ReadValue<byte>(modules.First().BaseAddress + ability_slot_address);
-                            if(next_ability_slot == 134){
+                            if (next_ability_slot == 134){
                                 return vars.completed_splits.Add("phil_cup_solo") && settings["phil_cup_solo"];
                             }
                             byte[] ability_slots = memory.ReadBytes(modules.First().BaseAddress + abilities_address, byte_count);
                             var ability_slots_slice = new byte[byte_count]; 
                             Array.Copy(ability_slots, vars.next_ability_slot_idx, ability_slots_slice, 0, byte_count);
                             for (int i = 0; i < ability_slots_slice.Length; i++){
-                                if(ability_slots[i] == 0){
+                                if (ability_slots[i] == 0){
                                     vars.next_ability_slot_idx = i;
                                     break;
                                 }
@@ -1103,19 +1107,19 @@ split
                         }
                     }
                     // can be adapted for plat
-                    if(old.room == 5 && old.scene == 11){
+                    if (old.room == 5 && old.scene == 11){
                         return vars.completed_splits.Add("hades_seed_49") && settings["hades_seed_49"];
                     }
                     // thunder level up
-                    if(current.magic_levels[0] > old.magic_levels[0] && current.room == 5 && current.scene == 4){
+                    if (current.magic_levels[0] > old.magic_levels[0] && current.room == 5 && current.scene == 4){
                         return vars.completed_splits.Add("hades_seed_29") && settings["hades_seed_29"];
                     }
                     break;
                 // monstro
                 case 12:
-                    if(settings["mo_2"]){
-                        if(vars.completed_splits.TryGetValue("mo_1", out output_catch)){
-                            if(!vars.mo_counts){
+                    if (settings["mo_2"]){
+                        if (vars.completed_splits.TryGetValue("mo_1", out output_catch)){
+                            if (!vars.mo_counts){
                                 vars.mo_counts = true;
                                 vars.puppies = current.puppy_count;
                                 vars.green = current.trinity_counts[3];
@@ -1136,9 +1140,9 @@ split
                     break;
                 // neverland
                 case 13:
-                    if(settings["nl_2"]){
-                        if(vars.completed_splits.TryGetValue("nl_1", out output_catch)){
-                            if(!vars.nl_counts){
+                    if (settings["nl_2"]){
+                        if (vars.completed_splits.TryGetValue("nl_1", out output_catch)){
+                            if (!vars.nl_counts){
                                 vars.nl_counts = true;
                                 vars.puppies = current.puppy_count;
                                 vars.white = current.trinity_counts[5];
@@ -1159,20 +1163,20 @@ split
                 // hollow bastion
                 case 15:
                     // divine rose & cure level
-                    if(current.equips[33] == 1 && current.magic_levels[56] == 3 && current.in_gummi > 0){
+                    if (current.equips[33] == 1 && current.magic_levels[56] == 3 && current.in_gummi > 0){
                         return vars.completed_splits.Add("hb_2") && settings["hb_2"];
                     }
                     // exp necklace
-                    if(current.room == 12 && current.scene == 2 && current.equips[2] > old.equips[2]){
+                    if (current.room == 12 && current.scene == 2 && current.equips[2] > old.equips[2]){
                         return settings["xemnas"];
                     }
                     break;
                 // end of world
                 case 16:
-                    if(current.in_gummi > 0){
+                    if (current.in_gummi > 0){
                         return vars.completed_splits.Add("eow") && settings["eow"];
                     }
-                    if(current.room == 29){
+                    if (current.room == 29){
                         vars.chronicles_complete = current.chronicles_count == 10;
                         vars.reports_complete = current.reports_count == 13;
                         vars.characters_complete = (
@@ -1211,22 +1215,22 @@ split
                             vars.world_trinities_complete &&
                             vars.chronicles_complete
                         );
-                        if(vars.journal_complete){
+                        if (vars.journal_complete){
                             return vars.completed_splits.Add("jj_complete_early") && settings["jj_complete_early"];
                         }
                     }
-                    if(old.room == 29 && current.room == 30 && vars.journal_complete){
+                    if (old.room == 29 && current.room == 30 && vars.journal_complete){
                         return vars.completed_splits.Add("jj_complete") && settings["jj_complete"];
                     }
                     break;
             }
         }
         // Register initial world visits complete for revisit checks
-        if(current.in_gummi > 0){
+        if (current.in_gummi > 0){
             var docked_world = vars.watchers["docked_world"];
             docked_world.Update(game);
             // blizzard unlocked
-            if(settings["wl_2"] && docked_world.Current != 4 && (
+            if (settings["wl_2"] && docked_world.Current != 4 && (
                 current.magic_unlock_val == 3 ||
                 current.magic_unlock_val == 7 ||
                 current.magic_unlock_val == 11 ||
@@ -1235,41 +1239,41 @@ split
                 vars.completed_splits.Add("wl_1");
             }
             // jungle king
-            if(settings["dj_2"] && current.equips[28] == 1 && docked_world.Current != 5){
+            if (settings["dj_2"] && current.equips[28] == 1 && docked_world.Current != 5){
                 vars.completed_splits.Add("dj_1");
             }
             // three wishes
-            if(settings["ag_2"] && current.equips[29] == 1 && docked_world.Current != 8){
+            if (settings["ag_2"] && current.equips[29] == 1 && docked_world.Current != 8){
                 vars.completed_splits.Add("ag_1");
             }
             // pumpkin head
-            if(settings["ht_2"] && current.equips[31] == 1 && docked_world.Current != 10){
+            if (settings["ht_2"] && current.equips[31] == 1 && docked_world.Current != 10){
                 vars.completed_splits.Add("ht_1");
             }
             // stop unlocked
-            if(settings["mo_2"] && docked_world.Current == 8 && (
+            if (settings["mo_2"] && docked_world.Current == 8 && (
                 current.magic_unlock_val == 43 ||
                 current.magic_unlock_val == 47
             )){
                 vars.completed_splits.Add("mo_1");
             }
             // fairy harp
-            if(settings["nl_2"] && current.equips[30] == 1 && docked_world.Current != 13){
+            if (settings["nl_2"] && current.equips[30] == 1 && docked_world.Current != 13){
                 vars.completed_splits.Add("nl_1");
             }
         }
     }
 
-    if(settings["plat_splits"]){
+    if (settings["plat_splits"]){
         switch (current_world){
             // traverse town splits
             case 3:
                 // aero level
-                if(!vars.aero_level_up && current.magic_levels[224] > old.magic_levels[224]){
+                if (!vars.aero_level_up && current.magic_levels[224] > old.magic_levels[224]){
                     vars.aero_level_up = true;
                 }
                 // ultima
-                if(current.equips[41] >= 1 && vars.aero_level_up){
+                if (current.equips[41] >= 1 && vars.aero_level_up){
                     return vars.completed_splits.Add("tt_final") && settings["tt_final"];
                 }
                 break;
@@ -1287,35 +1291,35 @@ split
             current.collected_items_2[3] >= 1 && // serenity power
             current.collected_items_2[5] >= 1 // mythril stone
         );
-        if(vars.mats){
+        if (vars.mats){
             return vars.completed_splits.Add("each_mat") && settings["each_mat"];
         }
         // gummi splits
-        if(current.in_gummi){
+        if (current.in_gummi){
             int gummi_kills_address = vars.gummi_kills_address;
             vars.gummi_kills = memory.ReadValue<uint>(modules.First().BaseAddress + gummi_kills_address);            
         }
-        if(vars.gummi_kills >= 2500){
+        if (vars.gummi_kills >= 2500){
             return vars.completed_splits.Add("gummi_kills") && settings["gummi_kills"];
         }
     }
 
-    if(settings["misc"]){
-        if(settings["coco"] && !vars.finished_nut){
-            if(settings["per_10"]){
+    if (settings["misc"]){
+        if (settings["coco"] && !vars.finished_nut){
+            if (settings["per_10"]){
                 // coconuts
-                if(current.collected_items_2[46] > old.collected_items_2[46] && current.collected_items_2[46] % 10 == 0){
+                if (current.collected_items_2[46] > old.collected_items_2[46] && current.collected_items_2[46] % 10 == 0){
                     return true;
                 }
             }
-            else if(settings["per_1"]){
+            else if (settings["per_1"]){
                 // coconuts
-                if(current.collected_items_2[46] > old.collected_items_2[46]){
+                if (current.collected_items_2[46] > old.collected_items_2[46]){
                     return true;
                 }
             }
             // coconuts
-            if(current.collected_items_2[46] == 99){
+            if (current.collected_items_2[46] == 99){
                 vars.finished_nut = true;
                 return true;
             }
@@ -1323,36 +1327,36 @@ split
     }
 
     // logic for handling death if you want to repeat splits or not and have one off
-    if(death){
+    if (death){
         string back_split = vars.back_split;
         switch (back_split){
             case "clay1":
-                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["clayton_1"])){
+                if (settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["clayton_1"])){
                     vars.clayton_1 = false;
                 }
                 break;
             case "pre_hook":
-                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["pre_hook"])){
+                if (settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["pre_hook"])){
                     vars.pre_hook = false;
                 }
                 break;
             case "fake":
-                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["fake_guard"])){
+                if (settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["fake_guard"])){
                     vars.fake_guard = false;
                 }
                 break;
             case "cloud2":
-                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["cloud_2"])){
+                if (settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["cloud_2"])){
                     vars.cloud_2 = false;
                 }
                 break;
             case "be3":
-                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["behemoth_3"])){
+                if (settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["behemoth_3"])){
                     vars.behemoth_3 = false;
                 }
                 break;
             case "ds3":
-                if(settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["ds3"])){
+                if (settings["manual_back_step"] || (!settings["manual_back_step"] && !settings["ds3"])){
                     vars.ds3 = false;
                 }
                 break;
@@ -1372,10 +1376,13 @@ init
     var gb = modules.First().BaseAddress;
     vars.offset = 0x0;
     vars.watchers = new Dictionary<string, MemoryWatcher>{};
-    if (memory.ReadValue<byte>(gb + 0x46A822) == 106 || memory.ReadValue<byte>(gb + 0x46A802) == 106) {
-        if (memory.ReadValue<byte>(gb + 0x46A822) == 106) {
-            version = "EG Global";
-        } else {
+    int epic_gl = memory.ReadValue<byte>(gb + 0x46A822);
+    int epic_jp = memory.ReadValue<byte>(gb + 0x46A802);
+    int steam_gl = memory.ReadValue<byte>(gb + 0x4698D2);
+    int steam_jp = memory.ReadValue<byte>(gb + 0x469872);
+    if (epic_gl == 106 || epic_jp == 106) {
+        version = "EG Global";
+        if (epic_jp == 106) {
             version = "EG JP";
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
@@ -1399,13 +1406,12 @@ init
             { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54D08) },
             { "text_progress", new MemoryWatcher<byte>(gb + 0x232E974) },
         };
-    } else if (memory.ReadValue<byte>(gb + 0x4698D2) == 106 || memory.ReadValue<byte>(gb + 0x469872) == 106) {
-        if (memory.ReadValue<byte>(gb + 0x4698D2) == 106) {
-            version = "Steam Global";
-        } else {
+    } else if (steam_gl == 106) || (steam_jp == 106) {
+        vars.offset = 0xA00;
+        version = "Steam Global";
+        if (steam_jp == 106) {
             version = "Steam JP";
         }
-        vars.offset = 0xA00;
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DC718) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
@@ -1547,15 +1553,15 @@ init
             };
             int level = memory.ReadValue<byte>(modules.First().BaseAddress + level_address);
             vars.cons_met = 0;
-            if(level == 1){
+            if (level == 1){
                 difficulty += 1;
             }
             foreach (int value in Enumerable.Range(0, 8)){
-                if(current_vals[value] - starting_vals[value] >= vars.revisit_info[world][difficulty][value]){
+                if (current_vals[value] - starting_vals[value] >= vars.revisit_info[world][difficulty][value]){
                     vars.cons_met += 1;
                 }
             }
-            if(vars.cons_met == 8){
+            if (vars.cons_met == 8){
                 vars.cons_met = 0;
                 return true;
             } else {
@@ -1570,7 +1576,7 @@ init
 reset
 {
     // -1 value of 4 byte for world
-    if(current.scene == 0 && current.room == 0 && current.world == 65535 && old.world != 65535){
+    if (current.scene == 0 && current.room == 0 && current.world == 65535 && old.world != 65535){
         if (settings["boss_rush"]) {
             File.Copy(@"Boss Rush\001_Darkside 1.dat", vars.autosavedst, true);
         }
@@ -1592,7 +1598,7 @@ update
     vars.watchers["sora_hp"].Update(game);
     vars.watchers["summon_load"].Update(game);
     vars.watchers["fightend"].Update(game);
-    if(
+    if (
         (settings["ship"] && !vars.completed_splits.TryGetValue("ship", out output_catch)) || (settings["ship_early"] && !vars.completed_splits.TryGetValue("ship_early", out output_catch)) ||
         (settings["wl_2"] && !vars.completed_splits.TryGetValue("wl_2", out output_catch)) || (settings["dj_2"] && !vars.completed_splits.TryGetValue("dj_2", out output_catch)) ||
         (settings["ag_2"] && !vars.completed_splits.TryGetValue("ag_2", out output_catch)) || (settings["ht_2"] && !vars.completed_splits.TryGetValue("ht_2", out output_catch)) ||
@@ -1601,11 +1607,11 @@ update
         vars.watchers["gummi_start_world"].Update(game);
         vars.watchers["gummi_destination_world"].Update(game);
     }
-    if(settings["atl_dock"] && !vars.completed_splits.TryGetValue("atl_dock", out output_catch)){
+    if (settings["atl_dock"] && !vars.completed_splits.TryGetValue("atl_dock", out output_catch)){
         vars.watchers["docked_world"].Update(game);
     }
 
-    if(vars.booting && current.world == 65535){
+    if (vars.booting && current.world == 65535){
         vars.booting = false;
     }
 }
