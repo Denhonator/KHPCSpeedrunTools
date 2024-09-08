@@ -123,7 +123,8 @@ startup
         settings.Add("shadows_1", false, "Shadows 1 (first full group)", "optional_splits");
         settings.Add("shadows_2", false, "Shadows 2 (post save point cutscene)", "optional_splits");
         settings.Add("day_1", false, "Destiny Islands Day One", "optional_splits");
-        settings.Add("destiny", false, "Destiny Islands Day Two", "optional_splits");
+        settings.Add("destiny", false, "Destiny Islands Day Two (on raft supplies claimed)", "optional_splits");
+        settings.Add("destiny_opt", false, "Destiny Islands Day Two (on transition)", "optional_splits");
         settings.Add("leon", true, "Leon", "optional_splits");
         settings.Add("crank", true, "Crank Tower - Fight End", "optional_splits");
         settings.Add("crank_alt", true, "Crank Tower - Post Fight Cutscene", "optional_splits");
@@ -1391,8 +1392,13 @@ init
     var gb = modules.First().BaseAddress;
     vars.offset = 0x0;
     vars.watchers = new Dictionary<string, MemoryWatcher>{};
-    if (memory.ReadValue<byte>(gb + 0x46A822) == 106 || memory.ReadValue<byte>(gb + 0x46A802) == 106) {
-        if (memory.ReadValue<byte>(gb + 0x46A822) == 106) {
+    int epic_gl = memory.ReadValue<byte>(gb + 0x46A822);
+    int epic_jp = memory.ReadValue<byte>(gb + 0x46A802);
+    int steam_gl = memory.ReadValue<byte>(gb + 0x4698D2);
+    int steam_jp = memory.ReadValue<byte>(gb + 0x469872);
+    if (epic_gl == 106 || epic_jp == 106) {
+        version = "EG Global";
+        if (epic_jp == 106) {
             version = "EG Global";
         } else {
             version = "EG JP";
@@ -1418,13 +1424,12 @@ init
             { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54D08) },
             { "text_progress", new MemoryWatcher<byte>(gb + 0x232E974) },
         };
-    } else if (memory.ReadValue<byte>(gb + 0x4698D2) == 106 || memory.ReadValue<byte>(gb + 0x469872) == 106) {
-        if (memory.ReadValue<byte>(gb + 0x4698D2) == 106) {
-            version = "Steam Global";
-        } else {
+    } else if (steam_gl == 106) || (steam_jp == 106) {
+        vars.offset = 0xA00;
+        version = "Steam Global";
+        if (steam_jp == 106) {
             version = "Steam JP";
         }
-        vars.offset = 0xA00;
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DC718) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
