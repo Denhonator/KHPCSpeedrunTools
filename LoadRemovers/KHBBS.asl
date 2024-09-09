@@ -58,7 +58,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam Global") // 1.0.0.2 - do
 
     // mini games
     byte dwarf_count : 0x10FA3A44;
-    byte urns_score : 0x10FB0618;
+    byte urns_score : 0x10FB1698;
 }
 
 state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam JP") // 1.0.0.2
@@ -491,7 +491,6 @@ init
     // game base address
     var gb = modules.First().BaseAddress;
     int character_address = 0x0;
-    int offset = 0x0;
     int epic_gl = memory.ReadValue<byte>(gb + 0x726364);
     int epic_jp = memory.ReadValue<byte>(gb + 0x726344);
     int steam_gl = memory.ReadValue<byte>(gb + 0x726464);
@@ -504,24 +503,31 @@ init
             version = "EG JP";
             character_address = 0xD1802D;
         }
+        vars.watchers = new Dictionary<string, MemoryWatcher>{
+            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51) },
+            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5D53) },
+            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB07D4) },
+            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB081C) },
+            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB2CBC) },
+        };
     } else if (steam_gl == 106 || steam_jp == 106) {
+        int offset = 0x0;
         if (steam_gl == 106) {
             version = "Steam Global";
-            offset = 0x1780;
             character_address = 0xCFB92D;
         } else {
             version = "Steam JP";
-            offset = 0x1700;
             character_address = 0xD1692D;
+            offset = 0x1000;
         }
+        vars.watchers = new Dictionary<string, MemoryWatcher>{
+            { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5651 - offset) },
+            { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5653 - offset) },
+            { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB00D4 - offset) },
+            { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB011C - offset) },
+            { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB25BC - offset) },
+        };
     }
-    vars.watchers = new Dictionary<string, MemoryWatcher>{
-        { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51 - offset) },
-        { "bladecharge", new MemoryWatcher<byte>(gb + 0x10FA5D53 - offset) },
-        { "fruit_ball_score", new MemoryWatcher<byte>(gb + 0x10FB07D4 - offset) },
-        { "ice_cream_beat_score", new MemoryWatcher<ushort>(gb + 0x10FB081C - offset) },
-        { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB2CBC - offset) },
-    };
     vars.watchers["character"] = new MemoryWatcher<byte>(gb + character_address);
     vars.completed_splits = new HashSet<string>();
 
