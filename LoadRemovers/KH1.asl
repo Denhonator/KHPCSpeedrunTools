@@ -1424,10 +1424,11 @@ init
             { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54D08) },
             { "text_progress", new MemoryWatcher<byte>(gb + 0x232E974) },
         };
-    } else if (steam_gl == 106) || (steam_jp == 106) {
+    } else {
         vars.offset = 0xA00;
-        version = "Steam Global";
-        if (steam_jp == 106) {
+        if (steam_gl == 106) {
+            version = "Steam Global";
+        } else if (steam_jp == 106) {
             version = "Steam JP";
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
@@ -1451,8 +1452,6 @@ init
             { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54308) },
             { "text_progress", new MemoryWatcher<byte>(gb + 0x232DF74) },
         };
-    } else {
-        print("No matching version found");
     }
     vars.party_address = 0x2DEA1EF - vars.offset;
     vars.abilities_address = 0x2DE9DA4 - vars.offset;
