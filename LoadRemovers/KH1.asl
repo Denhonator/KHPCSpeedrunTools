@@ -21,6 +21,7 @@ state("KINGDOM HEARTS FINAL MIX", "EG Global") // 1.0.0.10
     byte6 trinity_counts : 0x2DEB9C6;
     ushort puppy_count : 0x2E9DB28;
     ushort mini_game_count : 0x2E9DD74;
+    ushort reports : 0x2DEB720;
 }
 
 state("KINGDOM HEARTS FINAL MIX", "EG JP") // 1.0.0.10
@@ -46,6 +47,7 @@ state("KINGDOM HEARTS FINAL MIX", "EG JP") // 1.0.0.10
     byte6 trinity_counts : 0x2DEB9C6;
     ushort puppy_count : 0x2E9DB28;
     ushort mini_game_count : 0x2E9DD74;
+    ushort reports : 0x2DEB720;
 }
 
 state("KINGDOM HEARTS FINAL MIX", "Steam Global") // 1.0.0.2
@@ -71,6 +73,7 @@ state("KINGDOM HEARTS FINAL MIX", "Steam Global") // 1.0.0.2
     byte6 trinity_counts : 0x2DEAFC6;
     ushort puppy_count : 0x2E9D148;
     ushort mini_game_count : 0x2E9D394;
+    ushort reports : 0x2DEAD20;
 }
 
 state("KINGDOM HEARTS FINAL MIX", "Steam JP") // 1.0.0.2
@@ -96,6 +99,7 @@ state("KINGDOM HEARTS FINAL MIX", "Steam JP") // 1.0.0.2
     byte6 trinity_counts : 0x2DEAFC6;
     ushort puppy_count : 0x2E9D148;
     ushort mini_game_count : 0x2E9D394;
+    ushort reports : 0x2DEAD20;
 }
 
 startup
@@ -708,6 +712,9 @@ split
                     if (current.collected_items_2[46] < old.collected_items_2[46]) {
                         return settings["destiny"];
                     }
+                    if (old.room == 2 && current.room == 3 && current.scene == 2){
+                        return vars.completed_splits.Add("destiny_opt") && settings["destiny_opt"];                        
+                    }
                     break;
                 // traverse town
                 case 3:
@@ -1178,8 +1185,8 @@ split
                     break;
                 // hollow bastion
                 case 15:
-                    // divine rose & cure level
-                    if (current.equips[33] == 1 && current.magic_levels[56] == 3 && current.in_gummi > 0) {
+                    // report count total - see rando some logic for how reports map
+                    if (current.reports == 49406 && current.in_gummi > 0) {
                         return vars.completed_splits.Add("hb_2") && settings["hb_2"];
                     }
                     // exp necklace
@@ -1407,7 +1414,7 @@ init
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DD3F8) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233F1F4) },
             { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E0018C) },
-            { "docked_world", new MemoryWatcher<ushort>(gb + 0x526AC0) },
+            { "docked_world", new MemoryWatcher<ushort>(gb + 0x526A40) },
             { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DEA96C) },
             { "fightend", new MemoryWatcher<byte>(gb + 0x2D54438) },
             { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x508280) },
@@ -1552,8 +1559,68 @@ init
         }
     };
 
+    // resets all used variables on restart
     vars.completed_splits = new HashSet<string>();
     vars.completed_fights = new HashSet<string>();
+
+    // traverse town vars
+    vars.fake_guard = false;
+    vars.oppo = false;
+    vars.aero_level_up = false;
+
+    // wonderland vars
+    vars.wl_counts = false;
+    vars.wl_2_complete = false;
+
+    // deep jungle vars
+    vars.pw_gummis = 0;
+    vars.clayton_1 = false;
+    vars.clayton_2 = false;
+    vars.dj_counts = false;
+    vars.dj_2_complete = false;
+
+    // agrabah vars
+    vars.ag_counts = false;
+    vars.ag_2_complete = false;
+
+    // atlantica vars
+    vars.atl_torn_page = false;
+
+    // halloween town vars
+    vars.ht_counts = false;
+    vars.ht_2_complete = false;
+
+    // olympus coliseum vars
+    vars.cloud_2 = false;
+    vars.herc_cup = false;
+    vars.next_ability_slot_idx = 0;
+
+    // monstro vars
+    vars.mo_counts = false;
+    vars.mo_2_complete = false;
+
+    // neverland vars
+    vars.pre_hook = false;
+    vars.nl_counts = false;
+    vars.nl_2_complete = false;
+
+    // end of world vars
+    vars.journal_complete = false;
+    vars.behemoth_3 = false;
+    vars.ds3 = false;
+
+    // outside world vars
+    vars.world_puppies_complete = false;
+    vars.world_enemies_complete = false;
+    vars.world_trinities_complete = false;
+    vars.world_mini_game_complete = false;
+    vars.gummi_kills = 0;
+
+    // misc category vars
+    vars.finished_nut = false;
+
+    // manual back step vars
+    vars.back_split = "";
 
     vars.check_jj_revisit = (Func <int, int[], bool>)(
         (int world, int[] starting_vals) => {

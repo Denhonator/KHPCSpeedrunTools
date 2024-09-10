@@ -262,7 +262,7 @@ local function BossAdjust(bossHP)
 	local endtime = 300
 
 	-- Herc cup
-	if w == 11 and r == 2 and ReadInt(inTournament) ~= oldTournament and oldTournament == 13 then
+	if w == 11 and r == 2 and ReadInt(inTournament) == 528 then
 		if ReadByte(OCseed) == 9 then
 			addr[1] = bossAdjustAddresses[11]
 			e[1] = addrs[11][enemyAddresses[90]]
@@ -581,7 +581,7 @@ end
 
 local function Fixes()
 	local bossHP = bossAdjustAddresses[24]
-	if ReadByte(party1) == 255 and ReadByte(bossAdjustAddresses[27]) == 255 then
+	if ReadByte(party1) == 255 and ReadByte(party1 - 1) == 255 then
 		bossHP = bossAdjustAddresses[23]
 	end
 	if ReadByte(world) == 13 and ReadByte(room) == 8 then
