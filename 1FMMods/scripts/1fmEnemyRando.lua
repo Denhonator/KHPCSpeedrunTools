@@ -135,9 +135,9 @@ local function AddAddrs()
 	addrs[15][enemyAddresses[47]] = PickRandom(behe) -- HB behemoth
 	addrs[16][enemyAddresses[71]] = PickRandom(normal) -- EotW Invisible
 	addrs[16][enemyAddresses[70]] = PickRandom(normal) -- EotW Darkball
-	addrs[16][enemyAddresses[92]] = PickRandom(normal) -- TT Terminal Solider
+	addrs[16][enemyAddresses[92]] = PickRandom(normal) -- TT Terminal Soldier
 	addrs[16][enemyAddresses[1]] = PickRandom(normal) -- WL Terminal Wizard
-	addrs[16][enemyAddresses[7]] = PickRandom(normal) -- OC Terminal Air Solider
+	addrs[16][enemyAddresses[7]] = PickRandom(normal) -- OC Terminal Air Soldier
 	addrs[16][enemyAddresses[9]] = PickRandom(normal) -- DJ Terminal Powerwild
 	addrs[16][enemyAddresses[11]] = PickRandom(normal) -- AG Terminal Bandit
 	addrs[16][enemyAddresses[63]] = PickRandom(normal) -- AT Terminal Neon

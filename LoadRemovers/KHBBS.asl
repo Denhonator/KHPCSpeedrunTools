@@ -514,7 +514,7 @@ init
         int offset = 0x0;
         if (steam_gl == 106) {
             version = "Steam Global";
-            character_address = 0xCFB92D;
+            character_address = 0x845C5A;
         } else {
             version = "Steam JP";
             character_address = 0xD1692D;
