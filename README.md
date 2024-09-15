@@ -16,4 +16,4 @@ Add scriptable auto splitter into your Livesplit layout, and select the .asl fil
 
 
 ## Join the Action
-The speedrunning community for the series has a discord where these scripts, casual play and more are discussed, join us [here](https://discord.gg/BYtRzqdC) 
+The speedrunning community for the series has a discord where these scripts, casual play and more are discussed, join us [here](https://discord.gg/5GjHsyQT8R) 
