@@ -902,8 +902,8 @@ split
                     if (old_world == 6 && vars.completed_splits.TryGetValue("torn_page_power", out output_catch)) {
                         return vars.completed_splits.Add("power_boost") && settings["power_boost"];
                     }
-                    if (vars.completed_splits.TryGetValue("torn_page_5", out output_catch) && old.room == 9 && current.room == 19) {
-                        return settings["seal_100_aw"];
+                    if (vars.completed_splits.TryGetValue("torn_page_5", out output_catch)) {
+                        return vars.completed_splits.Add("seal_100_aw") && settings["seal_100_aw"];
                     }
                     break;
                 // 100 acre wood
@@ -912,24 +912,24 @@ split
                     if (current.collected_items_2[0] > old.collected_items_2[0]) {
                         vars.completed_splits.Add("torn_page_power");
                     }
-                    // nature spark
-                    if (current.collected_items_2[55] == 1 && old.collected_items_2[55] == 0) {
+                    // torn page 1 consumed
+                    if (current.collected_items_2[60] == 0 && old.collected_items_2[60] == 1) {
                         return settings["torn_page_1"];
                     }
-                    // mythril shard
-                    if (current.collected_items_2[100] > old.collected_items_2[100]) {
+                    // torn page 2 consumed
+                    if (current.collected_items_2[61] == 0 && old.collected_items_2[61] == 1) {
                         return vars.completed_splits.Add("torn_page_2") && settings["torn_page_2"];
                     }
-                    // stop level
-                    if (current.magic_levels[168] > old.magic_levels[168]) {
+                    // torn page 3 consumed
+                    if (current.collected_items_2[62] == 0 && old.collected_items_2[62] == 1) {
                         return settings["torn_page_3"];
                     }
-                    // mythril
-                    if (current.collected_items_2[101] > old.collected_items_2[101]) {
+                    // torn page 4 consumed
+                    if (current.collected_items_2[63] == 0 && old.collected_items_2[63] == 1) {
                         return vars.completed_splits.Add("torn_page_4") && settings["torn_page_4"];
                     }
-                    // exp ring
-                    if (current.equips[0] > old.equips[0]) {
+                    // torn page 5 consumed
+                    if (current.collected_items_2[64] == 0 && old.collected_items_2[64] == 1) {
                         return vars.completed_splits.Add("torn_page_5") && settings["torn_page_5"];
                     }
                     break;
@@ -1110,7 +1110,7 @@ split
                             int byte_count = 48 - vars.next_ability_slot_idx;
                             int ability_slot_address = 0x0;
                             int abilities_address = vars.abilities_address;
-                            ability_slot_address = abilities_address + vars.next_ability_slot_idx - vars.offset;
+                            ability_slot_address = abilities_address + vars.next_ability_slot_idx;
                             var next_ability_slot = memory.ReadValue<byte>(modules.First().BaseAddress + ability_slot_address);
                             if (next_ability_slot == 134) {
                                 return vars.completed_splits.Add("phil_cup_solo") && settings["phil_cup_solo"];
@@ -1200,11 +1200,15 @@ split
                         return vars.completed_splits.Add("eow") && settings["eow"];
                     }
                     if (current.room == 29) {
-                        vars.chronicles_complete = current.chronicles_count == 10;
-                        vars.reports_complete = current.reports_count == 13;
+                        vars.watchers["chronicles_count"].Update(game);
+                        vars.watchers["characters_one_count"].Update(game);
+                        vars.watchers["characters_two_count"].Update(game);
+                        var chronicles_count = vars.watchers["chronicles_count"];
+                        var characters_one_count = vars.watchers["characters_one_count"];
+                        var characters_two_count = vars.watchers["characters_two_count"];
                         vars.characters_complete = (
-                            current.characters_one_count == 39 &&
-                            current.characters_two_count == 64 &&
+                            characters_one_count.Current == 39 &&
+                            characters_two_count.Current == 64 &&
                             current.enemies_defeated[4] >= 1 && // bouncy wild
                             current.enemies_defeated[10] >= 1 && // sea neon
                             current.enemies_defeated[12] >= 1 && // sheltering zone
@@ -1231,12 +1235,11 @@ split
                         );
                         vars.world_mini_game_complete = current.mini_game_count == 8;
                         vars.journal_complete = (
-                            vars.chronicles_complete &&
-                            vars.reports_complete &&
+                            chronicles_count.Current == 10 &&
+                            current.reports == 63743 &&
                             vars.characters_complete &&
                             vars.world_puppies_complete &&
-                            vars.world_trinities_complete &&
-                            vars.chronicles_complete
+                            vars.world_trinities_complete
                         );
                         if (vars.journal_complete) {
                             return vars.completed_splits.Add("jj_complete_early") && settings["jj_complete_early"];
@@ -1412,6 +1415,9 @@ init
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DD3F8) },
+            { "characters_one_count", new MemoryWatcher<byte>(gb + 0x2E9CB28) },
+            { "characters_two_count", new MemoryWatcher<byte>(gb + 0x2E9CB2C) },
+            { "chronicles_count", new MemoryWatcher<byte>(gb + 0x2E9DB10) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233F1F4) },
             { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E0018C) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x526A40) },
@@ -1440,6 +1446,9 @@ init
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "black_inv", new MemoryWatcher<bool>(gb + 0x4DC718) },
+            { "characters_one_count", new MemoryWatcher<byte>(gb + 0x2E9C148) },
+            { "characters_two_count", new MemoryWatcher<byte>(gb + 0x2E9C14C) },
+            { "chronicles_count", new MemoryWatcher<byte>(gb + 0x2E9D130) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
             { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFF78C) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x525D60) }, 
