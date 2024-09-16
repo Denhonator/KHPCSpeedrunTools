@@ -8,7 +8,7 @@ btlTyp = 0x2A10E84
 save = 0x9A9330
 
 -- gummi skip
-gummiSkip = 0x9AD324
+gummiSkip = 0x9AD327
 
 -- auto save
 continue = 0x29FB000

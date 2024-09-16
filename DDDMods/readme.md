@@ -1,5 +1,5 @@
 ## Update status
-All mods have been updated to work with Epic Games release 1.0.0.9 and Steam
+All mods have been updated to work with Epic Games release 1.0.0.10 and Steam 1.0.0.2
 
 ## Disclaimer:
 At the time of this update mods are not allowed for use with runs submitted to speedrun.com

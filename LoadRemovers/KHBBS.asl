@@ -13,6 +13,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "EG Global") // 1.0.0.10
     byte state_2 : 0x10FB56E8;
 
     byte max_hp : 0x10FA6950;
+    byte character : 0x10FB5972;
 
     // mini games
     byte dwarf_count : 0x10FA4144;
@@ -34,6 +35,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "EG JP") // 1.0.0.10
     byte state_2 : 0x10FB56E8;
 
     byte max_hp : 0x10FA6950;
+    byte character : 0x10FB5972;
 
     // mini games
     byte dwarf_count : 0x10FA4144;
@@ -55,6 +57,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam Global") // 1.0.0.2 - do
     byte state_2 : 0x10FB4FE8;
 
     byte max_hp : 0x10FA6250;
+    byte character : 0x10FB5272;
 
     // mini games
     byte dwarf_count : 0x10FA3A44;
@@ -76,6 +79,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam JP") // 1.0.0.2
     byte state_2 : 0x10FB3FE8;
 
     byte max_hp : 0x10FA5250;
+    byte character : 0x10FB4272;
 
     // mini games
     byte dwarf_count : 0x10FA2A44;
@@ -181,9 +185,9 @@ split
 {    
     var output_catch = "";
 
-    var venConfirm = settings["ven_base"] && vars.watchers["character"].Current == 1;
-    var terraConfirm = settings["terra_base"] && vars.watchers["character"].Current == 2;
-    var aquaConfirm = settings["aqua_base"] && vars.watchers["character"].Current == 3;
+    var venConfirm = settings["ven_base"] && current.character == 0;
+    var aquaConfirm = settings["aqua_base"] && current.character == 1;
+    var terraConfirm = settings["terra_base"] && current.character == 2;
 
     var fight_complete = current.state_1 != 2 && old.state_1 == 2 && current.state_2 != 128;
     if (fight_complete) {
@@ -490,7 +494,6 @@ init
 {    
     // game base address
     var gb = modules.First().BaseAddress;
-    int character_address = 0x0;
     int epic_gl = memory.ReadValue<byte>(gb + 0x726364);
     int epic_jp = memory.ReadValue<byte>(gb + 0x726344);
     int steam_gl = memory.ReadValue<byte>(gb + 0x726464);
@@ -498,10 +501,8 @@ init
     if (epic_gl == 106 || epic_jp == 106) {
         if (epic_gl == 106) {
             version = "EG Global";
-            character_address = 0xCFC02D;
         } else {
             version = "EG JP";
-            character_address = 0xD1802D;
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
             { "thunderbolt", new MemoryWatcher<byte>(gb + 0x10FA5D51) },
@@ -514,10 +515,8 @@ init
         int offset = 0x0;
         if (steam_gl == 106) {
             version = "Steam Global";
-            character_address = 0xCFB92D;
         } else {
             version = "Steam JP";
-            character_address = 0xD1692D;
             offset = 0x1000;
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
@@ -528,7 +527,6 @@ init
             { "rumble_racing_complete", new MemoryWatcher<byte>(gb + 0x10FB25BC - offset) },
         };
     }
-    vars.watchers["character"] = new MemoryWatcher<byte>(gb + character_address);
     vars.completed_splits = new HashSet<string>();
 
     timer.IsGameTimePaused = false;
@@ -536,13 +534,11 @@ init
 
 reset
 {
-    return vars.watchers["character"].Current == 0 && vars.watchers["character"].Old != 0 && !settings["all_stories"];
+    return current.character == 0 && old.character != 0 && !settings["all_stories"];
 }
 
 update
 {
-    var character = vars.watchers["character"];
-    character.Update(game);
     if (vars.character_select_load && current.text_box == 2 && old.text_box == 1) {
         vars.character_select_load = false;
     }

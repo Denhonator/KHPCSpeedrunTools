@@ -2423,7 +2423,7 @@ local function FlagFixes()
 				if slideCount < requiredSlides then
 					local o = 0
 					while ReadInt(slideActive + o * 1200 + 4) ~= 262168 and ReadInt(slideActive + o * 1200 + 4) ~= 0 and o > -5 do
-						o = o-1
+						o = o - 1
 					end
 					if ReadInt(slideActive + o * 1200 + 4) == 262168 then
 						for i=0, 5 do
