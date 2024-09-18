@@ -43,34 +43,35 @@ function _OnFrame()
 		end
 	end
 	if canExecute then
-		local input = ReadShort(inputAddress)
+		local input = ReadInt(inputAddress)
+		local inputCheck = input == 8192 or input == 196608
 
 		--reset loadCount
 		if ReadByte(loadMenu) == 3 then
 			loadCount = 0
 			-- touchpad (left side or share for steam) / L2 R2
-			local inputCheck = input == 1 or input == 768
 			if inputCheck then
 				WriteFloat(loadingIndicator, 90)
 			end
-			if ReadInt(saveSelect) == 0 and ReadInt(save + 12) ~= prevSave and inputCheck then
-				local f = io.open("KH2autosave.dat", "rb")
-				if input == 768 then
-					f = io.open("KH2autosave2.dat", "rb")
-				end
-				if f ~= nil then
-					WriteString(save, f:read("*a"))
-					f:close()
-					if input == 1 then
-						ConsolePrint("Loaded autosave")
-					else
-						ConsolePrint("Loaded backup autosave")
-					end
+		end
+
+		if ReadInt(saveSelect) == 0 and ReadInt(save) ~= prevSave and inputCheck then
+			local f = io.open("KH2autosave.dat", "rb")
+			if input == 196608 then
+				f = io.open("KH2autosave2.dat", "rb")
+			end
+			if f ~= nil then
+				WriteString(save - 12, f:read("*a"))
+				f:close()
+				if input == 8192 then
+					ConsolePrint("Loaded autosave")
+				else
+					ConsolePrint("Loaded backup autosave")
 				end
 			end
 		end
 
-		if ReadInt(continue + 12) ~= prevContinue and ReadByte(writeLogic) == 0 and blacklisted == false then
+		if ReadInt(continue) ~= prevContinue and ReadByte(writeLogic) == 0 and not blacklisted then
 			if loadCount > 1 then
 				local r = io.open("KH2autosave.dat", "rb")
 				local f2 = io.open("KH2autosave2.dat", "wb")
@@ -81,13 +82,13 @@ function _OnFrame()
 			end
 
 			local f = io.open("KH2autosave.dat", "wb")
-			f:write(ReadString(continue, 69568))
+			f:write(ReadString(continue - 12, 69568))
 			f:close()
 			ConsolePrint("Wrote autosave")
 
 			loadCount = loadCount + 1
 		end
-		prevSave = ReadInt(save + 12)
-		prevContinue = ReadInt(continue + 12)
+		prevSave = ReadInt(save)
+		prevContinue = ReadInt(continue)
 	end
 end

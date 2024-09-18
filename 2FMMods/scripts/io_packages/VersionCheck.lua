@@ -2,7 +2,7 @@
 -- Global and JP versions currently match
 EGSGlobalVersion = 0x660E44
 EGSJPVersion = 0x660E44
-SteamGlobalVersion = 0x660E74
+SteamGlobalVersion = 0x660EF4
 SteamJPVersion = 0x660E74
 
 function importVars(file)

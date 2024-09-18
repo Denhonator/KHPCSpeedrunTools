@@ -218,7 +218,7 @@ local function LoadSaveMenu()
 			WriteInt(menu + 4, loadFunc) -- Slot 1: Load Game
 		elseif ReadByte(btlTyp) == 0 then -- Out-of-Battle (When Status Menu can be opened)
 			-- R2
-			if ReadShort(inputAddress) == 512 then -- Hold R2 and press Start
+			if ReadInt(inputAddress) == 65536 then -- Hold R2 and press Start
 				WriteByte(menu, 1) -- Pause with Slots
 				WriteInt(menu + 24, 0) -- No Pause Text
 				WriteShort(menu + 2, 2) -- 2 Pause Menu Slots
