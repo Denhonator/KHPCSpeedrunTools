@@ -36,7 +36,7 @@ Not all of these scripts are allowed in speedruns
 
 ### LoadSaveMenu:
 - Allows the in game opening of the save/load menu where possible
-- Normally opens with just start, during x opens with start + R2 (or equivalent on your input device)
+- Normally opens with just start, during x opens with Start + R2 (or equivalent on your input device)
 
 ### QuickHP0:
 - Instantly set your HP to 0
@@ -44,7 +44,7 @@ Not all of these scripts are allowed in speedruns
 
 ### SaveAnywhere:
 - Bring up the save menu anywhere, which allows going to world map
-- In-game, press L2+R2+R1+Triangle (or equivalent on your input device)
+- In-game, press L2 + R2 + R1 (or equivalent on your input device) to prompt and follow with Triangle (or equivalent on your input device) to open
 - Works by replacing Auto Valor command, which may have some limitations
 - Saving when you normally wouldn't be able to may or may not work well
 

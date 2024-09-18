@@ -32,7 +32,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadShort(inputAddress) == 2816 then
+		if ReadInt(inputAddress) == 212992 then
 			if valor == "" then
 				valor = ReadString(valorAddress, 46)
 				save = ReadString(saveAddress, 46)
@@ -52,7 +52,7 @@ function _OnFrame()
 			end
 
 			hold = true
-		elseif ReadByte(valorAddress) == 0x37 then
+		elseif ReadByte(valorAddress) == 55 then
 			WriteString(valorAddress, valor)
 			WriteByte(soraHP, savedHP)
 			WriteByte(abilities, savedAbilities)

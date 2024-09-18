@@ -25,7 +25,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadByte(input) == 768 and ReadInt(soraHP) ~= 0 then
+		if ReadInt(input) == 196608 and ReadInt(soraHP) ~= 0 then
 			WriteInt(soraHP, 0)
 		end
 	end

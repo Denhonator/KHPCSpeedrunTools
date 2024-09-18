@@ -1,7 +1,7 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 -- shared
-inputAddress = 0xBF3270
-saveMenuSlot = 0xBEDE10
+inputAddress = 0xBF31A0
+saveMenuSlot = 0xBEDE90
 soraHP = 0x2A23598
 location  = 0x717008
 btlTyp = 0x2A11404
