@@ -11,6 +11,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "EG Global") // 1.0.0.10
     byte char_select_confirm_2 : 0x10F8BAA8;
     byte state_1 : 0x10FB56A8;  
     byte state_2 : 0x10FB56E8;
+    byte reset : 0x86749C;
 
     byte max_hp : 0x10FA6950;
     byte character : 0x10FB5972;
@@ -33,6 +34,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "EG JP") // 1.0.0.10
     byte char_select_confirm_2 : 0x10F8BAA8;
     byte state_1 : 0x10FB56A8;  
     byte state_2 : 0x10FB56E8;
+    byte reset : 0x86749C;
 
     byte max_hp : 0x10FA6950;
     byte character : 0x10FB5972;
@@ -55,6 +57,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam Global") // 1.0.0.2 - do
     byte char_select_confirm_2 : 0x10F8B3A8;
     byte state_1 : 0x10FB4FA8;  
     byte state_2 : 0x10FB4FE8;
+    byte reset : 0x866D9C;
 
     byte max_hp : 0x10FA6250;
     byte character : 0x10FB5272;
@@ -77,6 +80,7 @@ state("KINGDOM HEARTS Birth by Sleep FINAL MIX", "Steam JP") // 1.0.0.2
     byte char_select_confirm_2 : 0x10F8A3A8;
     byte state_1 : 0x10FB3FA8;  
     byte state_2 : 0x10FB3FE8;
+    byte reset : 0x865D9C;
 
     byte max_hp : 0x10FA5250;
     byte character : 0x10FB4272;
@@ -534,7 +538,7 @@ init
 
 reset
 {
-    return current.character == 0 && old.character != 0 && !settings["all_stories"];
+    return current.reset > 0 && old.reset == 0 && !settings["all_stories"];
 }
 
 update
