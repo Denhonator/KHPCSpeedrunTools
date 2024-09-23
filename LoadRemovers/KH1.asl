@@ -15,7 +15,7 @@ state("KINGDOM HEARTS FINAL MIX", "EG Global") // 1.0.0.10
     byte102 collected_items_2 : 0x2DEA291;  
     byte33 power_wild_gummis : 0x2DF5BDC;
     byte42 equips : 0x2DEA233;
-    byte225 magic_levels : 0x2D235F0;
+    byte7 magic_level_flags : 0x2DEB97E;
     byte96 enemies_defeated : 0x2DEA53A;
     byte torn_page_count : 0x2DEB160;
     byte6 trinity_counts : 0x2DEB9C6;
@@ -41,7 +41,7 @@ state("KINGDOM HEARTS FINAL MIX", "EG JP") // 1.0.0.10
     byte102 collected_items_2 : 0x2DEA291;  
     byte33 power_wild_gummis : 0x2DF5BDC;
     byte42 equips : 0x2DEA233;
-    byte225 magic_levels : 0x2D235F0;
+    byte7 magic_level_flags : 0x2DEB97E;
     byte96 enemies_defeated : 0x2DEA53A;
     byte torn_page_count : 0x2DEB160;
     byte6 trinity_counts : 0x2DEB9C6;
@@ -67,7 +67,7 @@ state("KINGDOM HEARTS FINAL MIX", "Steam Global") // 1.0.0.2
     byte102 collected_items_2 : 0x2DE9891;  
     byte33 power_wild_gummis : 0x2DF51DC;
     byte42 equips : 0x2DE9833;
-    byte225 magic_levels : 0x2D22BF0;
+    byte7 magic_level_flags : 0x2DEAF7E;
     byte96 enemies_defeated : 0x2DE9B3A;
     byte torn_page_count : 0x2DEA760;
     byte6 trinity_counts : 0x2DEAFC6;
@@ -93,7 +93,7 @@ state("KINGDOM HEARTS FINAL MIX", "Steam JP") // 1.0.0.2
     byte102 collected_items_2 : 0x2DE9891;  
     byte33 power_wild_gummis : 0x2DF51DC;
     byte42 equips : 0x2DE9833;
-    byte225 magic_levels : 0x2D22BF0;
+    byte7 magic_level_flags : 0x2DEAF7E;
     byte96 enemies_defeated : 0x2DE9B3A;
     byte torn_page_count : 0x2DEA760;
     byte6 trinity_counts : 0x2DEAFC6;
@@ -219,6 +219,10 @@ startup
             settings.Add("ht_2", false, "Halloween Town Revisit", "revisit_jj_check");
             settings.Add("nl_2", false, "Neverland Revisit", "revisit_jj_check");
             settings.Add("eow", false, "End of the World 1", "revisit_jj_check");
+            settings.SetToolTip(
+                "eow",
+                "Split when returning to gummi map from end of world."
+            );
             settings.Add("jj_complete", false, "Journal Complete - Enter Final Fights", "revisit_jj_check");
             settings.Add("jj_complete_early", false, "Journal Complete - Check", "revisit_jj_check");
 
@@ -261,7 +265,6 @@ start
 {
     // resets all used variables on restart
     vars.completed_splits = new HashSet<string>();
-    vars.completed_fights = new HashSet<string>();
 
     // traverse town vars
     vars.fake_guard = false;
@@ -269,26 +272,22 @@ start
     vars.aero_level_up = false;
 
     // wonderland vars
-    vars.wl_counts = false;
-    vars.wl_2_complete = false;
+    vars.wl_puppies = 0;
 
     // deep jungle vars
     vars.pw_gummis = 0;
     vars.clayton_1 = false;
     vars.clayton_2 = false;
-    vars.dj_counts = false;
-    vars.dj_2_complete = false;
+    vars.dj_puppies = 0;
 
     // agrabah vars
-    vars.ag_counts = false;
-    vars.ag_2_complete = false;
+    vars.ag_puppies = 0;
 
     // atlantica vars
     vars.atl_torn_page = false;
 
     // halloween town vars
-    vars.ht_counts = false;
-    vars.ht_2_complete = false;
+    vars.ht_puppies = 0;
 
     // olympus coliseum vars
     vars.cloud_2 = false;
@@ -296,13 +295,12 @@ start
     vars.next_ability_slot_idx = 0;
 
     // monstro vars
-    vars.mo_counts = false;
-    vars.mo_2_complete = false;
+    vars.mo_torn_page = false;
+    vars.mo_puppies = 0;
 
     // neverland vars
+    vars.nl_puppies = 0;
     vars.pre_hook = false;
-    vars.nl_counts = false;
-    vars.nl_2_complete = false;
 
     // end of world vars
     vars.journal_complete = false;
@@ -547,7 +545,7 @@ split
                 // wonderland
                 case 4:
                     if (current.room == 3) {
-                        vars.completed_fights.Add("crank");
+                        vars.completed_splits.Add("crank");
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\006_Trickmaster.dat", vars.autosavedst, true);
                         }
@@ -734,7 +732,7 @@ split
                     break;
                 // wonderland
                 case 4:
-                    if (current.room == 3 && vars.completed_fights.TryGetValue("crank", out output_catch) && cutscene.Current) {
+                    if (current.room == 3 && vars.completed_splits.TryGetValue("crank", out output_catch) && cutscene.Current) {
                         return vars.completed_splits.Add("crank_alt") && settings["crank_alt"];
                     }
                     break;
@@ -987,82 +985,92 @@ split
                         return vars.completed_splits.Add("seph") && settings["seph"];
                     }
                     break;
-                // neverland
-                case 13:
-                    if (current.room == 9 && current.scene == 1) {
-                        return vars.completed_splits.Add("nap_time") && settings["nap_time"];
-                    }
-                    break;
             }
         } else {
             // all other splits
             switch (current_world) {
                 // wonderland
                 case 4:
-                    if (settings["wl_2"]) {
-                        if (vars.completed_splits.TryGetValue("wl_1", out output_catch)) {
-                            if (!vars.wl_counts) {
-                                vars.wl_counts = true;
-                                vars.puppies = current.puppy_count;
-                                vars.green = current.trinity_counts[3];
-                                vars.blue = current.trinity_counts[0];
-                                vars.white = current.trinity_counts[5];
-                            }
+                    if (settings["wl_2"] && !vars.completed_splits.TryGetValue("wl_2", out output_catch)) {
+                        if (
+                            vars.wl_puppies < 4 &&
+                            (
+                                (current.room == 3 && vars.check_world_puppies(current_world, new int[] {2}, 1)) ||
+                                (current.room == 9 && vars.check_world_puppies(current_world, new int[] {8}, 3)) ||
+                                (current.room == 4 && vars.check_world_puppies(current_world, new int[] {1, 4}, 2))
+                            )
+                        ) {
+                            vars.wl_puppies += 1;
+                            print(vars.wl_puppies.ToString());
+                        }
+                        if (current.in_gummi > 0) {
+                            var wl_trinities = vars.watchers["wl_trinities"];
+                            wl_trinities.Update(game);
                             return (
-                                current.in_gummi > 0 &&
+                                vars.completed_splits.Add("wl_2") &&
                                 // gigas shadow
                                 current.enemies_defeated[82] >= 1 &&
-                                vars.check_jj_revisit(
-                                    current_world,
-                                    new int[] {vars.puppies, vars.blue, 0, vars.green, 0, vars.white, 0, 0}
-                                )
-                            ) && vars.completed_splits.Add("wl_2");
+                                wl_trinities.Current == 248 &&
+                                vars.wl_puppies == 4
+                            );
                         }
                     }
                     break;
                 // deep jungle
                 case 5:
-                    if (settings["dj_2"]) {
-                        if (vars.completed_splits.TryGetValue("dj_1", out output_catch)) {
-                            if (!vars.dj_counts) {
-                                vars.dj_counts = true;
-                                vars.mini = current.mini_game_count;
-                                vars.green = current.trinity_counts[3];
-                                vars.white = current.trinity_counts[5];
-                            }
+                    if (settings["dj_2"] && !vars.completed_splits.TryGetValue("dj_2", out output_catch)) {
+                        if (
+                            vars.dj_puppies < 4 &&
+                            (
+                                (current.room == 5 && vars.check_world_puppies(current_world, new int[] {1}, 1)) ||
+                                (current.room == 4 && vars.check_world_puppies(current_world, new int[] {2}, 2)) ||
+                                (current.room == 12 && vars.check_world_puppies(current_world, new int[] {4}, 3)) ||
+                                (current.room == 9 && vars.check_world_puppies(current_world, new int[] {2}, 4))
+                            )
+                        ) {
+                            vars.dj_puppies += 1;
+                        }
+                        if (current.in_gummi > 0) {
+                            var dj_trinities = vars.watchers["dj_trinities"];
+                            var slider_journal_entry = vars.watchers["slider_journal_entry"];
+                            dj_trinities.Update(game);
+                            slider_journal_entry.Update(game);
                             return (
-                                current.in_gummi > 0 &&
+                                vars.completed_splits.Add("dj_2") &&
                                 // black ballad and bouncy wild
                                 current.enemies_defeated[86] >= 1 &&
                                 current.enemies_defeated[4] >= 1 &&
-                                vars.check_jj_revisit(
-                                    current_world,
-                                    new int[] {0, 0, 0, vars.green, 0, vars.white, vars.mini, 0}
-                                )
-                            ) && vars.completed_splits.Add("dj_2");
+                                slider_journal_entry.Current - slider_journal_entry.Old == 64 &&
+                                dj_trinities.Current == 184 &&
+                                vars.dj_puppies == 4
+                            );
                         }
                     }
                     break;
                 // agrabah
                 case 8:
-                    if (settings["ag_2"]) {
-                        if (vars.completed_splits.TryGetValue("ag_1", out output_catch)) {
-                            if (!vars.ag_counts) {
-                                vars.ag_counts = true;
-                                vars.puppies = current.puppy_count;
-                                vars.green = current.trinity_counts[3];
-                                vars.yellow = current.trinity_counts[4];                            
-                                vars.white = current.trinity_counts[5];
-                            }
+                    if (settings["ag_2"] && !vars.completed_splits.TryGetValue("ag_2", out output_catch)) {
+                        if (
+                            vars.ag_puppies < 4 &&
+                            (
+                                (current.room == 6 && vars.check_world_puppies(current_world, new int[] {8}, 1)) ||
+                                (current.room == 8 && vars.check_world_puppies(current_world, new int[] {1}, 2)) ||
+                                (current.room == 11 && vars.check_world_puppies(current_world, new int[] {4}, 3)) ||
+                                (current.room == 15 && vars.check_world_puppies(current_world, new int[] {4}, 4))
+                            )
+                        ) {
+                            vars.ag_puppies += 1;
+                        }
+                        if (current.in_gummi > 0) {
+                            var ag_trinities = vars.watchers["ag_trinities"];
+                            ag_trinities.Update(game);
                             return (
-                                current.in_gummi > 0 &&
+                                vars.completed_splits.Add("ag_2") &&
                                 // pot scorpion
                                 current.enemies_defeated[34] >= 1 &&
-                                vars.check_jj_revisit(
-                                    current_world,
-                                    new int[] {vars.puppies, 0, 0, vars.green, vars.yellow, vars.white, 0, 0}
-                                )
-                            ) && vars.completed_splits.Add("ag_2");
+                                ag_trinities.Current == 252 &&
+                                vars.ag_puppies == 4
+                            );
                         }
                     }
                     break;
@@ -1077,30 +1085,35 @@ split
                     break;
                 // halloween town
                 case 10:
-                    if (settings["ht_2"]) {
-                        if (vars.completed_splits.TryGetValue("ht_1", out output_catch)) {
-                            if (!vars.ht_counts) {
-                                vars.ht_counts = true;
-                                vars.puppies = current.puppy_count;
-                                vars.red = current.trinity_counts[2];
-                                vars.white = current.trinity_counts[5];
-                            }
+                    if (settings["ht_2"] && !vars.completed_splits.TryGetValue("ht_2", out output_catch)) {
+                        if (
+                            vars.ht_puppies < 4 &&
+                            (
+                                (current.room == 3 && vars.check_world_puppies(current_world, new int[] {8}, 1)) ||
+                                (current.room == 12 && vars.check_world_puppies(current_world, new int[] {1}, 2)) ||
+                                (current.room == 18 && vars.check_world_puppies(current_world, new int[] {1}, 3)) ||
+                                (current.room == 0 && vars.check_world_puppies(current_world, new int[] {8}, 4))
+                            )
+                        ) {
+                            vars.ht_puppies += 1;
+                        }
+                        if (current.in_gummi > 0) {
+                            var ht_trinities = vars.watchers["ht_trinities"];
+                            ht_trinities.Update(game);
                             return (
-                                current.in_gummi > 0 &&
+                                vars.completed_splits.Add("ht_2") &&
                                 // chimera
                                 current.enemies_defeated[48] >= 1 &&
-                                vars.check_jj_revisit(
-                                    current_world,
-                                    new int[] {vars.puppies, 0, vars.red, 0, 0, vars.white, 0, 0}
-                                )
-                            ) && vars.completed_splits.Add("ht_2");
+                                ht_trinities.Current == 192 &&
+                                vars.ht_puppies == 4
+                            );
                         }
                     }
                     break;
                 // olympus coliseum
                 case 11:
                     // gravity level
-                    if (current.magic_levels[112] > old.magic_levels[112]) {
+                    if (current.magic_level_flags[4] > old.magic_level_flags[4]) {
                         return settings["phil_cup"] && vars.completed_splits.Add("phil_cup");
                     }
                     if (current.room == 2 && current.scene == 7) {
@@ -1137,49 +1150,63 @@ split
                     break;
                 // monstro
                 case 12:
-                    if (settings["mo_2"]) {
-                        if (vars.completed_splits.TryGetValue("mo_1", out output_catch)) {
-                            if (!vars.mo_counts) {
-                                vars.mo_counts = true;
-                                vars.puppies = current.puppy_count;
-                                vars.green = current.trinity_counts[3];
-                                vars.white = current.trinity_counts[5];
-                                vars.pages = current.torn_page_count;
-                            }
+                    if (settings["mo_2"] && !vars.completed_splits.TryGetValue("mo_2", out output_catch)) {
+                        if (
+                            vars.mo_puppies < 4 &&
+                            (
+                                (current.room == 10 && vars.check_world_puppies(current_world, new int[] {2}, 1)) ||
+                                (current.room == 1 && vars.check_world_puppies(current_world, new int[] {2}, 2)) ||
+                                (current.room == 7 && vars.check_world_puppies(current_world, new int[] {1}, 3)) ||
+                                (current.room == 9 && vars.check_world_puppies(current_world, new int[] {4}, 4))
+                            )
+                        ) {
+                            vars.mo_puppies += 1;
+                        }
+                        if (current.torn_page_count > old.torn_page_count) {
+                            vars.mo_torn_page = true;
+                        }
+                        if (current.in_gummi > 0) {
+                            var mo_trinities = vars.watchers["mo_trinities"];
+                            mo_trinities.Update(game);
                             return (
-                                current.in_gummi > 0 &&
+                                vars.completed_splits.Add("mo_2") &&
                                 // grand ghost
                                 current.enemies_defeated[92] >= 1 &&
-                                vars.check_jj_revisit(
-                                    current_world,
-                                    new int[] {vars.puppies, 0, 0, vars.green, 0, vars.white, 0, vars.pages}
-                                )
-                            ) && vars.completed_splits.Add("mo_2");
+                                vars.mo_torn_page &&
+                                mo_trinities.Current == 248 &&
+                                vars.mo_puppies == 4
+                            );
                         }
                     }
                     break;
                 // neverland
                 case 13:
-                    if (settings["nl_2"]) {
-                        if (vars.completed_splits.TryGetValue("nl_1", out output_catch)) {
-                            if (!vars.nl_counts) {
-                                vars.nl_counts = true;
-                                vars.puppies = current.puppy_count;
-                                vars.white = current.trinity_counts[5];
-                                vars.yellow = current.trinity_counts[4];
-                            }
+                    if (settings["nl_2"] && !vars.completed_splits.TryGetValue("nl_2", out output_catch)) {
+                        if (
+                            vars.nl_puppies < 4 &&
+                            (
+                                (current.room == 8 && vars.check_world_puppies(current_world, new int[] {2}, 1)) ||
+                                (current.room == 0 && vars.check_world_puppies(current_world, new int[] {8}, 2)) ||
+                                (current.room == 6 && vars.check_world_puppies(current_world, new int[] {4}, 3)) ||
+                                (current.room == 2 && vars.check_world_puppies(current_world, new int[] {2}, 3))
+                            )
+                        ) {
+                            vars.nl_puppies += 1;
+                        }
+                        if (current.in_gummi > 0) {
+                            var nl_trinities = vars.watchers["nl_trinities"];
+                            nl_trinities.Update(game);
                             return (
-                                current.in_gummi > 0 &&
+                                vars.completed_splits.Add("nl_2") &&
                                 // jet balloon
                                 current.enemies_defeated[88] >= 1 &&
-                                vars.check_jj_revisit(
-                                    current_world,
-                                    new int[] {vars.puppies, 0, 0, 0, vars.yellow, vars.white, 0, 0}
-                                )
-                            ) && vars.completed_splits.Add("nl_2");
+                                nl_trinities.Current == 131 &&
+                                vars.nl_puppies == 4
+                            );
                         }
                     }
-                    if (current.magic_levels[168] > old.magic_levels[168]) {
+                    // stop level
+                    if (current.magic_level_flags[5] > old.magic_level_flags[5]) {
                         return vars.completed_splits.Add("nap_time") && settings["nap_time"];
                     }
                     break;
@@ -1251,43 +1278,6 @@ split
                     break;
             }
         }
-        // Register initial world visits complete for revisit checks
-        if (current.in_gummi > 0) {
-            var docked_world = vars.watchers["docked_world"];
-            docked_world.Update(game);
-            // blizzard unlocked
-            if (settings["wl_2"] && docked_world.Current != 4 && (
-                current.magic_unlock_val == 3 ||
-                current.magic_unlock_val == 7 ||
-                current.magic_unlock_val == 11 ||
-                current.magic_unlock_val == 15
-            )) {
-                vars.completed_splits.Add("wl_1");
-            }
-            // jungle king
-            if (settings["dj_2"] && current.equips[28] == 1 && docked_world.Current != 5) {
-                vars.completed_splits.Add("dj_1");
-            }
-            // three wishes
-            if (settings["ag_2"] && current.equips[29] == 1 && docked_world.Current != 8) {
-                vars.completed_splits.Add("ag_1");
-            }
-            // pumpkin head
-            if (settings["ht_2"] && current.equips[31] == 1 && docked_world.Current != 10) {
-                vars.completed_splits.Add("ht_1");
-            }
-            // stop unlocked
-            if (settings["mo_2"] && docked_world.Current == 8 && (
-                current.magic_unlock_val == 43 ||
-                current.magic_unlock_val == 47
-            )) {
-                vars.completed_splits.Add("mo_1");
-            }
-            // fairy harp
-            if (settings["nl_2"] && current.equips[30] == 1 && docked_world.Current != 13) {
-                vars.completed_splits.Add("nl_1");
-            }
-        }
     }
 
     if (settings["plat_splits"]) {
@@ -1295,7 +1285,7 @@ split
             // traverse town splits
             case 3:
                 // aero level
-                if (!vars.aero_level_up && current.magic_levels[224] > old.magic_levels[224]) {
+                if (!vars.aero_level_up && current.magic_level_flags[6] > old.magic_level_flags[6]) {
                     vars.aero_level_up = true;
                 }
                 // ultima
@@ -1321,7 +1311,7 @@ split
             return vars.completed_splits.Add("each_mat") && settings["each_mat"];
         }
         // gummi splits
-        if (current.in_gummi) {
+        if (current.in_gummi > 0) {
             int gummi_kills_address = vars.gummi_kills_address;
             vars.gummi_kills = memory.ReadValue<uint>(modules.First().BaseAddress + gummi_kills_address);            
         }
@@ -1419,23 +1409,14 @@ init
             { "characters_two_count", new MemoryWatcher<byte>(gb + 0x2E9CB2C) },
             { "chronicles_count", new MemoryWatcher<byte>(gb + 0x2E9DB10) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233F1F4) },
-            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2E0018C) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x526A40) },
-            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DEA96C) },
-            { "fightend", new MemoryWatcher<byte>(gb + 0x2D54438) },
             { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x508280) },
             { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507C90) },
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED751E) },
-            { "load", new MemoryWatcher<bool>(gb + 0x232E6E8) },
-            { "load_2", new MemoryWatcher<bool>(gb + 0x233F230) },
-            { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEB26D) },
             { "newgame", new MemoryWatcher<byte>(gb + 0x2E9CBA4) },
             { "party_load", new MemoryWatcher<bool>(gb + 0x2E1FE7C) },
             { "paused", new MemoryWatcher<bool>(gb + 0x232E9BC) },
             { "save_load", new MemoryWatcher<bool>(gb + 0x2E20F38) },
-            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5D64C) },
-            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54D08) },
-            { "text_progress", new MemoryWatcher<byte>(gb + 0x232E974) },
         };
     } else {
         vars.offset = 0xA00;
@@ -1450,127 +1431,60 @@ init
             { "characters_two_count", new MemoryWatcher<byte>(gb + 0x2E9C14C) },
             { "chronicles_count", new MemoryWatcher<byte>(gb + 0x2E9D130) },
             { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
-            { "difficulty", new MemoryWatcher<ushort>(gb + 0x2DFF78C) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x525D60) }, 
-            { "eow_scene", new MemoryWatcher<ushort>(gb + 0x2DE9F6C) },
-            { "fightend", new MemoryWatcher<byte>(gb + 0x2D53A38) },
             { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x507580) },
             { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x506F90) },
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED6A1E) },
-            { "load", new MemoryWatcher<bool>(gb + 0x232DCE8) },
-            { "load_2", new MemoryWatcher<bool>(gb + 0x233E830) },
-            { "neverland_scene", new MemoryWatcher<byte>(gb + 0x2DEA86D) },
             { "newgame", new MemoryWatcher<byte>(gb + 0x2E9C1C8) },
             { "party_load", new MemoryWatcher<bool>(gb + 0x2E1F4E8) },
             { "paused", new MemoryWatcher<bool>(gb + 0x232DFC0) },
             { "save_load", new MemoryWatcher<bool>(gb + 0x2E20564) },
-            { "sora_hp", new MemoryWatcher<byte>(gb + 0x2D5CC4C) }, 
-            { "summon_load", new MemoryWatcher<bool>(gb + 0x2D54308) },
-            { "text_progress", new MemoryWatcher<byte>(gb + 0x232DF74) },
-        };
+       };
     }
+    vars.watchers["difficulty"] = new MemoryWatcher<byte>(gb + 0x2E0018C - vars.offset);
+    vars.watchers["eow_scene"] = new MemoryWatcher<byte>(gb + 0x2DEA96C - vars.offset);
+    vars.watchers["fightend"] = new MemoryWatcher<byte>(gb + 0x2D54438 - vars.offset);
+    vars.watchers["load"] = new MemoryWatcher<byte>(gb + 0x232E6E8 - vars.offset);
+    vars.watchers["load_2"] = new MemoryWatcher<byte>(gb + 0x233F230 - vars.offset);
+    vars.watchers["neverland_scene"] = new MemoryWatcher<byte>(gb + 0x2DEB26D - vars.offset);
+    vars.watchers["sora_hp"] = new MemoryWatcher<byte>(gb + 0x2D5D64C - vars.offset);
+    vars.watchers["summon_load"] = new MemoryWatcher<byte>(gb + 0x2D54D08 - vars.offset);
+    vars.watchers["text_progress"] = new MemoryWatcher<byte>(gb + 0x232E974 - vars.offset);
+    vars.watchers["wl_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9CE - vars.offset);
+    vars.watchers["dj_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9D2 - vars.offset);
+    vars.watchers["ag_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9D4 - vars.offset);
+    vars.watchers["mo_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9D6 - vars.offset);
+    vars.watchers["ht_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9D8 - vars.offset);
+    vars.watchers["nl_trinities"] = new MemoryWatcher<byte>(gb + 0x2DEB9DA - vars.offset);
+    vars.watchers["slider_journal_entry"] = new MemoryWatcher<byte>(gb + 0x2DEB737 - vars.offset);
+    vars.watchers["wl_puppies_1"] = new MemoryWatcher<byte>(gb + 0x2DEA390 - vars.offset);
+    vars.watchers["wl_puppies_2"] = new MemoryWatcher<byte>(gb + 0x2DEA394 - vars.offset);
+    vars.watchers["wl_puppies_3"] = new MemoryWatcher<byte>(gb + 0x2DEA398 - vars.offset);
+    vars.watchers["dj_puppies_1"] = new MemoryWatcher<byte>(gb + 0x2DEA3A8 - vars.offset);
+    vars.watchers["dj_puppies_2"] = new MemoryWatcher<byte>(gb + 0x2DEA3AC - vars.offset);
+    vars.watchers["dj_puppies_3"] = new MemoryWatcher<byte>(gb + 0x2DEA3B0 - vars.offset);
+    vars.watchers["dj_puppies_4"] = new MemoryWatcher<byte>(gb + 0x2DEA3B4 - vars.offset);
+    vars.watchers["ag_puppies_1"] = new MemoryWatcher<byte>(gb + 0x2DEA3F8 - vars.offset);
+    vars.watchers["ag_puppies_2"] = new MemoryWatcher<byte>(gb + 0x2DEA400 - vars.offset);
+    vars.watchers["ag_puppies_3"] = new MemoryWatcher<byte>(gb + 0x2DEA404 - vars.offset);
+    vars.watchers["ag_puppies_4"] = new MemoryWatcher<byte>(gb + 0x2DEA410 - vars.offset);
+    vars.watchers["ht_puppies_1"] = new MemoryWatcher<byte>(gb + 0x2DEA458 - vars.offset);
+    vars.watchers["ht_puppies_2"] = new MemoryWatcher<byte>(gb + 0x2DEA460 - vars.offset);
+    vars.watchers["ht_puppies_3"] = new MemoryWatcher<byte>(gb + 0x2DEA464 - vars.offset);
+    vars.watchers["ht_puppies_4"] = new MemoryWatcher<byte>(gb + 0x2DEA474 - vars.offset);
+    vars.watchers["mo_puppies_1"] = new MemoryWatcher<byte>(gb + 0x2DEA420 - vars.offset);
+    vars.watchers["mo_puppies_2"] = new MemoryWatcher<byte>(gb + 0x2DEA488 - vars.offset);
+    vars.watchers["mo_puppies_3"] = new MemoryWatcher<byte>(gb + 0x2DEA498 - vars.offset);
+    vars.watchers["mo_puppies_4"] = new MemoryWatcher<byte>(gb + 0x2DEA4A0 - vars.offset);
+    vars.watchers["nl_puppies_1"] = new MemoryWatcher<byte>(gb + 0x2DEA4A4 - vars.offset);
+    vars.watchers["nl_puppies_2"] = new MemoryWatcher<byte>(gb + 0x2DEA4A8 - vars.offset);
+    vars.watchers["nl_puppies_3"] = new MemoryWatcher<byte>(gb + 0x2DEA4C0 - vars.offset);
     vars.party_address = 0x2DEA1EF - vars.offset;
     vars.abilities_address = 0x2DE9DA4 - vars.offset;
     vars.gummi_kills_address = 0x2DF5C98 - vars.offset;
-    int level_address = 0x2DE9D64 - vars.offset;
-    // values are equal to number of each element found on revisit (puppies, blue trin, red trin, green trin, yellow trin, white trin, mini games, torn pages)
-    // puppies sets are multiples of 3 by sets found
-    vars.revisit_info = new Dictionary<int, Dictionary<int, int[]>>{
-        {
-            // wonderland
-            4,
-            new Dictionary<int, int[]>
-            {
-                // beginner
-                {0, new int[]{12, 1, 0, 2, 0, 1, 0, 0}},
-                // standard
-                {1, new int[]{6, 1, 0, 2, 0, 1, 0, 0}},
-                // proud
-                {2, new int[]{6, 1, 0, 2, 0, 1, 0, 0}},
-                // level 1
-                {3, new int[]{12, 1, 0, 2, 0, 1, 0, 0}}
-            }
-        },
-        {
-            // deep jungle
-            5,
-            new Dictionary<int, int[]>
-            {
-                // beginner
-                {0, new int[]{0, 0, 0, 1, 0, 1, 1, 0}},
-                // standard
-                {1, new int[]{0, 0, 0, 1, 0, 1, 1, 0}},
-                // proud
-                {2, new int[]{0, 0, 0, 1, 0, 1, 1, 0}},
-                // level 1
-                {3, new int[]{0, 0, 0, 1, 0, 1, 1, 0}}
-            }
-        },
-        {
-            // agrabah
-            8,
-            new Dictionary<int, int[]>
-            {
-                // beginner
-                {0, new int[]{6, 0, 0, 1, 1, 1, 0, 0}},
-                // standard
-                {1, new int[]{0, 0, 0, 0, 1, 0, 0, 0}},
-                // proud
-                {2, new int[]{0, 0, 0, 0, 1, 0, 0, 0}},
-                // level 1
-                {3, new int[]{6, 0, 0, 1, 1, 1, 0, 0}}
-            }
-        },
-        {
-            // halloween town
-            10, 
-            new Dictionary<int, int[]>
-            {
-                // beginner
-                {0, new int[]{12, 0, 1, 0, 0, 1, 0, 0}},
-                // standard
-                {1, new int[]{9, 0, 1, 0, 0, 1, 0, 0}},
-                // proud
-                {2, new int[]{9, 0, 1, 0, 0, 1, 0, 0}},
-                // level 1
-                {3, new int[]{12, 0, 1, 0, 0, 1, 0, 0}}
-            }
-        },
-        {
-            // monstro
-            12,
-            new Dictionary<int, int[]>
-            {
-                // beginner
-                {0, new int[]{3, 0, 0, 1, 0, 1, 0, 0}},
-                // standard
-                {1, new int[]{3, 0, 0, 1, 0, 1, 0, 0}},
-                // proud
-                {2, new int[]{3, 0, 0, 1, 0, 1, 0, 0}},
-                // level 1
-                {3, new int[]{3, 0, 0, 1, 0, 1, 0, 1}}
-            }
-        },
-        {
-            // neverland
-            13,
-            new Dictionary<int, int[]>
-            {
-                // beginner
-                {0, new int[]{9, 0, 0, 0, 1, 1, 0, 0}},
-                // standard
-                {1, new int[]{9, 0, 0, 0, 1, 1, 0, 0}},
-                // proud
-                {2, new int[]{9, 0, 0, 0, 1, 1, 0, 0}},
-                // level 1
-                {3, new int[]{9, 0, 0, 0, 1, 1, 0, 0}}
-            }
-        }
-    };
 
     // resets all used variables on restart
     vars.completed_splits = new HashSet<string>();
-    vars.completed_fights = new HashSet<string>();
 
     // traverse town vars
     vars.fake_guard = false;
@@ -1578,26 +1492,22 @@ init
     vars.aero_level_up = false;
 
     // wonderland vars
-    vars.wl_counts = false;
-    vars.wl_2_complete = false;
+    vars.wl_puppies = 0;
 
     // deep jungle vars
     vars.pw_gummis = 0;
     vars.clayton_1 = false;
     vars.clayton_2 = false;
-    vars.dj_counts = false;
-    vars.dj_2_complete = false;
+    vars.dj_puppies = 0;
 
     // agrabah vars
-    vars.ag_counts = false;
-    vars.ag_2_complete = false;
+    vars.ag_puppies = 0;
 
     // atlantica vars
     vars.atl_torn_page = false;
 
     // halloween town vars
-    vars.ht_counts = false;
-    vars.ht_2_complete = false;
+    vars.ht_puppies = 0;
 
     // olympus coliseum vars
     vars.cloud_2 = false;
@@ -1605,13 +1515,12 @@ init
     vars.next_ability_slot_idx = 0;
 
     // monstro vars
-    vars.mo_counts = false;
-    vars.mo_2_complete = false;
+    vars.mo_torn_page = false;
+    vars.mo_puppies = 0;
 
     // neverland vars
+    vars.nl_puppies = 0;
     vars.pre_hook = false;
-    vars.nl_counts = false;
-    vars.nl_2_complete = false;
 
     // end of world vars
     vars.journal_complete = false;
@@ -1631,38 +1540,81 @@ init
     // manual back step vars
     vars.back_split = "";
 
-    vars.check_jj_revisit = (Func <int, int[], bool>)(
-        (int world, int[] starting_vals) => {
-            int difficulty = current.difficulty;
-            int[] current_vals = {
-                current.puppy_count,
-                current.trinity_counts[0], // blue
-                current.trinity_counts[2], // red
-                current.trinity_counts[3], // green
-                current.trinity_counts[4], // yellow
-                current.trinity_counts[5], // white
-                current.mini_game_count,
-                current.torn_page_count
-            };
-            int level = memory.ReadValue<byte>(modules.First().BaseAddress + level_address);
-            vars.cons_met = 0;
-            if (level == 1) {
-                difficulty += 1;
+    vars.check_world_puppies = (Func <int, int[], int, bool>)(
+        (int world, int[] chest_values, int target) => {
+            var puppy_check = new MemoryWatcher<byte>(modules.First().BaseAddress);
+            if (target == 1) {
+                puppy_check = vars.watchers["wl_puppies_1"];
+            } else if (target == 2) {
+                puppy_check = vars.watchers["wl_puppies_2"];
+            } else {
+                puppy_check = vars.watchers["wl_puppies_3"];
             }
-            foreach (int value in Enumerable.Range(0, 8)) {
-                if (current_vals[value] - starting_vals[value] >= vars.revisit_info[world][difficulty][value]) {
-                    vars.cons_met += 1;
+            switch (world) {
+                case 5:
+                    if (target == 1) {
+                        puppy_check = vars.watchers["dj_puppies_1"];
+                    } else if (target == 2) {
+                        puppy_check = vars.watchers["dj_puppies_2"];
+                    } else if (target == 3) {
+                        puppy_check = vars.watchers["dj_puppies_3"];
+                    } else {
+                        puppy_check = vars.watchers["dj_puppies_4"];
+                    }
+                    break;
+                case 8:
+                    if (target == 1) {
+                        puppy_check = vars.watchers["ag_puppies_1"];
+                    } else if (target == 2) {
+                        puppy_check = vars.watchers["ag_puppies_2"];
+                    } else if (target == 3) {
+                        puppy_check = vars.watchers["ag_puppies_3"];
+                    } else {
+                        puppy_check = vars.watchers["ag_puppies_4"];
+                    }
+                    break;
+                case 10:
+                    if (target == 1) {
+                        puppy_check = vars.watchers["ht_puppies_1"];
+                    } else if (target == 2) {
+                        puppy_check = vars.watchers["ht_puppies_2"];
+                    } else if (target == 3) {
+                        puppy_check = vars.watchers["ht_puppies_3"];
+                    } else {
+                        puppy_check = vars.watchers["ht_puppies_4"];
+                    }
+                    break;
+                case 12:
+                    if (target == 1) {
+                        puppy_check = vars.watchers["mo_puppies_1"];
+                    } else if (target == 2) {
+                        puppy_check = vars.watchers["mo_puppies_2"];
+                    } else if (target == 3) {
+                        puppy_check = vars.watchers["mo_puppies_3"];
+                    } else {
+                        puppy_check = vars.watchers["mo_puppies_4"];
+                    }
+                    break;
+                case 13:
+                    if (target == 1) {
+                        puppy_check = vars.watchers["nl_puppies_1"];
+                    } else if (target == 2) {
+                        puppy_check = vars.watchers["nl_puppies_2"];
+                    } else {
+                        puppy_check = vars.watchers["nl_puppies_3"];
+                    }
+                    break;
+            }
+            puppy_check.Update(game);
+            foreach (int chest_val in chest_values) {
+                if (puppy_check.Current - puppy_check.Old == chest_val) {
+                    return true;
                 }
             }
-            if (vars.cons_met == 8) {
-                vars.cons_met = 0;
-                return true;
-            } else {
-                vars.cons_met = 0;
-                return false;
-            }
+            return false;
         }
     );
+
     timer.IsGameTimePaused = false;
 }
 
