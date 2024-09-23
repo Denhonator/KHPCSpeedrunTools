@@ -1444,11 +1444,11 @@ init
     vars.watchers["difficulty"] = new MemoryWatcher<byte>(gb + 0x2E0018C - vars.offset);
     vars.watchers["eow_scene"] = new MemoryWatcher<byte>(gb + 0x2DEA96C - vars.offset);
     vars.watchers["fightend"] = new MemoryWatcher<byte>(gb + 0x2D54438 - vars.offset);
-    vars.watchers["load"] = new MemoryWatcher<byte>(gb + 0x232E6E8 - vars.offset);
-    vars.watchers["load_2"] = new MemoryWatcher<byte>(gb + 0x233F230 - vars.offset);
+    vars.watchers["load"] = new MemoryWatcher<bool>(gb + 0x232E6E8 - vars.offset);
+    vars.watchers["load_2"] = new MemoryWatcher<bool>(gb + 0x233F230 - vars.offset);
     vars.watchers["neverland_scene"] = new MemoryWatcher<byte>(gb + 0x2DEB26D - vars.offset);
     vars.watchers["sora_hp"] = new MemoryWatcher<byte>(gb + 0x2D5D64C - vars.offset);
-    vars.watchers["summon_load"] = new MemoryWatcher<byte>(gb + 0x2D54D08 - vars.offset);
+    vars.watchers["summon_load"] = new MemoryWatcher<bool>(gb + 0x2D54D08 - vars.offset);
     vars.watchers["text_progress"] = new MemoryWatcher<byte>(gb + 0x232E974 - vars.offset);
     vars.watchers["wl_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9CE - vars.offset);
     vars.watchers["dj_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9D2 - vars.offset);
