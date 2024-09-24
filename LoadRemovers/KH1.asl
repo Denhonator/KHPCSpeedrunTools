@@ -1,105 +1,115 @@
 state("KINGDOM HEARTS FINAL MIX", "EG Global") // 1.0.0.10
 {
-    // location info
-    ushort room : 0x2340EC4;
-    ushort scene : 0x2340EC8;
-    ushort world : 0x2340ECC;
-    byte white : 0x234081C;
-    byte in_gummi : 0x50832D;
-    byte magic_unlock_val : 0x2DE9DD4;
-    byte dest_behemoth_kills : 0x2DEA598;
     byte arch_behemoth_kills : 0x2DEA59A;
-    uint sora_exp : 0x2DE9DA0;
-
+    bool black : 0x4DD3F8;
     byte8 collected_items_1 : 0x2DEA202;
     byte102 collected_items_2 : 0x2DEA291;  
-    byte33 power_wild_gummis : 0x2DF5BDC;
-    byte42 equips : 0x2DEA233;
-    byte7 magic_level_flags : 0x2DEB97E;
+    bool cutscene : 0x233F1F4;
+    byte dest_behemoth_kills : 0x2DEA598;
     byte96 enemies_defeated : 0x2DEA53A;
+    byte42 equips : 0x2DEA233;
+    byte fightend : 0x2D54438;
+    byte in_gummi : 0x50832D;
+    bool load : 0x232E6E8;
+    bool load_2 : 0x233F230;
+    byte7 magic_level_flags : 0x2DEB97E;
+    byte magic_unlock_val : 0x2DE9DD4;
+    ushort mini_game_count : 0x2E9DD74;
+    bool party_load : 0x2E1FE7C;
+    bool paused : 0x232E9BC;
+    byte33 power_wild_gummis : 0x2DF5BDC;
+    ushort puppy_count : 0x2E9DB28;
+    ushort reports : 0x2DEB720;
+    ushort room : 0x2340EC4;
+    ushort scene : 0x2340EC8;
+    bool save_load : 0x2E20F38;
+    byte sora_hp : 0x2D5D64C;
+    uint sora_exp : 0x2DE9DA0;
+    bool summon_load : 0x2D54D08;
+    byte text_progress : 0x232E974;
     byte torn_page_count : 0x2DEB160;
     byte6 trinity_counts : 0x2DEB9C6;
-    ushort puppy_count : 0x2E9DB28;
-    ushort mini_game_count : 0x2E9DD74;
-    ushort reports : 0x2DEB720;
+    byte white : 0x234081C;
+    ushort world : 0x2340ECC;
+    byte newgame : 0x2E9CBA4;
 }
 
 state("KINGDOM HEARTS FINAL MIX", "EG JP") // 1.0.0.10
 {
-    // location info
-    ushort room : 0x2340EC4;
-    ushort scene : 0x2340EC8;
-    ushort world : 0x2340ECC;
-    byte white : 0x234081C;
-    byte in_gummi : 0x50832D;
-    byte magic_unlock_val : 0x2DE9DD4;
-    byte dest_behemoth_kills : 0x2DEA598;
     byte arch_behemoth_kills : 0x2DEA59A;
-    uint sora_exp : 0x2DE9DA0;
-
     byte8 collected_items_1 : 0x2DEA202;
     byte102 collected_items_2 : 0x2DEA291;  
-    byte33 power_wild_gummis : 0x2DF5BDC;
-    byte42 equips : 0x2DEA233;
-    byte7 magic_level_flags : 0x2DEB97E;
+    byte dest_behemoth_kills : 0x2DEA598;
     byte96 enemies_defeated : 0x2DEA53A;
+    byte42 equips : 0x2DEA233;
+    byte fightend : 0x2D54438;
+    byte in_gummi : 0x50832D;
+    byte7 magic_level_flags : 0x2DEB97E;
+    byte magic_unlock_val : 0x2DE9DD4;
+    ushort mini_game_count : 0x2E9DD74;
+    byte33 power_wild_gummis : 0x2DF5BDC;
+    ushort puppy_count : 0x2E9DB28;
+    ushort reports : 0x2DEB720;
+    ushort room : 0x2340EC4;
+    ushort scene : 0x2340EC8;
+    uint sora_exp : 0x2DE9DA0;
+    byte text_progress : 0x232E974;
     byte torn_page_count : 0x2DEB160;
     byte6 trinity_counts : 0x2DEB9C6;
-    ushort puppy_count : 0x2E9DB28;
-    ushort mini_game_count : 0x2E9DD74;
-    ushort reports : 0x2DEB720;
+    byte white : 0x234081C;
+    ushort world : 0x2340ECC;
 }
 
 state("KINGDOM HEARTS FINAL MIX", "Steam Global") // 1.0.0.2
 {
-    // location info
-    ushort room : 0x233FE8C;
-    ushort scene : 0x233FE90;
-    ushort world : 0x233FE94;
-    byte white : 0x233FE1C;
-    byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
-    byte magic_unlock_val : 0x2DE93D4;
-    byte dest_behemoth_kills : 0x2DE9B98;
     byte arch_behemoth_kills : 0x2DE9B9A;
-    uint sora_exp : 0x2DE93A0;
-
     byte8 collected_items_1 : 0x2DE9802;
     byte102 collected_items_2 : 0x2DE9891;  
-    byte33 power_wild_gummis : 0x2DF51DC;
-    byte42 equips : 0x2DE9833;
-    byte7 magic_level_flags : 0x2DEAF7E;
+    byte dest_behemoth_kills : 0x2DE9B98;
     byte96 enemies_defeated : 0x2DE9B3A;
+    byte42 equips : 0x2DE9833;
+    byte fightend : 0x2D53A38;
+    byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
+    byte7 magic_level_flags : 0x2DEAF7E;
+    byte magic_unlock_val : 0x2DE93D4;
+    ushort mini_game_count : 0x2E9D394;
+    byte33 power_wild_gummis : 0x2DF51DC;
+    ushort puppy_count : 0x2E9D148;
+    ushort reports : 0x2DEAD20;
+    ushort room : 0x233FE8C;
+    ushort scene : 0x233FE90;
+    uint sora_exp : 0x2DE93A0;
+    byte text_progress : 0x232DF74;
     byte torn_page_count : 0x2DEA760;
     byte6 trinity_counts : 0x2DEAFC6;
-    ushort puppy_count : 0x2E9D148;
-    ushort mini_game_count : 0x2E9D394;
-    ushort reports : 0x2DEAD20;
+    byte white : 0x233FE1C;
+    ushort world : 0x233FE94;
 }
 
 state("KINGDOM HEARTS FINAL MIX", "Steam JP") // 1.0.0.2
 {
-    // location info
-    ushort room : 0x233FE8C;
-    ushort scene : 0x233FE90;
-    ushort world : 0x233FE94;
-    byte white : 0x233FE1C;
-    byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
-    byte magic_unlock_val : 0x2DE93D4;
-    byte dest_behemoth_kills : 0x2DE9B98;
     byte arch_behemoth_kills : 0x2DE9B9A;
-    uint sora_exp : 0x2DE93A0;
-
     byte8 collected_items_1 : 0x2DE9802;
     byte102 collected_items_2 : 0x2DE9891;  
-    byte33 power_wild_gummis : 0x2DF51DC;
-    byte42 equips : 0x2DE9833;
-    byte7 magic_level_flags : 0x2DEAF7E;
+    byte dest_behemoth_kills : 0x2DE9B98;
     byte96 enemies_defeated : 0x2DE9B3A;
+    byte42 equips : 0x2DE9833;
+    byte fightend : 0x2D53A38;
+    byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
+    byte7 magic_level_flags : 0x2DEAF7E;
+    byte magic_unlock_val : 0x2DE93D4;
+    ushort mini_game_count : 0x2E9D394;
+    byte33 power_wild_gummis : 0x2DF51DC;
+    ushort puppy_count : 0x2E9D148;
+    ushort reports : 0x2DEAD20;
+    ushort room : 0x233FE8C;
+    ushort scene : 0x233FE90;
+    uint sora_exp : 0x2DE93A0;
+    byte text_progress : 0x232DF74;
     byte torn_page_count : 0x2DEA760;
     byte6 trinity_counts : 0x2DEAFC6;
-    ushort puppy_count : 0x2E9D148;
-    ushort mini_game_count : 0x2E9D394;
-    ushort reports : 0x2DEAD20;
+    byte white : 0x233FE1C;
+    ushort world : 0x233FE94;
 }
 
 startup
@@ -345,20 +355,14 @@ split
     int current_world = current.world;
     int old_world = old.world;
     var output_catch = "";
-    var fightend = vars.watchers["fightend"];
-    var cutscene = vars.watchers["cutscene"];
     var eow_scene = vars.watchers["eow_scene"];
-    var text_progress = vars.watchers["text_progress"];
-    var sora_hp = vars.watchers["sora_hp"];
-    var summon_load = vars.watchers["summon_load"];
-    var paused = vars.watchers["paused"];
     var gummi_start_world = vars.watchers["gummi_start_world"];
     var gummi_destination_world = vars.watchers["gummi_destination_world"];
     // Only works for certain fights, current use is for leon and sabor 1
     bool fight_exp = current.sora_exp > old.sora_exp && current.sora_exp - old.sora_exp > 5;
-    bool fight_complete = fightend.Current == 2 && fightend.Old == 0;
-    bool death = sora_hp.Current == 0 && sora_hp.Old > 0;
-    vars.summon_timer = summon_load.Current ? vars.summon_timer + (paused.Current ? 0 : 1) : 0;
+    bool fight_complete = current.fightend == 2 && old.fightend == 0;
+    bool death = current.sora_hp == 0 && old.sora_hp > 0;
+    vars.summon_timer = current.summon_load ? vars.summon_timer + (current.paused ? 0 : 1) : 0;
 
     // Final fight split always goes
     if (fight_complete && current_world == 16 && current.room == 33 && current.scene == 4) {
@@ -692,11 +696,11 @@ split
             switch (current_world) {
                 // station of awakening
                 case 0:
-                    if (current.enemies_defeated[0] >= 5 && cutscene.Current) {
+                    if (current.enemies_defeated[0] >= 5 && current.cutscene) {
                         return vars.completed_splits.Add("shadows_1") && settings["shadows_1"];
                     }
                     // shadows killed
-                    if (current.enemies_defeated[0] >= 9 && text_progress.Current > 0 && text_progress.Old == 0) {
+                    if (current.enemies_defeated[0] >= 9 && current.text_progress > 0 && old.text_progress == 0) {
                         return vars.completed_splits.Add("shadows_2") && settings["shadows_2"];
                     }
                     break;
@@ -732,7 +736,7 @@ split
                     break;
                 // wonderland
                 case 4:
-                    if (current.room == 3 && vars.completed_splits.TryGetValue("crank", out output_catch) && cutscene.Current) {
+                    if (current.room == 3 && vars.completed_splits.TryGetValue("crank", out output_catch) && current.cutscene) {
                         return vars.completed_splits.Add("crank_alt") && settings["crank_alt"];
                     }
                     break;
@@ -792,7 +796,7 @@ split
                         vars.pre_hook = true;
                         return settings["pre_hook"];
                     }
-                    if (cutscene.Current && gummi_destination_world.Current == 13 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)) {
+                    if (current.cutscene && gummi_destination_world.Current == 13 && (gummi_start_world.Current == 10 || gummi_start_world.Current == 9)) {
                         return vars.completed_splits.Add("ship") && settings["ship"];
                     }
                     break;
@@ -801,13 +805,13 @@ split
                     if (old.room == 11 && current.room == 4 && current.scene == 13) {
                         return settings["emblem"];
                     }
-                    if (current.room == 3 && current.scene == 13 && summon_load.Current && vars.summon_timer > 30) {
+                    if (current.room == 3 && current.scene == 13 && current.summon_load && vars.summon_timer > 30) {
                         return vars.completed_splits.Add("dumbo_1") && settings["dumbo_1"];
                     }
-                    if (current.room == 1 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30) {
+                    if (current.room == 1 && current.scene == 14 && current.summon_load && vars.summon_timer > 30) {
                         return vars.completed_splits.Add("dumbo_2") && settings["dumbo_2"];
                     }
-                    if (current.room == 3 && current.scene == 14 && summon_load.Current && vars.summon_timer > 30) {
+                    if (current.room == 3 && current.scene == 14 && current.summon_load && vars.summon_timer > 30) {
                         return vars.completed_splits.Add("dumbo_3") && settings["dumbo_3"];
                     }
                     break;
@@ -1404,19 +1408,13 @@ init
             version = "EG JP";
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
-            { "black_inv", new MemoryWatcher<bool>(gb + 0x4DD3F8) },
             { "characters_one_count", new MemoryWatcher<byte>(gb + 0x2E9CB28) },
             { "characters_two_count", new MemoryWatcher<byte>(gb + 0x2E9CB2C) },
             { "chronicles_count", new MemoryWatcher<byte>(gb + 0x2E9DB10) },
-            { "cutscene", new MemoryWatcher<bool>(gb + 0x233F1F4) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x526A40) },
             { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x508280) },
             { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507C90) },
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED751E) },
-            { "newgame", new MemoryWatcher<byte>(gb + 0x2E9CBA4) },
-            { "party_load", new MemoryWatcher<bool>(gb + 0x2E1FE7C) },
-            { "paused", new MemoryWatcher<bool>(gb + 0x232E9BC) },
-            { "save_load", new MemoryWatcher<bool>(gb + 0x2E20F38) },
         };
     } else {
         vars.offset = 0xA00;
@@ -1426,30 +1424,19 @@ init
             version = "Steam JP";
         }
         vars.watchers = new Dictionary<string, MemoryWatcher>{
-            { "black_inv", new MemoryWatcher<bool>(gb + 0x4DC718) },
             { "characters_one_count", new MemoryWatcher<byte>(gb + 0x2E9C148) },
             { "characters_two_count", new MemoryWatcher<byte>(gb + 0x2E9C14C) },
             { "chronicles_count", new MemoryWatcher<byte>(gb + 0x2E9D130) },
-            { "cutscene", new MemoryWatcher<bool>(gb + 0x233E808) },
             { "docked_world", new MemoryWatcher<ushort>(gb + 0x525D60) }, 
             { "gummi_destination_world", new MemoryWatcher<ushort>(gb + 0x507580) },
             { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x506F90) },
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED6A1E) },
             { "newgame", new MemoryWatcher<byte>(gb + 0x2E9C1C8) },
-            { "party_load", new MemoryWatcher<bool>(gb + 0x2E1F4E8) },
-            { "paused", new MemoryWatcher<bool>(gb + 0x232DFC0) },
-            { "save_load", new MemoryWatcher<bool>(gb + 0x2E20564) },
        };
     }
-    vars.watchers["difficulty"] = new MemoryWatcher<byte>(gb + 0x2E0018C - vars.offset);
-    vars.watchers["eow_scene"] = new MemoryWatcher<byte>(gb + 0x2DEA96C - vars.offset);
-    vars.watchers["fightend"] = new MemoryWatcher<byte>(gb + 0x2D54438 - vars.offset);
-    vars.watchers["load"] = new MemoryWatcher<bool>(gb + 0x232E6E8 - vars.offset);
-    vars.watchers["load_2"] = new MemoryWatcher<bool>(gb + 0x233F230 - vars.offset);
+    vars.watchers["difficulty"] = new MemoryWatcher<ushort>(gb + 0x2E0018C - vars.offset);
+    vars.watchers["eow_scene"] = new MemoryWatcher<ushort>(gb + 0x2DEA96C - vars.offset);
     vars.watchers["neverland_scene"] = new MemoryWatcher<byte>(gb + 0x2DEB26D - vars.offset);
-    vars.watchers["sora_hp"] = new MemoryWatcher<byte>(gb + 0x2D5D64C - vars.offset);
-    vars.watchers["summon_load"] = new MemoryWatcher<bool>(gb + 0x2D54D08 - vars.offset);
-    vars.watchers["text_progress"] = new MemoryWatcher<byte>(gb + 0x232E974 - vars.offset);
     vars.watchers["wl_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9CE - vars.offset);
     vars.watchers["dj_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9D2 - vars.offset);
     vars.watchers["ag_trinities"] = new MemoryWatcher<ushort>(gb + 0x2DEB9D4 - vars.offset);
@@ -1632,17 +1619,6 @@ reset
 update
 {
     var output_catch = "";
-    vars.watchers["black_inv"].Update(game);
-    vars.watchers["cutscene"].Update(game);
-    vars.watchers["text_progress"].Update(game);
-    vars.watchers["load"].Update(game);
-    vars.watchers["load_2"].Update(game);
-    vars.watchers["party_load"].Update(game);
-    vars.watchers["paused"].Update(game);
-    vars.watchers["save_load"].Update(game);
-    vars.watchers["sora_hp"].Update(game);
-    vars.watchers["summon_load"].Update(game);
-    vars.watchers["fightend"].Update(game);
     if (
         (settings["ship"] && !vars.completed_splits.TryGetValue("ship", out output_catch)) || (settings["ship_early"] && !vars.completed_splits.TryGetValue("ship_early", out output_catch)) ||
         (settings["wl_2"] && !vars.completed_splits.TryGetValue("wl_2", out output_catch)) || (settings["dj_2"] && !vars.completed_splits.TryGetValue("dj_2", out output_catch)) ||
@@ -1663,27 +1639,19 @@ update
 
 isLoading
 {
-    var load = vars.watchers["load"];
-    var load_2 = vars.watchers["load_2"];
-    var black = vars.watchers["black_inv"];
-    var cutscene = vars.watchers["cutscene"];
-    var paused = vars.watchers["paused"];
-    var summon_load = vars.watchers["summon_load"];
-    var save_load = vars.watchers["save_load"];
-    var party_load = vars.watchers["party_load"];
-    var sora_hp = vars.watchers["sora_hp"];
-    vars.summon_timer = summon_load.Current ? vars.summon_timer + (paused.Current ? 0 : 1) : 0;
+    vars.summon_timer = current.summon_load ? vars.summon_timer + (current.paused ? 0 : 1) : 0;
 
     return (
         (
-            load.Current 
-            || !black.Current
-            || (current.white == 128 && !cutscene.Current)
+            current.load
+            || !current.black
+            || (current.white == 128 && !current.cutscene)
             || vars.summon_timer > 30
         )
-        && !paused.Current
+        && !current.paused
     )
-    || save_load.Current
-    || party_load.Current
+    || current.save_load
+    || current.party_load
+    || (current.load_2 && current.sora_hp == 0)
     || vars.booting;
 }
