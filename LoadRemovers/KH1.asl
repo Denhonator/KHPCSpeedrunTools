@@ -566,6 +566,12 @@ split
             switch (current_world) {
                 // traverse town
                 case 3:
+                    if (current.room == 0 && current.scene == 3) {
+                        if (settings["boss_rush"]) {
+                            File.Copy(@"Boss Rush\004_Guard Armor.dat", vars.autosavedst, true);
+                        }
+                        return vars.completed_splits.Add("leon") && settings["leon"];
+                    }
                     if (current.room == 1 && !vars.fake_guard) {
                         vars.back_split = "fake";
                         vars.fake_guard = true;
@@ -584,6 +590,9 @@ split
                     break;
                 // deep jungle
                 case 5:
+                    if (current.room == 0 && current.scene == 0) {
+                        return vars.completed_splits.Add("sabor_1") && settings["sabor_1"];
+                    }
                     if (current.room == 2) {
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\008_Clayton.dat", vars.autosavedst, true);
@@ -1031,7 +1040,6 @@ split
                             )
                         ) {
                             vars.wl_puppies += 1;
-                            print(vars.wl_puppies.ToString());
                         }
                         if (current.in_gummi > 0) {
                             var wl_trinities = vars.watchers["wl_trinities"];
