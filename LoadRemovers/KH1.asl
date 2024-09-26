@@ -1040,17 +1040,16 @@ split
                             )
                         ) {
                             vars.wl_puppies += 1;
+                            print(vars.wl_puppies.ToString());
                         }
-                        if (current.in_gummi > 0) {
+                        // gigas shadow
+                        if (vars.wl_puppies == 4 && current.enemies_defeated[82] >= 1) {
                             var wl_trinities = vars.watchers["wl_trinities"];
                             wl_trinities.Update(game);
-                            return (
-                                vars.completed_splits.Add("wl_2") &&
-                                // gigas shadow
-                                current.enemies_defeated[82] >= 1 &&
-                                wl_trinities.Current == 248 &&
-                                vars.wl_puppies == 4
-                            );
+                            if (current.in_gummi > 0 && wl_trinities.Current == 216) {
+                                vars.wl_puppies = 5;
+                                return vars.completed_splits.Add("wl_2");
+                            }
                         }
                     }
                     break;
@@ -1068,20 +1067,16 @@ split
                         ) {
                             vars.dj_puppies += 1;
                         }
-                        if (current.in_gummi > 0) {
+                        // black ballad and bouncy wild
+                        if (vars.dj_puppies == 4 && current.enemies_defeated[86] >= 1 && current.enemies_defeated[4] >= 1) {
                             var dj_trinities = vars.watchers["dj_trinities"];
                             var slider_journal_entry = vars.watchers["slider_journal_entry"];
                             dj_trinities.Update(game);
                             slider_journal_entry.Update(game);
-                            return (
-                                vars.completed_splits.Add("dj_2") &&
-                                // black ballad and bouncy wild
-                                current.enemies_defeated[86] >= 1 &&
-                                current.enemies_defeated[4] >= 1 &&
-                                slider_journal_entry.Current - slider_journal_entry.Old == 64 &&
-                                dj_trinities.Current == 184 &&
-                                vars.dj_puppies == 4
-                            );
+                            if (current.in_gummi > 0  && dj_trinities.Current == 184 && slider_journal_entry.Current == 66) {
+                                vars.dj_puppies = 5;
+                                return vars.completed_splits.Add("dj_2");
+                            }
                         }
                     }
                     break;
@@ -1099,16 +1094,14 @@ split
                         ) {
                             vars.ag_puppies += 1;
                         }
-                        if (current.in_gummi > 0) {
+                        // pot scorpion
+                        if (vars.ag_puppies == 4 && current.enemies_defeated[34] >= 1) {
                             var ag_trinities = vars.watchers["ag_trinities"];
                             ag_trinities.Update(game);
-                            return (
-                                vars.completed_splits.Add("ag_2") &&
-                                // pot scorpion
-                                current.enemies_defeated[34] >= 1 &&
-                                ag_trinities.Current == 252 &&
-                                vars.ag_puppies == 4
-                            );
+                            if (current.in_gummi > 0 && ag_trinities.Current == 252) {
+                                vars.ag_puppies = 5;
+                                return vars.completed_splits.Add("ag_2");
+                            }
                         }
                     }
                     break;
@@ -1129,22 +1122,20 @@ split
                             (
                                 (current.room == 3 && vars.check_world_puppies(current_world, new int[] {8}, 1)) ||
                                 (current.room == 12 && vars.check_world_puppies(current_world, new int[] {1}, 2)) ||
-                                (current.room == 18 && vars.check_world_puppies(current_world, new int[] {1}, 3)) ||
+                                (current.room == 8 && vars.check_world_puppies(current_world, new int[] {1}, 3)) ||
                                 (current.room == 0 && vars.check_world_puppies(current_world, new int[] {8}, 4))
                             )
                         ) {
                             vars.ht_puppies += 1;
                         }
-                        if (current.in_gummi > 0) {
+                        // chimera
+                        if (vars.ht_puppies == 4 && current.enemies_defeated[48] >= 1) {
                             var ht_trinities = vars.watchers["ht_trinities"];
                             ht_trinities.Update(game);
-                            return (
-                                vars.completed_splits.Add("ht_2") &&
-                                // chimera
-                                current.enemies_defeated[48] >= 1 &&
-                                ht_trinities.Current == 192 &&
-                                vars.ht_puppies == 4
-                            );
+                            if (current.in_gummi > 0 && ht_trinities.Current == 192) {
+                                vars.ht_puppies = 5;
+                                return vars.completed_splits.Add("ht_2");
+                            }
                         }
                     }
                     break;
@@ -1203,17 +1194,14 @@ split
                         if (current.torn_page_count > old.torn_page_count) {
                             vars.mo_torn_page = true;
                         }
-                        if (current.in_gummi > 0) {
+                        // grand ghost
+                        if (vars.mo_puppies == 4 && current.enemies_defeated[92] >= 1) {
                             var mo_trinities = vars.watchers["mo_trinities"];
                             mo_trinities.Update(game);
-                            return (
-                                vars.completed_splits.Add("mo_2") &&
-                                // grand ghost
-                                current.enemies_defeated[92] >= 1 &&
-                                vars.mo_torn_page &&
-                                mo_trinities.Current == 248 &&
-                                vars.mo_puppies == 4
-                            );
+                            if (current.in_gummi > 0 && mo_trinities.Current == 248) {
+                                vars.mo_puppies = 5;
+                                return vars.completed_splits.Add("mo_2");
+                            }
                         }
                     }
                     break;
@@ -1231,20 +1219,17 @@ split
                         ) {
                             vars.nl_puppies += 1;
                         }
-                        if (current.in_gummi > 0) {
+                        // jet balloon
+                        if (vars.nl_puppies == 4 && current.enemies_defeated[88] >= 1) {
                             var nl_trinities = vars.watchers["nl_trinities"];
                             nl_trinities.Update(game);
-                            return (
-                                vars.completed_splits.Add("nl_2") &&
-                                // jet balloon
-                                current.enemies_defeated[88] >= 1 &&
-                                nl_trinities.Current == 131 &&
-                                vars.nl_puppies == 4
-                            );
+                            if (current.in_gummi > 0 && nl_trinities.Current == 131) {
+                                vars.nl_puppies = 5;
+                                return vars.completed_splits.Add("nl_2");
+                            }
                         }
                     }
-                    // stop level
-                    if (current.magic_level_flags[5] > old.magic_level_flags[5]) {
+                    if (current.room == 9 && current.scene == 1 && fight_exp) {
                         return vars.completed_splits.Add("nap_time") && settings["nap_time"];
                     }
                     break;
