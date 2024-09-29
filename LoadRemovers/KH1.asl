@@ -873,7 +873,7 @@ split
                         vars.back_split = "be3";
                         return settings["behemoth_3"];
                     }
-                    if (current.room == 29) {
+                    if (current.room == 29 && vars.completed_splits.TryGetValue("final_rest", out output_catch)) {
                         vars.back_split = "";
                         return vars.completed_splits.Add("final_rest") && settings["final_rest"];
                     }
@@ -1024,6 +1024,12 @@ split
                         return vars.completed_splits.Add("seph") && settings["seph"];
                     }
                     break;
+                // neverland
+                case 13:
+                    if (current.room == 9 && current.scene == 1) {
+                        return vars.completed_splits.Add("nap_time") && settings["nap_time"];
+                    }
+                    break;
             }
         } else {
             // all other splits
@@ -1040,13 +1046,12 @@ split
                             )
                         ) {
                             vars.wl_puppies += 1;
-                            print(vars.wl_puppies.ToString());
                         }
                         // gigas shadow
                         if (vars.wl_puppies == 4 && current.enemies_defeated[82] >= 1) {
                             var wl_trinities = vars.watchers["wl_trinities"];
                             wl_trinities.Update(game);
-                            if (current.in_gummi > 0 && wl_trinities.Current == 216) {
+                            if (current.in_gummi > 0 && wl_trinities.Current == 248) {
                                 vars.wl_puppies = 5;
                                 return vars.completed_splits.Add("wl_2");
                             }
@@ -1229,6 +1234,7 @@ split
                             }
                         }
                     }
+                    // backup on exp for phantom
                     if (current.room == 9 && current.scene == 1 && fight_exp) {
                         return vars.completed_splits.Add("nap_time") && settings["nap_time"];
                     }
@@ -1249,10 +1255,12 @@ split
                     if (current.in_gummi > 0) {
                         return vars.completed_splits.Add("eow") && settings["eow"];
                     }
-                    if (current.room == 29) {
+                    if (current.room == 29 && (settings["jj_complete_early"] || settings["jj_complete"])) {
+                        vars.watchers["menu_open"].Update(game);
                         vars.watchers["chronicles_count"].Update(game);
                         vars.watchers["characters_one_count"].Update(game);
                         vars.watchers["characters_two_count"].Update(game);
+                        var menu_open = vars.watchers["menu_open"];
                         var chronicles_count = vars.watchers["chronicles_count"];
                         var characters_one_count = vars.watchers["characters_one_count"];
                         var characters_two_count = vars.watchers["characters_two_count"];
@@ -1291,7 +1299,7 @@ split
                             vars.world_puppies_complete &&
                             vars.world_trinities_complete
                         );
-                        if (vars.journal_complete) {
+                        if (vars.journal_complete && menu_open.Old && !menu_open.Current) {
                             return vars.completed_splits.Add("jj_complete_early") && settings["jj_complete_early"];
                         }
                     }
@@ -1435,6 +1443,7 @@ init
             { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x507C90) },
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED751E) },
             { "newgame", new MemoryWatcher<byte>(gb + 0x2E9CBA4) },
+            { "menu_open", new MemoryWatcher<bool>(gb + 0x232E980) },
         };
     } else {
         vars.offset = 0xA00;
@@ -1452,6 +1461,7 @@ init
             { "gummi_start_world", new MemoryWatcher<ushort>(gb + 0x506F90) },
             { "hook_ship_flag", new MemoryWatcher<byte>(gb + 0xED6A1E) },
             { "newgame", new MemoryWatcher<byte>(gb + 0x2E9C1C8) },
+            { "menu_open", new MemoryWatcher<bool>(gb + 0x232DFA0) },
        };
     }
     vars.watchers["difficulty"] = new MemoryWatcher<ushort>(gb + 0x2E0018C - vars.offset);
