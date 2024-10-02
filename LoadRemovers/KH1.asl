@@ -873,7 +873,7 @@ split
                         vars.back_split = "be3";
                         return settings["behemoth_3"];
                     }
-                    if (current.room == 29 && vars.completed_splits.TryGetValue("final_rest", out output_catch)) {
+                    if (current.room == 29 && !vars.completed_splits.TryGetValue("final_rest", out output_catch)) {
                         vars.back_split = "";
                         return vars.completed_splits.Add("final_rest") && settings["final_rest"];
                     }
