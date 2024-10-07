@@ -303,10 +303,10 @@ init
     int epic_jp = memory.ReadValue<byte>(gb + 0x705128);
     int steam_gl = memory.ReadValue<byte>(gb + 0x705248);
     int steam_jp = memory.ReadValue<byte>(gb + 0x7051E8);
-    if (epic_global == 106) {
+    if (epic_gl == 106) {
         version = "EG Global";
     } else if (epic_jp == 106) {
-        version = "EG JP"
+        version = "EG JP";
     } else if (steam_gl == 106) {
         version = "Steam Global";
     } else if (steam_jp == 106) {
