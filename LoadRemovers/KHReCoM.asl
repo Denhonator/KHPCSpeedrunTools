@@ -316,7 +316,7 @@ init
 
 reset
 {
-    return current.title == 3;
+    return old.new_game == 1 && current.title == 3;
 }
 
 update
