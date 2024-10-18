@@ -1,4 +1,4 @@
-LUAGUI_NAME = "Unlock Reverse Rebirth"
+LUAGUI_NAME = "recomRebirthUnlock"
 LUAGUI_AUTH = "KSX (edited by deathofall84)"
 LUAGUI_DESC = "Unlock Reverse Rebirth"
 
