@@ -4,7 +4,7 @@ So you are having issues getting things working for one of the Lua tools. Fear n
 ## LuaBackend
 
 ### Install
-The first thing you want to do is ensure that you have the three files from the download from https://github.com/Sirius902/LuaBackend (`lua54.dll`, `DBGHELP.dll`(alternatively renamed to `DINPUT8.dll` for Steamdeck), `LuaBackend.toml`) in the game install folder.
+The first thing you want to do is ensure that you have the three files from the zip download (`DBGHELP.zip`) from https://github.com/Sirius902/LuaBackend/releases (`lua54.dll`, `DBGHELP.dll`(alternatively renamed to `DINPUT8.dll` for Steamdeck), `LuaBackend.toml`) in the game install folder.
 
 For Epic Games that would look like this:
 
@@ -63,3 +63,28 @@ And inside these is where you will place the mods found in this repo! To perform
 Now you can remove the test file and move on to the other mods in this repository! Follow the steps in the game specific readmes for further instructions and happy gaming!
 
 ## LuaFrontend
+
+### Install
+
+Grab the most recent release .rar file from here https://github.com/TopazTK/LuaFrontend/releases and extract it where ever you like. 
+
+### Config
+
+In the extracted folder there is a `config` folder inside this there is a `gameConfig.toml` we need to change a few things here. First, every line that says `Offset` or `Address` replace the elements inside the quotation marks with a 0. Next for each game if there the `Path` value ends in `gl` remove the `gl` from the end.
+
+You should end up with a file that looks like this:
+
+![image](images/luafrontend_config.png)
+
+
+### Scripts
+
+Next in the extracted folder there is a `scripts` folder with a number of folders inside, rename or replace these so that you end up with something that looks like this:
+
+![image](images/luafrontend_folders.png)
+
+And inside these is where you will place the mods found in this repo! To perform a test copy one of the `test_game.lua` (where game is replaced by a game abbreviation) files from the `test_lua` folder of the repo into the game specific folder. Once you have, open that game and run the `LuaFrontend.exe` from the extracted folder. Inside the new window click the `Engine` option at the top and select `Show Console...`, followed by again in the `Engine` option selecting `Start Engine`. You should end up with a window that looks like this:
+
+![image](images/luafrontend_test.png)
+
+Now you can remove the test file and move on to the other mods in this repository! Follow the steps in the game specific readmes for further instructions and happy gaming!
