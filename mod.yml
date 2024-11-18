@@ -90,3 +90,25 @@ assets:
   method: copy
   source:
     - name: ReCoMMods/scripts/io_packages/VersionCheck.lua
+
+## control files for DDD
+- name: ../kh3d/scripts/io_packages/EpicGamesGlobal.lua
+  method: copy
+  source:
+    - name: DDDMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../kh3d/scripts/io_packages/EpicGamesJP.lua
+  method: copy
+  source:
+    - name: DDDMods/scripts/io_packages/EpicGamesJP.lua
+- name: ../kh3d/scripts/io_packages/SteamGlobal.lua
+  method: copy
+  source:
+    - name: DDDMods/scripts/io_packages/SteamGlobal.lua
+- name: ../kh3d/scripts/io_packages/SteamJP.lua
+  method: copy
+  source:
+    - name: DDDMods/scripts/io_packages/SteamJP.lua
+- name: ../kh3d/scripts/io_packages/VersionCheck.lua
+  method: copy
+  source:
+    - name: DDDMods/scripts/io_packages/VersionCheck.lua

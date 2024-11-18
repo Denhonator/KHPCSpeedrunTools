@@ -23,3 +23,16 @@ function importVars(file)
 		end
 	end
 end
+
+if ReadByte(EGSGlobalVersion) == 106 then
+	importVars("EpicGamesGlobal")
+elseif ReadByte(EGSJPVersion) == 106 then
+	importVars("EpicGamesJP")
+elseif ReadByte(SteamGlobalVersion) == 106 then
+	importVars("SteamGlobal")
+elseif ReadByte(SteamJPVersion) == 106 then
+	importVars("SteamJP")
+else
+	canExecute = false
+	ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
+end

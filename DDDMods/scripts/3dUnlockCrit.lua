@@ -7,19 +7,6 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("Dream Drop Distance deteceted")
 		require("VersionCheck")
-		if ReadByte(EGSGlobalVersion) == 106 then
-			importVars("EpicGamesGlobal")
-		-- This version is not common or owned by a maintainer thus can not be checked
-		-- elseif ReadByte(EGSJPVersion) == 106 then
-		-- 	importVars("EpicGamesJP")
-		elseif ReadByte(SteamGlobalVersion) == 106 then
-			importVars("SteamGlobal")
-		elseif ReadByte(SteamJPVersion) == 106 then
-			importVars("SteamJP")
-		else
-			canExecute = false
-			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
-		end
 	else
 		ConsolePrint("Dream Drop Distance not detected, not running script")
 	end
