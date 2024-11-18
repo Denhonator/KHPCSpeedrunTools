@@ -28,9 +28,11 @@ local canOpenTable = {
 }
 
 function _OnInit()
-	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
+	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then
         canExecute = true
 		require("VersionCheck")
+	else
+		ConsolePrint("KH2 not detected, not running script")
 	end
 end
 

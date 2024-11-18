@@ -1,7 +1,11 @@
 # Setting up
 So you are having issues getting things working for one of the Lua tools. Fear not this document will get you squared away!
 
-## LuaBackend
+## Jump to
+- [LuaBackend](#lb)
+
+
+## <a name="lb"></a>LuaBackend
 
 ### Install
 The first thing you want to do is ensure that you have the three files from the zip download (`DBGHELP.zip`) from https://github.com/Sirius902/LuaBackend/releases (`lua54.dll`, `DBGHELP.dll`(alternatively renamed to `DINPUT8.dll` for Steamdeck), `LuaBackend.toml`) in the game install folder.
