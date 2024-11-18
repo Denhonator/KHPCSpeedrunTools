@@ -1,0 +1,24 @@
+title: KH PC Speedrun Tools
+originalAuthor: Denhonator (edits by deathofall84)
+description: A set of lua scripts for speed running the games of the KH series
+assets:
+- name: kh1/scripts/io_packages/EpicGamesGlobal.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: kh1/scripts/io_packages/EpicGamesJP.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/EpicGamesJP.lua
+- name: kh1/scripts/io_packages/SteamGlobal.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/SteamGlobal.lua
+- name: kh1/scripts/io_packages/SteamJP.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/SteamJP.lua
+- name: scripts/io_packages/VersionCheck.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/VersionCheck.lua
