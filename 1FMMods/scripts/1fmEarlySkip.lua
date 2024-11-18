@@ -3,7 +3,6 @@ LUAGUI_AUTH = "denhonator/TopazTK (edited by deathofall84)"
 LUAGUI_DESC = "Allows skipping cutscenes without waiting for them."
 
 local lastFade = 0
-local canExecute = false
 
 function _OnInit()
     if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
