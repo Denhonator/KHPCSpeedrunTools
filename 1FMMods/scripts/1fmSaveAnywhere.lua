@@ -8,7 +8,6 @@ local prevHUD = 0
 local revertCode = false
 local removeWhite = 0
 local lastDeathPointer = 0
-local canExecute = false
 local bossRush = false
 
 function _OnInit()

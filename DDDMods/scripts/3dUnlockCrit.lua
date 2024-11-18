@@ -2,8 +2,6 @@ LUAGUI_NAME = "Unlock Critical Mode"
 LUAGUI_AUTH = "deathofall84 (original by KSX)"
 LUAGUI_DESC = "Unlock Critical Mode"
 
-local canExecute = false
-
 function _OnInit()
 	if GAME_ID == 0xBED4B944 and ENGINE_TYPE == "BACKEND" then
 		canExecute = true
