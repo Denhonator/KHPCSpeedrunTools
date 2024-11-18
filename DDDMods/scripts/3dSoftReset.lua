@@ -2,8 +2,6 @@ LUAGUI_NAME = "dddSoftReset"
 LUAGUI_AUTH = "deathofall84 (original by denhonator)"
 LUAGUI_DESC = "Soft reset with shoulder buttons + start"
 
-local canExecute = false
-
 function _OnInit()
 	if GAME_ID == 0xBED4B944 and ENGINE_TYPE == "BACKEND" then
 		canExecute = true

@@ -12,7 +12,6 @@ local addrs = {}
 
 local used = {}
 
-local canExecute = false
 local posDebugString = 0x3EB1C8
 
 local function Djb2(str)
@@ -172,39 +171,29 @@ function _OnInit()
 		canExecute = true
 		ConsolePrint("KH1 detected, running script")
 		require("VersionCheck")
-		importVars("Rando/enemyTables")
-		if ReadByte(EGSGlobalVersion) == 106 then
-			importVars("EpicGamesGlobal")
-		elseif ReadByte(EGSJPVersion) == 106 then
-			importVars("EpicGamesJP")
-		elseif ReadByte(SteamGlobalVersion) == 106 then
-			importVars("SteamGlobal")
-		elseif ReadByte(SteamJPVersion) == 106 then
-			importVars("SteamJP")
-		else
-			canExecute = false
-			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
-		end
-		seedfile = io.open("randofiles/seed.txt", "r")
-		if seedfile ~= nil then
-			text = seedfile:read()
-			seedstring = text
-			seed = tonumber(text)
-			if seed == nil then
-				seed = Djb2(text)
+		if canExecute then
+			importVars("Rando/enemyTables")
+			seedfile = io.open("randofiles/seed.txt", "r")
+			if seedfile ~= nil then
+				text = seedfile:read()
+				seedstring = text
+				seed = tonumber(text)
+				if seed == nil then
+					seed = Djb2(text)
+				end
+				math.randomseed(seed)
+				ConsolePrint("Found existing seed")
+			else
+				seedfile = io.open("randofiles/seed.txt", "w")
+				local newseed = os.time()
+				math.randomseed(newseed)
+				seedstring = string.format("%d", newseed)
+				seedfile:write(newseed)
+				ConsolePrint("Wrote new seed")
 			end
-			math.randomseed(seed)
-			ConsolePrint("Found existing seed")
-		else
-			seedfile = io.open("randofiles/seed.txt", "w")
-			local newseed = os.time()
-			math.randomseed(newseed)
-			seedstring = string.format("%d", newseed)
-			seedfile:write(newseed)
-			ConsolePrint("Wrote new seed")
+			seedfile:close()
+			AddAddrs()
 		end
-		seedfile:close()
-		AddAddrs()
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
