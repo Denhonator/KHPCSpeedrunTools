@@ -1,20 +1,92 @@
-title: KH PC Speedrun Tools
+title: KH PC Speedrun Tools - Vars and Veersion Checking
 originalAuthor: Denhonator (edits by deathofall84)
-description: A set of lua scripts for speed running the games of the KH series
+description: Installs the needed files to run any of the lua mods from the repo for all games. You will need to register the mods themselves seperately for individual control (we don't want forced install of all mods)
 assets:
-- name: scripts/io_packages/EpicGamesGlobal.lua
+
+## control files for KH1
+- name: ../kh1/scripts/io_packages/EpicGamesGlobal.lua
   method: copy
   source:
     - name: 1FMMods/scripts/io_packages/EpicGamesGlobal.lua
-- name: scripts/io_packages/EpicGamesJP.lua
+- name: ../kh1/scripts/io_packages/EpicGamesJP.lua
   method: copy
   source:
     - name: 1FMMods/scripts/io_packages/EpicGamesJP.lua
-- name: scripts/io_packages/SteamGlobal.lua
+- name: ../kh1/scripts/io_packages/SteamGlobal.lua
   method: copy
   source:
     - name: 1FMMods/scripts/io_packages/SteamGlobal.lua
-- name: scripts/io_packages/SteamJP.lua
+- name: ../kh1/scripts/io_packages/SteamJP.lua
   method: copy
   source:
     - name: 1FMMods/scripts/io_packages/SteamJP.lua
+- name: ../kh1/scripts/io_packages/VersionCheck.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/VersionCheck.lua
+
+## control files for KH2
+- name: ../kh2/scripts/io_packages/EpicGamesGlobal.lua
+  method: copy
+  source:
+    - name: 2FMMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../kh2/scripts/io_packages/EpicGamesJP.lua
+  method: copy
+  source:
+    - name: 2FMMods/scripts/io_packages/EpicGamesJP.lua
+- name: ../kh2/scripts/io_packages/SteamGlobal.lua
+  method: copy
+  source:
+    - name: 2FMMods/scripts/io_packages/SteamGlobal.lua
+- name: ../kh2/scripts/io_packages/SteamJP.lua
+  method: copy
+  source:
+    - name: 2FMMods/scripts/io_packages/SteamJP.lua
+- name: ../kh2/scripts/io_packages/VersionCheck.lua
+  method: copy
+  source:
+    - name: 2FMMods/scripts/io_packages/VersionCheck.lua
+
+## control files for BBS
+- name: ../bbs/scripts/io_packages/EpicGamesGlobal.lua
+  method: copy
+  source:
+    - name: BBSMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../bbs/scripts/io_packages/EpicGamesJP.lua
+  method: copy
+  source:
+    - name: BBSMods/scripts/io_packages/EpicGamesJP.lua
+- name: ../bbs/scripts/io_packages/SteamGlobal.lua
+  method: copy
+  source:
+    - name: BBSMods/scripts/io_packages/SteamGlobal.lua
+- name: ../bbs/scripts/io_packages/SteamJP.lua
+  method: copy
+  source:
+    - name: BBSMods/scripts/io_packages/SteamJP.lua
+- name: ../bbs/scripts/io_packages/VersionCheck.lua
+  method: copy
+  source:
+    - name: BBSMods/scripts/io_packages/VersionCheck.lua
+
+## control files for Re:CoM
+- name: ../Recom/scripts/io_packages/EpicGamesGlobal.lua
+  method: copy
+  source:
+    - name: ReCoMMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../Recom/scripts/io_packages/EpicGamesJP.lua
+  method: copy
+  source:
+    - name: ReCoMMods/scripts/io_packages/EpicGamesJP.lua
+- name: ../Recom/scripts/io_packages/SteamGlobal.lua
+  method: copy
+  source:
+    - name: ReCoMMods/scripts/io_packages/SteamGlobal.lua
+- name: ../Recom/scripts/io_packages/SteamJP.lua
+  method: copy
+  source:
+    - name: ReCoMMods/scripts/io_packages/SteamJP.lua
+- name: ../Recom/scripts/io_packages/VersionCheck.lua
+  method: copy
+  source:
+    - name: ReCoMMods/scripts/io_packages/VersionCheck.lua
