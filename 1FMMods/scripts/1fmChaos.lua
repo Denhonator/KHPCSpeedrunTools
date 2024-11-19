@@ -17,8 +17,6 @@ local baseSeed = 0
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
-		ConsolePrint("KH1 detected, running script")
 		require("VersionCheck")
 		if canExecute then
 			for off = 0, 511 do

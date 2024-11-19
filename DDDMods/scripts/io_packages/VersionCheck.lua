@@ -1,6 +1,6 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 EGSGlobalVersion = 0x8A90A6
--- This is not verified as I do not own the Epic Version for JP
+-- This version is not common or owned by a maintainer thus can not be checked
 -- EGSJPVersion = 0x8A90A6
 SteamGlobalVersion = 0x8A9103
 SteamJPVersion = 0x8A90A3
@@ -23,4 +23,20 @@ function importVars(file)
 			ConsolePrint(string.format("Running with %s!", file))
 		end
 	end
+end
+
+ConsolePrint("Dream Drop Distance deteceted, running script")
+canExecute = true
+if ReadByte(EGSGlobalVersion) == 106 then
+	importVars("EpicGamesGlobal")
+-- This version is not common or owned by a maintainer thus can not be checked
+-- elseif ReadByte(EGSJPVersion) == 106 then
+-- 	importVars("EpicGamesJP")
+elseif ReadByte(SteamGlobalVersion) == 106 then
+	importVars("SteamGlobal")
+elseif ReadByte(SteamJPVersion) == 106 then
+	importVars("SteamJP")
+else
+	canExecute = false
+	ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
 end

@@ -24,6 +24,8 @@ function importVars(file)
 	end
 end
 
+canExecute = true
+ConsolePrint("KH1 detected, running script")
 if ReadByte(EGSGlobalVersion) == 106 then
 	importVars("EpicGamesGlobal")
 elseif ReadByte(EGSJPVersion) == 106 then

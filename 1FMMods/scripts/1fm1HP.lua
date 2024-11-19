@@ -4,8 +4,6 @@ LUAGUI_DESC = "Forces Sora's max HP to 1 and removes beeping noise"
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
-		ConsolePrint("KH1 detected, running script")
 		require("VersionCheck")
 		if canExecute then
 			WriteByte(beepHack, 1)

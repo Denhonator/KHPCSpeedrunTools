@@ -4,8 +4,6 @@ LUAGUI_DESC = "Removes low health beeping noise, works up to max health of 41"
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		ConsolePrint("KH1 detected, running script")
-		canExecute = true
 		require("VersionCheck")
 		if canExecute then
 			WriteByte(beepHack, 1)

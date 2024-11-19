@@ -3,7 +3,7 @@
 btlTyp = 0x2A10384
 inputAddress = 0xBF2120
 location  = 0x716008
-save = 0x9A8830
+save = 0x9A883C
 saveMenuSlot = 0xBECE90
 soraHP = 0x2A22518
 
@@ -12,16 +12,16 @@ gummiSkip = 0x9AC827
 
 -- auto save
 autoSaveAddress = 0x9B98B0
-continue = 0x29FA500
+continue = 0x29FA50C
 loadingIndicator = 0x8EB540
 loadMenu = 0x7425D0
 saveSelect = 0x2616460
 writeLogic = 0x7124A0
 
 -- save anywhere
-abilities = 0x2A226E8
-saveAddress = 0x2A5C124
-valorAddress = 0x2A61A94
+abilities = 0x2A226EA
+saveAddress = 0x2A5C126
+valorAddress = 0x2A61A96
 
 -- soft reset
 rng = 0x7525C0

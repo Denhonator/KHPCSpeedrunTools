@@ -4,8 +4,6 @@ LUAGUI_DESC = "Soft reset with shoulder buttons + start"
 
 function _OnInit()
 	if GAME_ID == 0x9E3134F5 and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
-		ConsolePrint("Re:CoM detected")
 		require("VersionCheck")
 	else
 		ConsolePrint("Re:Chain of Memories not detected, not running script")

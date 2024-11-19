@@ -4,8 +4,6 @@ LUAGUI_DESC = "Makes Hook Ship always appear when conditions are met"
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
-		ConsolePrint("KH1 detected, running script")
 		require("VersionCheck")
 	else
 		ConsolePrint("KH1 not detected, not running script")

@@ -4,8 +4,6 @@ LUAGUI_DESC = "Soft reset with shoulder buttons + start (options)"
 
 function _OnInit()
 	if GAME_ID == 0xBED4B944 and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
-		ConsolePrint("Birth by Sleep detected")
 		require("VersionCheck")
 	else
 		ConsolePrint("Birth by Sleep not detected, not running script")
