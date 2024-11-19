@@ -12,8 +12,6 @@ local addrs = {}
 
 local used = {}
 
-local posDebugString = 0x3EB1C8
-
 local function Djb2(str)
 	hash = 5381
 
