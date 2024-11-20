@@ -1,45 +1,45 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 -- shared
-btlTyp = 0x2A10E84
-inputAddress = 0x29FAD70
-location  = 0x716DF8
-save = 0x9A933C
-saveMenuSlot = 0xBED910
-soraHP = 0x2A23018
+btlTyp = 0x2A0EB04
+inputAddress = 0x29F89F0
+location  = 0x714DB8
+save = 0x9A70BC
+saveMenuSlot = 0xBEB690
+soraHP = 0x2A20C98
 
 -- gummi skip
-gummiSkip = 0x9AD327
+gummiSkip = 0x9AB0A7
 
 -- auto save
-autoSaveAddress = 0x9BA3B0
-continue = 0x29FB00C
-loadMenu = 0x743350
-loadingIndicator = 0x8EC050
-saveSelect = 0x2616DA0
-writeLogic = 0x713438
+autoSaveAddress = 0x9B8130
+continue = 0x29F8C8C
+loadMenu = 0x741320
+loadingIndicator = 0x8E9DA0
+saveSelect = 0x2614A20
+writeLogic = 0x711438
 
 -- save anywhere
-abilities = 0x2A231EA
-saveAddress = 0x2A5CC26
-valorAddress = 0x2A62596
+abilities = 0x2A20E6A
+saveAddress = 0x2A5A8A6
+valorAddress = 0x2A60216
 
 -- soft reset
-rng = 0x753350
-softReset = 0xABA6DA
-spawns = 0x2AE57F8
+rng = 0x751310
+softReset = 0xAB845A
+spawns = 0x2AE3478
 
 -- load save menu
-cutscene = 0x7281C0
-loading = 0x8EC053
-menu = 0x2A10FE0
+cutscene = 0x7261A0
+loading = 0x8E9E03
+menu = 0x2A0EC60
 
 -- laser dome skip
-xemnasHP = 0x2A22B28
+xemnasHP = 0x2A20A28
 
 -- credit skip
-pause = 0xABB2F8
+pause = 0xAB9078
 
 -- auto attack
-autoAttack = 0x2A5C416
-commandMenuItem = 0x2A1013C
-inDialogue = 0x2A15D90
+autoAttack = 0x2A5A096
+commandMenuItem = 0x2A0DDBC
+inDialogue = 0x2A13A10
