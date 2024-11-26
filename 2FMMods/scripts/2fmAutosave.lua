@@ -2,7 +2,6 @@ LUAGUI_NAME = "2fmAutoSave"
 LUAGUI_AUTH = "Sonicshadowsilver2 (edited by deathofall84)"
 LUAGUI_DESC = "Auto save and load auto saves"
 
-local canExecute = false
 local prevContinue = 0
 local blacklist = {
 	"es01", "bb05", "eh20", "eh22", "eh23", "eh24",
@@ -12,21 +11,10 @@ local blacklisted = false
 local loadCount = 0
 
 function _OnInit()
-	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
-        canExecute = true
+	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then
 		require("VersionCheck")
-		if ReadByte(EGSGlobalVersion) == 106 then
-			importVars("EpicGamesGlobal")
-		elseif ReadByte(EGSJPVersion) == 106 then
-			importVars("EpicGamesJP")
-		elseif ReadByte(SteamGlobalVersion) == 106 then
-			importVars("SteamGlobal")
-		elseif ReadByte(SteamJPVersion) == 106 then
-			importVars("SteamJP")
-		else
-			canExecute = false
-			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
-		end
+	else
+		ConsolePrint("KH2 not detected, not running script")
 	end
 end
 

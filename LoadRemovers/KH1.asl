@@ -167,7 +167,7 @@ startup
         settings.Add("destiny_opt", false, "Destiny Islands Day Two (on transition)", "optional_splits");
         settings.Add("leon", true, "Leon", "optional_splits");
         settings.Add("crank", true, "Crank Tower - Fight End", "optional_splits");
-        settings.Add("crank_alt", true, "Crank Tower - Post Fight Cutscene", "optional_splits");
+        settings.Add("crank_alt", false, "Crank Tower - Post Fight Cutscene", "optional_splits");
         settings.Add("sabor_1", true, "Sabor 1", "optional_splits");
         settings.Add("power_wilds", false, "Split after Power Wilds", "optional_splits");
         settings.Add("sabor_2", true, "Sabor 2", "optional_splits");

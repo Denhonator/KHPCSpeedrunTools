@@ -15,55 +15,41 @@ local commandData = {}
 local lastRoom = 99
 local baseSeed = 0
 
-local canExecute = false
-
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		canExecute = true
-		ConsolePrint("KH1 detected, running script")
 		require("VersionCheck")
-		if ReadByte(EGSGlobalVersion) == 106 then
-			importVars("EpicGamesGlobal")
-		elseif ReadByte(EGSJPVersion) == 106 then
-			importVars("EpicGamesJP")
-		elseif ReadByte(SteamGlobalVersion) == 106 then
-			importVars("SteamGlobal")
-		elseif ReadByte(SteamJPVersion) == 106 then
-			importVars("SteamJP")
-		else
-			canExecute = false
-			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
-		end
-		for off = 0, 511 do
-			local anim = ReadArray(anims + (off * 20), 20)
-			if anim[1] >= 200 and anim[1] < 221 and anim[1] ~= 219 then
-				animsData[off + 1] = anim
+		if canExecute then
+			for off = 0, 511 do
+				local anim = ReadArray(anims + (off * 20), 20)
+				if anim[1] >= 200 and anim[1] < 221 and anim[1] ~= 219 then
+					animsData[off + 1] = anim
+				end
 			end
-		end
 
-		for i = 7, 52 do
-			if (i < 28) or (i > 30 and i < 39) or (i > 46) then
-				validCommands[i] = true
+			for i = 7, 52 do
+				if (i < 28) or (i > 30 and i < 39) or (i > 46) then
+					validCommands[i] = true
+				end
 			end
-		end
 
-		local commsA = ReadLong(commandMenuPointer)
-		for i = 0, 99 do
-			if validCommands[i] then
-				commandData[i + 1] = ReadArray(commsA + (i * 16), 16, true)
+			local commsA = ReadLong(commandMenuPointer)
+			for i = 0, 99 do
+				if validCommands[i] then
+					commandData[i + 1] = ReadArray(commsA + (i * 16), 16, true)
+				end
 			end
-		end
 
-		for i = 100, 157 do
-			if not ((i >= 106 and i <= 109) or (i >= 113 and i <= 115)
-			or (i >= 132 and i <= 139) or i == 126 or i == 142
-			or i == 145 or i == 150 or i == 151 or i == 156) then
-				musics[(#musics) + 1] = i
-				musicExists[i] = true
+			for i = 100, 157 do
+				if not ((i >= 106 and i <= 109) or (i >= 113 and i <= 115)
+				or (i >= 132 and i <= 139) or i == 126 or i == 142
+				or i == 145 or i == 150 or i == 151 or i == 156) then
+					musics[(#musics) + 1] = i
+					musicExists[i] = true
+				end
 			end
-		end
 
-		lastBlack = ReadByte(blackFade)
+			lastBlack = ReadByte(blackFade)
+		end
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end

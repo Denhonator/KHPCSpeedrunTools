@@ -2,8 +2,6 @@ LUAGUI_NAME = "2fmGummiSkip"
 LUAGUI_AUTH = "Sonicshadowsilver2 (edited by deathofall84)"
 LUAGUI_DESC = "Open save anywhere"
 
-local canExecute = false
-
 local valor = ""
 local save = ""
 local savedHP = 0
@@ -12,21 +10,10 @@ local hold = false
 local counter = 30
 
 function _OnInit()
-	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then --PC
-        canExecute = true
+	if GAME_ID == 0x431219CC and ENGINE_TYPE == 'BACKEND' then
 		require("VersionCheck")
-		if ReadByte(EGSGlobalVersion) == 106 then
-			importVars("EpicGamesGlobal")
-		elseif ReadByte(EGSJPVersion) == 106 then
-			importVars("EpicGamesJP")
-		elseif ReadByte(SteamGlobalVersion) == 106 then
-			importVars("SteamGlobal")
-		elseif ReadByte(SteamJPVersion) == 106 then
-			importVars("SteamJP")
-		else
-			canExecute = false
-			ConsolePrint("\n\n!!!!!!!! VERSION ERROR !!!!!!!!\n\nVersion check failed, check variable file version numbers against game version")
-		end
+	else
+		ConsolePrint("KH2 not detected, not running script")
 	end
 end
 
