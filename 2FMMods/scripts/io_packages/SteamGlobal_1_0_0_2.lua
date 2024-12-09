@@ -1,7 +1,7 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 -- shared
 btlTyp = 0x2A11404
-inputAddress = 0xBF31A0
+inputAddress = 0x8BB2C0
 location  = 0x717008
 save = 0x9A98BC
 saveMenuSlot = 0xBEDE90

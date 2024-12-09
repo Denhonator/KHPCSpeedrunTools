@@ -12,7 +12,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadShort(inputAddress + 4) == 13 and ReadInt(soraHP) ~= 0 then
+		if ReadShort(inputAddress) == 768 and ReadInt(soraHP) ~= 0 then
 			WriteInt(soraHP, 0)
 		end
 	end
