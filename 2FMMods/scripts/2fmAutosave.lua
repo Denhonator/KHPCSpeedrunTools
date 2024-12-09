@@ -31,8 +31,8 @@ function _OnFrame()
 		end
 	end
 	if canExecute then
-		local input = ReadInt(inputAddress)
-		local inputCheck = input == 8192 or input == 196608
+		local input = ReadShort(inputAddress)
+		local inputCheck = input == 1 or input == 768
 
 		--reset loadCount
 		if ReadByte(loadMenu) == 3 then
@@ -45,13 +45,13 @@ function _OnFrame()
 
 		if ReadInt(saveSelect) == 0 and ReadInt(save) ~= prevSave and inputCheck then
 			local f = io.open("KH2autosave.dat", "rb")
-			if input == 196608 then
+			if input == 768 then
 				f = io.open("KH2autosave2.dat", "rb")
 			end
 			if f ~= nil then
 				WriteString(save - 12, f:read("*a"))
 				f:close()
-				if input == 8192 then
+				if input == 1 then
 					ConsolePrint("Loaded autosave")
 				else
 					ConsolePrint("Loaded backup autosave")

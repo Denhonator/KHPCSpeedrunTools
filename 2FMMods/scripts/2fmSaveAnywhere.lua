@@ -19,7 +19,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadInt(inputAddress) == 212992 then
+		if ReadShort(inputAddress) == 2816 then
 			if valor == "" then
 				valor = ReadString(valorAddress, 46)
 				save = ReadString(saveAddress, 46)

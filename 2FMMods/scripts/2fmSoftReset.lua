@@ -11,7 +11,7 @@ function _OnInit()
 end
 
 function _OnFrame()
-	if canExecute and ReadInt(inputAddress) == 247042 then
+	if canExecute and ReadShort(inputAddress) == 3848 then
 		WriteByte(softReset, 1)
 		WriteInt(rng, 1)
 		WriteByte(spawns, 0)

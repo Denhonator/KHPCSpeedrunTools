@@ -12,7 +12,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		local input = ReadInt(inputAddress) == 134217732
+		local input = ReadShort(inputAddress) == 16384
 		local command = ReadByte(commandMenuItem) == 0
 		local dialog = ReadByte(inDialogue) == 0
 		local inCombat = ReadByte(btlTyp) & 3 > 0
