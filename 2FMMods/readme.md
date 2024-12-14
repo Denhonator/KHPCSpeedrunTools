@@ -13,7 +13,7 @@ Not all of these scripts are allowed in speedruns
 
 ### LuaBackend or LuaFrontend
 - !!! Please follow the instruction ![here](../LUA.md) to setup one of the hook programs to actually run mods then continue !!!
-- Create or copy the `io_packages` folder (can be found inside scripts here) inside of your kh1 scripts folder from the previous install step. (Should have something like scripts/kh1/io_packages)
+- Create or copy the `io_packages` folder (can be found inside scripts here) inside of your kh2 scripts folder from the previous install step. (Should have something like scripts/kh2/io_packages)
 - If you created the folder yourself copy the version lua files for your version from the repo into it, ie. `EGSGlobal_1_0_0_10.lua` for Current English Epic Games.
 - Likewise to the last step copy in the `VersionCheck.lua` file.
 - These two files should live inside `io_packages` which should be inside the game folder inside the `scripts` folder.

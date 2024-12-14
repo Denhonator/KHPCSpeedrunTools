@@ -1,4 +1,4 @@
--- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
+-- -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 -- -- shared
 -- animSpeed = 0x233C24C
 -- beepHack = 0x2698DC
@@ -28,74 +28,74 @@
 -- room = 0x233CB44
 -- saveOpenAddress = 0x232A604
 -- skippable = 0x23944E4
-soraHP = 0x2D5C5CC
-soraHUD = 0x2811E1C
-stateFlag = 0x2866C58
-summoning = 0x2D6092C
-textProg = 0x232D8F4
-warpTrigger = 0x22EB9DC
-warpType1 = 0x233F540
-warpType2 = 0x22EB9E0
-white = 0x233F79C
-world = 0x233FE4C
+-- soraHP = 0x2D592CC
+-- soraHUD = 0x280EBE1C
+-- stateFlag = 0x2863958
+-- summoning = 0x2D5D62C
+-- textProg = 0x232A5F4
+-- warpTrigger = 0x22E86DC
+-- warpType1 = 0x233C240
+-- warpType2 = 0x22E86E0
+-- white = 0x233C49C
+-- world = 0x233CB4C
 
--- rando shared
-ardOff = 0x237C100
-khamaActive = 0x2D37A30
-OCseed = 0x238C780
-roomWarp = 0x233FE74
-soraPointer = 0x2537990
-soraStats = 0x2DE8D16
-theonActive = 0x2D391A0
-worldFlagBase = 0x2DEAE30
-worldWarp = 0x233FE70
+-- -- rando shared
+-- ardOff = 0x2394BB0
+-- khamaActive = 0x2D34730
+-- OCseed = 0x2389480
+-- roomWarp = 0x233CB74
+-- soraPointer = 0x2534680
+-- soraStats = 0x2DE5A06
+-- theonActive = 0x2D35EA0
+-- worldFlagBase = 0x2DE7B20
+-- worldWarp = 0x233CB70
 
--- 4:3
-height = 0x3B3574
+-- -- 4:3
+-- height = 0x3B1534
 
--- achievements
-ach = 0x21AA8A8
+-- -- achievements
+-- ach = 0x21A7628
 
--- auto attack
-attackCommand = 0x52860C
-attInp = 0x2340335
-fireState1 = 0x23D3900
-fireState2 = 0x232D744
-swapped = 0x22D9F7E
+-- -- auto attack
+-- attackCommand = 0x52558C
+-- attInp = 0x233D035
+-- fireState1 = 0x23D0600
+-- fireState2 = 0x232A444
+-- swapped = 0x22D6C7E
 
--- rando chaos
-anims = 0x2D2D0B0
-attackElement = 0x2D27238
-commandMenuPointer = 0x2D366D0
-donaldPointer = 0x2D36C08
-goofyPointer = 0x2D36C10
-moveSpeed = 0x2D5C498
-musicBaseSpeed = 32605
-musicPointer = 0x232D890
-musicSpeedHack = 0xA778B
-soraResist = 0x2D5C508
-weaponSize = 0xD2DF20
+-- -- rando chaos
+-- anims = 0x2D29DB0
+-- attackElement = 0x2D23F38
+-- commandMenuPointer = 0x2D333D0
+-- donaldPointer = 0x2D33908
+-- goofyPointer = 0x2D33910
+-- moveSpeed = 0x2D59298
+-- musicBaseSpeed = 0
+-- musicPointer = 0x232A590
+-- musicSpeedHack = 0xA778B
+-- soraResist = 0x2D59308
+-- weaponSize = 0xD2ACA0
 
--- consistent finishers
-gravBreak = 0x3EC358
-zantHack = 0x2A4948
-zantValue = 44140
+-- -- consistent finishers
+-- gravBreak = 0x3EA148
+-- zantHack = 0x2A2808
+-- zantValue = 0
 
--- early skip
-skipArray1 = 0x1781FC
-skipArray2 = 0x17D043
-skipFlag1 = 0x233F8B8
-skipFlag2 = 0x233FDA0
+-- -- early skip
+-- skipArray1 = 0x17605C
+-- skipArray2 = 0x17AEA3
+-- skipFlag1 = 0x233C5B8
+-- skipFlag2 = 0x233CAA0
 
--- rando enemy
-bossAdjustAddresses = {
-	0x6DB5F4, 0x70D284, 0x233FE94, 0x2D36C20, 0x2D370D0,
-	0x2D37580, 0x2D37EF4, 0x2D38840, 0x2D38854, 0x2D39FB0,
-	0x2D3A460, 0x2D3A910, 0x2D3ADC0, 0x2D3C080, 0x2D3C9E0,
-	0x2D3D340, 0x2D41E40, 0x2D45B30, 0x2D5C6CC, 0x2D5C8CC,
-	0x2D5C9CC, 0x2D5CDCC
+-- -- rando enemy
+-- bossAdjustAddresses = {
+-- 	0x6D8374, 0x70A004, 0x233D034, 0x2D33920, 0x2D33DD0,
+-- 	0x2D34280, 0x2D34BF4, 0x2D35540, 0x2D35554, 0x2D36CB0,
+-- 	0x2D37160, 0x2D37610, 0x2D37AC0, 0x2D38D80, 0x2D396E0,
+-- 	0x2D3A040, 0x2D3EB40, 0x2D42830, 0x2D593CC, 0x2D595CC,
+-- 	0x2D596CC, 0x2D59ACC
 	
-}
+-- }
 enemyAddresses = {
 	0x7E4340, 0x838A40, 0x855140, 0x8A80C0, 0x8A8100,
 	0x8A8140, 0x8CA380, 0x8D2C40, 0x8D4380, 0x8E40C0,
@@ -119,32 +119,32 @@ enemyAddresses = {
 	0xB1A000, 0xB1A4C0, 0xB1C840, 0xB5DD40, 0xB5F4C0,
 	0xB5F780, 0xBB3E40
 }
-bittestRender = 0x232D770
-combo = 0x2DE57B4
-cutsceneFlags = 0x2DEA1E0
-floorStatus = 0x52897C
-glideBarrier = 0x5069D8
-inTournament = 0x238C778
-wall = 0x6DC614
+-- bittestRender = 0x232A470
+-- combo = 0x2DE24B4
+-- cutsceneFlags = 0x2DE6ED0
+-- floorStatus = 0x5258FC
+-- glideBarrier = 0x503948
+-- inTournament = 0x2389480
+-- wall = 0x6D8374
 
--- fast camera
-cameraCenter = 0x2537A34
-cameraInputH = 0x2340360
-cameraInputV = 0x2340364
-curSpeedH = 0x25377D4
-curSpeedV = 0x25377D0
-speed = 0x506AAC
+-- -- fast camera
+-- cameraCenter = 0x2534724
+-- cameraInputH = 0x233D060
+-- cameraInputV = 0x233D064
+-- curSpeedH = 0x25344C4
+-- curSpeedV = 0x25344C0
+-- speed = 0x503A1C
 
--- faster dialogue
-textSpeed = 0x233F55C
-textTrans = 0x22EBA44
+-- -- faster dialogue
+-- textSpeed = 0x233C25C
+-- textTrans = 0x22E8744
 
--- hook ship
-debug1Value = 2
-neverland = 0x2DEABD7
-posDebug1 = 0x232D6A0
-posDebug2 = 0x2537964
-posDebugString = 0x3EA138
+-- -- hook ship
+-- debug1Value = 1
+-- neverland = 0x2DE78C7
+-- posDebug1 = 0x232A3A0
+-- posDebug2 = 0x2534654
+-- posDebugString = 0x3E7F28
 
 -- -- instant gummi
 -- monstro = 0x2DE78CA

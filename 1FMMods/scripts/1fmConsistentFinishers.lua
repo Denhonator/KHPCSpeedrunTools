@@ -12,9 +12,12 @@ end
 
 function _OnFrame()
 	if canExecute then
+		if zantValue == 0 then
+			zantValue = ReadShort(zantHack) + 78
+		end
 		if ReadShort(zantHack) ~= zantValue then
 			WriteFloat(gravBreak, -1.0)
-			WriteShort(zantHack, zantValue) -- 88 offset from original value
+			WriteShort(zantHack, zantValue)
 		end
 	end
 end

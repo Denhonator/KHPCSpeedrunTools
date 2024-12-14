@@ -70,7 +70,7 @@ commandMenuPointer = 0x2D376D0
 donaldPointer = 0x2D37C08
 goofyPointer = 0x2D37C10
 moveSpeed = 0x2D5D498
-musicBaseSpeed = 36701
+musicBaseSpeed = 0
 musicPointer = 0x232E890
 musicSpeedHack = 0xA778B
 soraResist = 0x2D5D508
@@ -79,7 +79,7 @@ weaponSize = 0xD2EF20
 -- consistent finishers
 gravBreak = 0x3ED378
 zantHack = 0x2A4B08
-zantValue = 48100
+zantValue = 0
 
 -- early skip
 skipArray1 = 0x1783BC

@@ -1,7 +1,7 @@
 # KHPCSpeedrunTools
 
 ## Update status
-All content has been updated to work with Epic Games release 1.0.0.10 and Steam 1.0.0.2 aside from Melody of Memory. There is also backwards compatibility for ![KH1](1FMMods) and ![KH2](2FMMods), follow their links for detailed lists of supported versions.
+All content has been updated to work with Epic Games release 1.0.0.10 and Steam 1.0.0.2 aside from Melody of Memory and 0.2. There is also backwards compatibility for ![KH1](1FMMods) and ![KH2](2FMMods), follow their links for detailed lists of supported versions.
 
 ## How to use:
 

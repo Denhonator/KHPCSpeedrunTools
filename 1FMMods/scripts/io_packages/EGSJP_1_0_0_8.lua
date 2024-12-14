@@ -70,7 +70,7 @@ commandMenuPointer = 0x2D366D0
 donaldPointer = 0x2D36C08
 goofyPointer = 0x2D36C10
 moveSpeed = 0x2D5C498
-musicBaseSpeed = 32605
+musicBaseSpeed = 0
 musicPointer = 0x232D890
 musicSpeedHack = 0xA778B
 soraResist = 0x2D5C508
@@ -79,7 +79,7 @@ weaponSize = 0xD2DF20
 -- consistent finishers
 gravBreak = 0x3EC358
 zantHack = 0x2A4948
-zantValue = 44140
+zantValue = 0
 
 -- early skip
 skipArray1 = 0x1781FC
@@ -233,21 +233,21 @@ worldMapLines = 0x2DEABF2
 worldWarps = 0x50E9E8
 
 -- ASL shared
-gummiInventory = 0x2DF4B5C
-magicUnlock = 0x2DE8D54
-party1 = 0x2DE916F
-soraCurAbilities = 0x2DE8D24
+-- gummiInventory = 0x2DF4B5C
+magicUnlock = 0x2DE5A44
+party1 = 0x2DE5E5F
+-- soraCurAbilities = 0x2DE8D24
 
 -- save anywhere
-cam = 0x506AA8
-config = 0x2DFF0E0
-continue = 0x2DFF8E0
-cutSceneAspect = 0x4DD242
-deathCheck = 0x299A20
-saveAnywhere = 0x23541D4
-title = 0x233FDB8
-titlescreenamvtimer = 0x2EE88D4
-titlescreenpicture = 0x2EE45EC
+cam = 0x503A18
+config = 0x2DFBDD0
+continue = 0x2DFC5D0
+cutSceneAspect = 0x4DA202
+deathCheck = 0x2978E0
+saveAnywhere = 0x2350CD4
+title = 0x233CAB8
+titlescreenamvtimer = 0x2EE55E0
+titlescreenpicture = 0x2EE55EC
 
 -- unlock 0 volume
-volumeZero = 0x3D8B04
+volumeZero = 0x3D6ABC
