@@ -1,7 +1,7 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 -- shared
 animSpeed = 0x233FBCC
-beepHack = 0x26E20C
+beepHack = 0x26DECC
 blackFade = 0x4DC718
 buttonTypes = 0x2E20548
 closeMenu = 0x2E941C0
@@ -13,7 +13,7 @@ dialog = 0x299BB08
 fadeBase = 0x233FDD0
 gummiSelect = 0x50707C
 gummiStart = 0x506F90
-hookship = 0xED6A3E
+hookship = 0xED6A1E
 inCutscene = 0x23AB2D0
 inGummi = 0x5075A8 -- differs to cover a change on linux systems
 inputAddress = 0x23407B4
@@ -33,9 +33,9 @@ soraHUD = 0x281249C
 stateFlag = 0x2867364
 summoning = 0x2D60FAC
 textProg = 0x232DF74
-warpTrigger = 0x22EC0AC
+warpTrigger = 0x22EC07C
 warpType1 = 0x233FBC0
-warpType2 = 0x22EC0B0
+warpType2 = 0x22EC080
 white = 0x233FE1C
 world = 0x233FE94
 
@@ -43,25 +43,25 @@ world = 0x233FE94
 ardOff = 0x2382C60
 khamaActive = 0x2D380B0
 OCseed = 0x23BBBF0
-roomWarp = 0x233FEBC
+roomWarp = 0x23404F4
 soraPointer = 0x2537E48
-soraStats = 0x2DE9396
+soraStats = 0x2DE937D
 theonActive = 0x2D39820
 worldFlagBase = 0x2DEB4B0
-worldWarp = 0x233FEB8
+worldWarp = 0x23404F0
 
 -- 4:3
-height = 0x3B3514
+height = 0x3B3504
 
 -- achievements
 ach = 0x21AAE28
 
 -- auto attack
 attackCommand = 0x52890C
+attInp = 0x23407B5
 fireState1 = 0x23D3F80
 fireState2 = 0x232DDC4
-attInp = 0x23407B5
-swapped = 0x4D8632
+swapped = 0x22DA5EE
 
 -- rando chaos
 anims = 0x2D2D730
@@ -70,31 +70,30 @@ commandMenuPointer = 0x2D36D50
 donaldPointer = 0x2D37288
 goofyPointer = 0x2D37290
 moveSpeed = 0x2D5CB18
-musicBaseSpeed = 33021
+musicBaseSpeed = 32925
 musicPointer = 0x232DF20
-musicSpeedHack = 0xA7A5B
+musicSpeedHack = 0xA771B
 soraResist = 0x2D5CB88
 weaponSize = 0xD2E4C0
 
 -- consistent finishers
-gravBreak = 0x3EC5A8
-zantHack = 0x2A6FD8
-zantValue = 34796
+gravBreak = 0x3EC538
+zantHack = 0x2A6C98
+zantValue = 35620
 
 -- early skip
-skipArray1 = 0x17A7DC
-skipArray2 = 0x17F663
+skipArray1 = 0x17A49C
+skipArray2 = 0x17F323
 skipFlag1 = 0x233FEE8
 skipFlag2 = 0x23404D0
 
 -- rando enemy
 bossAdjustAddresses = {
-	0x506DE8, 0x528C7C, 0x528C9C, 0x6DBB74, 0x70CC4C,
-	0x70D804, 0x2340A94, 0x2D372A0, 0x2D37750, 0x2D37C00,
-	0x2D38574, 0x2D38EC0, 0x2D38ED4, 0x2D3A630, 0x2D3AAE0,
-	0x2D3AF90, 0x2D3B440, 0x2D3C700, 0x2D3D060, 0x2D3D9C0,
-	0x2D424C0, 0x2D461B0, 0x2D5CD4C, 0x2D5CF4C, 0x2D5D04C,
-	0x2D5D44C
+	0x6DBB74, 0x70D804, 0x2340A94, 0x2D372A0, 0x2D37750,
+	0x2D37C00, 0x2D38574, 0x2D38EC0, 0x2D38ED4, 0x2D3A630,
+	0x2D3AAE0, 0x2D3AF90, 0x2D3B440, 0x2D3C700, 0x2D3D060,
+	0x2D3D9C0, 0x2D424C0, 0x2D461B0, 0x2D5CD4C, 0x2D5CF4C,
+	0x2D5D04C, 0x2D5D44C
 }
 enemyAddresses = {
 	0x7E48C0, 0x838FC0, 0x8556C0, 0x8A8640, 0x8A8680,
@@ -124,7 +123,7 @@ combo = 0x2DE5E34
 cutsceneFlags = 0x2DEA860
 floorStatus = 0x528C7C
 glideBarrier = 0x506DE8
-inTournament = 0x237F4E0
+inTournament = 0x237F4E4
 wall = 0x6DBB94
 
 -- fast camera
@@ -137,14 +136,14 @@ speed = 0x506CDC
 
 -- faster dialogue
 textSpeed = 0x233FBDC
-textTrans = 0x22EC114
+textTrans = 0x22EC0E4
 
 -- hook ship
-debug1Value = 2
+debug1Value = 1
 neverland = 0x2DEB257
 posDebug1 = 0x232DD20
 posDebug2 = 0x2537E40
-posDebugString = 0x3EA388
+posDebugString = 0x3EA318
 
 -- instant gummi
 monstro = 0x2DEB25A
@@ -187,7 +186,7 @@ lockMenu = 0x232DF80
 magicFlags = 0x2DEAF7E
 magicLevels = 0x2DE97F2
 menuCheck = 0x2E92838
-mermaidKickSpeed = 0x3EFA4C
+mermaidKickSpeed = 0x3EF9DC
 OCCupDialog = 0x2384760
 OCCupUnlock = 0x2DEB160
 oppositeState = 0x2DEB018
@@ -195,7 +194,7 @@ oppositeTrigger = 0x2DEA07D
 party2 = 0x2E205A5
 poohProgress = 0x2DEB0A8
 poohProgress2 = 0x2DEA780
-randoInitCheck = 0x7AC788
+randoInitCheck = 0x7AC708
 RCName = 0x2866D10
 report1 = 0x1D06DA4
 rewardTable = 0x2D2F3E8
@@ -210,11 +209,10 @@ soraAbilityTable = 0x2D26938
 soraAbilityTable2 = 0x2D26868
 soraAbilityTable3 = 0x2D268D0
 soraStatTable = 0x2D26800
-soraStats = 0x2DE937D
 summons = 0x2DE9B30
 summonsReturned = 0x2DEA08C
-superglideBaseSpeed = 1560284
-superglideSpeedHack = 0x2B2A84
+superglideBaseSpeed = 1561020
+superglideSpeedHack = 0x2B2744
 synthItems = 0x5478A0
 synthRequirements = 0x5476C0
 terminusTeleUsable = 0x2380954 -- On: 4378 Off: 4294957296
@@ -244,11 +242,11 @@ cam = 0x506CD8
 config = 0x2DFF760
 continue = 0x2DFFF60
 cutSceneAspect = 0x4DD562
-deathCheck = 0x29C0B0
+deathCheck = 0x29BD70
 saveAnywhere = 0x2354854
 title = 0x23404E8
 titlescreenamvtimer = 0x2EE8BA4
 titlescreenpicture = 0x2EE8BB8
 
 -- unlock 0 volume
-volumeZero = 0x3D8B64
+volumeZero = 0x3D8AF4

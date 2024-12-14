@@ -1,8 +1,10 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 (Epic Games Store)
 -- Global and JP versions currently match
 versions = {
+	"EGSGlobal_1_0_0_8",
 	"EGSGlobal_1_0_0_9",
 	"EGSGlobal_1_0_0_10",
+	"EGSJP_1_0_0_8",
 	"EGSJP_1_0_0_9",
 	"EGSJP_1_0_0_10",
 	"SteamGlobal_1_0_0_1",
@@ -11,8 +13,10 @@ versions = {
 	"SteamJP_1_0_0_2"
 }
 versions_table = {
+	EGSGlobal_1_0_0_8 = 0x0,
 	EGSGlobal_1_0_0_9 = 0x660E04,
 	EGSGlobal_1_0_0_10 = 0x660E44,
+	EGSJP_1_0_0_8 = 0x0,
 	EGSJP_1_0_0_9 = 0x65E898,
 	EGSJP_1_0_0_10 = 0x660E44,
 	SteamGlobal_1_0_0_1 = 0x660E74,
