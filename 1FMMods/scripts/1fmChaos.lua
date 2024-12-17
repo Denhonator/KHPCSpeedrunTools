@@ -116,6 +116,9 @@ local function Randomize()
 	if ReadByte(musicSpeedHack) == 243 then
 		r = math.random(10)
 		n = r == 10 and 12 or r == 1 and -32 or 0
+		if musicBaseSpeed == 0 then
+			musicBaseSpeed = ReadShort(musicSpeedHack + 4)
+		end
 		WriteShort(musicSpeedHack + 4, musicBaseSpeed + n)
 	end
 
@@ -160,7 +163,10 @@ local function Revert()
 	end
 
 	if ReadByte(musicSpeedHack) == 243 then
-		WriteByte(musicSpeedHack + 4, musicBaseSpeed)
+		if musicBaseSpeed == 0 then
+			musicBaseSpeed = ReadShort(musicSpeedHack + 4)
+		end
+		WriteShort(musicSpeedHack + 4, musicBaseSpeed)
 	end
 
 	-- Movement speed

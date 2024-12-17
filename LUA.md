@@ -5,6 +5,7 @@ So you are having issues getting things working for one of the Lua tools. Fear n
 - [LuaBackend](#lb)
 - [LuaFrontend](#lf)
 - [OpenKH Mod Manager](#omm)
+- [Game Specific Mods](#mods)
 
 ## <a name="lb"></a>LuaBackend
 
@@ -156,3 +157,14 @@ For this part we will be adding the desired mods. Once again get into the mod in
 As the last step to the built in route you need to make sure it cross populates the installed mods the the correct run location. Doing so is very simple but very important!
 
 If you are on Steam you can make use of the run related features to start your game, this seems bugged for Epic Games however. In either case you only NEED to click the `Build Only` option in the `Mod Loader` drop down.
+
+## <a name="mods"></a>Game Specific Mods
+
+Follow these links to get to the mods for the given game as well as further documentation on how to use them:
+
+- ![Kingdom Hearts 0.2](02Mods)
+- ![Kingdom Hearts 1](1FMMods)
+- ![Kingdom Hearts 2](2FMMods)
+- ![Kingdom Hearts Birth by Sleep](BBSMods)
+- ![Kingdom Hearts Dream Drop Distance](DDDMods)
+- ![Kingdom Hearts Re: Chain of Memories](ReCoMMods)

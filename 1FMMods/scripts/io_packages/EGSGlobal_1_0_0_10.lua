@@ -1,7 +1,7 @@
 -- Current Versions are 1.0.0.2 (Steam) and 1.0.0.10 Epic Games Store
 -- shared
 animSpeed = 0x23405CC
-beepHack = 0x26BEDC
+beepHack = 0x26C09C
 blackFade = 0x4DD3F8
 buttonTypes = 0x2E20F20
 closeMenu = 0x2E94BA0
@@ -51,16 +51,16 @@ worldFlagBase = 0x2DEBEB0
 worldWarp = 0x2340EF0
 
 -- 4:3
-height = 0x3B4584
+height = 0x3B45A4
 
 -- achievements
 ach = 0x21AB928
 
 -- auto attack
 attackCommand = 0x52960C
+attInp = 0x23413B5
 fireState1 = 0x23D4980
 fireState2 = 0x232E7C4
-attInp = 0x23413B5
 swapped = 0x22DB02E
 
 -- rando chaos
@@ -70,31 +70,30 @@ commandMenuPointer = 0x2D37750
 donaldPointer = 0x2D37C88
 goofyPointer = 0x2D37C90
 moveSpeed = 0x2D5D518
-musicBaseSpeed = 36797
+musicBaseSpeed = 0
 musicPointer = 0x232E910
 musicSpeedHack = 0xA778B
 soraResist = 0x2D5D588
 weaponSize = 0xD2EFA0
 
 -- consistent finishers
-gravBreak = 0x3ED3C8
-zantHack = 0x2A4C88
-zantValue = 47724
+gravBreak = 0x3ED3E8
+zantHack = 0x2A4E48
+zantValue = 0
 
 -- early skip
-skipArray1 = 0x17853C
-skipArray2 = 0x17D383
+skipArray1 = 0x1786FC
+skipArray2 = 0x17D543
 skipFlag1 = 0x2340938
 skipFlag2 = 0x2340E20
 
 -- rando enemy
 bossAdjustAddresses = {
-	0x5079D8, 0x52997C, 0x52999C, 0x6DC674, 0x70D74C,
-	0x70E304, 0x2340F14, 0x2D37CA0, 0x2D38150, 0x2D38600,
-	0x2D38F74, 0x2D398C0, 0x2D398D4, 0x2D3B030, 0x2D3B4E0,
-	0x2D3B990, 0x2D3BE40, 0x2D3D100, 0x2D3DA60, 0x2D3E3C0,
-	0x2D42EC0, 0x2D46BB0, 0x2D5D74C, 0x2D5D94C, 0x2D5DA4C,
-	0x2D5DE4C
+	0x6DC674, 0x70E304, 0x2340F14, 0x2D37CA0, 0x2D38150,
+	0x2D38600, 0x2D38F74, 0x2D398C0, 0x2D398D4, 0x2D3B030,
+	0x2D3B4E0, 0x2D3B990, 0x2D3BE40, 0x2D3D100, 0x2D3DA60,
+	0x2D3E3C0, 0x2D42EC0, 0x2D46BB0, 0x2D5D74C, 0x2D5D94C,
+	0x2D5DA4C, 0x2D5DE4C
 }
 enemyAddresses = {
 	0x7E53C0, 0x839AC0, 0x8561C0, 0x8A9140, 0x8A9180,
@@ -144,7 +143,7 @@ debug1Value = 1
 neverland = 0x2DEBC57
 posDebug1 = 0x232E720
 posDebug2 = 0x25389E4
-posDebugString = 0x3EB1A8
+posDebugString = 0x3EB1C8
 
 -- instant gummi
 monstro = 0x2DEBC5A
@@ -187,7 +186,7 @@ lockMenu = 0x232E98C
 magicFlags = 0x2DEB97E
 magicLevels = 0x2DEA1F2
 menuCheck = 0x2E93218
-mermaidKickSpeed = 0x3F087C
+mermaidKickSpeed = 0x3F088C
 OCCupDialog = 0x239AA30
 OCCupUnlock = 0x2DEBB60
 oppositeState = 0x2DEBA18
@@ -195,7 +194,7 @@ oppositeTrigger = 0x2DEAA7D
 party2 = 0x2E20F65
 poohProgress = 0x2DEBAA8
 poohProgress2 = 0x2DEB180
-randoInitCheck = 0x7AD208
+randoInitCheck = 0x7AD1E8
 RCName = 0x2867710
 report1 = 0x1D07884
 rewardTable = 0x2D2FDE8
@@ -212,8 +211,8 @@ soraAbilityTable3 = 0x2D272D0
 soraStatTable = 0x2D27200
 summons = 0x2DEA530
 summonsReturned = 0x2DEAA8C
-superglideBaseSpeed = 1573212
-superglideSpeedHack = 0x2B0734
+superglideBaseSpeed = 0
+superglideSpeedHack = 0x2B08F4
 synthItems = 0x548580
 synthRequirements = 0x5483A0
 terminusTeleUsable = 0x2396C24 -- On: 4378 Off: 4294957296
@@ -232,7 +231,7 @@ weaponTable = 0x2D2CC68
 worldMapLines = 0x2DEBC72
 worldWarps = 0x50F9E8
 
--- rando some logic - used in ASL
+-- ASL shared
 gummiInventory = 0x2DF5BDC
 magicUnlock = 0x2DE9DD4
 party1 = 0x2DEA1EF
@@ -243,11 +242,11 @@ cam = 0x507AA8
 config = 0x2E00160
 continue = 0x2E00960
 cutSceneAspect = 0x4DE242
-deathCheck = 0x299D60
+deathCheck = 0x299F20
 saveAnywhere = 0x2355254
 title = 0x2340E38
 titlescreenamvtimer = 0x2EE9954
 titlescreenpicture = 0x2EE9968
 
 -- unlock 0 volume
-volumeZero = 0x3D9B74
+volumeZero = 0x3D9B94

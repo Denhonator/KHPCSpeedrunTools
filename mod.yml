@@ -4,29 +4,52 @@ description: Installs the needed files to run any of the lua mods from the repo 
 assets:
 
 ## control files for KH1
-- name: ../kh1/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../kh1/scripts/io_packages/EpicGamesGlobal_1_0_0_8.lua
   method: copy
   source:
-    - name: 1FMMods/scripts/io_packages/EpicGamesGlobal.lua
-- name: ../kh1/scripts/io_packages/EpicGamesJP.lua
+    - name: 1FMMods/scripts/io_packages/EpicGamesGlobal_1_0_0_8.lua
+- name: ../kh1/scripts/io_packages/EpicGamesGlobal_1_0_0_9.lua
   method: copy
   source:
-    - name: 1FMMods/scripts/io_packages/EpicGamesJP.lua
-- name: ../kh1/scripts/io_packages/SteamGlobal.lua
+    - name: 1FMMods/scripts/io_packages/EpicGamesGlobal_1_0_0_9.lua
+- name: ../kh1/scripts/io_packages/EpicGamesGlobal_1_0_0_10.lua
   method: copy
   source:
-    - name: 1FMMods/scripts/io_packages/SteamGlobal.lua
-- name: ../kh1/scripts/io_packages/SteamJP.lua
+    - name: 1FMMods/scripts/io_packages/EpicGamesGlobal_1_0_0_10.lua
+- name: ../kh1/scripts/io_packages/EpicGamesJP_1_0_0_8.lua
   method: copy
   source:
-    - name: 1FMMods/scripts/io_packages/SteamJP.lua
+    - name: 1FMMods/scripts/io_packages/EpicGamesJP_1_0_0_8.lua
+- name: ../kh1/scripts/io_packages/EpicGamesJP_1_0_0_9.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/EpicGamesJP_1_0_0_9.lua
+- name: ../kh1/scripts/io_packages/EpicGamesJP_1_0_0_10.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/EpicGamesJP_1_0_0_10.lua
+- name: ../kh1/scripts/io_packages/SteamGlobal_1_0_0_1.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/SteamGlobal_1_0_0_1.lua
+- name: ../kh1/scripts/io_packages/SteamGlobal_1_0_0_2.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/SteamGlobal_1_0_0_2.lua
+- name: ../kh1/scripts/io_packages/SteamJP_1_0_0_1.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/SteamJP_1_0_0_1.lua
+- name: ../kh1/scripts/io_packages/SteamJP_1_0_0_2.lua
+  method: copy
+  source:
+    - name: 1FMMods/scripts/io_packages/SteamJP_1_0_0_2.lua
 - name: ../kh1/scripts/io_packages/VersionCheck.lua
   method: copy
   source:
     - name: 1FMMods/scripts/io_packages/VersionCheck.lua
 
 ## control files for KH2
-# Not yet supported back to 1.0.0.8
 # - name: ../kh2/scripts/io_packages/EpicGamesGlobal_1_0_0_8.lua
 #   method: copy
 #   source:
