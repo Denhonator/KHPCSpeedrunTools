@@ -2069,6 +2069,10 @@ local function StackAbilities()
 			end
 		end
 
+		if superglideBaseSpeed == 0 then
+			superglideBaseSpeed = ReadInt(superglideSpeedHack)
+		end
+
 		WriteInt(superglideSpeedHack, superglideBaseSpeed + math.max(countedAbilities[3] - 2, 0) * 4)
 
 		WriteFloat(mermaidKickSpeed, 10 + (8 * countedAbilities[2]))
