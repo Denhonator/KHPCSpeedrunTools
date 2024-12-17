@@ -1,6 +1,5 @@
 ## Update status
 All mods have been updated to work with the following versions:
-- Epic Games: 1.0.0.8 (Global + JP)
 - Epic Games: 1.0.0.9 (Global + JP)
 - Epic Games: 1.0.0.10 (Global + JP)
 - Steam: 1.0.0.1 (Global + JP)
