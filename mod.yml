@@ -50,14 +50,14 @@ assets:
     - name: 1FMMods/scripts/io_packages/VersionCheck.lua
 
 ## control files for KH2
-- name: ../kh2/scripts/io_packages/EpicGamesGlobal_1_0_0_8.lua
-  method: copy
-  source:
-    - name: 2FMMods/scripts/io_packages/EpicGamesGlobal_1_0_0_8.lua
-- name: ../kh2/scripts/io_packages/EpicGamesJP_1_0_0_8.lua
-  method: copy
-  source:
-    - name: 2FMMods/scripts/io_packages/EpicGamesJP_1_0_0_8.lua
+# - name: ../kh2/scripts/io_packages/EpicGamesGlobal_1_0_0_8.lua
+#   method: copy
+#   source:
+#     - name: 2FMMods/scripts/io_packages/EpicGamesGlobal_1_0_0_8.lua
+# - name: ../kh2/scripts/io_packages/EpicGamesJP_1_0_0_8.lua
+#   method: copy
+#   source:
+#     - name: 2FMMods/scripts/io_packages/EpicGamesJP_1_0_0_8.lua
 - name: ../kh2/scripts/io_packages/EpicGamesGlobal_1_0_0_9.lua
   method: copy
   source:
