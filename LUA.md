@@ -1,5 +1,5 @@
 # Setting up
-So you are having issues getting things working for one of the Lua tools. Fear not this document will get you squared away! Follow ONE of the bellow setups for a Lua tool, then carry on into game specific mods!
+So you are having issues getting things working for one of the Lua tools. Fear not this document will get you squared away! Follow ONE of the bellow setups for a Lua tool, then carry on into game specific mods! This is step one and the game specific document is step two.
 
 ## Disclaimer
 If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md) instead as there are minor changes.
@@ -84,39 +84,59 @@ A setup that includs Kingdom Hearts 1, 2, Re: Chain of Memories, and Birth by Sl
 
 As a last step we are going to run a test. For this example we will be using Kingdom Hearts 1 but any of the other games can be directly swapped.
 
-- In the newly created `kh1` folder copy the `test_kh1.lua` found [here](test_lua)
+- In the newly created `kh1` folder copy the `test_kh1.lua` found in the [test_lua](test_lua) folder
 - Boot the game either through Steam or Epic Games
 - Start up Kingdom Hearts 1 from the KH Launcher
 - Once KH 1 is loaded Press `F2`
-- You will know you are good to go if you get a window that looks like this: ![image](images/backend_terminal.png)
+- You will know you are good to go if you get a window that looks like this:  
+![image](images/backend_terminal.png)
 - To clean up delete `test_kh1.lua` and continue from one of the [game specific links](#mods)
+
+
 
 ## <a name="lf"></a>LuaFrontend
 
 ### Install
 
-Grab the most recent release .rar file from here https://github.com/TopazTK/LuaFrontend/releases and extract it where ever you like. 
+Grab the most recent release .rar file from [here](https://github.com/TopazTK/LuaFrontend/releases) and extract it wherever you like.
 
 ### Config
 
-In the extracted folder there is a `config` folder inside this there is a `gameConfig.toml` we need to change a few things here. First, every line that says `Offset` or `Address` replace the elements inside the quotation marks with a 0. Next for each game if there the `Path` value ends in `gl` remove the `gl` from the end.
+- Open the newley extraced folder
+- Open the `config` folder inside
+- Open the `gameConfig.toml` file from this folder in a text editor (notepade for example)
+- Set each `Offset` and `Address` line to `"0"`
+- (Optional, but recommended for this guide) Change the `Path` lines that include a `gl` to remove the `gl`
 
-You should end up with a file that looks like this:
+You should end up with a file that looks like this:  
 
 ![image](images/luafrontend_config.png)
 
 
 ### Scripts
 
-Next in the extracted folder there is a `scripts` folder with a number of folders inside, rename or replace these so that you end up with something that looks like this:
-
+- Go back to the top level of the extracted folder (should be the folder named `LuaFrontend.v1.15` or something similar unless you renamed it)
+- Open the `scripts` folder
+- Rename or replace the folders here to match what you did in the `Path` lines from the config step so that you end up with something that looks like this:  
 ![image](images/luafrontend_folders.png)
 
-And inside these is where you will place the mods found in this repo! To perform a test copy one of the `test_game.lua` (where game is replaced by a game abbreviation) files from the `test_lua` folder of the repo into the game specific folder. Once you have, open that game and run the `LuaFrontend.exe` from the extracted folder. Inside the new window click the `Engine` option at the top and select `Show Console...`, followed by again in the `Engine` option selecting `Start Engine`. You should end up with a window that looks like this:
 
+### Testing
+
+As a last step we are going to run a test. For this example we will be using Kingdom Hearts 1 but any of the other games can be directly swapped.
+
+- In the newly created `kh1` folder copy the `test_kh1.lua` found in the [test_lua](test_lua) folder
+- Boot the game either through Steam or Epic Games
+- Start up Kingdom Hearts 1 from the KH Launcher
+- Once KH 1 is loaded, run `LuaFrontend.exe` from the extracted folder
+- Inside the new window click the `Engine` option in the top left
+- Select `Show Console...`
+- Click `Engine` again
+- Select `Start Engine`
+- You should end up with a window that looks like this:  
 ![image](images/luafrontend_test.png)
+- To clean up delete `test_kh1.lua` and continue from one of the [game specific links](#mods)
 
-Now you can remove the test file and move on to the other mods in this repository! Follow the steps in the game specific readmes for further instructions and happy gaming!
 
 ## <a name="omm"></a>Open KH Mod Manager
 
