@@ -38,11 +38,11 @@ If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md
 
 For Epic Games it should end up looking like this:
 
-[image](images/epic_install.png)
+![image](images/epic_install.png)
 
 For Steam that would look like this:
 
-[image](images/steam_install.png)
+![image](images/steam_install.png)
 
 #### Steamdeck extra steps
 - Rename the `DBGHELP.dll` file to `DINPUT8.dll` that you placed in the game install folder.
@@ -54,14 +54,14 @@ Our next goal is to ensure a proper `LuaBackend.toml` file setup:
 	- We will be setting the `game_docs` line, this will be relative to YOUR documents folder so some changes may be reflected
 	- For Epic Games:
 		- You should have something like `C:\Users\<your_user_name>\Documents\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this: [image](images/epic_docs.png)
+		- It will look something like this: ![image](images/epic_docs.png)
 	- For Steam:
 		- You should have something like `C:\Users\<your_user_name>\Documents\My Games\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this: [image](images/steam_docs.png)
+		- It will look something like this: ![image](images/steam_docs.png)
 	- This is the same as the path for the `game data` folder we opened in prep
 	- Note after this you should have ONE `game_docs` line per game that does not start with a `#` matching what is described above, any additional `game_docs` lines can stay as long as they start with `#` and a space or be deleted entirely.
-	- For Epic Games this looks like: [image](images/epic_toml.png)
-	- For Steam this looks like: [image](images/steam_toml.png)
+	- For Epic Games this looks like: ![image](images/epic_toml.png)
+	- For Steam this looks like: ![image](images/steam_toml.png)
 
 ### Scripts
 From here on we will be in the `game data` folder we opened earlier.
@@ -74,7 +74,7 @@ From here on we will be in the `game data` folder we opened earlier.
 
 A setup that includs Kingdom Hearts 1, 2, Re: Chain of Memories, and Birth by Sleep will look like this:
 
-[image](images/scripts_folder.png)
+![image](images/scripts_folder.png)
 
 ### Testing
 
@@ -84,7 +84,7 @@ As a last step we are going to run a test. For this example we will be using Kin
 - Boot the game either through Steam or Epic Games
 - Start up Kingdom Hearts 1 from the KH Launcher
 - Once KH 1 is loaded Press `F2`
-- You will know you are good to go if you get a window that looks like this: [image](images/backend_terminal.png)
+- You will know you are good to go if you get a window that looks like this: ![image](images/backend_terminal.png)
 - To clean up delete `test_kh1.lua` and continue from one of the [game specific links](#mods)
 
 ## <a name="lf"></a>LuaFrontend
@@ -99,18 +99,18 @@ In the extracted folder there is a `config` folder inside this there is a `gameC
 
 You should end up with a file that looks like this:
 
-[image](images/luafrontend_config.png)
+![image](images/luafrontend_config.png)
 
 
 ### Scripts
 
 Next in the extracted folder there is a `scripts` folder with a number of folders inside, rename or replace these so that you end up with something that looks like this:
 
-[image](images/luafrontend_folders.png)
+![image](images/luafrontend_folders.png)
 
 And inside these is where you will place the mods found in this repo! To perform a test copy one of the `test_game.lua` (where game is replaced by a game abbreviation) files from the `test_lua` folder of the repo into the game specific folder. Once you have, open that game and run the `LuaFrontend.exe` from the extracted folder. Inside the new window click the `Engine` option at the top and select `Show Console...`, followed by again in the `Engine` option selecting `Start Engine`. You should end up with a window that looks like this:
 
-[image](images/luafrontend_test.png)
+![image](images/luafrontend_test.png)
 
 Now you can remove the test file and move on to the other mods in this repository! Follow the steps in the game specific readmes for further instructions and happy gaming!
 
@@ -144,7 +144,7 @@ For this option ensure that there is a `mod` folder inside your `openkh` folder 
 
 Inside the above folder you will want a `scripts` folder and this will be where you place any `.lua` files! Copy and paste in the `io_packages` folder from the game specific folder here and any `.lua` mods you want! You should end up looking something like this:
 
-[image](images/omm_scripts_folder.png)
+![image](images/omm_scripts_folder.png)
 
 #### Built in Add
 This is only Partially supported by this repo natively as we don't want it to install ALL mods across all games by force, so there are three parts:
@@ -161,7 +161,7 @@ The required files portion only needs to be done once to work across all games, 
 
 We will first grab the required files through a repo add. Open the mod install window with the green plus, from the mods drop down, or the appropriate keyboard shortcut. In the new window put in the repo info (Denhonator/KHPCSpeedrunTools) like so:
 
-[image](images/repo_install.png)
+![image](images/repo_install.png)
 
 Feel free to set this to auto update, to make sure your mods stay working at all times! This part will install the Version checking lua files as well as the variable files that go with each version across all of the games!
 
