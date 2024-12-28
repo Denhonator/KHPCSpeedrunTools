@@ -1,6 +1,9 @@
 # Setting up
 So you are having issues getting things working for one of the Lua tools. Fear not this document will get you squared away! Follow ONE of the bellow setups for a Lua tool, then carry on into game specific mods!
 
+## Before you start
+If you have not already, or run into language you are unfamiliar with go read through the [glossary](GLOSSARY.md) for terms that are used throughout. If there is word or short hand use that is still unclear please reach out so it can be add!
+
 ## Jump to
 - [LuaBackend](#lb)
 - [LuaFrontend](#lf)

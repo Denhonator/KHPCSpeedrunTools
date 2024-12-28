@@ -92,8 +92,6 @@ As a last step we are going to run a test. For this example we will be using Kin
 ![image](images/backend_terminal.png)
 - To clean up delete `test_kh1.lua` and continue from one of the [game specific links](#mods)
 
-
-
 ## <a name="lf"></a>LuaFrontend
 
 ### Install
@@ -120,7 +118,6 @@ You should end up with a file that looks like this:
 - Rename or replace the folders here to match what you did in the `Path` lines from the config step so that you end up with something that looks like this:  
 ![image](images/luafrontend_folders.png)
 
-
 ### Testing
 
 As a last step we are going to run a test. For this example we will be using Kingdom Hearts 1 but any of the other games can be directly swapped.
@@ -137,45 +134,40 @@ As a last step we are going to run a test. For this example we will be using Kin
 ![image](images/luafrontend_test.png)
 - To clean up delete `test_kh1.lua` and continue from one of the [game specific links](#mods)
 
-
 ## <a name="omm"></a>Open KH Mod Manager
 
 ### Install
-Grab the most recent release .zip file from here https://github.com/OpenKH/OpenKh/releases and extract it where ever you like.
-
-Once you have it unzipped, find the `OpenKh.Tools.ModsManager.exe` and start it up, if it is the first time it will run through their wizard. If you change platforms or languages at a later point go through the wizard again to change the configurations. 
-
-In the wizard:
-- Choose `PC Release`, your language, and your platform and click `Detect Instillations` then click `Next`.
-- If you intend to use any non `.lua` mods (things from other creators like visual mods), select the game collection at the top and go ahead and add Panacea on this page otherwise just click `Next`.
-- Make sure to select the proper game collection on this page, tick the boxes for any games you plan to have mods for, and click `Install and Configure Lua Backend`. Follow up with hitting `Next` again.
-- Once again if you plan to have any non `.lua` mods you will need to follow the steps on this stage to extract the game assets for moddification. This page is only for people using things not included in this repo. Tick the `Skip Game Extraction` box and click `Next` in all basic `.lua` use cases.
-- On the last page click `Finish`!
-
-* As a note the mod manager may crash out at this stage if being configured for Epic Games this is fine, just boot it again.
+Grab the most recent release .zip file from [here](https://github.com/OpenKH/OpenKh/releases) and extract it where ever you like.
 
 ### Config
+- Open the newly unzipped folder, find and run `OpenKh.Tools.ModsManager.exe`
+- If it is the first time it will run through their wizard. If you change platforms or languages at a later point go through the wizard again to change the configurations. 
+- In the wizard:
+	- Choose `PC Release`, your language, and your platform and click `Detect Instillations` then click `Next`.
+	- If you intend to use any non `.lua` mods (things from other creators like visual mods), select the game collection at the top and go ahead and add Panacea on this page otherwise just click `Next`.
+	- Make sure to select the proper game collection on this page, tick the boxes for any games you plan to have mods for, and click `Install and Configure Lua Backend`. Follow up with hitting `Next` again.
+	- Once again if you plan to have any non `.lua` mods you will need to follow the steps on this stage to extract the game assets for moddification. This page is only for people using things not included in this repo. Tick the `Skip Game Extraction` box and click `Next` in all basic `.lua` use cases.
+	- On the last page click `Finish`!
+	- As a note the mod manager may crash out at this stage if being configured for Epic Games this is fine, just boot it again.
+
+### Scripts
 Up to this point you have now setup all of the required pieces to install the mods, now we just need to dump the files into the right place. You have two options from here. Copy paste OR the built in add features.
 
 #### Copy paste
-For this option ensure that there is a `mod` folder inside your `openkh` folder and inside said `mod` folder you will want to have a folder for each game you intend to play matching to these names:
-
-- `kh1`
-- `kh2`
-- `bbs`
-- `Recom`
-- `kh3d`
-
-Inside the above folder you will want a `scripts` folder and this will be where you place any `.lua` files! Copy and paste in the `io_packages` folder from the game specific folder here and any `.lua` mods you want! You should end up looking something like this:
-
-![image](images/omm_scripts_folder.png)
+- Check that a the `mod` folder exists inside the extracted folder
+	- If it does not create a new folder called `mod`
+- Check that inside the `mod` folder the following folders exist and if not create them:
+	- `kh1`
+	- `kh2`
+	- `bbs`
+	- `Recom`
+	- `kh3d`
+- Check that inside each of the above folders a `scripts` folder exists and if not create them
 
 #### Built in Add
-This is only Partially supported by this repo natively as we don't want it to install ALL mods across all games by force, so there are three parts:
+!!! This approach will actually put you part way into the steps detailed in the game specific pages as it is automated !!!
 
-- Required Files
-- Mods
-- Build
+This is only partially supported by this repo natively as we don't want it to install ALL mods across all games by force.
 
 The required files portion only needs to be done once to work across all games, but make sure to keep it up to date if you switch between games.
 
@@ -183,23 +175,30 @@ The required files portion only needs to be done once to work across all games, 
 
 !!!!! ONLY DO THIS STEP ONCE !!!!!
 
-We will first grab the required files through a repo add. Open the mod install window with the green plus, from the mods drop down, or the appropriate keyboard shortcut. In the new window put in the repo info (Denhonator/KHPCSpeedrunTools) like so:
-
+- Open the mod install window with the green plus, from the mods drop down, or the appropriate keyboard shortcut
+- In the new window put in the repo info (Denhonator/KHPCSpeedrunTools) like so:  
 ![image](images/repo_install.png)
+- Feel free to set this to auto update, to make sure your mods stay working at all times!
+- This part will install the Version checking lua files as well as the variable files that go with each version across all of the games! (the previously noted extras that other parts of this guide do not)
 
-Feel free to set this to auto update, to make sure your mods stay working at all times! This part will install the Version checking lua files as well as the variable files that go with each version across all of the games!
+##### Testing
 
-##### Mods
-
-For this part we will be adding the desired mods. Once again get into the mod install window mentioned above (green plus, drop down, or shortcut). This time select the `Select and install Mod Archive or Lua Script` button. You should now have a folder from the required files section that contains the full repository, something like `C:\Users\chuds\Downloads\openkh\mods\kh1\Denhonator\KHPCSpeedrunTools`. This has all of the mods for all of the games, select the game you want then navigate to `scripts` folder to find a full list of the available mods (`.lua` files). Select any file from this list and click open.
-
-##### Build
-
-!!!!! DO THIS EVERY TIME YOU ADD or REMOVE A MOD !!!!!
-
-As the last step to the built in route you need to make sure it cross populates the installed mods the the correct run location. Doing so is very simple but very important!
-
-If you are on Steam you can make use of the run related features to start your game, this seems bugged for Epic Games however. In either case you only NEED to click the `Build Only` option in the `Mod Loader` drop down.
+- Once again get into the mod install window mentioned above (green plus, drop down, or shortcut)
+- Select the `Select and install Mod Archive or Lua Script` button
+- Navigate into the `mods` folder and to your currently selected game folder, for our example `kh1`
+- You should find a new folder here that was downloaded in the last step, `Denhonator`, open it.
+- Open `KHPCSpeedrunTools` (this has all of the content of this repo)
+- Open test_lua
+- Select `test_kh1.lua` (or the one to your game)
+- Open the `Mod Loader` drop down
+- Select `Build Only` option
+- This will cross populate the newly added mod file
+- Launch Kingdom Hearts through Steam or Epic Games
+- Launch Kingdom Hearts 1 (or the game you are using)
+- Once the game is loaded press `F2`
+- You will know you are good to go if you get a window that looks like this:  
+![image](images/backend_terminal.png)
+- To clean up remove `1fmTest` via the minus, menu option, or keyboard shortcut and continue from one of the [game specific links](#mods)
 
 ## <a name="mods"></a>Game Specific Mods
 

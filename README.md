@@ -5,7 +5,7 @@ All content has been updated to work with Epic Games release 1.0.0.10 and Steam 
 
 ## How to use
 
-Before you get started you may want to familiarize yourself with some terminology found [here](GLOSSARY.md).
+Before you get started you may want to familiarize yourself with some terminology found [here](GLOSSARY.md). If there is word or short hand use that is still unclear please reach out so it can be add!
 
 Download files from the repository in one of the following ways:
 - Click the green Code button and download the repository as zip
