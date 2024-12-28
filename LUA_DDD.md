@@ -1,9 +1,6 @@
 # Setting up
 So you are having issues getting things working for one of the Lua tools. Fear not this document will get you squared away! Follow ONE of the bellow setups for a Lua tool, then carry on into game specific mods!
 
-## Disclaimer
-If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md) instead as there are minor changes.
-
 ## Jump to
 - [LuaBackend](#lb)
 - [LuaFrontend](#lf)
@@ -12,80 +9,64 @@ If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md
 
 ## <a name="lb"></a>LuaBackend
 
-### Prep
-- First locate your game install folder:
-	- For Epic Games:
-		- Open the Epic Games Launcher
-		- Go to `Library`
-		- Right click the game
-		- Click `Manage`
-		- Click the magnifying glass on the `Instillation` line
-	- For Steam:
-		- Open Steam
-		- Select the game from your `Library`
-		- Click the gear icon and select `Properties`
-		- Select the `Installed Files` tab
-		- Click the `Browse...` button
-- In another file explorer window open your `Documents` folder
-	- For Epic Games:
-		- You should see a folder named `KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- Open this folder (this is the `game data` folder moving forward)
-	- For Steam:
-		- You should see a `My Games` folder
-		- Open `My Games` and you should now see a folder named `KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- Open this folder (this is the `game data` folder moving forward)
-- Next download `DBGHELP.zip` from [here](https://github.com/Sirius902/LuaBackend/releases) and unzip the contents into the game install folder you just found. This will unpack three files, `DBGHELP.dll`, `lua54.dll`, and `LuaBackend.toml`.
+### Install
+The first thing you want to do is ensure that you have the three files from the zip download (`DBGHELP.zip`) from https://github.com/Sirius902/LuaBackend/releases (`lua54.dll`, `DBGHELP.dll`(alternatively renamed to `DINPUT8.dll` for Steamdeck), `LuaBackend.toml`) in the game install folder.
 
-For Epic Games it should end up looking like this:
+For Epic Games that would look like this:
 
 [image](images/epic_install.png)
+
+To get there open the Epic Games Launcher, go to your `Library`, right click the game and click on `Manage`, on the `Instillation` line click on the folder with a magnifying glass.
 
 For Steam that would look like this:
 
 [image](images/steam_install.png)
 
-#### Steamdeck extra steps
-- Rename the `DBGHELP.dll` file to `DINPUT8.dll` that you placed in the game install folder.
-- In the `General` section of game properties on Steam, add the following as the `Launch Options`: `WINEDLLOVERRIDES="dinput8=n,b" %command%`
+To get there open Steam, go to the `Properties` for the game, go to the `Installed Files` tab of this menu, and click the `Browse...` button.
 
 ### Config
-Our next goal is to ensure a proper `LuaBackend.toml` file setup:
-- Open `LuaBackend.toml` in a text editor (notepade for example)
-	- We will be setting the `game_docs` line, this will be relative to YOUR documents folder so some changes may be reflected
-	- For Epic Games:
-		- You should have something like `C:\Users\<your_user_name>\Documents\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this: [image](images/epic_docs.png)
-	- For Steam:
-		- You should have something like `C:\Users\<your_user_name>\Documents\My Games\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this: [image](images/steam_docs.png)
-	- This is the same as the path for the `game data` folder we opened in prep
-	- Note after this you should have ONE `game_docs` line per game that does not start with a `#` matching what is described above, any additional `game_docs` lines can stay as long as they start with `#` and a space or be deleted entirely.
-	- For Epic Games this looks like: [image](images/epic_toml.png)
-	- For Steam this looks like: [image](images/steam_toml.png)
+Once this step is complete you want to ensure that you have the correct `game_docs` line inside the .toml file! This points to the folder that the game uses to save data.
+
+For Epic Games that path will look like this:
+`KINGDOM HEARTS HD 1.5+2.5 ReMIX`
+
+Since the save location looks like this, with your user name swapped and maybe a different drive:
+
+[image](images/epic_docs.png)
+
+For Steam that path will look like this:
+`My Games/KINGDOM HEARTS HD 1.5+2.5 ReMIX`
+
+Since the save location looks like this, with your user name swapped and maybe a different drive:
+
+[image](images/steam_docs.png)
+
+Note after this you should have ONE `game_docs` line per game that does not start with a `#` in the .toml file matching what is described above, any additional `game_docs` lines can stay as long as they start with `#` and a space.
+
+For Epic Games this looks like:
+
+[image](images/epic_toml.png)
+
+For Steam this looks like:
+
+[image](images/steam_toml.png)
+
+(The above is the setup for all applicable games aside from Dream Drop Distance, for that all of the same steps apply except where `KINGDOM HEARTS HD 1.5+2.5 ReMIX` is used is swapped with `KINGDOM HEARTS HD 2.8 Final Chapter Prologue` and `KH_1.5_2.5` is swapped for `KH_2.8`.)
 
 ### Scripts
-From here on we will be in the `game data` folder we opened earlier.
-- Create a new folder called `scripts`
-- Inside the new `scripts` folder add the following for each game you wish to have mods for:
-	- KH1: Create a new folder called `kh1`
-	- KH2: Create a new folder called `kh2`
-	- BBS: Create a new folder called `bbs`
-	- ReCoM: Create a new folder called `recom`
+From here you want to make sure you have the `scripts` folder as seen in the last screenshots. Now inside that folder we will be creating a folder per game you are trying to add mods for!
 
-A setup that includs Kingdom Hearts 1, 2, Re: Chain of Memories, and Birth by Sleep will look like this:
+For Kingdom Hearts 1, 2, Re: Chain of Memories, and Birth by Sleep that looks like this:
 
 [image](images/scripts_folder.png)
 
-### Testing
+(In the case of Dream Drop Distance you will want a folder named `kh3d` instead of any of the above names. This will land in the 2.8 packs save folder as is called out above.)
 
-As a last step we are going to run a test. For this example we will be using Kingdom Hearts 1 but any of the other games can be directly swapped.
+And inside these is where you will place the mods found in this repo! To perform a test copy one of the `test_game.lua` (where game is replaced by a game abbreviation) files from the `test_lua` folder of the repo into the game specific folder. Once you have, open that game and press `F2`. You will know you are good to go if you get a window that looks like this:
 
-- In the newly created `kh1` folder copy the `test_kh1.lua` found [here](test_lua)
-- Boot the game either through Steam or Epic Games
-- Start up Kingdom Hearts 1 from the KH Launcher
-- Once KH 1 is loaded Press `F2`
-- You will know you are good to go if you get a window that looks like this: [image](images/backend_terminal.png)
-- To clean up delete `test_kh1.lua` and continue from one of the [game specific links](#mods)
+[image](images/backend_terminal.png)
+
+Now you can remove the test file and move on to the other mods in this repository! Follow the steps in the game specific readmes for further instructions and happy gaming!
 
 ## <a name="lf"></a>LuaFrontend
 
