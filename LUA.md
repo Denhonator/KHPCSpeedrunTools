@@ -54,14 +54,18 @@ Our next goal is to ensure a proper `LuaBackend.toml` file setup:
 	- We will be setting the `game_docs` line, this will be relative to YOUR documents folder so some changes may be reflected
 	- For Epic Games:
 		- You should have something like `C:\Users\<your_user_name>\Documents\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this: ![image](images/epic_docs.png)
+		- It will look something like this:
+		![image](images/epic_docs.png)
 	- For Steam:
 		- You should have something like `C:\Users\<your_user_name>\Documents\My Games\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this: ![image](images/steam_docs.png)
+		- It will look something like this:
+		![image](images/steam_docs.png)
 	- This is the same as the path for the `game data` folder we opened in prep
 	- Note after this you should have ONE `game_docs` line per game that does not start with a `#` matching what is described above, any additional `game_docs` lines can stay as long as they start with `#` and a space or be deleted entirely.
-	- For Epic Games this looks like: ![image](images/epic_toml.png)
-	- For Steam this looks like: ![image](images/steam_toml.png)
+	- For Epic Games this looks like:
+	![image](images/epic_toml.png)
+	- For Steam this looks like:
+	![image](images/steam_toml.png)
 
 ### Scripts
 From here on we will be in the `game data` folder we opened earlier.
