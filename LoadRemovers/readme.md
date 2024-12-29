@@ -18,7 +18,7 @@ For all splitters aside from Melody of Memory these files are linked directly in
 - !!! Note: This method will not automatically update when changes are made here, you will need to redownload the file !!!
 - Download the file for the game you wish to run from this folder (eg. `KH1.asl`)
 - Add the `Scriptable Auto Splitter` component to your layout in LiveSplit
-- ![iamge](../images/live_split_layout.png)
+- ![image](../images/live_split_layout.png)
 - Double click the newly added component browse to the downloaded .asl file, it should end up looking something like this:
 - ![image](../images/live_split_browse.png)
 - Once selected you should get the settings populating
