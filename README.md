@@ -26,12 +26,12 @@ Note that using mods that affect a speedrun are not allowed unless specifically 
 
 ### Load Removers
 
-Add the `Scriptable Auto Splitter` component into your Livesplit layout, and select the .asl file for your game. Ensure you have a timer set to show game time. Some games do not support load removed time (LRT) leader boards, check your games leader board to be sure. You may still use a load remover in these cases but you must ensure your recording includes the "real time" timing method for submission. For more detailed instructions and screenshots see [here](LoadRemovers/readme.md)
+Add the `Scriptable Auto Splitter` component into your Livesplit layout, and select the .asl file for your game. Ensure you have a timer set to show game time. Some games do not support load removed time (LRT) leader boards, check your games leader board to be sure. You may still use a load remover in these cases but you must ensure your recording includes the "real time" timing method for submission. For more detailed instructions and screenshots see [here](LoadRemovers/readme.md)!
 
 
 ## Join the Action
 
-The speedrunning community for the series has a discord where these scripts, casual play and more are discussed, join us [here](https://discord.gg/5GjHsyQT8R)
+The speedrunning community for the series has a discord where these scripts, casual play and more are discussed, join us [here](https://discord.gg/5GjHsyQT8R)!
 
 ### Requesting Changes and Reporting Problems
 

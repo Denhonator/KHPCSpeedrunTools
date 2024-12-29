@@ -22,7 +22,7 @@ If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md
 		- Go to `Library`
 		- Right click the game
 		- Click `Manage`
-		- Click the magnifying glass on the `Instillation` line
+		- Click the magnifying glass on the `Installation` line
 	- For Steam:
 		- Open Steam
 		- Select the game from your `Library`
@@ -33,10 +33,16 @@ If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md
 	- For Epic Games:
 		- You should see a folder named `KINGDOM HEARTS HD 1.5+2.5 ReMIX`
 		- Open this folder (this is the `game data` folder moving forward)
+		- You should have something like `C:\Users\<your_user_name>\Documents\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
+		- It will look something like this:  
+		![image](images/epic_docs.png)
 	- For Steam:
 		- You should see a `My Games` folder
 		- Open `My Games` and you should now see a folder named `KINGDOM HEARTS HD 1.5+2.5 ReMIX`
 		- Open this folder (this is the `game data` folder moving forward)
+		- You should have something like `C:\Users\<your_user_name>\Documents\My Games\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
+		- It will look something like this:  
+		![image](images/steam_docs.png)
 - Next download `DBGHELP.zip` from [here](https://github.com/Sirius902/LuaBackend/releases) and unzip the contents into the game install folder you just found. This will unpack three files, `DBGHELP.dll`, `lua54.dll`, and `LuaBackend.toml`.
 
 For Epic Games it should end up looking like this:
@@ -48,27 +54,18 @@ For Steam that would look like this:
 ![image](images/steam_install.png)
 
 #### Steamdeck extra steps
-- Rename the `DBGHELP.dll` file to `DINPUT8.dll` that you placed in the game install folder.
+- Rename the `DBGHELP.dll` file to `DINPUT8.dll` that you placed in the game install folder
 - In the `General` section of game properties on Steam, add the following as the `Launch Options`: `WINEDLLOVERRIDES="dinput8=n,b" %command%`
 
 ### Config
 Our next goal is to ensure a proper `LuaBackend.toml` file setup:
 - Open `LuaBackend.toml` in a text editor (notepade for example)
-	- We will be setting the `game_docs` line, this will be relative to YOUR documents folder so some changes may be reflected
-	- For Epic Games:
-		- You should have something like `C:\Users\<your_user_name>\Documents\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this:  
-		![image](images/epic_docs.png)
-	- For Steam:
-		- You should have something like `C:\Users\<your_user_name>\Documents\My Games\KINGDOM HEARTS HD 1.5+2.5 ReMIX`
-		- It will look something like this:  
-		![image](images/steam_docs.png)
-	- This is the same as the path for the `game data` folder we opened in prep
-	- Note after this you should have ONE `game_docs` line per game that does not start with a `#` matching what is described above, any additional `game_docs` lines can stay as long as they start with `#` and a space or be deleted entirely.
+	- We will be setting the `game_docs` line relative to which platform you are installed on (if you have both you can choose one instead of doing both but they will end up shared)
+	- Note after this you should have ONE `game_docs` line per game that does not start with a `#` matching what is described above, any additional `game_docs` lines can stay as long as they start with `#` and a space or be deleted entirely
 	- For Epic Games this looks like:  
-	![image](images/epic_toml.png)
+	![image](images/epic_toml_ddd.png)
 	- For Steam this looks like:  
-	![image](images/steam_toml.png)
+	![image](images/steam_toml_ddd.png)
 
 ### Scripts
 From here on we will be in the `game data` folder we opened earlier.
@@ -99,11 +96,11 @@ As a last step we are going to run a test. For this example we will be using Kin
 
 ### Install
 
-Grab the most recent release .rar file from [here](https://github.com/TopazTK/LuaFrontend/releases) and extract it wherever you like.
+Grab the most recent release .rar file from [here](https://github.com/TopazTK/LuaFrontend/releases) and extract it wherever you like, this will be the `extracted folder`.
 
 ### Config
 
-- Open the newley extraced folder
+- Open the newley `extracted folder`
 - Open the `config` folder inside
 - Open the `gameConfig.toml` file from this folder in a text editor (notepade for example)
 - Set each `Offset` and `Address` line to `"0"`
@@ -116,7 +113,7 @@ You should end up with a file that looks like this:
 
 ### Scripts
 
-- Go back to the top level of the extracted folder (should be the folder named `LuaFrontend.v1.15` or something similar unless you renamed it)
+- Go back to the top level of the `extracted folder` (should be the folder named `LuaFrontend.v1.15` or something similar unless you renamed it)
 - Open the `scripts` folder
 - Rename or replace the folders here to match what you did in the `Path` lines from the config step so that you end up with something that looks like this:  
 ![image](images/luafrontend_folders.png)
@@ -125,10 +122,11 @@ You should end up with a file that looks like this:
 
 As a last step we are going to run a test. For this example we will be using Kingdom Hearts 1 but any of the other games can be directly swapped.
 
-- In the newly created `kh1` folder copy the `test_kh1.lua` found in the [test_lua](test_lua) folder
+- If you closed it re-open the `scripts` folder
+- In the `kh1` folder copy the `test_kh1.lua` found in the [test_lua](test_lua) folder
 - Boot the game either through Steam or Epic Games
 - Start up Kingdom Hearts 1 from the KH Launcher
-- Once KH 1 is loaded, run `LuaFrontend.exe` from the extracted folder
+- Once KH 1 is loaded, run `LuaFrontend.exe` from the `extracted folder`
 - Inside the new window click the `Engine` option in the top left
 - Select `Show Console...`
 - Click `Engine` again
@@ -144,27 +142,26 @@ Grab the most recent release .zip file from [here](https://github.com/OpenKH/Ope
 
 ### Config
 - Open the newly unzipped folder, find and run `OpenKh.Tools.ModsManager.exe`
-- If it is the first time it will run through their wizard. If you change platforms or languages at a later point go through the wizard again to change the configurations. 
+- If it is the first time it will run through their wizard. If you change platforms or languages at a later point go through the wizard again to change the configurations
 - In the wizard:
-	- Choose `PC Release`, your language, and your platform and click `Detect Instillations` then click `Next`.
-	- If you intend to use any non `.lua` mods (things from other creators like visual mods), select the game collection at the top and go ahead and add Panacea on this page otherwise just click `Next`.
-	- Make sure to select the proper game collection on this page, tick the boxes for any games you plan to have mods for, and click `Install and Configure Lua Backend`. Follow up with hitting `Next` again.
-	- Once again if you plan to have any non `.lua` mods you will need to follow the steps on this stage to extract the game assets for moddification. This page is only for people using things not included in this repo. Tick the `Skip Game Extraction` box and click `Next` in all basic `.lua` use cases.
-	- On the last page click `Finish`!
-	- As a note the mod manager may crash out at this stage if being configured for Epic Games this is fine, just boot it again.
+	- Choose `PC Release`, your language, and your platform and click `Detect Installations` then click `Next`
+	- If you intend to use any non `.lua` mods (things from other creators like visual mods), select the game collection at the top and go ahead and add Panacea on this page otherwise just click `Next`
+	- Make sure to select the proper game collection on this page, tick the boxes for any games you plan to have mods for, and click `Install and Configure Lua Backend`. Follow up with hitting `Next` again
+	- Once again if you plan to have any non `.lua` mods you will need to follow the steps on this stage to extract the game assets for moddification. This page is only for people using things not included in this repo. Tick the `Skip Game Extraction` box and click `Next` in all basic `.lua` use cases
+	- On the last page click `Finish`
+	- As a note the mod manager may crash out at this stage if being configured for Epic Games this is fine, just boot it again
 
 ### Scripts
 Up to this point you have now setup all of the required pieces to install the mods, now we just need to dump the files into the right place. You have two options from here. Copy paste OR the built in add features.
 
 #### Copy paste
 - Check that a the `mod` folder exists inside the extracted folder
-	- If it does not create a new folder called `mod`
-- Check that inside the `mod` folder the following folders exist and if not create them:
+	- If it does not, create a new folder called `mod`
+- Check that inside the `mod` folder the following folders exist and if not create them (relevant to the games you wish to mod):
 	- `kh1`
 	- `kh2`
 	- `bbs`
 	- `Recom`
-	- `kh3d`
 - Check that inside each of the above folders a `scripts` folder exists and if not create them
 
 #### Built in Add
@@ -207,9 +204,7 @@ The required files portion only needs to be done once to work across all games, 
 
 Follow these links to get to the mods for the given game as well as further documentation on how to use them:
 
-- [Kingdom Hearts 0.2](02Mods)
 - [Kingdom Hearts 1](1FMMods)
 - [Kingdom Hearts 2](2FMMods)
 - [Kingdom Hearts Birth by Sleep](BBSMods)
-- [Kingdom Hearts Dream Drop Distance](DDDMods)
 - [Kingdom Hearts Re: Chain of Memories](ReCoMMods)
