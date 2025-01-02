@@ -1,4 +1,4 @@
-LUAGUI_NAME = "2fmGummiSkip"
+LUAGUI_NAME = "2fmSaveAnywhere"
 LUAGUI_AUTH = "Sonicshadowsilver2 (edited by deathofall84)"
 LUAGUI_DESC = "Open save anywhere"
 
