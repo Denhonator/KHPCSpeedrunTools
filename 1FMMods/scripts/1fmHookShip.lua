@@ -12,18 +12,20 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadByte(hookship) == 1 and ReadByte(dest) == 13 and ReadByte(neverland) == 2 then
+		ship_check = ReadByte(hookship) == 1 or ReadByte(hookship) == 255
+		dest_check = ReadByte(dest) == 13 and ReadByte(neverland) == 2
+		if ship_check and dest_check then
 			WriteByte(hookship, 0)
 			WriteString(posDebugString, "            Hook  ship  100%%!              ")
 		end
 
-		if ReadByte(dest) == 13 and ReadByte(neverland) == 2 and ReadByte(posDebug1) == 0 and ReadInt(inGummi) == 0 then
+		if dest_check and ReadByte(posDebug1) == 0 and ReadInt(inGummi) == 0 then
 			WriteByte(posDebug1, debug1Value)
 			WriteByte(posDebug2, 1)
 			WriteString(posDebugString, "            Hook  ship  100%%               ")
 		end
 
-		if (ReadByte(neverland) ~= 2 or ReadByte(dest) ~= 13) and ReadByte(posDebug1) == debug1Value then
+		if not dest_check and ReadByte(posDebug1) == debug1Value then
 			WriteByte(posDebug1, 0)
 			WriteByte(posDebug2, 0)
 			WriteString(posDebugString, "X : %4.2f  Y : %4.2f  Z : %4.2f  Dir : %4.2f")
