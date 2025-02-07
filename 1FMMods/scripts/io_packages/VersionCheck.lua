@@ -33,9 +33,13 @@ function importVars(file)
 		local errorString = "\n\n!!!!!!!! IMPORT ERROR !!!!!!!!\n\n"
 		local msg = ""
 		if slashIdx then
-			msg = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+			msg_part_1 = string.format("%s.lua missing, get it from the Github!", string.sub(file, slashIdx + 1, #file))
+			msg_part_2 = "\nMissing file is from the Rando folder inside io_packages."
+			msg = string.format("%s%s", msg_part_1, msg_part_2)
 		else
-			msg = string.format("%s.lua missing, get it from the Github!", file)
+			msg_part_1 = string.format("%s.lua missing, get it from the Github!", file)
+			msg_part_2 = "\nMissing file is from the io_packages folder."
+			msg = string.format("%s%s", msg_part_1, msg_part_2)
 		end
 		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
 	else
