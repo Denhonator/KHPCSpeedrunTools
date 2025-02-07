@@ -5,7 +5,7 @@ If you have not, follow the steps [here](LUA.md) first! Otherwise there are thre
 - Third is to configure settings to your liking!
 
 ## Disclaimer
-A warning, when using the OpenKH Mod Managers `build` or `build and run` operations will reset the `settings.lua` file as it will be rebuilt from the base.
+A warning, when using the OpenKH Mod Managers `build` or `build and run` operations the `settings.lua` file will be reset as it will be rebuilt from the base.
 
 
 ## Jump to
@@ -88,4 +88,4 @@ I am not going to get in to the nitty gritty of what each setting does but the `
 - For Open KH Mod Manager:
 	- `<unzipped folder location>/openkh/mod/kh1/scripts/io_packages/Rando`
 
-This file control various things outlined in detail inside the file itself to configure how your randomizer experience goes, change it as you see fit or leave it at default the choices are yours.
+This file controls various things outlined in detail inside the `settings.lua` file itself to configure how your randomizer experience goes, change it as you see fit or leave it at default, the choices are yours.
