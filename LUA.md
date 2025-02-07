@@ -7,6 +7,8 @@ If you have not already, or run into language you are unfamiliar with go read th
 ## Disclaimer
 If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md) instead as there are minor changes.
 
+If you are setting up for 1FM Rando with OpenKH there is an extra document [here](RANDO.md)!
+
 ## Jump to
 - [LuaBackend](#lb)
 - [LuaFrontend](#lf)
@@ -138,7 +140,7 @@ As a last step we are going to run a test. For this example we will be using Kin
 ## <a name="omm"></a>Open KH Mod Manager
 
 ### Install
-Grab the most recent release .zip file from [here](https://github.com/OpenKH/OpenKh/releases) and extract it where ever you like.
+Grab the most recent release .zip file from [here](https://github.com/OpenKH/OpenKh/releases) and extract it where ever you like. It is however recommended that you do so on a more base level, such as in your `Downloads` or `Documents` folders as it can throw errors if it is nested to far in due to path length limitations.
 
 ### Config
 - Open the newly unzipped folder, find and run `OpenKh.Tools.ModsManager.exe`
