@@ -182,6 +182,7 @@ The required files portion only needs to be done once to work across all games, 
 ![image](images/repo_install.png)
 - Feel free to set this to auto update, to make sure your mods stay working at all times!
 - This part will install the Version checking lua files as well as the variable files that go with each version across all of the games! (the previously noted extras that other parts of this guide do not)
+- Required files for 1FM Rando are also included in this.
 
 ##### Testing
 
@@ -192,8 +193,11 @@ The required files portion only needs to be done once to work across all games, 
 - Open `KHPCSpeedrunTools` (this has all of the content of this repo)
 - Open test_lua
 - Select `test_kh1.lua` (or the one to your game)
+- Ensure that at least the repo and test mods packages are checked like this:
+![image](images/openkh_mod_manager.png)
 - Open the `Mod Loader` drop down
-- Select `Build Only` option
+- !!! Select `Build Only` option !!!
+	- THIS IS THE MOST IMPORTANT STEP OF THE WHOLE GUIDE, IF YOU DO NOT BUILD THERE WILL BE NO MODS LOADED TO RUN WITH THE GAME!
 - This will cross populate the newly added mod file
 - Launch Kingdom Hearts through Steam or Epic Games
 - Launch Kingdom Hearts 1 (or the game you are using)
