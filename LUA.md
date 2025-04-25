@@ -7,7 +7,7 @@ If you have not already, or run into language you are unfamiliar with go read th
 ## Disclaimer
 If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md) instead as there are minor changes.
 
-If you are setting up for 1FM Rando with OpenKH there is an extra document [here](RANDO.md)!
+If you are setting up for 1FM Rando there is an extra document [here](RANDO.md)!
 
 ## Jump to
 - [LuaBackend](#lb)
