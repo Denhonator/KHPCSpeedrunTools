@@ -8,6 +8,8 @@ All mods have been updated to work with the following versions:
 
 
 ## Disclaimer:
+If you are setting up for 1FM Rando there is an extra document [here](RANDO.md)!
+
 Not all of these scripts are allowed in speedruns, the following are allowed:
 - Hook Ship
 - Save Anywhere (for soft resetting only)

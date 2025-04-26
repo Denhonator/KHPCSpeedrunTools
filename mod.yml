@@ -1,4 +1,4 @@
-title: KH PC Speedrun Tools - Vars and Veersion Checking
+title: KH PC Speedrun Tools - Vars and Version Checking
 originalAuthor: Denhonator (edits by deathofall84)
 description: Installs the needed files to run any of the lua mods from the repo for all games. You will need to register the mods themselves seperately for individual control (we don't want forced install of all mods)
 assets:
@@ -117,14 +117,14 @@ assets:
     
 
 ## control files for BBS
-- name: ../bbs/scripts/io_packages/EGSGlobal.lua
+- name: ../bbs/scripts/io_packages/EpicGamesGlobal.lua
   method: copy
   source:
-    - name: BBSMods/scripts/io_packages/EGSGlobal.lua
-- name: ../bbs/scripts/io_packages/EGSJP.lua
+    - name: BBSMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../bbs/scripts/io_packages/EpicGamesJP.lua
   method: copy
   source:
-    - name: BBSMods/scripts/io_packages/EGSJP.lua
+    - name: BBSMods/scripts/io_packages/EpicGamesJP.lua
 - name: ../bbs/scripts/io_packages/SteamGlobal.lua
   method: copy
   source:
@@ -139,14 +139,14 @@ assets:
     - name: BBSMods/scripts/io_packages/VersionCheck.lua
 
 ## control files for Re:CoM
-- name: ../Recom/scripts/io_packages/EGSGlobal.lua
+- name: ../Recom/scripts/io_packages/EpicGamesGlobal.lua
   method: copy
   source:
-    - name: ReCoMMods/scripts/io_packages/EGSGlobal.lua
-- name: ../Recom/scripts/io_packages/EGSJP.lua
+    - name: ReCoMMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../Recom/scripts/io_packages/EpicGamesJP.lua
   method: copy
   source:
-    - name: ReCoMMods/scripts/io_packages/EGSJP.lua
+    - name: ReCoMMods/scripts/io_packages/EpicGamesJP.lua
 - name: ../Recom/scripts/io_packages/SteamGlobal.lua
   method: copy
   source:
@@ -161,14 +161,14 @@ assets:
     - name: ReCoMMods/scripts/io_packages/VersionCheck.lua
 
 ## control files for DDD
-- name: ../kh3d/scripts/io_packages/EGSGlobal.lua
+- name: ../kh3d/scripts/io_packages/EpicGamesGlobal.lua
   method: copy
   source:
-    - name: DDDMods/scripts/io_packages/EGSGlobal.lua
-- name: ../kh3d/scripts/io_packages/EGSJP.lua
+    - name: DDDMods/scripts/io_packages/EpicGamesGlobal.lua
+- name: ../kh3d/scripts/io_packages/EpicGamesJP.lua
   method: copy
   source:
-    - name: DDDMods/scripts/io_packages/EGSJP.lua
+    - name: DDDMods/scripts/io_packages/EpicGamesJP.lua
 - name: ../kh3d/scripts/io_packages/SteamGlobal.lua
   method: copy
   source:

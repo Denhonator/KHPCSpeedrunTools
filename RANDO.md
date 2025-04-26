@@ -1,5 +1,5 @@
 # Setting up
-If you have not, follow the steps [here](LUA.md) first! Otherwise there are three pieces to this:
+If you have not, follow the steps [here](LUA.md) first followed by these steps [here](1FMMods/readme.md) second! Otherwise there are three pieces to this:
 - First we need to ensure that the Rando lua files are setup.
 - Second we need to ensure the `randofiles` folder is created, and optionally populated with any lanugae files you might want.
 - Third is to configure settings to your liking!

@@ -1,6 +1,6 @@
-LUAGUI_NAME = "3dUnlockCriticalMode"
-LUAGUI_AUTH = "deathofall84 (original by KSX)"
-LUAGUI_DESC = "Unlock Critical Mode"
+LUAGUI_NAME = "3dOvercast"
+LUAGUI_AUTH = "denhonator (edited by deathofall84)"
+LUAGUI_DESC = "Changes all forecasts to overcast"
 
 function _OnInit()
 	if GAME_ID == 0xE86A2A90 and ENGINE_TYPE == "BACKEND" then
@@ -11,9 +11,7 @@ function _OnInit()
 end
 
 function _OnFrame()
-	if canExecute then
-		if ReadByte(unlock) == 0 then
-			WriteByte(unlock, 1)
-		end
+	for i = 0, 20 do
+		WriteByte(forecasts + i * 8, 6)
 	end
 end
