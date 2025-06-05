@@ -1,8 +1,8 @@
 # Setting up
-So you are having issues getting things working for one of the Lua tools. Fear not this document will get you squared away! Follow ONE of the bellow setups for a Lua tool, then carry on into game specific mods! This is step one and the game specific document is step two.
+So you are having issues getting things working for one of the Lua tools. Fear not this document will get you squared away! Follow ONE of the below setups for a Lua tool, then carry on into game specific mods! This is step one and the game specific document is step two.
 
 ## Before you start
-If you have not already, or run into language you are unfamiliar with go read through the [glossary](GLOSSARY.md) for terms that are used throughout. If there is word or short hand use that is still unclear please reach out so it can be add!
+If you have not already, or run into language you are unfamiliar with, go read through the [glossary](GLOSSARY.md) for terms that are used throughout. If there is word or short hand use that is still unclear please reach out so it can be added!
 
 ## Disclaimer
 If you are setting up for Dream Drop Distance follow the steps [here](LUA_DDD.md) instead as there are minor changes.
@@ -102,11 +102,12 @@ Grab the most recent release .rar file from [here](https://github.com/TopazTK/Lu
 
 ### Config
 
-- Open the newley `extracted folder`
+- Open the newly `extracted folder`
 - Open the `config` folder inside
-- Open the `gameConfig.toml` file from this folder in a text editor (notepade for example)
+- Open the `gameConfig.toml` file from this folder in a text editor (notepad for example)
 - Set each `Offset` and `Address` line to `"0"`
 - (Optional, but recommended for this guide) Change the `Path` lines that include a `gl` to remove the `gl`
+- Save your changes!
 
 You should end up with a file that looks like this:  
 
@@ -125,7 +126,7 @@ You should end up with a file that looks like this:
 As a last step we are going to run a test. For this example we will be using Kingdom Hearts 1 but any of the other games can be directly swapped.
 
 - If you closed it re-open the `scripts` folder
-- In the `kh1` folder copy the `test_kh1.lua` found in the [test_lua](test_lua) folder
+- Download and copy the `test_kh1.lua` file found in the [test_lua](test_lua) folder into the `kh1` folder 
 - Boot the game either through Steam or Epic Games
 - Start up Kingdom Hearts 1 from the KH Launcher
 - Once KH 1 is loaded, run `LuaFrontend.exe` from the `extracted folder`
