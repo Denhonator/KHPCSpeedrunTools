@@ -1,183 +1,232 @@
 title: KH PC Speedrun Tools - Vars and Version Checking
 originalAuthor: Denhonator (edits by deathofall84)
 description: Installs the needed files to run any of the lua mods from the repo for all games. You will need to register the mods themselves seperately for individual control (we don't want forced install of all mods)
+isCollection: true
+collectionGames:
+  - "kh1"
+  - "kh2"
+  - "bbs"
+  - "Recom"
+  - "kh3d"
 assets:
 
 ## control files for KH1
-- name: ../kh1/scripts/io_packages/Rando/chests.lua
+- name: scripts/io_packages/Rando/chests.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/Rando/chests.lua
-- name: ../kh1/scripts/io_packages/Rando/enemyTables.lua
+- name: scripts/io_packages/Rando/enemyTables.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/Rando/enemyTables.lua
-- name: ../kh1/scripts/io_packages/Rando/itemNames.lua
+- name: scripts/io_packages/Rando/itemNames.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/Rando/itemNames.lua
-- name: ../kh1/scripts/io_packages/Rando/rewards.lua
+- name: scripts/io_packages/Rando/rewards.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/Rando/rewards.lua
-- name: ../kh1/scripts/io_packages/Rando/settings.lua
+- name: scripts/io_packages/Rando/settings.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/Rando/settings.lua
-- name: ../kh1/scripts/io_packages/EGSGlobal_1_0_0_8.lua
+- name: scripts/io_packages/EGSGlobal_1_0_0_8.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/EGSGlobal_1_0_0_8.lua
-- name: ../kh1/scripts/io_packages/EGSGlobal_1_0_0_9.lua
+- name: scripts/io_packages/EGSGlobal_1_0_0_9.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/EGSGlobal_1_0_0_9.lua
-- name: ../kh1/scripts/io_packages/EGSGlobal_1_0_0_10.lua
+- name: scripts/io_packages/EGSGlobal_1_0_0_10.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/EGSGlobal_1_0_0_10.lua
-- name: ../kh1/scripts/io_packages/EGSJP_1_0_0_8.lua
+- name: scripts/io_packages/EGSJP_1_0_0_8.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/EGSJP_1_0_0_8.lua
-- name: ../kh1/scripts/io_packages/EGSJP_1_0_0_9.lua
+- name: scripts/io_packages/EGSJP_1_0_0_9.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/EGSJP_1_0_0_9.lua
-- name: ../kh1/scripts/io_packages/EGSJP_1_0_0_10.lua
+- name: scripts/io_packages/EGSJP_1_0_0_10.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/EGSJP_1_0_0_10.lua
-- name: ../kh1/scripts/io_packages/SteamGlobal_1_0_0_1.lua
+- name: scripts/io_packages/SteamGlobal_1_0_0_1.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/SteamGlobal_1_0_0_1.lua
-- name: ../kh1/scripts/io_packages/SteamGlobal_1_0_0_2.lua
+- name: scripts/io_packages/SteamGlobal_1_0_0_2.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/SteamGlobal_1_0_0_2.lua
-- name: ../kh1/scripts/io_packages/SteamJP_1_0_0_1.lua
+- name: scripts/io_packages/SteamJP_1_0_0_1.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/SteamJP_1_0_0_1.lua
-- name: ../kh1/scripts/io_packages/SteamJP_1_0_0_2.lua
+- name: scripts/io_packages/SteamJP_1_0_0_2.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/SteamJP_1_0_0_2.lua
-- name: ../kh1/scripts/io_packages/VersionCheck.lua
+- name: scripts/io_packages/VersionCheck.lua
   method: copy
+  game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/VersionCheck.lua
 
 ## control files for KH2
-# - name: ../kh2/scripts/io_packages/EGSGlobal_1_0_0_8.lua
-#   method: copy
-#   source:
-#     - name: 2FMMods/scripts/io_packages/EGSGlobal_1_0_0_8.lua
-# - name: ../kh2/scripts/io_packages/EGSJP_1_0_0_8.lua
-#   method: copy
-#   source:
-#     - name: 2FMMods/scripts/io_packages/EGSJP_1_0_0_8.lua
-- name: ../kh2/scripts/io_packages/EGSGlobal_1_0_0_9.lua
+- name: scripts/io_packages/EGSGlobal_1_0_0_8.lua
   method: copy
+  game: "kh2"
+  source:
+    - name: 2FMMods/scripts/io_packages/EGSGlobal_1_0_0_8.lua
+- name: scripts/io_packages/EGSJP_1_0_0_8.lua
+  method: copy
+  game: "kh2"
+  source:
+    - name: 2FMMods/scripts/io_packages/EGSJP_1_0_0_8.lua
+- name: scripts/io_packages/EGSGlobal_1_0_0_9.lua
+  method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/EGSGlobal_1_0_0_9.lua
-- name: ../kh2/scripts/io_packages/EGSJP_1_0_0_9.lua
+- name: scripts/io_packages/EGSJP_1_0_0_9.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/EGSJP_1_0_0_9.lua
-- name: ../kh2/scripts/io_packages/EGSGlobal_1_0_0_10.lua
+- name: scripts/io_packages/EGSGlobal_1_0_0_10.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/EGSGlobal_1_0_0_10.lua
-- name: ../kh2/scripts/io_packages/EGSJP_1_0_0_10.lua
+- name: scripts/io_packages/EGSJP_1_0_0_10.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/EGSJP_1_0_0_10.lua
-- name: ../kh2/scripts/io_packages/SteamGlobal_1_0_0_1.lua
+- name: scripts/io_packages/SteamGlobal_1_0_0_1.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/SteamGlobal_1_0_0_1.lua
-- name: ../kh2/scripts/io_packages/SteamJP_1_0_0_1.lua
+- name: scripts/io_packages/SteamJP_1_0_0_1.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/SteamJP_1_0_0_1.lua
-- name: ../kh2/scripts/io_packages/SteamGlobal_1_0_0_2.lua
+- name: scripts/io_packages/SteamGlobal_1_0_0_2.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/SteamGlobal_1_0_0_2.lua
-- name: ../kh2/scripts/io_packages/SteamJP_1_0_0_2.lua
+- name: scripts/io_packages/SteamJP_1_0_0_2.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/SteamJP_1_0_0_2.lua
-- name: ../kh2/scripts/io_packages/VersionCheck.lua
+- name: scripts/io_packages/VersionCheck.lua
   method: copy
+  game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/VersionCheck.lua
     
 
 ## control files for BBS
-- name: ../bbs/scripts/io_packages/EpicGamesGlobal.lua
+- name: scripts/io_packages/EpicGamesGlobal.lua
   method: copy
+  game: "bbs"
   source:
     - name: BBSMods/scripts/io_packages/EpicGamesGlobal.lua
-- name: ../bbs/scripts/io_packages/EpicGamesJP.lua
+- name: scripts/io_packages/EpicGamesJP.lua
   method: copy
+  game: "bbs"
   source:
     - name: BBSMods/scripts/io_packages/EpicGamesJP.lua
-- name: ../bbs/scripts/io_packages/SteamGlobal.lua
+- name: scripts/io_packages/SteamGlobal.lua
   method: copy
+  game: "bbs"
   source:
     - name: BBSMods/scripts/io_packages/SteamGlobal.lua
-- name: ../bbs/scripts/io_packages/SteamJP.lua
+- name: scripts/io_packages/SteamJP.lua
   method: copy
+  game: "bbs"
   source:
     - name: BBSMods/scripts/io_packages/SteamJP.lua
-- name: ../bbs/scripts/io_packages/VersionCheck.lua
+- name: scripts/io_packages/VersionCheck.lua
   method: copy
+  game: "bbs"
   source:
     - name: BBSMods/scripts/io_packages/VersionCheck.lua
 
 ## control files for Re:CoM
-- name: ../Recom/scripts/io_packages/EpicGamesGlobal.lua
+- name: scripts/io_packages/EpicGamesGlobal.lua
   method: copy
+  game: "Recom"
   source:
     - name: ReCoMMods/scripts/io_packages/EpicGamesGlobal.lua
-- name: ../Recom/scripts/io_packages/EpicGamesJP.lua
+- name: scripts/io_packages/EpicGamesJP.lua
   method: copy
+  game: "Recom"
   source:
     - name: ReCoMMods/scripts/io_packages/EpicGamesJP.lua
-- name: ../Recom/scripts/io_packages/SteamGlobal.lua
+- name: scripts/io_packages/SteamGlobal.lua
   method: copy
+  game: "Recom"
   source:
     - name: ReCoMMods/scripts/io_packages/SteamGlobal.lua
-- name: ../Recom/scripts/io_packages/SteamJP.lua
+- name: scripts/io_packages/SteamJP.lua
   method: copy
+  game: "Recom"
   source:
     - name: ReCoMMods/scripts/io_packages/SteamJP.lua
-- name: ../Recom/scripts/io_packages/VersionCheck.lua
+- name: scripts/io_packages/VersionCheck.lua
   method: copy
+  game: "Recom"
   source:
     - name: ReCoMMods/scripts/io_packages/VersionCheck.lua
 
 ## control files for DDD
-- name: ../kh3d/scripts/io_packages/EpicGamesGlobal.lua
+- name: scripts/io_packages/EpicGamesGlobal.lua
   method: copy
+  game: "kh3d"
   source:
     - name: DDDMods/scripts/io_packages/EpicGamesGlobal.lua
-- name: ../kh3d/scripts/io_packages/EpicGamesJP.lua
+- name: scripts/io_packages/EpicGamesJP.lua
   method: copy
+  game: "kh3d"
   source:
     - name: DDDMods/scripts/io_packages/EpicGamesJP.lua
-- name: ../kh3d/scripts/io_packages/SteamGlobal.lua
+- name: scripts/io_packages/SteamGlobal.lua
   method: copy
+  game: "kh3d"
   source:
     - name: DDDMods/scripts/io_packages/SteamGlobal.lua
-- name: ../kh3d/scripts/io_packages/SteamJP.lua
+- name: scripts/io_packages/SteamJP.lua
   method: copy
+  game: "kh3d"
   source:
     - name: DDDMods/scripts/io_packages/SteamJP.lua
-- name: ../kh3d/scripts/io_packages/VersionCheck.lua
+- name: scripts/io_packages/VersionCheck.lua
   method: copy
+  game: "kh3d"
   source:
     - name: DDDMods/scripts/io_packages/VersionCheck.lua
