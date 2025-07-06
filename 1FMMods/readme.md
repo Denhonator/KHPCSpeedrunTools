@@ -60,24 +60,11 @@ Not all of these scripts are allowed in speedruns, the following are allowed:
 * As a note you do not need to have the scripts in more than one place if you are playing across both Epic and Steam
 
 ### <a name="omm_skip"></a> Setup - Open KH Mod Manager
-- For each mod you wish to install do the following:
-    - Open the `Install a new mod` window through the green plus, mods drop down, or keyboard shortcut
-    - Press the `Select and install Mod Archive or Lua Script` button
-    - Browse to one of the following locations to find the mod files to add:
-        - Download of repo:
-            - Unzip (if you have not yet) the downloaded repo
-            - Open the `1FMMods` folder
-            - Open the scripts folder
-            - Select your mod
-        - Installed with OpenKH setup from `LUA.md`:
-            - Navigate to your unzipped `openkh` folder
-            - Open the `mods` folder
-            - Open the folder for whichever game you used in setup
-            - Open the `Denhonator` folder (if this folder is not present check other game folders for the last step)
-            - Open the `KHPCSpeedrunTools` folder
-            - Open the `1FMMods` folder
-            - Select your mod
-    - Repeat these steps for each mod you wish to include
+- Open the `Collection Settings` menu via the button on the right side:
+![image](images/collection_settings.png)
+- Select any and all mods in this pop up you wish to run with
+- Close the pop up
+- In the `Patching` menu select one of the `Build` options
 - If you are installing randomizer mods continue [here](#rando)
 
 ### <a name="rando"></a> Setup - Rando

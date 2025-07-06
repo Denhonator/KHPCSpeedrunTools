@@ -93,6 +93,12 @@ assets:
     - name: 1FMMods/scripts/io_packages/VersionCheck.lua
 
 ## mod files for KH1
+- name: scripts/test_1fm.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: test_lua/test_1fm.lua
 - name: scripts/1fm1HP.lua
   method: copy
   game: "kh1"
@@ -260,6 +266,12 @@ assets:
     - name: 2FMMods/scripts/io_packages/VersionCheck.lua
 
 ## mod files for KH2
+- name: scripts/test_2fm.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: test_lua/test_2fm.lua
 - name: scripts/2fmAutoAttack.lua
   method: copy
   game: "kh2"
@@ -343,6 +355,12 @@ assets:
     - name: BBSMods/scripts/io_packages/VersionCheck.lua
 
 ## mod files for BBS
+- name: scripts/test_bbs.lua
+  method: copy
+  game: "bbs"
+  collectionOptional: true
+  source:
+    - name: test_lua/test_bbs.lua
 - name: scripts/bbsSoftReset.lua
   method: copy
   game: "bbs"
@@ -384,6 +402,12 @@ assets:
     - name: ReCoMMods/scripts/io_packages/VersionCheck.lua
 
 ## mod files for Re:CoM
+- name: scripts/test_recom.lua
+  method: copy
+  game: "Recom"
+  collectionOptional: true
+  source:
+    - name: test_lua/test_recom.lua
 - name: scripts/recomRebirthUnlock.lua
   method: copy
   game: "Recom"
@@ -425,6 +449,12 @@ assets:
     - name: DDDMods/scripts/io_packages/VersionCheck.lua
 
 ## mod files for DDD
+- name: scripts/test_ddd.lua
+  method: copy
+  game: "kh3d"
+  collectionOptional: true
+  source:
+    - name: test_lua/test_ddd.lua
 - name: scripts/3dOvercast.lua
   method: copy
   game: "kh3d"
