@@ -92,6 +92,116 @@ assets:
   source:
     - name: 1FMMods/scripts/io_packages/VersionCheck.lua
 
+## mod files for KH1
+- name: scripts/1fm1HP.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fm1HP.lua
+- name: scripts/1fm4by3.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fm4by3.lua
+- name: scripts/1fmAchievements.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmAchievements.lua
+- name: scripts/1fmAutoattack.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmAutoattack.lua
+- name: scripts/1fmBeepHack.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmBeepHack.lua
+- name: scripts/1fmChaos.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmChaos.lua
+- name: scripts/1fmConsistentFinishers.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmConsistentFinishers.lua
+- name: scripts/1fmEarlySkip.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmEarlySkip.lua
+- name: scripts/1fmEnemyRando.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmEnemyRando.lua
+- name: scripts/1fmFastCamera.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmFastCamera.lua
+- name: scripts/1fmFasterAnims.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmFasterAnims.lua
+- name: scripts/1fmFasterDialogue.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmFasterDialogue.lua
+- name: scripts/1fmHookShip.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmHookShip.lua
+- name: scripts/1fmInstantGummi.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmInstantGummi.lua
+- name: scripts/1fmRandoSomeLogic.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmRandoSomeLogic.lua
+- name: scripts/1fmSaveAnywhere.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmSaveAnywhere.lua
+- name: scripts/1fmUnlock0Volume.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmUnlock0Volume.lua
+- name: scripts/1fmUnskippable.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/1fmUnskippable.lua
+
 ## control files for KH2
 - name: scripts/io_packages/EGSGlobal_1_0_0_8.lua
   method: copy
@@ -148,7 +258,62 @@ assets:
   game: "kh2"
   source:
     - name: 2FMMods/scripts/io_packages/VersionCheck.lua
-    
+
+## mod files for KH2
+- name: scripts/2fmAutoAttack.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmAutoAttack.lua
+- name: scripts/2fmAutosave.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmAutosave.lua
+- name: scripts/2fmCreditSkip.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmCreditSkip.lua
+- name: scripts/2fmGummiSkip.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmGummiSkip.lua
+- name: scripts/2fmLaserDomeSkip.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmLaserDomeSkip.lua
+- name: scripts/2fmLoadSaveMenu.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmLoadSaveMenu.lua
+- name: scripts/2fmQuickHP0.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmQuickHP0.lua
+- name: scripts/2fmSaveAnywhere.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmSaveAnywhere.lua
+- name: scripts/2fmSoftReset.lua
+  method: copy
+  game: "kh2"
+  collectionOptional: true
+  source:
+    - name: 2FMMods/scripts/2fmSoftReset.lua
 
 ## control files for BBS
 - name: scripts/io_packages/EpicGamesGlobal.lua
@@ -177,6 +342,20 @@ assets:
   source:
     - name: BBSMods/scripts/io_packages/VersionCheck.lua
 
+## mod files for BBS
+- name: scripts/bbsSoftReset.lua
+  method: copy
+  game: "bbs"
+  collectionOptional: true
+  source:
+    - name: BBSMods/scripts/bbsSoftReset.lua
+- name: scripts/bbsUnlcokCharacterSelect.lua
+  method: copy
+  game: "bbs"
+  collectionOptional: true
+  source:
+    - name: BBSMods/scripts/bbsUnlcokCharacterSelect.lua
+
 ## control files for Re:CoM
 - name: scripts/io_packages/EpicGamesGlobal.lua
   method: copy
@@ -204,6 +383,20 @@ assets:
   source:
     - name: ReCoMMods/scripts/io_packages/VersionCheck.lua
 
+## mod files for Re:CoM
+- name: scripts/recomRebirthUnlock.lua
+  method: copy
+  game: "Recom"
+  collectionOptional: true
+  source:
+    - name: ReCoMMods/scripts/recomRebirthUnlock.lua
+- name: scripts/recomSoftReset.lua
+  method: copy
+  game: "Recom"
+  collectionOptional: true
+  source:
+    - name: ReCoMMods/scripts/recomSoftReset.lua
+
 ## control files for DDD
 - name: scripts/io_packages/EpicGamesGlobal.lua
   method: copy
@@ -230,3 +423,23 @@ assets:
   game: "kh3d"
   source:
     - name: DDDMods/scripts/io_packages/VersionCheck.lua
+
+## mod files for DDD
+- name: scripts/3dOvercast.lua
+  method: copy
+  game: "kh3d"
+  collectionOptional: true
+  source:
+    - name: DDDMods/scripts/3dOvercast.lua
+- name: scripts/3dSoftReset.lua
+  method: copy
+  game: "kh3d"
+  collectionOptional: true
+  source:
+    - name: DDDMods/scripts/3dSoftReset.lua
+- name: scripts/3dUnlockCrit.lua
+  method: copy
+  game: "kh3d"
+  collectionOptional: true
+  source:
+    - name: DDDMods/scripts/3dUnlockCrit.lua
