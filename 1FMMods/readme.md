@@ -131,8 +131,9 @@ There are a few extra steps if you want to use one of the randomizer mods, follo
  - This feature is a little wacky so it's disabled by default
 
 ## FasterAnims:
-- Speeds "mini cutscenes" as well as room transitions
-- Also speeds up summon animations. If you don't want that, replace "summonSpeedup = true" with "summonSpeedup = false"
+- By default speeds "mini cutscenes", room transitions, and summon animations
+- If you don't want cutscenes and rooms to be sped up, replace "sceneSpeedup = true" with "sceneSpeedup = false"
+- If you don't want summons to be sped up, replace "summonSpeedup = true" with "summonSpeedup = false"
 - Default speed multiplier is 2.0, but you can change it to anything you like
 
 ## Autoattack:
