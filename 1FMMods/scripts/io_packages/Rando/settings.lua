@@ -1,5 +1,5 @@
 -- Prevent select key items from being randomized
--- Item IDs are listed in items.lua
+-- Item IDs are listed in itemNames.lua
 -- Available options: 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 206, 230
 -- For example, if you want to unrandomize Entry Pass and Navi-Gummi:
 -- Unrandomize = {206, 230}

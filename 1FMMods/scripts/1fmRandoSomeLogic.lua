@@ -2,6 +2,7 @@ LUAGUI_NAME = "1fmRandomizer"
 LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Use with InstantGummi"
 
+local saveLoaded = false
 local idFind = 0
 local idReplace = 0
 local textFind = ""
@@ -793,6 +794,7 @@ local function LoadRando()
 		return false
 	end
 
+	saveLoaded = true
 	local freshboot = false
 	for i=1, 255 do
 		itemData[i] = ReadArray(itemTable + ((i - 1) * 20), 20)
@@ -1444,17 +1446,14 @@ local function ValidSeed()
 		for j=1, 10 do
 			GetAvailability()
 			local HBWin = ItemAccessible(205, 1)
-			ConsolePrint(itemNames[205][1] .. ": " .."205" .. " = " .. itemsAvailable[205])
-			ConsolePrint(string.format("cd %s", tostring(ItemAccessible(205, 1))))
+			ConsolePrint(string.format("%s %s", itemNames[205][1], tostring(ItemAccessible(205, 1))))
 			for i=188, 191 do
-				ConsolePrint(itemNames[i][1] .. ": " .. i .. " = " .. itemsAvailable[i])
 				ConsolePrint(string.format("%s %s", itemNames[i][1], tostring(ItemAccessible(i, 1))))
 				HBWin = HBWin and ItemAccessible(i, 1)
 			end
 
 			local DIWin = true
 			for i=192, 199 do
-				ConsolePrint(itemNames[i][1] .. ": " .. i .. " = " .. itemsAvailable[i])
 				ConsolePrint(string.format("%s %s", itemNames[i][1], tostring(ItemAccessible(i, 1))))
 				DIWin = DIWin and ItemAccessible(i, 1)
 			end
@@ -1463,14 +1462,11 @@ local function ValidSeed()
 				ConsolePrint(string.format("%s %s", itemNames[keyitems[i]][1], tostring(ItemAccessible(keyitems[i], 1))))
 			end
 
-			ConsolePrint(itemNames[211][1] .. ": " .."211" .. " = " .. itemsAvailable[211])
-			ConsolePrint(itemNames[228][1] .. ": " .."228" .. " = " .. itemsAvailable[228])
-			ConsolePrint("Dalmations avail: " .. dalmatiansAvailable)
 			local misc = dalmatiansAvailable == 99 and ItemAccessible(228, 1) and ItemAccessible(211, 3)
 
 			ConsolePrint(string.format("Complexity %d", j))
 			if HBWin then
-				ConsolePrint("HBWin")
+				ConsolePrint("HB Win")
 			end
 			if DIWin then
 				ConsolePrint("DI Win")
@@ -1752,8 +1748,7 @@ local function UpdateInventory(HUDNow)
 	end
 
 	for i=1, 255 do
-		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and
-																i ~= itemids[i] then
+		if not string.find(ItemType(i), "Weapon") and not string.find(ItemType(i), "Accessory") and i ~= itemids[i] and not saveLoaded then
 			local itemCount = ReadByte(inventory + (i - 1))
 			local dif = itemCount - inventoryUpdater[i]
 			if dif ~= 0 then
@@ -2592,4 +2587,3 @@ function _OnFrame()
 		end
 	end
 end
-
