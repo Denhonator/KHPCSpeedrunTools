@@ -1409,6 +1409,7 @@ local function SaveRando()
 		{"\nShops:\n", shops, "%03x %02x\n", 3, 1, 2559},
 		{"\nSynths:\n", synths, "%02x", 2},
 		{"\nMagic:\n", perMagicShuffle, "%x %x\n", 1},
+		{"\nTrinities:\n", trinityTable, "%x %x\n", 1},
 		{"\nSora stats:\n", soraLevels, "%02d %x\n", 1},
 		{"\nSora abilities1:\n", soraAbilities, "%02d %x\n", 1},
 		{"\nSora abilities2:\n", soraAbilities2, "%02d %x\n", 1},
