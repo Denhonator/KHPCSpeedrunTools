@@ -26,7 +26,7 @@ Note that using mods that affect a speedrun are not allowed unless specifically 
 
 ### Load Removers
 
-#### Option one
+#### (recommended) Option one
 
 After selecting your game in the `Game Name` field in the `Edit Splits` window, press the `Activate` button.
 
