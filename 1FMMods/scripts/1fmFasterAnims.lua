@@ -26,11 +26,11 @@ function inTimedEvent()
 end
 
 function inSummoning()
-	return ReadInt(summoning) == 0 or summonSpeedup
+	return ReadInt(summoning) == 0 and summonSpeedup
 end
 
 function inScene()
-	return (ReadFloat(soraHUD) < 1 and ReadInt(inCutscene) > 0 and ReadInt(inCutscene) ~= 8  and ReadInt(skippable) ~= 1025) or sceneSpeedup
+	return (ReadFloat(soraHUD) < 1 and ReadInt(inCutscene) > 0 and ReadInt(inCutscene) ~= 8  and ReadInt(skippable) ~= 1025) and sceneSpeedup
 end
 
 function inDIBoatSide()
