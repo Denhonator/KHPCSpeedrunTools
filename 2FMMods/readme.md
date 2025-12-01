@@ -49,7 +49,7 @@ Not all of these scripts are allowed in speedruns
 
 ### <a name="omm_skip"></a> Setup - Open KH Mod Manager
 - Open the `Collection Settings` menu via the button on the right side:
-![image](images/collection_settings.png)
+![image](../images/collection_settings.png)
 - Select any and all mods in this pop up you wish to run with
 - Close the pop up
 - In the `Patching` menu select one of the `Build` options
