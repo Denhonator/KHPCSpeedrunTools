@@ -1,45 +1,45 @@
 state("KINGDOM HEARTS Dream Drop Distance", "EG Global") // 1.0.0.10
 {
-    byte in_game : 0xA9966C;
-    byte reset : 0xAC9098;
     byte world : 0x9CF720;
     byte room : 0x9CF721;
     byte scene : 0x9CF722;
-    byte fightend : 0x9E96E1;
+    byte fight_end : 0x9E6BD8;
+    byte game_start : 0x9EB208;
+    byte reset : 0xAC9098;
     byte loading : 0x14C89B68;
 }
 
 // This is not verified as I do not own the Epic Version for JP
 // state("KINGDOM HEARTS Dream Drop Distance", "EG JP")
 // {
-//     byte in_game : 0xA9962C;
-//     byte reset : 0xAC9058;
 //     byte world : 0x9CF720;
 //     byte room : 0x9CF721;
 //     byte scene : 0x9CF722;
-//     byte fightend : 0x9E66E1;
+//     byte fight_end : 0x9E6BD8;
+//     byte game_start : 0x9EB208;
+//     byte reset : 0xAC9058;
 //     byte loading : 0x14C89B28;
 // }
 
 state("KINGDOM HEARTS Dream Drop Distance", "Steam Global") // 1.0.0.2
 {
-    byte in_game : 0xA99DEC;
-    byte reset : 0xAC9818;
     byte world : 0x9CF730;
     byte room : 0x9CF731;
     byte scene : 0x9CF732;
-    byte fightend : 0x9E96F1;
+    byte fight_end : 0x9E6BE8;
+    byte game_start : 0x9EB218;
+    byte reset : 0xAC9818;
     byte loading : 0x14C8A2E8;
 }
 
 state("KINGDOM HEARTS Dream Drop Distance", "Steam JP") // 1.0.0.2
 {
-    byte in_game : 0xA99DEC;
-    byte reset : 0xAC9818;
     byte world : 0x9CF730;
     byte room : 0x9CF731;
     byte scene : 0x9CF732;
-    byte fightend : 0x9E96F1;
+    byte fight_end : 0x9E6BE8;
+    byte game_start : 0x9EB218;
+    byte reset : 0xAC9818;
     byte loading : 0x14C8A2E8;
 }
 
@@ -72,7 +72,6 @@ startup
             settings.Add("yxeh", false, "Young Xehanort", "riku_boss");
     settings.Add("ff", false, "Forced Fight splits");
         settings.Add("sora_ff", false, "Sora Fights", "ff");
-            settings.Add("ssd", false, "Second District", "sora_ff");
             settings.Add("square", false, "Square", "sora_ff");
             settings.Add("town", false, "Town", "sora_ff");
             settings.Add("ap", false, "Amusement Park", "sora_ff");
@@ -82,7 +81,6 @@ startup
             settings.Add("dino", false, "Carriage Defense", "sora_ff");
             settings.Add("msm", false, "Dungeon", "sora_ff");
         settings.Add("riku_ff", false, "Riku Fights", "ff");
-            settings.Add("rsd", false, "Second District", "riku_ff");
             settings.Add("rfd", false, "First District", "riku_ff");
             settings.Add("bike", false, "Light Cycle Commantis", "riku_ff");
             settings.Add("rcity", false, "City", "riku_ff");
@@ -98,13 +96,15 @@ startup
 
 start
 {
-   return current.in_game == 1 && old.in_game != 1 && current.reset == 0;
+    vars.in_game = current.game_start == 2 && old.game_start == 1;
+    return vars.in_game && current.reset == 0;
 }
 
 split
 {    
     int world = current.world;
-    bool fight_complete = current.fightend == 1 && old.fightend == 0;
+    // boss fight == 143, mob fight == 10
+    bool fight_complete = (current.fight_end == 10 || current.fight_end == 143) && old.fight_end == 0;
     if (fight_complete) {
         switch (world) {
             // Initial/Atlantica/Merlins Tower
@@ -113,17 +113,11 @@ split
                 break;
             // Station of Awakening
             case 2:
-                return true; // final fight - Armored Ventus Nightmare 2-4-10
+                return true; // final fight - Armored Ventus Nightmare 2-4-10 riku none
             // Traverse Town
             case 3:
                 if (current.room == 1 && current.scene == 11) {
                     return settings["rfd"];
-                }
-                if (current.room == 2 && current.scene == 0) {
-                    return settings["ssd"];
-                }
-                if (current.room == 2 && current.scene == 10) {
-                    return settings["rsd"];
                 }
                 if (current.room == 3 && current.scene == 0) {
                     return settings["sbr"];
@@ -286,12 +280,17 @@ init
         }
     }
     vars.completed_splits = new HashSet<string>();
+    vars.initial_load = false;
     timer.IsGameTimePaused = false;
 }
 
 reset
 {
-    return current.reset > 0 && old.reset == 0;
+    if (current.reset > 0 && old.reset == 0) {
+        vars.in_game = false;
+        return true;
+    }
+    return false;
 }
 
 update
@@ -301,5 +300,11 @@ update
 
 isLoading
 {
-    return current.loading == 1 && current.in_game == 1;
+    if (current.world == 255 && current.room == 255 && current.scene == 255) {
+        vars.initial_load = true;
+    }
+    if (vars.initial_load && current.game_start == 1 && old.game_start == 0) {
+        vars.initial_load = false;
+    }
+    return current.loading == 1 && vars.in_game || vars.initial_load;
 }
