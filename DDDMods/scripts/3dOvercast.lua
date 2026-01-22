@@ -12,6 +12,6 @@ end
 
 function _OnFrame()
 	for i = 0, 20 do
-		WriteByte(forecasts + i * 8, 6)
+		WriteByte(forecast + i * 8, 6)
 	end
 end
