@@ -2263,7 +2263,7 @@ local function FlagFixes()
 	end
 
 	if ReadByte(world) == 3 and ReadByte(room) == 2 and ReadByte(cutsceneFlags) == 35 then
-		WriteByte(unequipBlacklist, ReadByte(soraStats + 25))
+		WriteByte(unequipBlacklist, ReadByte(soraStats))
 	else
 		for i=0, 3 do
 			WriteByte(unequipBlacklist + (i * 4), 0)
@@ -2500,7 +2500,7 @@ local function EquipmentFixes()
 	for p=0, 2 do
 		local accOff = (p * 116)
 		for i=0, 3 do
-			local eqID = ReadByte(soraStats + accOff + i)
+			local eqID = ReadByte(soraStats - 54 + accOff + i)
 			local eqName = ReadByte(itemTable + ((eqID - 1) * 20))
 			if eqName == 86 or eqName == 88 then
 				expMult = expMult + 0.2
