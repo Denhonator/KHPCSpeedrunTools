@@ -26,7 +26,7 @@ function inTimedEvent()
 end
 
 function inSummoning()
-	return ReadInt(summoning) == 0 and summonSpeedup
+	return ReadInt(summoning) == 0 or summonSpeedup
 end
 
 function inScene()
