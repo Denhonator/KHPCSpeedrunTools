@@ -6,7 +6,7 @@ state("KINGDOM HEARTS III", "EGS")
 	uint transition : "KINGDOM HEARTS III.exe", 0x092D1EE8, 0x600;
 	uint kbload : "KINGDOM HEARTS III.exe", 0x09D2E310, 0x120, 0x18, 0x70, 0x90, 0xB8, 0x48;
 	uint menuScreen : "KINGDOM HEARTS III.exe", 0x09D2E310, 0x2B0, 0x6B8;
-	bool fightend : "KINGDOM HEARTS III.exe", 0x09D62910, 0xA18, 0x700, 0x6D0, 0x178, 0xB0;
+	bool fightend : "KINGDOM HEARTS III.exe", 0x9D62B58, 0x118, 0x2E0, 0x50, 0x178, 0xB0;
 	bool fightend2 : "KINGDOM HEARTS III.exe", 0x092D1EE0, 0xE30, 0x268, 0xC0, 0xF8, 0xB0;
 	string2 world : "KINGDOM HEARTS III.exe", 0x9302795;
 }
@@ -19,7 +19,7 @@ state("KINGDOM HEARTS III", "Steam")
 	uint transition : "KINGDOM HEARTS III.exe", 0x09DE3B68, 0x7A0;
 	uint kbload : "KINGDOM HEARTS III.exe", 0x09D48E70, 0x120, 0x18, 0x70, 0x90, 0xB8, 0x48;
 	uint menuScreen : "KINGDOM HEARTS III.exe", 0x09D48E70, 0x2B0, 0x720;
-	bool fightend : "KINGDOM HEARTS III.exe", 0x09D62910, 0xA18, 0x700, 0x6D0, 0x178, 0xB0;
+	bool fightend : "KINGDOM HEARTS III.exe", 0x9B17B88, 0x118, 0x2E0, 0x50, 0x178, 0xB0;
 	bool fightend2 : "KINGDOM HEARTS III.exe", 0x09DE3B98, 0xE30, 0x268, 0xC0, 0xF8, 0xB0;
 	string2 world : "KINGDOM HEARTS III.exe", 0x87F8825;
 }
@@ -31,6 +31,7 @@ startup
 	
 	settings.Add("WorldSplit", false, "Split on enter world");
 	settings.Add("DataSplit", false, "Split on bosses (like data org)");
+	settings.Add("AllSplit", false, "Split on all fights");
 	settings.Add("IGT", false, "IGT Mode (don't use)");
 }
 
@@ -42,7 +43,8 @@ gameTime
 split
 {
 	return (current.world != old.world && settings["WorldSplit"]) ||
-		(settings["DataSplit"] && current.fightend2 && !old.fightend2);
+		(settings["DataSplit"] && current.fightend2 && !old.fightend2) ||
+		(settings["AllSplit"] && current.fightend && !old.fightend);
 }
 
 exit
@@ -53,7 +55,7 @@ exit
 
 init
 {
-	if (modules.First().ModuleMemorySize == 177639424)
+	if (modules.First().ModuleMemorySize == 177639424 || modules.First().ModuleMemorySize == 177430528)
 		version = "Steam";
 }
 
