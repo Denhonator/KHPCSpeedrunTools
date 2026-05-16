@@ -43,22 +43,25 @@ function importVars(file)
 		end
 		ConsolePrint(string.format("%s%s%s", errorString, msg, errorString))
 	else
-		if slashIdx then
-			ConsolePrint(string.format("Running with %s!", string.sub(file, slashIdx + 1, #file)))
-		else
-			ConsolePrint(string.format("Running with %s!", file))
+		-- Extra check for version overlaps - first 4 of string
+		if ReadByte(beepHack) == 9 then
+			if slashIdx then
+				ConsolePrint(string.format("Running with %s!", string.sub(file, slashIdx + 1, #file)))
+			else
+				ConsolePrint(string.format("Running with %s!", file))
+			end
+			return true
 		end
 	end
+	return false
 end
 
 canExecute = true
 ConsolePrint("KH1 detected, running script")
 for _, version_name in ipairs(versions) do
 	if ReadByte(versions_table[version_name]) == 106 then
-		importVars(version_name)
-		canExecute = true
-		-- Extra check for version overlaps - first 4 of string
-		if ReadInt(posDebugString) == 540680280 then
+		if importVars(version_name) then
+			canExecute = true
 			break
 		end
 	end

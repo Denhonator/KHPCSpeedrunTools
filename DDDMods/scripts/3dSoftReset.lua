@@ -1,4 +1,4 @@
-LUAGUI_NAME = "dddSoftReset"
+LUAGUI_NAME = "3dSoftReset"
 LUAGUI_AUTH = "deathofall84 (original by denhonator)"
 LUAGUI_DESC = "Soft reset with shoulder buttons + start"
 

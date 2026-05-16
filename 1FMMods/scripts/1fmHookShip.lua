@@ -12,9 +12,8 @@ end
 
 function _OnFrame()
 	if canExecute then
-		ship_check = ReadByte(hookship) == 1 or ReadByte(hookship) == 255
 		dest_check = ReadByte(dest) == 13 and ReadByte(neverland) == 2
-		if ship_check and dest_check then
+		if ReadByte(hookship) == 1 and dest_check then
 			WriteByte(hookship, 0)
 			WriteString(posDebugString, "            Hook  ship  100%%!              ")
 		end

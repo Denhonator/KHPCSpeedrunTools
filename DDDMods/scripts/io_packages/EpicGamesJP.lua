@@ -5,5 +5,8 @@ reset = 0xAC9098
 copyright_skip = 0xA99670
 input = 0x9E9D98
 
+-- forecast
+forecast = 0xA50F28
+
 -- crit unlock
 unlock = 0xA72D30
