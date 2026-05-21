@@ -35,6 +35,7 @@ startup
 	settings.Add("DataSplit", false, "Split on bosses (like data org)");
 	settings.Add("AllSplit", false, "Split on fight end when it gives a bonus");
 	settings.Add("AllSplit2", false, "Split on fight end slowdown");
+	settings.Add("KGSplit", false, "Split on fight end slowdown also in Keyblade Graveyard");
 	settings.Add("IGT", false, "IGT Mode (don't use)");
 }
 
@@ -48,7 +49,8 @@ split
 	return (current.world != old.world && settings["WorldSplit"]) ||
 		(settings["DataSplit"] && current.fightend2 && !old.fightend2) ||
 		(settings["AllSplit"] && current.fightend && !old.fightend) || 
-		(settings["AllSplit2"] && current.slowdown == 0.05f && old.slowdown == 1.0f);
+		(settings["AllSplit2"] && current.slowdown == 0.05f && old.slowdown == 1.0f && 
+		(settings["KGSplit"] || current.world != "kg"));
 }
 
 exit
