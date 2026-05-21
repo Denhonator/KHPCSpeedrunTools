@@ -8,6 +8,7 @@ state("KINGDOM HEARTS III", "EGS")
 	uint menuScreen : "KINGDOM HEARTS III.exe", 0x09D2E310, 0x2B0, 0x6B8;
 	bool fightend : "KINGDOM HEARTS III.exe", 0x9D62B58, 0x118, 0x2E0, 0x50, 0x178, 0xB0;
 	bool fightend2 : "KINGDOM HEARTS III.exe", 0x092D1EE0, 0xE30, 0x268, 0xC0, 0xF8, 0xB0;
+	float slowdown : "KINGDOM HEARTS III.exe", 0xA7058C0, 0x360, 0x88, 0x488;
 	string2 world : "KINGDOM HEARTS III.exe", 0x9302795;
 }
 
@@ -21,6 +22,7 @@ state("KINGDOM HEARTS III", "Steam")
 	uint menuScreen : "KINGDOM HEARTS III.exe", 0x09D48E70, 0x2B0, 0x720;
 	bool fightend : "KINGDOM HEARTS III.exe", 0x9B17B88, 0x118, 0x2E0, 0x50, 0x178, 0xB0;
 	bool fightend2 : "KINGDOM HEARTS III.exe", 0x09DE3B98, 0xE30, 0x268, 0xC0, 0xF8, 0xB0;
+	float slowdown : "KINGDOM HEARTS III.exe", 0x9D53718, 0x360, 0x88, 0x488;
 	string2 world : "KINGDOM HEARTS III.exe", 0x87F8825;
 }
 
@@ -31,7 +33,8 @@ startup
 	
 	settings.Add("WorldSplit", false, "Split on enter world");
 	settings.Add("DataSplit", false, "Split on bosses (like data org)");
-	settings.Add("AllSplit", false, "Split on all fights");
+	settings.Add("AllSplit", false, "Split on fight end when it gives a bonus");
+	settings.Add("AllSplit2", false, "Split on fight end slowdown");
 	settings.Add("IGT", false, "IGT Mode (don't use)");
 }
 
@@ -44,7 +47,8 @@ split
 {
 	return (current.world != old.world && settings["WorldSplit"]) ||
 		(settings["DataSplit"] && current.fightend2 && !old.fightend2) ||
-		(settings["AllSplit"] && current.fightend && !old.fightend);
+		(settings["AllSplit"] && current.fightend && !old.fightend) || 
+		(settings["AllSplit2"] && current.slowdown == 0.05f && old.slowdown == 1.0f);
 }
 
 exit
