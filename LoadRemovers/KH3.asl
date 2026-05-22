@@ -30,6 +30,7 @@ startup
 {
 	vars.booting = false;
 	vars.lastMenuScreen = 0;
+	vars.lastSplit = 0.0f;
 	
 	settings.Add("WorldSplit", false, "Split on enter world");
 	settings.Add("DataSplit", false, "Split on bosses (like data org)");
@@ -46,11 +47,15 @@ gameTime
 
 split
 {
-	return (current.world != old.world && settings["WorldSplit"]) ||
+	bool splitNow = (current.world != old.world && settings["WorldSplit"]) ||
 		(settings["DataSplit"] && current.fightend2 && !old.fightend2) ||
 		(settings["AllSplit"] && current.fightend && !old.fightend) || 
 		(settings["AllSplit2"] && current.slowdown == 0.05f && old.slowdown == 1.0f && 
 		(settings["KGSplit"] || current.world != "kg"));
+	bool willSplit = splitNow && vars.lastSplit <= 0.0f;
+	vars.lastSplit = splitNow ? 2.0f : vars.lastSplit -= 0.01f;
+	
+	return willSplit;
 }
 
 exit
