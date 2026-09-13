@@ -180,10 +180,10 @@ startup
         settings.Add("leon", true, "Leon", "optional_splits");
         settings.Add("crank", true, "Crank Tower - Fight End", "optional_splits");
         settings.SetToolTip("crank", "Split on killing crank tower.");
-        settings.Add("crank_alt", false, "Crank Tower - Post Fight Cutscene", "optional_splits");
+        settings.Add("crank_alt", false, "Crank Tower - Post Fade", "optional_splits");
         settings.SetToolTip("crank_alt", "Split after the fade out when the cutscene triggers. Makes Trickmaster the consistent split and adds the load out time to this split.");
         settings.Add("sabor_1", true, "Sabor 1", "optional_splits");
-        settings.Add("power_wilds", false, "Split after Power Wilds", "optional_splits");
+        settings.Add("power_wilds", false, "Power Wilds", "optional_splits");
         settings.Add("sabor_2", true, "Sabor 2", "optional_splits");
         settings.Add("clayton_1", false, "Clayton 1", "optional_splits");
         settings.Add("wfc", false, "Waterfall Cavern", "optional_splits");
@@ -242,6 +242,7 @@ startup
 
     settings.Add("all_worlds_splits", false, "All Worlds categories");
         settings.Add("thunder", false, "Thunder", "all_worlds_splits");
+        settings.Add("thunder_alt", false, "Thunder - Beginner", "all_worlds_splits");
         settings.Add("power_boost", false, "100 Acre Wood Power Boost", "all_worlds_splits");
         settings.Add("torn_page_1", false, "Torn Page 1 Complete", "all_worlds_splits");
         settings.Add("torn_page_2", false, "Torn Page 2 Complete", "all_worlds_splits");
@@ -254,6 +255,7 @@ startup
         settings.Add("cloud_2", false, "Cloud 2", "all_worlds_splits");
         settings.Add("herc_cup", false, "Hercules Cup", "all_worlds_splits");
         settings.Add("atl_dock", false, "Atlantica Dock", "all_worlds_splits");
+        settings.Add("nl2", false, "Neverland 2 - Aero upgrade", "all_worlds_splits");
         settings.Add("urs_1", false, "Ursula 1", "all_worlds_splits");
         settings.Add("urs_2", false, "Ursula 2", "all_worlds_splits");
 
@@ -363,6 +365,7 @@ start
 
     // neverland vars
     vars.nl_puppies = 0;
+    vars.nl_magic_unlock = 0;
     vars.pre_hook = false;
 
     // end of world vars
@@ -1031,6 +1034,19 @@ split
                     )) {
                         return vars.completed_splits.Add("thunder") && settings["thunder"];
                     }
+                    if (current.magic_unlock_val > old.magic_unlock_val) {
+                        return vars.completed_splits.Add("thunder_alt") && settings["thunder_alt"];
+                    }
+                    break;
+                // neverland
+                case 13:
+                    if (current.magic_unlock_val > old.magic_unlock_val) {
+                        vars.nl_magic_unlock += 1;
+                    }
+                    // Second magic unlock is Aero upgrade
+                    if (current.in_gummi > 0 && vars.nl_magic_unlock == 2) {
+                        return vars.completed_splits.Add("nl2") && settings["nl2"];
+                    }
                     break;
             }
         }
@@ -1580,6 +1596,7 @@ init
 
     // neverland vars
     vars.nl_puppies = 0;
+    vars.nl_magic_unlock = 0;
     vars.pre_hook = false;
 
     // end of world vars

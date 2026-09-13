@@ -63,15 +63,6 @@ local achievementList = {
 	"Master Defender      "
 }
 
-function _OnInit()
-	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
-		Track(-1)
-		require("VersionCheck")
-	else
-		ConsolePrint("KH1 not detected, not running script")
-	end
-end
-
 local function Track(achID)
 	local f = io.open("achievements.txt")
 	if not f then
@@ -96,6 +87,15 @@ local function Track(achID)
 		end
 	end
 	ConsolePrint(string.format("Progress: %d/%d", achCount, #achievementList))
+end
+
+function _OnInit()
+	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
+		Track(-1)
+		require("VersionCheck")
+	else
+		ConsolePrint("KH1 not detected, not running script")
+	end
 end
 
 function _OnFrame()
