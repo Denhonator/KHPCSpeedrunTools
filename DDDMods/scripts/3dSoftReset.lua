@@ -1,6 +1,6 @@
 LUAGUI_NAME = "3dSoftReset"
 LUAGUI_AUTH = "deathofall84 (original by denhonator)"
-LUAGUI_DESC = "Soft reset with shoulder buttons + start"
+LUAGUI_DESC = "Soft Reset with L1 + R1 + Start"
 
 function _OnInit()
 	if GAME_ID == 0xE86A2A90 and ENGINE_TYPE == "BACKEND" then
@@ -12,7 +12,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if ReadInt(input) == 3848 then
+		if ReadInt(input) == 3080 then
 			WriteByte(reset, 1)
 		end
 		WriteByte(copyright_skip, 2)
