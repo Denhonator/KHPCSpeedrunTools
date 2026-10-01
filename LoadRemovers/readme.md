@@ -2,7 +2,7 @@
 All load removers have been updated to work with Epic Games release 1.0.0.10 and Steam 1.0.0.2 aside from Melody of Memory
 
 ## How to use:
-For all splitters aside from Melody of Memory these files are linked directly into LiveSplit and can be used as such. Choose one of the two bellow methods of install.
+For all splitters aside from Melody of Memory these files are linked directly into LiveSplit and can be used as such. Choose one of the two below methods of install.
 
 ## Disclaimer
 DO NOT DO BOTH INSTALL METHODS OR IT WILL DOUBLE SPLIT!
