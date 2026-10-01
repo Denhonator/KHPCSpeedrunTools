@@ -6,9 +6,11 @@ state("KINGDOM HEARTS FINAL MIX", "EG Global") // 1.0.0.10
     byte102 collected_items_2 : 0x2DEA291;  
     bool cutscene : 0x233F1F4;
     byte dest_behemoth_kills : 0x2DEA598;
+    byte door : 0x232E908;
     byte96 enemies_defeated : 0x2DEA53A;
     byte42 equips : 0x2DEA233;
     byte fightend : 0x2D54438;
+    byte in_garage : 0x2340ED9a;
     byte in_gummi : 0x50832D;
     bool load : 0x232E6E8;
     bool load_2 : 0x233F230;
@@ -41,9 +43,11 @@ state("KINGDOM HEARTS FINAL MIX", "EG JP") // 1.0.0.10
     byte102 collected_items_2 : 0x2DEA291;  
     bool cutscene : 0x233F1F4;
     byte dest_behemoth_kills : 0x2DEA598;
+    byte door : 0x232E908;
     byte96 enemies_defeated : 0x2DEA53A;
     byte42 equips : 0x2DEA233;
     byte fightend : 0x2D54438;
+    byte in_garage : 0x2340ED9;
     byte in_gummi : 0x50832D;
     bool load : 0x232E6E8;
     bool load_2 : 0x233F230;
@@ -76,9 +80,11 @@ state("KINGDOM HEARTS FINAL MIX", "Steam Global") // 1.0.0.2
     byte102 collected_items_2 : 0x2DE9891;  
     bool cutscene : 0x233E808;
     byte dest_behemoth_kills : 0x2DE9B98;
+    byte door : 0x232DF18;
     byte96 enemies_defeated : 0x2DE9B3A;
     byte42 equips : 0x2DE9833;
     byte fightend : 0x2D53A38;
+    byte in_garage : 0x233FEA1;
     byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
     bool load : 0x232DCE8;
     bool load_2 : 0x233E830;
@@ -111,9 +117,11 @@ state("KINGDOM HEARTS FINAL MIX", "Steam JP") // 1.0.0.2
     byte102 collected_items_2 : 0x2DE9891;  
     bool cutscene : 0x233E808;
     byte dest_behemoth_kills : 0x2DE9B98;
+    byte door : 0x232DF18;
     byte96 enemies_defeated : 0x2DE9B3A;
     byte42 equips : 0x2DE9833;
     byte fightend : 0x2D53A38;
+    byte in_garage : 0x233FEA1;
     byte in_gummi : 0x5075A8; // differs to cover a change on linux systems
     bool load : 0x232DCE8;
     bool load_2 : 0x233E830;
@@ -160,19 +168,27 @@ startup
         settings.Add("a2", true, "Ansem 2", "main");
 
     settings.Add("optional_splits", true, "All other Any % splits");
-        settings.Add("shadows_1", false, "Shadows 1 (first full group)", "optional_splits");
-        settings.Add("shadows_2", false, "Shadows 2 (post save point cutscene)", "optional_splits");
+        settings.Add("shadows_1", false, "Shadows 1", "optional_splits");
+        settings.SetToolTip("shadows_1", "Split on killing the first group of 4 shadows.");
+        settings.Add("shadows_2", false, "Shadows 2", "optional_splits");
+        settings.SetToolTip("shadows_2", "Split on the cutscene after touching the save point.");
         settings.Add("day_1", false, "Destiny Islands Day One", "optional_splits");
-        settings.Add("destiny", false, "Destiny Islands Day Two (on raft supplies claimed)", "optional_splits");
-        settings.Add("destiny_opt", false, "Destiny Islands Day Two (on transition)", "optional_splits");
+        settings.Add("destiny", false, "Destiny Islands Day Two Early", "optional_splits");
+        settings.SetToolTip("destiny", "Split on turning in raft supplies to Kairi.");
+        settings.Add("destiny_alt", false, "Destiny Islands Day Two", "optional_splits");
+        settings.SetToolTip("destiny_alt", "Split on scene transition after all text.");
         settings.Add("leon", true, "Leon", "optional_splits");
         settings.Add("crank", true, "Crank Tower - Fight End", "optional_splits");
-        settings.Add("crank_alt", false, "Crank Tower - Post Fight Cutscene", "optional_splits");
+        settings.SetToolTip("crank", "Split on killing crank tower.");
+        settings.Add("crank_alt", false, "Crank Tower - Post Fade", "optional_splits");
+        settings.SetToolTip("crank_alt", "Split after the fade out when the cutscene triggers. Makes Trickmaster the consistent split and adds the load out time to this split.");
         settings.Add("sabor_1", true, "Sabor 1", "optional_splits");
-        settings.Add("power_wilds", false, "Split after Power Wilds", "optional_splits");
+        settings.Add("power_wilds", false, "Power Wilds", "optional_splits");
         settings.Add("sabor_2", true, "Sabor 2", "optional_splits");
         settings.Add("clayton_1", false, "Clayton 1", "optional_splits");
         settings.Add("wfc", false, "Waterfall Cavern", "optional_splits");
+        settings.Add("simba", false, "Simba", "optional_splits");
+        settings.SetToolTip("simba", "Split on turning in Earth Shine to the Fairy Godmother.");
         settings.Add("tt_2", false, "Traverse Town 2", "optional_splits");
         settings.Add("save_al", false, "Save Aladdin", "optional_splits");
         settings.Add("pot", true, "Pot Centipede", "optional_splits");
@@ -184,19 +200,30 @@ startup
         settings.Add("jb", false, "Jack in the Box", "optional_splits");
         settings.Add("lsb", true, "LSB", "optional_splits");
         settings.Add("oogie", true, "Oogie Boogie", "optional_splits");
-        settings.Add("ship_early", false, "Hooks Ship (in gummi mission)", "optional_splits");
-        settings.Add("ship", false, "Hooks Ship (at first cutscene in world)", "optional_splits");
+        settings.Add("ship_early", false, "Hooks Ship Early", "optional_splits");
+        settings.SetToolTip("ship_early", "Split on encountering the ship in gummi mission.");
+        settings.Add("ship", false, "Hooks Ship", "optional_splits");
+        settings.SetToolTip("ship", "Split on the first cutscene in Neverland.");
         settings.Add("anti", true, "Anti Sora", "optional_splits");
         settings.Add("pre_hook", false, "Pre Hook", "optional_splits");
         settings.Add("fake_guard", false, "Fake Guard Armor", "optional_splits");
         settings.Add("riku", true, "Riku 1", "optional_splits");
         settings.Add("emblem", false, "Emblem Door", "optional_splits");
         settings.Add("dumbo_1", false, "Dumbo Skip 1", "optional_splits");
+        settings.SetToolTip("dumbo_1", "Split on the summon animation in the skip room.");
+        settings.Add("dumbo_1_alt", false, "Dumbo Skip 1 Late", "optional_splits");
+        settings.SetToolTip("dumbo_1_alt", "Split on transition into next room, works for dumboless.");
         settings.Add("mal", true, "Maleficent", "optional_splits");
         settings.Add("dragon", true, "Dragon Maleficent", "optional_splits");
         settings.Add("tt_4", false, "Traverse Town 4", "optional_splits");
         settings.Add("dumbo_2", false, "Dumbo Skip 2", "optional_splits");
+        settings.SetToolTip("dumbo_2", "Split on the summon animation in the skip room.");
+        settings.Add("dumbo_2_alt", false, "Dumbo Skip 2 Late", "optional_splits");
+        settings.SetToolTip("dumbo_2_alt", "Split on transition into next room, works for dumboless.");
         settings.Add("dumbo_3", false, "Dumbo Skip 3", "optional_splits");
+        settings.SetToolTip("dumbo_3", "Split on the summon animation in the skip room.");
+        settings.Add("dumbo_3_alt", false, "Dumbo Skip 3 Late", "optional_splits");
+        settings.SetToolTip("dumbo_3_alt", "Split on transition into next room, works for dumboless.");
         settings.Add("arch", false, "Arch Behemoth", "optional_splits");
         settings.Add("oc_portal", false, "Olympus Coliseum portal", "optional_splits");
         settings.Add("atl_portal", false, "Atlantica portal", "optional_splits");
@@ -215,6 +242,7 @@ startup
 
     settings.Add("all_worlds_splits", false, "All Worlds categories");
         settings.Add("thunder", false, "Thunder", "all_worlds_splits");
+        settings.Add("thunder_alt", false, "Thunder - Beginner", "all_worlds_splits");
         settings.Add("power_boost", false, "100 Acre Wood Power Boost", "all_worlds_splits");
         settings.Add("torn_page_1", false, "Torn Page 1 Complete", "all_worlds_splits");
         settings.Add("torn_page_2", false, "Torn Page 2 Complete", "all_worlds_splits");
@@ -227,6 +255,7 @@ startup
         settings.Add("cloud_2", false, "Cloud 2", "all_worlds_splits");
         settings.Add("herc_cup", false, "Hercules Cup", "all_worlds_splits");
         settings.Add("atl_dock", false, "Atlantica Dock", "all_worlds_splits");
+        settings.Add("nl2", false, "Neverland 2 - Aero upgrade", "all_worlds_splits");
         settings.Add("urs_1", false, "Ursula 1", "all_worlds_splits");
         settings.Add("urs_2", false, "Ursula 2", "all_worlds_splits");
 
@@ -336,6 +365,7 @@ start
 
     // neverland vars
     vars.nl_puppies = 0;
+    vars.nl_magic_unlock = 0;
     vars.pre_hook = false;
 
     // end of world vars
@@ -388,6 +418,7 @@ split
     bool fight_exp = current.sora_exp > old.sora_exp && current.sora_exp - old.sora_exp > 5;
     bool fight_complete = current.fightend == 2 && old.fightend == 0;
     bool death = current.sora_hp == 0 && old.sora_hp > 0;
+    bool whiteout = current.white > 0 && old.white == 0;
     vars.summon_timer = current.summon_load ? vars.summon_timer + (current.paused ? 0 : 1) : 0;
 
     // Final fight split always goes
@@ -750,18 +781,22 @@ split
                         return settings["destiny"];
                     }
                     if (old.room == 2 && current.room == 3 && current.scene == 2){
-                        return vars.completed_splits.Add("destiny_opt") && settings["destiny_opt"];                        
+                        return vars.completed_splits.Add("destiny_alt") && settings["destiny_alt"];                        
                     }
                     break;
                 // traverse town
                 case 3:
-                    if (current.room == 0 && current.scene == 3 && ((death) || (fight_exp))) {
+                    if (current.room == 0 && current.scene == 3 && ((death) || (fight_exp) || (whiteout))) {
                         if (settings["boss_rush"]) {
                             File.Copy(@"Boss Rush\004_Guard Armor.dat", vars.autosavedst, true);
                         }
                         return vars.completed_splits.Add("leon") && settings["leon"];
                     }
-                    if (current.room == 10 && current.scene == 11 && current.in_gummi > 0) {
+                    // earth shine returned
+                    if (current.collected_items_2[57] == 0 && old.collected_items_2[57] == 1) {
+                        return vars.completed_splits.Add("simba") && settings["simba"];
+                    }
+                    if (current.room == 10 && current.scene == 11 && (current.in_gummi > 0 || current.in_garage == 95 || current.in_gummi == 96)) {
                         return vars.completed_splits.Add("tt_2") && settings["tt_2"];
                     }
                     // oath keeper
@@ -777,7 +812,7 @@ split
                     break;
                 // deep jungle
                 case 5:
-                    if (current.room == 0 && current.scene == 0 && ((death) || (fight_exp))) {
+                    if (current.room == 0 && current.scene == 0 && ((death) || (fight_exp) || (whiteout))) {
                         return vars.completed_splits.Add("sabor_1") && settings["sabor_1"];
                     }
                     if (
@@ -843,8 +878,19 @@ split
                     if (current.room == 3 && current.scene == 13 && current.summon_load && vars.summon_timer > 30) {
                         return vars.completed_splits.Add("dumbo_1") && settings["dumbo_1"];
                     }
+                    if (old.room == 3 && current.room == 6 && current.door == 35) {
+                        if (current.scene == 13) {
+                            return vars.completed_splits.Add("dumbo_1_alt") && settings["dumbo_1_alt"];
+                        }
+                        if (current.scene == 14) {
+                            return vars.completed_splits.Add("dumbo_3_alt") && settings["dumbo_3_alt"];
+                        }
+                    }
                     if (current.room == 1 && current.scene == 14 && current.summon_load && vars.summon_timer > 30) {
                         return vars.completed_splits.Add("dumbo_2") && settings["dumbo_2"];
+                    }
+                    if (old.room == 1 && current.room == 2 && current.scene == 14 && current.door == 7) {
+                        return vars.completed_splits.Add("dumbo_2_alt") && settings["dumbo_2_alt"];
                     }
                     if (current.room == 3 && current.scene == 14 && current.summon_load && vars.summon_timer > 30) {
                         return vars.completed_splits.Add("dumbo_3") && settings["dumbo_3"];
@@ -987,6 +1033,19 @@ split
                         current.magic_unlock_val == 15
                     )) {
                         return vars.completed_splits.Add("thunder") && settings["thunder"];
+                    }
+                    if (current.magic_unlock_val > old.magic_unlock_val) {
+                        return vars.completed_splits.Add("thunder_alt") && settings["thunder_alt"];
+                    }
+                    break;
+                // neverland
+                case 13:
+                    if (current.magic_unlock_val > old.magic_unlock_val) {
+                        vars.nl_magic_unlock += 1;
+                    }
+                    // Second magic unlock is Aero upgrade
+                    if (current.in_gummi > 0 && vars.nl_magic_unlock == 2) {
+                        return vars.completed_splits.Add("nl2") && settings["nl2"];
                     }
                     break;
             }
@@ -1537,6 +1596,7 @@ init
 
     // neverland vars
     vars.nl_puppies = 0;
+    vars.nl_magic_unlock = 0;
     vars.pre_hook = false;
 
     // end of world vars
