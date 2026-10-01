@@ -286,7 +286,7 @@ init
 
 reset
 {
-    if (current.reset > 0 && old.reset == 0) {
+    if (current room < 60 && current.reset > 0 && old.reset == 0) {
         vars.in_game = false;
         return true;
     }
