@@ -136,7 +136,7 @@ start
 }
 
 split
-{    
+{
     bool fight_complete = current.state == 2 && old.state != 2;
     bool rebirth = current.character == 255; // 0 = sora, 255 = riku
     int scene_offset = 0;
@@ -294,7 +294,8 @@ exit
 }
 
 init
-{    
+{
+    vars.initial_load = false;
     vars.in_brawl = false;
     vars.completed_splits = new HashSet<string>();
     timer.IsGameTimePaused = false;
@@ -325,5 +326,5 @@ update
 
 isLoading
 {
-    return current.loading == 255;
+    return current.loading == 255 && (current.title != 0 || current.new_game == 7);
 }
