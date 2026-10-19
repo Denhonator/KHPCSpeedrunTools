@@ -281,6 +281,7 @@ init
     }
     vars.completed_splits = new HashSet<string>();
     vars.initial_load = false;
+    vars.in_game = false;
     timer.IsGameTimePaused = false;
 }
 
@@ -288,14 +289,19 @@ reset
 {
     if (current room < 60 && current.reset > 0 && old.reset == 0) {
         vars.in_game = false;
-        return true;
+        if (current.room < 60) {
+            vars.initial_load = true;
+            return true;
+        }
     }
     return false;
 }
 
 update
 {
-    
+    if (!vars.in_game) {
+        vars.in_game = current.game_start == 2 && old.game_start == 1;
+    }
 }
 
 isLoading
