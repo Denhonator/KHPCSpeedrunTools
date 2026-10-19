@@ -2,9 +2,11 @@ state("KINGDOM HEARTS II FINAL MIX", "EPIC-1.0.0.10")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC053;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABAE47;
+	short forcedTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB2E0;
 	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE0D4;
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8E40;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x713438;
+	byte difficulty: "KINGDOM HEARTS II FINAL MIX.exe", 0x9AB7C8;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23018;
 	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22DA0;
 	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F4C8;
@@ -38,9 +40,11 @@ state("KINGDOM HEARTS II FINAL MIX", "EPIC-1.0.0.9")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EBFF3;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABAE07;
+	short forcedTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB2A0;
 	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE094;
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8E00;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x713438;
+	byte difficulty: "KINGDOM HEARTS II FINAL MIX.exe", 0x9AB788;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22FD8;
 	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22D60;
 	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F488;
@@ -74,9 +78,11 @@ state("KINGDOM HEARTS II FINAL MIX", "STEAM-1.0.0.1")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC543;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB347;
+	short forcedTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB7E0;
 	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE5D4;
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD9340;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x7169B4;
+	byte difficulty: "KINGDOM HEARTS II FINAL MIX.exe", 0x9ABCC8;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23518;
 	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A232A0;
 	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0F9C8;
@@ -110,9 +116,11 @@ state("KINGDOM HEARTS II FINAL MIX", "STEAM-1.0.0.2")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EC5B3;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB3C7;
+	short forcedTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0xABB860;
 	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBEE654;
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD93C0;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x7169B4;
+	byte difficulty: "KINGDOM HEARTS II FINAL MIX.exe", 0x9ABD48;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23598;
 	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A23320;
 	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0FA48;
@@ -146,9 +154,11 @@ state("KINGDOM HEARTS II FINAL MIX", "STEAM-1.0.0.1JP")
 {
 	bool load : "KINGDOM HEARTS II FINAL MIX.exe", 0x8EB543;
 	byte black: "KINGDOM HEARTS II FINAL MIX.exe", 0xABA347;
+	short forcedTimer: "KINGDOM HEARTS II FINAL MIX.exe", 0xABA7E0;
 	bool saveload: "KINGDOM HEARTS II FINAL MIX.exe", 0xBED5D4;
 	bool fightend: "KINGDOM HEARTS II FINAL MIX.exe", 0xAD8340;
 	byte titlescreen: "KINGDOM HEARTS II FINAL MIX.exe", 0x7159B4;
+	byte difficulty: "KINGDOM HEARTS II FINAL MIX.exe", 0x9AACC8;
 	byte soraHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A22518;
 	short storyHP: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A222A0;
 	byte cloneCount: "KINGDOM HEARTS II FINAL MIX.exe", 0x2A0E9C8;
@@ -234,26 +244,32 @@ startup
 				settings.Add("02-22-9D", false, "Twilight Thorn", "STT");
 				settings.Add("02-05-54", false, "Hayner", "STT");
 				settings.Add("02-05-55", false, "Vivi", "STT");
+				settings.Add("02-05-56", false, "Sandlot Dusks", "STT");
 				settings.Add("02-05-57", false, "Axel I", "STT");
-				settings.Add("02-0C-7D", false, "7 Wonders: Bag", "STT");
-				settings.Add("02-14-89", true , "Axel II", "STT");
+				settings.Add("02-05-58", false, "Setzer", "STT");
+				settings.Add("02-24-9F", false, "Seven Wonders: Vivi Clones", "STT");
+				settings.Add("02-0A-79", false, "Seven Wonders: Shadow Roxas", "STT");
+				settings.Add("02-0C-7D", false, "Seven Wonders: Bag", "STT");
+				settings.Add("02-03-49", false, "Back Alley Nobodies", "STT");
+				settings.Add("02-13-86", false, "Mansion: Basement Hall Nobodies", "STT");
+				settings.Add("02-14-89", true, "Axel II", "STT");
 
-			settings.Add("TT1", true, "Twilight Town 1", "any");
+			settings.Add("TT1", true, "Twilight Town (1st Visit)", "any");
 				settings.Add("02-08-6C", false, "Station Plaza Nobodies","TT1");
-				settings.Add("02-19-95", false, "Tower: Entryway Heartless","TT1");
+				settings.Add("02-19-95", false, "The Tower Shadows","TT1");
 				settings.Add("02-1D-98", false, "Tower: Star Chamber Heartless","TT1");
 				settings.Add("02-1E-99", false, "Tower: Moon Chamber Heartless","TT1");
-				settings.Add("02-1C-04", true , "Leaving Tower (on the Door)","TT1");
-				settings.Add("02-1B-04", true , "Leaving Tower (Cutscene leaving Tower)","TT1");
+				settings.Add("02-1C-04", true, "Leaving Tower (on the Door)","TT1");
+				settings.Add("02-1B-04", true, "Leaving Tower (Cutscene leaving Tower)","TT1");
 	
 
-			settings.Add("HB1", true, "Hollow Bastion 1", "any");	
+			settings.Add("HB1", true, "Hollow Bastion (1st Visit)", "any");	
 				settings.Add("04-09-33", false, "Borough Nobodies", "HB1");
-				settings.Add("04-08-34", true , "Bailey Nobodies","HB1");
+				settings.Add("04-08-34", true, "Bailey Nobodies","HB1");
 
-			settings.Add("LoD1", true, "Land of Dragons 1", "any");
+			settings.Add("LoD1", true, "The Land of Dragons (1st Visit)", "any");
+				settings.Add("08-01-44", false, "Encampment Heartless", "LoD1");
 				settings.Add("Missions", false, "Missions", "LoD1");
-					settings.Add("08-01-44", false, "Encampment Heartless", "Missions");
 					settings.Add("08-02-45", false, "Mission 1: The Surprise Attack", "Missions");
 					settings.Add("08-02-50", false, "Mission 2: The Ambush", "Missions");
 					settings.Add("08-01-46", false, "Mission 3: The Search", "Missions");
@@ -261,101 +277,118 @@ startup
 				settings.Add("08-05-48", false, "Village Cave Heartless", "LoD1");
 				settings.Add("08-07-49", false, "Summit Timed Fight", "LoD1");
 				settings.Add("08-08-4A", false, "Imperial Square Heartless 1", "LoD1");
-				settings.Add("08-09-4B", true , "Shan-Yu","LoD1");
+				settings.Add("08-09-4B", true, "Shan-Yu","LoD1");
 
-			settings.Add("OC1", true,  "Olympus Coliseum","any");
+			settings.Add("OC1", true,  "Olympus Coliseum (1st Visit)","any");
 				settings.Add("06-05-6F", false, "Hades Escape","OC1");
 				settings.Add("06-07-72", false, "Cerberus","OC1");
 				settings.Add("06-00-8C", false, "Phil's Training: Practice (Urns 1)","OC1");
 				settings.Add("06-00-8D", false, "Phil's Training: Maniac (Urns 2)","OC1");
 				settings.Add("06-11-7B", false, "Demyx's Water Clones","OC1");
 				settings.Add("06-08-74", false, "Pete","OC1");			
-				settings.Add("06-12-AB", true , "The Hydra","OC1");
+				settings.Add("06-12-AB", true, "The Hydra","OC1");
 
-			settings.Add("04-09-3A", false, "HB2 Borough Heartless","any");
-			settings.Add("04-0D-08", false, "Acquire Chicken Little (HB2)","any");
+			settings.Add("HB2", true,  "Hollow Bastion (2nd Visit)","any");
+				settings.Add("04-09-3A", false, "Borough Heartless","HB2");
+				settings.Add("04-0D-08", false, "Acquire Chicken Little","HB2");
 
-			settings.Add("BC1", true, "Beast's Castle 1","any");
+			settings.Add("BC1", true, "Beast's Castle (1st Visit)","any");
+				settings.Add("05-01-44", false, "Parlor Shadows","BC1");
 				settings.Add("05-0B-48", false, "Thresholder","BC1");
 				settings.Add("05-03-45", false, "The Beast", "BC1");
 				settings.Add("05-05-4E", false, "Shadow Stalker","BC1");
 				settings.Add("05-05-4F", true , "Dark Thorn","BC1");
 
-			settings.Add("0C-00-33", false, "Minnie Escort","any");
+			settings.Add("DC", true, "Disney Castle","any");
+				settings.Add("0C-02-01", false, "Minnie Escort (Part 1)","DC");
+				settings.Add("0C-00-33", false, "Minnie Escort (Part 2)","DC");
+
 			settings.Add("TR", true, "Timeless River", "any");
-				settings.Add("0D-05-37", false, "Building Site Heartless","TR");
-				settings.Add("0D-04-36", false, "Lilliput Heartless","TR");
-				settings.Add("0D-06-38", false, "Scene of the Fire Heartless","TR");
-				settings.Add("0D-07-39", false, "Mickey's House Heartless","TR");
+				settings.Add("0D-01-3A", false, "Past Pete","TR");
+				settings.Add("Windows", false, "Windows of Time", "TR");
+					settings.Add("0D-05-37", false, "Building Site Heartless","Windows");
+					settings.Add("0D-04-36", false, "Lilliput Heartless","Windows");
+					settings.Add("0D-06-38", false, "Scene of the Fire Heartless","Windows");
+					settings.Add("0D-07-39", false, "Mickey's House Heartless","Windows");
 				settings.Add("0D-02-34", false, "Boat Pete", "TR");
-				settings.Add("0D-03-35", true , "Timeless River Pete","TR");
+				settings.Add("0D-03-35", true, "Timeless River Pete","TR");
 
-			settings.Add("PR1", true, "Port Royal 1", "any");
+			settings.Add("PR1", true, "Port Royal (1st Visit)", "any");
+				settings.Add("10-01-34", false, "Harbor Pirates 1","PR1");
 				settings.Add("10-02-37", false, "Town Heartless", "PR1");
-				settings.Add("10-09-3B", false, "Cave Mouth Timed Fight", "PR1");
+				settings.Add("10-09-3B", false, "Isla de Muerta: Cave Mouth Timed Fight", "PR1");
 				settings.Add("10-07-3A", false, "Medallion Fight", "PR1");
-				settings.Add("10-0A-3C", true , "Captain Barbossa","PR1");
+				settings.Add("10-0A-3C", true, "Captain Barbossa","PR1");
 
-			settings.Add("AG1", true, "Agrabah 1", "any");
+			settings.Add("AG1", true, "Agrabah (1st Visit)", "any");
+				settings.Add("07-00-39", false, "Agrabah Heartless", "AG1");
 				settings.Add("07-09-02", false, "Abu Escort", "AG1");
 				settings.Add("07-0D-4F", false, "Chasm of Challenges", "AG1");
 				settings.Add("07-0A-3A", false, "Treasure Room Heartless", "AG1");
-				settings.Add("07-03-3B", true , "Volcano Lord & Blizzard Lord","AG1");
+				settings.Add("07-03-3B", true, "Volcano Lord & Blizzard Lord","AG1");
 
-			settings.Add("HT1", true, "Halloween Town 1","any");
+			settings.Add("HT1", true, "Halloween Town (1st Visit)","any");
+				settings.Add("0E-00-33", false, "Halloween Town Square Heartless","HT1");
 				settings.Add("0E-06-35", false, "Candy Cane Lane Heartless","HT1");
 				settings.Add("0E-03-34", false, "Prison Keeper","HT1");
-				settings.Add("0E-09-37", true , "Oogie Boogie","HT1");
+				settings.Add("0E-09-37", true, "Oogie Boogie","HT1");
 
-			settings.Add("TT2", true, "Twilight Town 2", "any");
+			settings.Add("TT2", true, "Twilight Town (2nd Visit)", "any");
 				settings.Add("02-04-50", false, "Sandlot Nobodies","TT2");
 				settings.Add("02-02-48", false, "Acquire Limit Form","TT2");
 
-			settings.Add("SP1", true,  "Space Paranoids 1","any");
+			settings.Add("SP1", true,  "Space Paranoids (1st Visit)","any");
 				settings.Add("11-02-3E", false, "Light Cycle","SP1");
 				settings.Add("11-03-36", false, "Dataspace Screens Minigame","SP1");
-				settings.Add("11-04-37", true , "Hostile Program","SP1");
+				settings.Add("11-04-37", true, "Hostile Program","SP1");
 
-			settings.Add("HB3", true, "Hollow Bastion 3","any");
+			settings.Add("HB3", true, "Hollow Bastion (3rd Visit)","any");
 				settings.Add("04-14-56", false, "Corridors Fight", "HB3");
 				settings.Add("04-12-49", false, "Restoration Site Nobodies", "HB3");
 				settings.Add("04-04-37", false, "Demyx","HB3");
-				settings.Add("04-10-41", false, "Final Fantasy Fights","HB3");
-				settings.Add("04-11-42", true , "1K Heartless","HB3");
+				settings.Add("04-10-3E", false, "Ravine Trail Heartless with Yuffie","HB3");
+				settings.Add("04-10-3F", false, "Ravine Trail Heartless with Leon","HB3");
+				settings.Add("04-10-40", false, "Ravine Trail Heartless with Tifa","HB3");
+				settings.Add("04-10-41", false, "Ravine Trail Heartless with Cloud","HB3");
+				settings.Add("04-11-42", true, "1000 Heartless","HB3");
 
-			settings.Add("BC2", true, "Beast's Castle 2", "any");
+			settings.Add("BC2", true, "Beast's Castle (2nd Visit)", "any");
+				settings.Add("05-04-4A", false, "Ballroom Nobodies", "BC2");
 				settings.Add("05-03-0B", false, "Rumbling Rose", "BC2");
 				settings.Add("05-03-14-W", false, "Leaving BC after Rumbling Rose", "BC2");
 				settings.Add("05-00-4B", false, "Entrance Hall Nobodies","BC2");
-				settings.Add("05-0F-52", true , "Xaldin","BC2");
+				settings.Add("05-0F-52", true, "Xaldin","BC2");
 
-			settings.Add("PR2", true, "Port Royal 2","any");
+			settings.Add("PR2", true, "Port Royal (2nd Visit)","any");
+				settings.Add("10-01-35", false, "Harbor Pirates 2","PR2");
 				settings.Add("10-12-55", false, "Grim Reaper I","PR2");
-				settings.Add("10-01-36", true , "Grim Reaper II","PR2");
+				settings.Add("10-0E-3E", false, "1st Gambler (Ship Graveyard: Seadrift Keep)","PR2");
+				settings.Add("10-0A-00", false, "Medallion Collection", "PR2");
+				settings.Add("10-01-36", true, "Grim Reaper II","PR2");
 
-			settings.Add("HT2", true, "Halloween Town 2", "any");
+			settings.Add("HT2", true, "Halloween Town (2nd Visit)", "any");
 				settings.Add("0E-0A-3E", false, "Lock, Shock, & Barrel", "HT2");
 				settings.Add("0E-00-3C", false, "Present Collection", "HT2");
 				settings.Add("0E-0A-3F", false, "Gift Wrapping", "HT2");
-				settings.Add("0E-07-40", true , "The Experiment","HT2");
+				settings.Add("0E-07-40", true, "The Experiment","HT2");
 
-			settings.Add("AG2", true, "Agrabah 2", "any");
+			settings.Add("AG2", true, "Agrabah (2nd Visit)", "any");
 				settings.Add("07-0E-56", false, "Sandswept Ruins Heartless 1", "AG2");
 				settings.Add("07-0E-57", false, "Sandswept Ruins Heartless 2", "AG2");
 				settings.Add("07-0E-11", false, "Magic Switches", "AG2");
 				settings.Add("07-0E-3D", false, "Magic Carpet (Carpet autoscroller)", "AG2");
-				settings.Add("07-05-3E", true , "Genie Jafar","AG2");
+				settings.Add("07-05-3E", true, "Genie Jafar","AG2");
 
-			settings.Add("LoD2", true, "Land of Dragons 2", "any");
+			settings.Add("LoD2", true, "The Land of Dragons (2nd Visit)", "any");
 				settings.Add("08-07-4C", false, "Riku", "LoD2");
-				settings.Add("08-08-51", false, "Imperial Square Heartless", "LoD2");
+				settings.Add("08-08-51", false, "Imperial Square Heartless 2", "LoD2");
 				settings.Add("08-0A-4E", false, "Antechamber Nobodies", "LoD2");
-				settings.Add("08-08-4F", true , "Storm Rider","LoD2");
+				settings.Add("08-08-4F", true, "Storm Rider","LoD2");
 
-			settings.Add("TT3", true , "Twilight Town 3","any");
+			settings.Add("TT3", true , "Twilight Town (3rd Visit)","any");
 				settings.Add("02-29-BA", false, "The Old Mansion Nobodies", "TT3");
 				settings.Add("02-28-A0", false, "Betwixt and Between Nobodies (without Axel)","TT3");
-				settings.Add("02-28-A1", true , "Betwixt and Between Nobodies","TT3");	
+				settings.Add("02-28-A1", true, "Betwixt and Between Nobodies","TT3");	
 
 			settings.Add("TWTNW",true, "The World That Never Was", "any");
 				settings.Add("12-15-41", false, "Roxas","TWTNW");
@@ -373,12 +406,20 @@ startup
 				
 		settings.Add("AW", false, "All Remainder Optional Worlds");
 			settings.Add("04-03-16-W", false, "Leave Crystal Fissure before 1,000 Heartless","AW");
-			settings.Add("PL", true, "Pride Lands","AW");
-				settings.Add("0A-02-33", false, "Hyenas I (Protect Timon/Pumbaa)","PL");
-				settings.Add("0A-0E-37", true , "Scar","PL");
-				settings.Add("0A-05-39", false, "Hyenas II","PL");
-				settings.Add("0A-0F-3B", true , "Groundshaker","PL");
-			settings.Add("SP2", true, "Space Paranoids 2","AW");
+			settings.Add("PL1", true, "Pride Lands (1st Visit)","AW");
+				settings.Add("0A-05-38", false, "Elephant Graveyard Living Bones","PL1");
+				settings.Add("0A-02-33", false, "Hyenas I (Protect Timon/Pumbaa)","PL1");
+				settings.Add("0A-0E-37", true , "Scar","PL1");
+			settings.Add("PL2", true, "Pride Lands (2nd Visit)","AW");
+				settings.Add("0A-05-39", false, "Hyenas II","PL2");
+				settings.Add("0A-0F-3B", true , "Groundshaker","PL2");
+			settings.Add("OC2", true , "Olympus Coliseum (2nd Visit)","AW");
+				settings.Add("06-09-7C", false, "The Underdrome Heartless 1","OC2");
+				settings.Add("06-09-7D", false, "The Underdrome Heartless 2","OC2");
+				settings.Add("06-06-7E", false, "Hades' Chamber Nobodies","OC2");
+				settings.Add("06-13-CA", true, "Hades","OC2");
+			settings.Add("SP2", true, "Space Paranoids (2nd Visit)","AW");
+				settings.Add("04-09-48", false, "Pre-SP2 Borough Heartless","SP2");
 				settings.Add("11-02-35", false, "Game Grid Heartless","SP2");
 				settings.Add("11-04-38", false, "I/O Tower: Hallway Heartless","SP2");
 				settings.Add("11-07-39", false, "Solar Sailer Simulation Heartless","SP2");
@@ -390,9 +431,6 @@ startup
 				settings.Add("09-05-04", false, "Balloon Bounce (Kanga's House)","100AW");
 				settings.Add("09-09-03", false, "The Expotition (Spooky Cave)","100AW");
 				settings.Add("09-01-03", true, "The Hunny Pot (Starry Hill)","100AW");
-			settings.Add("OC2", true , "Olympus Coliseum 2","AW");
-				settings.Add("06-06-7E", false, "Hades' Chamber Nobodies","OC2");
-				settings.Add("06-13-CA", true, "Hades","OC2");
 			settings.Add("ATL", true, "Atlantica","AW");
 				settings.Add("0B-02-3F", false, "Tutorial","ATL");
 				settings.Add("0B-04-40", false, "Swim This Way","ATL");
@@ -522,13 +560,68 @@ split
 	string currentLocation = string.Format("{0:X2}-{1:X2}-{2:X2}", current.worldID, current.roomID, current.eventID3);
 	string oldLocation     = string.Format("{0:X2}-{1:X2}-{2:X2}", old.worldID, old.roomID, old.eventID3);
 	
-	//Conditional cases if Sora or specific things need to survive
+	//Conditional cases if Sora or specific things need to survive or other alternative fight conditions
 	switch (currentLocation) {
 		//Party Member Dying
 		case "12-14-4A": 
-		case "12-14-69":
+		case "12-14-62":
 		case "10-0A-3C":
 			if(current.storyHP == 0 || current.soraHP == 0)vars.splitTimer = 10;
+			break;
+		//Seifer
+		case "02-04-4E":
+			if(current.soraHP == 0 && old.soraHP > 0)return settings[currentLocation];
+			break;
+		//Setzer
+		case "02-05-58":
+			if(current.soraHP == 0 && old.soraHP > 0
+			|| current.forcedTimer < 2 && old.forcedTimer > 1)return settings[currentLocation];
+			break;
+		//Back Alley Nobodies
+		case "02-03-49":
+			if(current.difficulty < 3 && current.soraHP < 8 && old.soraHP > 7
+			|| current.difficulty == 3 && current.soraHP < 7 && old.soraHP > 6)return settings[currentLocation];
+			break;
+		//Station Plaza Nobodies
+		case "02-08-6C":
+			if(current.difficulty < 3 && current.soraHP < 10 && old.soraHP > 9
+			|| current.difficulty == 3 && current.soraHP < 8 && old.soraHP > 7
+			|| current.cloneCount > 99 && old.cloneCount < 100
+			|| current.forcedTimer < 2 && old.forcedTimer > 1)return settings[currentLocation];
+			break;
+		//The Tower Shadows
+		case "02-19-95":
+			if(current.difficulty < 3 && current.soraHP < 10 && old.soraHP > 9
+			|| current.difficulty == 3 && current.soraHP < 8 && old.soraHP > 7)return settings[currentLocation];
+			break;
+		//Borough Nobodies
+		case "04-09-33":
+			if(current.difficulty < 3 && current.soraHP < 10 && old.soraHP > 9
+			|| current.difficulty == 3 && current.soraHP < 8 && old.soraHP > 7)return settings[currentLocation];
+			break;
+		//Borough Heartless
+		case "04-09-3A":
+			if(current.difficulty < 3 && current.soraHP < 14 && old.soraHP > 13
+			|| current.difficulty == 3 && current.soraHP < 10 && old.soraHP > 9)return settings[currentLocation];
+			break;
+		//Parlor Shadows
+		case "05-01-44":
+			if(current.difficulty < 3 && current.soraHP < 14 && old.soraHP > 13
+			|| current.difficulty == 3 && current.soraHP < 8 && old.soraHP > 7
+			|| current.cloneCount > 99 && old.cloneCount < 100
+			|| current.forcedTimer < 2 && old.forcedTimer > 1)return settings[currentLocation];
+			break;
+		//Agrabah Heartless
+		case "07-00-39":
+			if(current.difficulty < 3 && current.soraHP < 17 && old.soraHP > 16
+			|| current.difficulty == 3 && current.soraHP < 11 && old.soraHP > 10
+			|| current.cloneCount > 99 && old.cloneCount < 100
+			|| current.forcedTimer < 2 && old.forcedTimer > 1)return settings[currentLocation];
+			break;
+		//Halloween Town Square Heartless
+		case "0E-00-33":
+			if(current.difficulty < 3 && current.soraHP < 19 && old.soraHP > 18
+			|| current.difficulty == 3 && current.soraHP < 11 && old.soraHP > 10)return settings[currentLocation];
 			break;
 		//Demyx
 		case "04-04-37":
@@ -538,6 +631,11 @@ split
 		//Riku?
 		case "08-07-4C":
 			if(current.storyHP == 228 && old.storyHP > 228)return settings[currentLocation];
+			break;
+		//Pre-SP2 Borough Heartless
+		case "04-09-48":
+			if(current.difficulty < 3 && current.soraHP < 31 && old.soraHP > 30
+			|| current.difficulty == 3 && current.soraHP < 16 && old.soraHP > 15)return settings[currentLocation];
 			break;
 		//Top Left Gauge Runs Out
 		case "04-08-34":
@@ -607,7 +705,6 @@ split
 		//print("C:"+currentLocation+" O:"+oldLocation);
 		switch(oldLocation) {
 			case "02-02-48":
-			case "02-08-6C":
 			case "02-1B-04":
 			case "02-1C-04":
 			case "04-0D-08":
@@ -660,7 +757,7 @@ split
 				}
 				break;	
 			default:
-				if (current.wolrdID == 0x0F && vars.WorldSplitTrigger == 1) vars.WorldSplitTrigger = 0;
+				if (current.worldID == 0x0F && vars.WorldSplitTrigger == 1) vars.WorldSplitTrigger = 0;
 				break;
 		}
 	}
