@@ -7,6 +7,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG Global") // 1.0.0.10
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
     byte teeming_0 : 0x87A1E8, 0x3A0;
+    byte joker : 0x87A1E8, 0x486;
     byte red_noc : 0x87A1E8, 0x493;
     byte blue_rhap : 0x87A1E8, 0x494;
     byte current_room : 0x87AB50, 0x1;
@@ -30,6 +31,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG JP") // 1.0.0.10
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
     byte teeming_0 : 0x87A1E8, 0x3A0;
+    byte joker : 0x87A1E8, 0x486;
     byte red_noc : 0x87A1E8, 0x493;
     byte blue_rhap : 0x87A1E8, 0x494;
     byte current_room : 0x87AB50, 0x1;
@@ -53,6 +55,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global") // 1.0.0.2
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
     byte teeming_0 : 0x87A7E8, 0x3A0;
+    byte joker : 0x87A7E8, 0x486;
     byte red_noc : 0x87A7E8, 0x493;
     byte blue_rhap : 0x87A7E8, 0x494;
     byte current_room : 0x87B110, 0x1;
@@ -76,6 +79,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP") // 1.0.0.2
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
     byte teeming_0 : 0x87A7E8, 0x3A0;
+    byte joker : 0x87A7E8, 0x486;
     byte red_noc : 0x87A7E8, 0x493;
     byte blue_rhap : 0x87A7E8, 0x494;
     byte current_room : 0x87B110, 0x1;
@@ -388,10 +392,12 @@ split
         }
         if (current.world == 2) {
             if (current.map_card_count == 95 && old.map_card_count < 95) {
+                print("Map Card Grind AG");
                 return vars.completed_splits.Add("Map Card Grind AG") && settings["grind_2"];
             }
-            if (current.fire_1 > old.fire_1 && current.scene == 4) {
-                if (current.joker >= 5 && current.fire_1 >= 2) {
+            if (current.scene == 4) {
+                var output_catch = "";
+                if (current.joker >= 5 && current.fire_1 >= 2 && !vars.completed_splits.TryGetValue("Joker and Mog 1 Manip", out output_catch)) {
                     return vars.completed_splits.Add("Joker and Mog 1 Manip") && settings["joker"];
                 }
                 if (current.fire_1 >= 6 && current.prem_fire_6 >= 1) {
