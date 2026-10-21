@@ -392,7 +392,6 @@ split
         }
         if (current.world == 2) {
             if (current.map_card_count == 95 && old.map_card_count < 95) {
-                print("Map Card Grind AG");
                 return vars.completed_splits.Add("Map Card Grind AG") && settings["grind_2"];
             }
             if (current.scene == 4) {
