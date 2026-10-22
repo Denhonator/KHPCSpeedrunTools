@@ -168,7 +168,6 @@ startup
         settings.Add("sora_misc_splits", false, "Other Splits", "sora_base");
             settings.Add("tut_1", false, "First Tutorial (Marluxia)", "sora_misc_splits");
             settings.Add("tut_2", false, "Leon Tutorial", "sora_misc_splits");
-            settings.Add("belly", false, "Monstro's Belly Brawl", "sora_misc_splits");
             settings.Add("rm1_manip", false, "First Room Manip", "sora_misc_splits");
             settings.SetToolTip("rm1_manip", "Triggers on completing the forced shadow fight in the first room, intended to be used with moogle point manip in this room.");
             settings.Add("noc", false, "Red Nocturn Manip", "sora_misc_splits");
@@ -183,6 +182,7 @@ startup
             settings.SetToolTip("mog", "Triggers on last card of moogle shop while meeting minimums from having manipulated the second and third moogle shops for fires and blizzards.");
             settings.Add("blue", false, "Blue Rhapsody Manip", "sora_misc_splits");
             settings.SetToolTip("blue", "Triggers on collecting a blue rhap enemy card in Olympus, optional if you did not get one or more before this and uses a very basic quick manip.");
+            settings.Add("belly", false, "Monstro's Belly Brawl", "sora_misc_splits");
     settings.Add("riku_base", false, "Riku Base Splits");
         settings.Add("riku_world_splits", false, "World Event Splits", "riku_base");
             settings.Add("riku_world_sub_splits", false, "Room Splits", "riku_world_splits");
