@@ -178,12 +178,19 @@ startup
         settings.Add("destiny_alt", false, "Destiny Islands Day Two", "optional_splits");
         settings.SetToolTip("destiny_alt", "Split on scene transition after all text.");
         settings.Add("leon", true, "Leon", "optional_splits");
+        settings.Add("tt_1", false, "Travers Town 1", "optional_splits");
         settings.Add("crank", true, "Crank Tower - Fight End", "optional_splits");
         settings.SetToolTip("crank", "Split on killing crank tower.");
         settings.Add("crank_alt", false, "Crank Tower - Post Fade", "optional_splits");
         settings.SetToolTip("crank_alt", "Split after the fade out when the cutscene triggers. Makes Trickmaster the consistent split and adds the load out time to this split.");
         settings.Add("sabor_1", true, "Sabor 1", "optional_splits");
-        settings.Add("power_wilds", false, "Power Wilds", "optional_splits");
+        settings.Add("camp_pw", false, "Camp Powerwilds", "optional_splits");
+        settings.Add("trees_pw", false, "Climbing Trees Powerwilds", "optional_splits");
+        settings.Add("house_pw", false, "Treehouse Powerwilds", "optional_splits");
+        settings.Add("cliffs_pw", false, "Cliffs Powerwilds", "optional_splits");
+        settings.Add("bamboo_pw", false, "Bamboo Thicket Powerwilds", "optional_splits");
+        settings.Add("power_wilds", false, "Powerwilds", "optional_splits");
+        settings.SetToolTip("power_wilds", "Do not use all five of the individual power wilds splits along side this split or it will double split on the last fight.");
         settings.Add("sabor_2", true, "Sabor 2", "optional_splits");
         settings.Add("clayton_1", false, "Clayton 1", "optional_splits");
         settings.Add("wfc", false, "Waterfall Cavern", "optional_splits");
@@ -792,6 +799,10 @@ split
                         }
                         return vars.completed_splits.Add("leon") && settings["leon"];
                     }
+                    // exit traverse town 1, splits on entering the gummi ship
+                    if (current.in_gummi > 0 || current.in_garage == 95 || current.in_gummi == 96) {
+                        return vars.completed_splits.Add("tt_1") && settings["tt_1"];
+                    }
                     // earth shine returned
                     if (current.collected_items_2[57] == 0 && old.collected_items_2[57] == 1) {
                         return vars.completed_splits.Add("simba") && settings["simba"];
@@ -815,19 +826,40 @@ split
                     if (current.room == 0 && current.scene == 0 && ((death) || (fight_exp) || (whiteout))) {
                         return vars.completed_splits.Add("sabor_1") && settings["sabor_1"];
                     }
-                    if (
-                        // house gummi
-                        (current.room == 0 && current.scene == 3 && current.power_wild_gummis[13] != old.power_wild_gummis[13]) ||
-                        // bamboo gummi
-                        (current.room == 2 && current.scene == 2 && current.power_wild_gummis[0] != old.power_wild_gummis[0]) ||
-                        // climbing trees gummi
-                        (current.room == 6 && current.scene == 2 && current.power_wild_gummis[32] != old.power_wild_gummis[32]) ||
-                        // cliff gummi
-                        (current.room == 11 && current.scene == 2 && current.power_wild_gummis[31] != old.power_wild_gummis[31]) ||
-                        // camp gummi
-                        (current.room == 12 && current.scene == 1 && current.power_wild_gummis[7] != old.power_wild_gummis[7])
-                    ) {
+                    // house gummi
+                    if (current.room == 0 && current.scene == 3 && current.power_wild_gummis[13] != old.power_wild_gummis[13]) {
                         vars.pw_gummis += 1;
+                        if (settings["house_pw"]) {
+                            return vars.completed_splits.Add("house_pw");
+                        }
+                    }
+                    // bamboo gummi
+                    if (current.room == 2 && current.scene == 2 && current.power_wild_gummis[0] != old.power_wild_gummis[0]) {
+                        vars.pw_gummis += 1;
+                        if (settings["bamboo_pw"]) {
+                            return vars.completed_splits.Add("bamboo_pw");
+                        }
+                    }
+                    // climbing trees gummi
+                    if (current.room == 6 && current.scene == 2 && current.power_wild_gummis[32] != old.power_wild_gummis[32]) {
+                        vars.pw_gummis += 1;
+                        if (settings["trees_pw"]) {
+                            return vars.completed_splits.Add("trees_pw");
+                        }
+                    }
+                    // cliffs gummi
+                    if (current.room == 11 && current.scene == 2 && current.power_wild_gummis[31] != old.power_wild_gummis[31]) {
+                        vars.pw_gummis += 1;
+                        if (settings["cliffs_pw"]) {
+                            return vars.completed_splits.Add("cliffs_pw");
+                        }
+                    }
+                    // camp gummi
+                    if (current.room == 12 && current.scene == 1 && current.power_wild_gummis[7] != old.power_wild_gummis[7]) {
+                        vars.pw_gummis += 1;
+                        if (settings["camp_pw"]) {
+                            return vars.completed_splits.Add("camp_pw");
+                        }
                     }
                     if (vars.pw_gummis == 5) {
                         vars.pw_gummis = 0;
