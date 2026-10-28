@@ -179,7 +179,7 @@ startup
             settings.Add("grind_1", false, "Map Card Grind TT", "sora_misc_splits");
             settings.SetToolTip("grind_1", "Triggers on reaching 75 map cards for the first time, in Traverse Town.");
             settings.Add("grind_2", false, "Map Card Grind AG", "sora_misc_splits");
-            settings.SetToolTip("grind_2", "Triggers on reaching 95 map cards for the first time, in Agrabah.");
+            settings.SetToolTip("grind_2", "Triggers on reaching 95 map cards for the first time, in Agrabah, after completing the Key to Guidance room.");
             settings.Add("joker", false, "Joker Mog Manip", "sora_misc_splits");
             settings.SetToolTip("joker", "Triggers on last card of moogle shop while having at least 5 Random Jokers and meeting minimums from having manipulated the first moogle shop for fires and blizzards.");
             settings.Add("mog", false, "Mog 2 + 3 Manip", "sora_misc_splits");
@@ -391,7 +391,9 @@ split
             }
         }
         if (current.world == 2) {
-            if (current.map_card_count == 95 && old.map_card_count < 95) {
+            // check keys to beginnings and guidance to be sure this count is done
+            // after those rooms are complete to avoid early splitting
+            if (current.map_card_count >= 95 && current.beginnings == 0 && current.guidance == 0) {
                 return vars.completed_splits.Add("Map Card Grind AG") && settings["grind_2"];
             }
             if (current.scene == 4) {
