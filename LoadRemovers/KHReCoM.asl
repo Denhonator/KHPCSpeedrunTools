@@ -7,6 +7,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG Global") // 1.0.0.10
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
     byte teeming_0 : 0x87A1E8, 0x3A0;
+    byte joker : 0x87A1E8, 0x486;
     byte red_noc : 0x87A1E8, 0x493;
     byte blue_rhap : 0x87A1E8, 0x494;
     byte current_room : 0x87AB50, 0x1;
@@ -30,6 +31,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG JP") // 1.0.0.10
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
     byte teeming_0 : 0x87A1E8, 0x3A0;
+    byte joker : 0x87A1E8, 0x486;
     byte red_noc : 0x87A1E8, 0x493;
     byte blue_rhap : 0x87A1E8, 0x494;
     byte current_room : 0x87AB50, 0x1;
@@ -53,6 +55,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global") // 1.0.0.2
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
     byte teeming_0 : 0x87A7E8, 0x3A0;
+    byte joker : 0x87A7E8, 0x486;
     byte red_noc : 0x87A7E8, 0x493;
     byte blue_rhap : 0x87A7E8, 0x494;
     byte current_room : 0x87B110, 0x1;
@@ -76,6 +79,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP") // 1.0.0.2
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
     byte teeming_0 : 0x87A7E8, 0x3A0;
+    byte joker : 0x87A7E8, 0x486;
     byte red_noc : 0x87A7E8, 0x493;
     byte blue_rhap : 0x87A7E8, 0x494;
     byte current_room : 0x87B110, 0x1;
@@ -168,7 +172,6 @@ startup
         settings.Add("sora_misc_splits", false, "Other Splits", "sora_base");
             settings.Add("tut_1", false, "First Tutorial (Marluxia)", "sora_misc_splits");
             settings.Add("tut_2", false, "Leon Tutorial", "sora_misc_splits");
-            settings.Add("belly", false, "Monstro's Belly Brawl", "sora_misc_splits");
             settings.Add("rm1_manip", false, "First Room Manip", "sora_misc_splits");
             settings.SetToolTip("rm1_manip", "Triggers on completing the forced shadow fight in the first room, intended to be used with moogle point manip in this room.");
             settings.Add("noc", false, "Red Nocturn Manip", "sora_misc_splits");
@@ -183,6 +186,7 @@ startup
             settings.SetToolTip("mog", "Triggers on last card of moogle shop while meeting minimums from having manipulated the second and third moogle shops for fires and blizzards.");
             settings.Add("blue", false, "Blue Rhapsody Manip", "sora_misc_splits");
             settings.SetToolTip("blue", "Triggers on collecting a blue rhap enemy card in Olympus, optional if you did not get one or more before this and uses a very basic quick manip.");
+            settings.Add("belly", false, "Monstro's Belly Brawl", "sora_misc_splits");
     settings.Add("riku_base", false, "Riku Base Splits");
         settings.Add("riku_world_splits", false, "World Event Splits", "riku_base");
             settings.Add("riku_world_sub_splits", false, "Room Splits", "riku_world_splits");
@@ -390,8 +394,9 @@ split
             if (current.map_card_count == 95 && old.map_card_count < 95) {
                 return vars.completed_splits.Add("Map Card Grind AG") && settings["grind_2"];
             }
-            if (current.fire_1 > old.fire_1 && current.scene == 4) {
-                if (current.joker >= 5 && current.fire_1 >= 2) {
+            if (current.scene == 4) {
+                var output_catch = "";
+                if (current.joker >= 5 && current.fire_1 >= 2 && !vars.completed_splits.TryGetValue("Joker and Mog 1 Manip", out output_catch)) {
                     return vars.completed_splits.Add("Joker and Mog 1 Manip") && settings["joker"];
                 }
                 if (current.fire_1 >= 6 && current.prem_fire_6 >= 1) {
