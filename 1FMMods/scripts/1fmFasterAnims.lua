@@ -26,7 +26,7 @@ function inTimedEvent()
 end
 
 function inSummoning()
-	return ReadInt(summoning) == 0 or summonSpeedup
+	return ReadInt(summoning) == 1 and summonSpeedup
 end
 
 function inScene()
@@ -39,7 +39,7 @@ end
 
 function _OnFrame()
 	if canExecute then
-		if inScene() and inSummoning() and not inTimedEvent() and not inDIBoatSide() then
+		if inScene() or inSummoning() and not inTimedEvent() and not inDIBoatSide() then
 			WriteFloat(animSpeed, speedMult)
 		else
 			WriteFloat(animSpeed, 1.0)
