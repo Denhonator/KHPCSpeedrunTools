@@ -799,20 +799,22 @@ split
                         }
                         return vars.completed_splits.Add("leon") && settings["leon"];
                     }
-                    // exit traverse town 1, splits on entering the gummi ship
+                    // exit traverse town 1, 2, and 4, splits on entering the gummi ship
                     if (current.in_gummi > 0 || current.in_garage == 95 || current.in_gummi == 96) {
-                        return vars.completed_splits.Add("tt_1") && settings["tt_1"];
+                        if ((current.room == 10 && current.scene == 2) || (current.room == 0 && current.scene == 0)) {
+                            return vars.completed_splits.Add("tt_1") && settings["tt_1"];
+                        }
+                        if ((current.room == 10 && (current.scene == 11 || current.scene == 0) || (current.room == 0 && current.scene == 5)) {
+                            // oath keeper
+                            if (current.equips[38] == 1) {
+                                return vars.completed_splits.Add("tt_4") && settings["tt_4"];
+                            }
+                            return vars.completed_splits.Add("tt_2") && settings["tt_2"];
+                        }
                     }
                     // earth shine returned
                     if (current.collected_items_2[57] == 0 && old.collected_items_2[57] == 1) {
                         return vars.completed_splits.Add("simba") && settings["simba"];
-                    }
-                    if (current.room == 10 && current.scene == 11 && (current.in_gummi > 0 || current.in_garage == 95 || current.in_gummi == 96)) {
-                        return vars.completed_splits.Add("tt_2") && settings["tt_2"];
-                    }
-                    // oath keeper
-                    if (current.scene == 0 && current.room == 10 && current.in_gummi > 0 && current.equips[38] == 1) {
-                        return vars.completed_splits.Add("tt_4") && settings["tt_4"];
                     }
                     break;
                 // wonderland
