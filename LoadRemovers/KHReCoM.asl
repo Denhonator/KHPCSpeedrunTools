@@ -11,6 +11,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG Global") // 1.0.0.10
     byte red_noc : 0x87A1E8, 0x493;
     byte blue_rhap : 0x87A1E8, 0x494;
     byte current_room : 0x87AB50, 0x1;
+    byte previous_room : 0x87AB50, 0x4;
     byte state : 0x87B200;
     byte character : 0x87B245;
     byte scene : 0x87B260;
@@ -35,6 +36,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG JP") // 1.0.0.10
     byte red_noc : 0x87A1E8, 0x493;
     byte blue_rhap : 0x87A1E8, 0x494;
     byte current_room : 0x87AB50, 0x1;
+    byte previous_room : 0x87AB50, 0x4;
     byte state : 0x87B200;
     byte character : 0x87B245;
     byte scene : 0x87B260;
@@ -59,6 +61,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global") // 1.0.0.2
     byte red_noc : 0x87A7E8, 0x493;
     byte blue_rhap : 0x87A7E8, 0x494;
     byte current_room : 0x87B110, 0x1;
+    byte previous_room : 0x87B110, 0x4;
     byte state : 0x87B800;
     byte character : 0x87B845;
     byte scene : 0x87B860;
@@ -83,6 +86,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP") // 1.0.0.2
     byte red_noc : 0x87A7E8, 0x493;
     byte blue_rhap : 0x87A7E8, 0x494;
     byte current_room : 0x87B110, 0x1;
+    byte previous_room : 0x87B110, 0x4;
     byte state : 0x87B800;
     byte character : 0x87B845;
     byte scene : 0x87B860;
@@ -248,9 +252,15 @@ start
 split
 {
     string short_world = "";
+    int old_world = old.world;
     vars.worlds.TryGetValue(current.world, out short_world);
-    string old_short_world = "";
-    vars.worlds.TryGetValue(old.world, out old_short_world);
+    if (old.world != 0 && vars.old_short_world == "") {
+        string output_catch = "";
+        vars.worlds.TryGetValue(old_world, out output_catch);
+        if (output_catch != "") {
+            vars.old_short_world = output_catch;
+        }
+    }
     bool fight_complete = current.state == 2 && old.state != 2;
     bool rebirth = current.character == 255; // 0 = sora, 255 = riku
     int scene_offset = 0;
@@ -346,13 +356,15 @@ split
         }
     } else {
         // World End Splits
-        if (current.world == 0 && old.world != 0 && current.current_room == 99) {
-            if (old.world == 10) {
-                return vars.completed_splits.Add(old_short_world) && settings["s_haw_end"] && !rebirth;
+        if (current.current_room == 99 && current.previous_room != 2 && current.previous_room != 99 && vars.old_short_world != "") {
+            bool to_split = false;
+            if (old_world == 10) {
+                to_split = vars.completed_splits.Add(vars.old_short_world) && settings["s_haw_end"] && !rebirth;
+            } else if ((settings[string.Format("s_{0}_end", vars.old_short_world)] && !rebirth) || (settings[string.Format("r_{0}_end", vars.old_short_world)] && rebirth)) {
+                to_split = vars.completed_splits.Add(vars.old_short_world);
             }
-            if ((settings[string.Format("s_{0}_end", old_short_world)] && !rebirth) || (settings[string.Format("r_{0}_end", old_short_world)] && rebirth)) {
-                return vars.completed_splits.Add(old_short_world);
-            }
+            vars.old_short_world = "";
+            return to_split;
         }
         // World Key Cards
         if (current.world != 0 && current.world != 10) {
@@ -425,7 +437,8 @@ exit
 }
 
 init
-{    
+{
+    vars.old_short_world = "";
     vars.in_brawl = false;
     vars.completed_splits = new HashSet<string>();
     vars.worlds = new Dictionary<int, string>{
