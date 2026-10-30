@@ -804,7 +804,7 @@ split
                         if ((current.room == 10 && current.scene == 2) || (current.room == 0 && current.scene == 0)) {
                             return vars.completed_splits.Add("tt_1") && settings["tt_1"];
                         }
-                        if ((current.room == 10 && (current.scene == 11 || current.scene == 0) || (current.room == 0 && current.scene == 5)) {
+                        if (current.room == 10 && (current.scene == 11 || current.scene == 0) || (current.room == 0 && current.scene == 5)) {
                             // oath keeper
                             if (current.equips[38] == 1) {
                                 return vars.completed_splits.Add("tt_4") && settings["tt_4"];
