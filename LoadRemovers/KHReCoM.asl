@@ -403,6 +403,7 @@ split
             }
         }
         if (current.world == 2) {
+            string output_catch = "";
             if (current.scene == 4) {
                 if (current.joker >= 5 && current.fire_1 >= 2 && !vars.completed_splits.TryGetValue("Joker and Mog 1 Manip", out output_catch)) {
                     return vars.completed_splits.Add("Joker and Mog 1 Manip") && settings["joker"];
