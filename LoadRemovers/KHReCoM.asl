@@ -3,6 +3,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG Global") // 1.0.0.10
     byte loading : 0x822034;
     byte map_card_count : 0x87A1E8, 0x2;
     byte fire_1 : 0x87A1E8, 0x211;
+    byte simba_6 : 0x87A1E8, 0x270;
     byte dumbo_4 : 0x87A1E8, 0x28C;
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
@@ -28,6 +29,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG JP") // 1.0.0.10
     byte loading : 0x822034;
     byte map_card_count : 0x87A1E8, 0x2;
     byte fire_1 : 0x87A1E8, 0x211;
+    byte simba_6 : 0x87A1E8, 0x270;
     byte dumbo_4 : 0x87A1E8, 0x28C;
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
@@ -53,6 +55,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global") // 1.0.0.2
     byte loading : 0x8222C4;
     byte map_card_count : 0x87A7E8, 0x2;
     byte fire_1 : 0x87A7E8, 0x211;
+    byte simba_6 : 0x87A7E8, 0x270;
     byte dumbo_4 : 0x87A7E8, 0x28C;
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
@@ -78,6 +81,7 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP") // 1.0.0.2
     byte loading : 0x8222C4;
     byte map_card_count : 0x87A7E8, 0x2;
     byte fire_1 : 0x87A7E8, 0x211;
+    byte simba_6 : 0x87A7E8, 0x270;
     byte dumbo_4 : 0x87A7E8, 0x28C;
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
@@ -254,13 +258,6 @@ split
     string short_world = "";
     int old_world = old.world;
     vars.worlds.TryGetValue(current.world, out short_world);
-    if (old.world != 0 && vars.old_short_world == "") {
-        string output_catch = "";
-        vars.worlds.TryGetValue(old_world, out output_catch);
-        if (output_catch != "") {
-            vars.old_short_world = output_catch;
-        }
-    }
     bool fight_complete = current.state == 2 && old.state != 2;
     bool rebirth = current.character == 255; // 0 = sora, 255 = riku
     int scene_offset = 0;
@@ -356,14 +353,13 @@ split
         }
     } else {
         // World End Splits
-        if (current.current_room == 99 && current.previous_room != 2 && current.previous_room != 99 && vars.old_short_world != "") {
+        if (current.current_room == 99 && current.previous_room != 0 && current.previous_room != 99 && vars.old_short_world != "") {
             bool to_split = false;
             if (old_world == 10) {
                 to_split = vars.completed_splits.Add(vars.old_short_world) && settings["s_haw_end"] && !rebirth;
             } else if ((settings[string.Format("s_{0}_end", vars.old_short_world)] && !rebirth) || (settings[string.Format("r_{0}_end", vars.old_short_world)] && rebirth)) {
                 to_split = vars.completed_splits.Add(vars.old_short_world);
             }
-            vars.old_short_world = "";
             return to_split;
         }
         // World Key Cards
@@ -386,10 +382,12 @@ split
         }
         // special splits
         if (current.world == 1) {
-            if (old.scene == 76 && current.scene != 76) {
+            if (current.scene != 76 && vars.tutorial == 1) {
+                vars.tutorial = 0;
                 return (settings["tut_1"] && !rebirth) || (settings["a_tut"] && rebirth);
             }
-            if (old.scene == 77 && current.scene != 77 && !rebirth) {
+            if (current.scene != 77 && vars.tutorial == 2 && !rebirth) {
+                vars.tutorial = 0;
                 return settings["tut_2"];
             }
             if (current.tranquil_2 == 1 && old.tranquil_2 == 0) {
@@ -441,6 +439,7 @@ init
 {
     vars.old_short_world = "";
     vars.in_brawl = false;
+    vars.tutorial = 0;
     vars.completed_splits = new HashSet<string>();
     vars.worlds = new Dictionary<int, string>{
         {1, "trt"},
@@ -481,6 +480,26 @@ reset
 
 update
 {
+    if (old.world != 0 && vars.old_short_world == "") {
+        int old_world = old.world;
+        string output_catch = "";
+        vars.worlds.TryGetValue(old_world, out output_catch);
+        if (output_catch != "") {
+            vars.old_short_world = output_catch;
+        }
+    }
+    if (current.current_room == 0 && vars.old_short_world != "") {
+        vars.old_short_world = "";
+    }
+    if (vars.tutorial == 0) {
+        if (current.scene == 76) {
+            vars.tutorial = 1;
+        } else if (current.scene == 77) {
+            vars.tutorial = 2;
+        }
+    }
+
+    return true;
 }
 
 isLoading
