@@ -3,7 +3,6 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG Global") // 1.0.0.10
     byte loading : 0x822034;
     byte map_card_count : 0x87A1E8, 0x2;
     byte fire_1 : 0x87A1E8, 0x211;
-    byte simba_6 : 0x87A1E8, 0x270;
     byte dumbo_4 : 0x87A1E8, 0x28C;
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
@@ -29,7 +28,6 @@ state("KINGDOM HEARTS Re_Chain of Memories", "EG JP") // 1.0.0.10
     byte loading : 0x822034;
     byte map_card_count : 0x87A1E8, 0x2;
     byte fire_1 : 0x87A1E8, 0x211;
-    byte simba_6 : 0x87A1E8, 0x270;
     byte dumbo_4 : 0x87A1E8, 0x28C;
     byte prem_fire_6 : 0x87A1E8, 0x2B6;
     byte tranquil_2 : 0x87A1E8, 0x398;
@@ -55,7 +53,6 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam Global") // 1.0.0.2
     byte loading : 0x8222C4;
     byte map_card_count : 0x87A7E8, 0x2;
     byte fire_1 : 0x87A7E8, 0x211;
-    byte simba_6 : 0x87A7E8, 0x270;
     byte dumbo_4 : 0x87A7E8, 0x28C;
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
@@ -81,7 +78,6 @@ state("KINGDOM HEARTS Re_Chain of Memories", "Steam JP") // 1.0.0.2
     byte loading : 0x8222C4;
     byte map_card_count : 0x87A7E8, 0x2;
     byte fire_1 : 0x87A7E8, 0x211;
-    byte simba_6 : 0x87A7E8, 0x270;
     byte dumbo_4 : 0x87A7E8, 0x28C;
     byte prem_fire_6 : 0x87A7E8, 0x2B6;
     byte tranquil_2 : 0x87A7E8, 0x398;
