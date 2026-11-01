@@ -801,7 +801,7 @@ split
                     }
                     // exit traverse town 1, 2, and 4, splits on entering the gummi ship
                     if (current.in_gummi > 0 || current.in_garage == 95 || current.in_gummi == 96) {
-                        if ((current.room == 10 && current.scene == 2) || (current.room == 0 && current.scene == 0)) {
+                        if ((current.room == 10 && current.scene == 2) || (current.room == 0 && current.scene == 0) || (current.room == 19 && current.scene == 0)) {
                             return vars.completed_splits.Add("tt_1") && settings["tt_1"];
                         }
                         if (current.room == 10 && (current.scene == 11 || current.scene == 0) || (current.room == 0 && current.scene == 5)) {
