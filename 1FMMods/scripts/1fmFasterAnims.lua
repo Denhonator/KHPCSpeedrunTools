@@ -37,12 +37,79 @@ function inDIBoatSide()
 	return ReadByte(world) == 1 and ReadByte(room) == 2 and (ReadByte(dialog) >= 1 and ReadByte(dialog) <= 5)
 end
 
+
+
 function _OnFrame()
-	if canExecute then
-		if inScene() or inSummoning() and not inTimedEvent() and not inDIBoatSide() then
-			WriteFloat(animSpeed, speedMult)
-		else
-			WriteFloat(animSpeed, 1.0)
-		end
-	end
+    if not canExecute then
+        return
+    end
+
+    local currentWorld = ReadByte(world)
+
+    -- 100 Acre Wood
+    if currentWorld == 6 then
+        WriteFloat(animSpeed, 1.0)
+        return
+    end
+
+    -- Normal menus
+    local menuOpen =
+        ReadByte(menu) ~= 0 or
+        ReadByte(menuCheck) ~= 0
+
+    -- Shops and synthesis
+    local shopUI =
+        (ReadByte(dialog) == 7
+            and ReadByte(stateFlag) == 12)
+        or
+        (ReadByte(dialog) == 0
+            and ReadByte(stateFlag) == 14
+            and ReadInt(inCutscene) == 2
+            and ReadInt(skippable) == 3072)
+
+    -- Olympus Coliseum selection screen
+    local olympusMenu =
+        currentWorld == 11
+        and ReadByte(room) == 1
+        and ReadByte(stateFlag) == 12
+        and ReadFloat(soraHUD) < 1
+
+    -- Timed event protection
+    local timedEvent = inTimedEvent()
+
+    -- Olympus post-battle transition
+    local state = ReadByte(stateFlag)
+
+    local olympusVictoryTransition =
+        currentWorld == 11
+        and ReadByte(room) == 2
+        and ReadInt(inCutscene) == 2
+        and (state == 1 or state == 2 or state == 3)
+
+    -- Menus and shops always run at normal speed
+    if menuOpen or shopUI or olympusMenu then
+        WriteFloat(animSpeed, 1.0)
+        return
+    end
+
+    -- Timed challenges: accelerate post-battle scenes only
+    if timedEvent then
+        if olympusVictoryTransition then
+            WriteFloat(animSpeed, speedMult)
+        else
+            WriteFloat(animSpeed, 1.0)
+        end
+        return
+    end
+
+    -- Normal scene and summon acceleration
+    local speedUp =
+        (inScene() or inSummoning())
+        and not inDIBoatSide()
+
+    if speedUp then
+        WriteFloat(animSpeed, speedMult)
+    else
+        WriteFloat(animSpeed, 1.0)
+    end
 end
