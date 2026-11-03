@@ -20,7 +20,7 @@ function _OnFrame()
 		elseif cooldown > 0 then
 			cooldown = cooldown - 1
 		end
-		autofireState = (attackInput and ReadByte(attackCommand) and cooldown == 0) and 1 or 0
+		autofireState = (attackInput and ReadByte(attackCommand) == 0 and cooldown == 0) and 1 or 0
 		WriteInt(fireState1, autofireState)
 		WriteInt(fireState2, autofireState)
 	end
