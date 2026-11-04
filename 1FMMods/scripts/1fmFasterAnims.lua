@@ -37,12 +37,6 @@ function _OnFrame()
     	(dialogState >= 1
     		and dialogState <= 5)
 
-    -- 100 Acre Wood
-    if currentWorld == 6  or DIBoatSide then
-        WriteFloat(animSpeed, 1.0)
-        return
-    end
-
     local state = ReadByte(stateFlag)
     local cutscene = ReadInt(inCutscene)
     local canSkip = ReadInt(skippable)
@@ -70,8 +64,8 @@ function _OnFrame()
         and state == 12
         and HUD < 1
 
-    -- Menus and shops always run at normal speed
-    if menuOpen or shopUI or olympusMenu then
+    -- 100 Acre Wood, Destiny islands safety disable, and standard speed menus set to normal speed
+    if currentWorld == 6  or DIBoatSide or menuOpen or shopUI or olympusMenu then
         WriteFloat(animSpeed, 1.0)
         return
     end
