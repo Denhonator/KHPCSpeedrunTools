@@ -21,36 +21,32 @@ function any(array, value)
 	return false
 end
 
-function inTimedEvent()
-	return ReadInt(minitimer) > 0 and any({6, 11}, ReadByte(world))
-end
-
-function inSummoning()
-	return ReadInt(summoning) == 1 and summonSpeedup
-end
-
-function inScene()
-	return (ReadFloat(soraHUD) < 1 and ReadInt(inCutscene) > 0 and ReadInt(inCutscene) ~= 8  and ReadInt(skippable) ~= 1025) and sceneSpeedup
-end
-
-function inDIBoatSide()
-	return ReadByte(world) == 1 and ReadByte(room) == 2 and (ReadByte(dialog) >= 1 and ReadByte(dialog) <= 5)
-end
-
-
-
 function _OnFrame()
     if not canExecute then
         return
     end
 
     local currentWorld = ReadByte(world)
+    local currentRoom = ReadByte(room)
+    local dialogState = ReadByte(dialog)
+
+    -- Destiny Island dialog safety
+    local DIBoatSide =
+    	currentWorld == 1 and
+    	currentRoom == 2 and
+    	(dialogState >= 1
+    		and dialogState <= 5)
 
     -- 100 Acre Wood
-    if currentWorld == 6 then
+    if currentWorld == 6  or DIBoatSide then
         WriteFloat(animSpeed, 1.0)
         return
     end
+
+    local state = ReadByte(stateFlag)
+    local cutscene = ReadInt(inCutscene)
+    local canSkip = ReadInt(skippable)
+    local HUD = ReadFloat(soraHUD)
 
     -- Normal menus
     local menuOpen =
@@ -59,32 +55,20 @@ function _OnFrame()
 
     -- Shops and synthesis
     local shopUI =
-        (ReadByte(dialog) == 7
-            and ReadByte(stateFlag) == 12)
+        (dialogState == 7
+            and state == 12)
         or
-        (ReadByte(dialog) == 0
-            and ReadByte(stateFlag) == 14
-            and ReadInt(inCutscene) == 2
-            and ReadInt(skippable) == 3072)
+        (dialogState == 0
+            and state == 14
+            and cutscene == 2
+            and canSkip == 3072)
 
     -- Olympus Coliseum selection screen
     local olympusMenu =
         currentWorld == 11
-        and ReadByte(room) == 1
-        and ReadByte(stateFlag) == 12
-        and ReadFloat(soraHUD) < 1
-
-    -- Timed event protection
-    local timedEvent = inTimedEvent()
-
-    -- Olympus post-battle transition
-    local state = ReadByte(stateFlag)
-
-    local olympusVictoryTransition =
-        currentWorld == 11
-        and ReadByte(room) == 2
-        and ReadInt(inCutscene) == 2
-        and (state == 1 or state == 2 or state == 3)
+        and currentRoom == 1
+        and state == 12
+        and HUD < 1
 
     -- Menus and shops always run at normal speed
     if menuOpen or shopUI or olympusMenu then
@@ -92,22 +76,26 @@ function _OnFrame()
         return
     end
 
-    -- Timed challenges: accelerate post-battle scenes only
-    if timedEvent then
-        if olympusVictoryTransition then
-            WriteFloat(animSpeed, speedMult)
-        else
-            WriteFloat(animSpeed, 1.0)
-        end
-        return
-    end
+    -- Olympus post-battle transition
+    local olympusVictoryTransition =
+        currentWorld == 11
+        and currentRoom == 2
+        and cutscene == 2
+        and (state == 1 or state == 2 or state == 3)
+        and ReadInt(minitimer) > 0
 
-    -- Normal scene and summon acceleration
-    local speedUp =
-        (inScene() or inSummoning())
-        and not inDIBoatSide()
+    local inScene =
+    	HUD < 1 and
+    	cutscene > 0 and
+    	cutscene ~= 8  and
+    	canSkip ~= 1025 and
+    	sceneSpeedup
 
-    if speedUp then
+    local inSummoning =
+    	ReadInt(summoning) == 1 and
+    	summonSpeedup
+
+    if inScene or inSummoning or olympusVictoryTransition then
         WriteFloat(animSpeed, speedMult)
     else
         WriteFloat(animSpeed, 1.0)
