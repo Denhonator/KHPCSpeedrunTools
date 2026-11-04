@@ -5,7 +5,7 @@ state("KINGDOM HEARTS 0.2 Birth by Sleep", "EG Global") // 1.0.0.10
 	byte start : 0x44F708D;
 	byte fightend : 0x44F7165;
 	byte loading : 0x4509394;
-	byte gear_kill : 0x453178D;
+	byte gear_kill : 0x47DFA50, 0x308, 0x28, 0x128, 0x10, 0x108, 0x448;
 	byte scene : 0x466C64C;
 	byte title : 0x47CD35D;
 	byte loading_2 : 0x4893D94;
@@ -18,7 +18,7 @@ state("KINGDOM HEARTS 0.2 Birth by Sleep", "EG Global") // 1.0.0.10
 // 	byte start : 0x44F708D;
 // 	byte fightend : 0x44F7165;
 // 	byte loading : 0x4509394;
-// 	byte gear_kill : 0x453178D;
+//  byte gear_kill : 0x47DFA50, 0x308, 0x28, 0x128, 0x10, 0x108, 0x448;
 // 	byte scene : 0x466C64C;
 // 	byte title : 0x47CD35D;
 // 	byte loading_2 : 0x4893D94;
@@ -54,7 +54,10 @@ startup
 {
 	settings.Add("shadows_1", true, "Shadows I");
 	settings.Add("shadows_2", true, "Shadows II");
-	settings.Add("gears", true, "Gears");
+	settings.Add("gear_1", true, "Gear I");
+	settings.Add("gear_2", true, "Gear II");
+	settings.Add("gear_3", true, "Gear III");
+	settings.Add("gear_4", true, "Gear IV");
 	settings.Add("dt_1", true, "Demon Tower I");
 	settings.Add("aqua_1", true, "Aqua I");
 	settings.Add("aqua_2", true, "Aqua II");
@@ -91,9 +94,6 @@ split
 {
 	if (current.fightend != 0 && current.loading == 16 && (old.loading != 16 || old.fightend == 0)) {
 		vars.split_count += 1;
-		if (vars.split_count == 3) {
-			vars.split_count += 1;
-		}
 	}
 	if (current.scene == vars.cutscene_base - 1 && old.scene == vars.cutscene_base && vars.cutscene_count < 2) {
 		vars.cutscene_count += 1;
@@ -101,23 +101,26 @@ split
 			vars.split_count = 1;
 		}
 	}
-	if (current.gear_kill == 4 && old.gear_kill != 4) {
+	if (current.gear_kill <= 4 && current.gear_kill > old.gear_kill && vars.split_count > 2 && vars.split_count < 6) {
 		vars.split_count += 1;
 	}
 	int split_count = vars.split_count;
 	switch (split_count) {
 		case 1: return vars.completed_splits.Add("shadows_1") && settings["shadows_1"];
 		case 2: return vars.completed_splits.Add("shadows_2") && settings["shadows_2"];
-		case 3: return vars.completed_splits.Add("gears") && settings["gears"];
-		case 4: return vars.completed_splits.Add("dt_1") && settings["dt_1"];
-		case 5: return vars.completed_splits.Add("aqua_1") && settings["aqua_1"];
-		case 6: return vars.completed_splits.Add("aqua_2") && settings["aqua_2"];
-		case 7: return vars.completed_splits.Add("aqua_3") && settings["aqua_3"];
-		case 8: return vars.completed_splits.Add("ds_1") && settings["ds_1"];
-		case 9: return vars.completed_splits.Add("fff") && settings["fff"];
-		case 10: return vars.completed_splits.Add("ds_2") && settings["ds_2"];
-		case 11: return vars.completed_splits.Add("dt_2") && settings["dt_2"];
-		case 12: return vars.completed_splits.Add("dtide") && settings["dtide"];
+		case 3: return vars.completed_splits.Add("gear_1") && settings["gear_1"];
+		case 4: return vars.completed_splits.Add("gear_2") && settings["gear_2"];
+		case 5: return vars.completed_splits.Add("gear_3") && settings["gear_3"];
+		case 6: return vars.completed_splits.Add("gear_4") && settings["gear_4"];
+		case 7: return vars.completed_splits.Add("dt_1") && settings["dt_1"];
+		case 8: return vars.completed_splits.Add("aqua_1") && settings["aqua_1"];
+		case 9: return vars.completed_splits.Add("aqua_2") && settings["aqua_2"];
+		case 10: return vars.completed_splits.Add("aqua_3") && settings["aqua_3"];
+		case 11: return vars.completed_splits.Add("ds_1") && settings["ds_1"];
+		case 12: return vars.completed_splits.Add("fff") && settings["fff"];
+		case 13: return vars.completed_splits.Add("ds_2") && settings["ds_2"];
+		case 14: return vars.completed_splits.Add("dt_2") && settings["dt_2"];
+		case 15: return vars.completed_splits.Add("dtide") && settings["dtide"];
 	}
 }
 
@@ -163,7 +166,7 @@ init
 reset
 {
 	if (current.loading == 0 || current.loading == 16) {
-		if (vars.split_count < 11) {
+		if (vars.split_count < 14) {
 			return current.title != old.title && current.world == 1;
 		} else {
 			return current.scene == old.scene - 5;
