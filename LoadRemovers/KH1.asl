@@ -912,7 +912,7 @@ split
                     if (current.room == 3 && current.scene == 13 && current.summon_load && vars.summon_timer > 30) {
                         return vars.completed_splits.Add("dumbo_1") && settings["dumbo_1"];
                     }
-                    if (old.room == 3 && current.room == 6 && current.door == 35) {
+                    if (current.door == 35) {
                         if (current.scene == 13) {
                             return vars.completed_splits.Add("dumbo_1_alt") && settings["dumbo_1_alt"];
                         }
