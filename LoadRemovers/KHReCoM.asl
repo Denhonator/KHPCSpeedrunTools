@@ -479,8 +479,7 @@ update
     if (old.world != 0 && vars.old_short_world == "") {
         int old_world = old.world;
         string output_catch = "";
-        vars.worlds.TryGetValue(old_world, out output_catch);
-        if (output_catch != "") {
+        if (vars.worlds.TryGetValue(old_world, out output_catch)) {
             vars.old_short_world = output_catch;
         }
     }
@@ -494,7 +493,6 @@ update
             vars.tutorial = 2;
         }
     }
-
     return true;
 }
 
