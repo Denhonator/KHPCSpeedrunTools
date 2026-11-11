@@ -471,7 +471,7 @@ init
 
 reset
 {
-    return old.new_game == 16 && current.new_game == 15;
+    return old.new_game != 16 && current.new_game == 16 && current.world == 255;
 }
 
 update
