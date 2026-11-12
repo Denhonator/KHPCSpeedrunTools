@@ -245,6 +245,8 @@ start
     if (current.new_game == 7 && old.new_game == 18) {
         vars.completed_splits = new HashSet<string>();
         vars.in_brawl = false;
+        vars.tutorial = 0;
+        vars.old_short_world = "";
         return true;
     }
 }
