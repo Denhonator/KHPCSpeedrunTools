@@ -2,13 +2,10 @@ LUAGUI_NAME = "1fmFasterAnims"
 LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Speeds up animations during which you can't play"
 
-local sceneSpeedup = true
-local summonSpeedup = true
-local speedMult = 2.0
-
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		require("VersionCheck")
+        require("SettingsCheck")
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
@@ -89,8 +86,10 @@ function _OnFrame()
     	ReadInt(summoning) == 1 and
     	summonSpeedup
 
-    if inScene or inSummoning or olympusVictoryTransition then
-        WriteFloat(animSpeed, speedMult)
+    if inScene or olympusVictoryTransition then
+        WriteFloat(animSpeed, animSpeedMult)
+    else if inSummoning then
+        WriteFloat(animSpeed, summonSpeedMult)        
     else
         WriteFloat(animSpeed, 1.0)
     end

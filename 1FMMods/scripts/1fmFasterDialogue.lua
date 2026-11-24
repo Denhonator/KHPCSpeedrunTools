@@ -3,12 +3,11 @@ LUAGUI_AUTH = "denhonator (edited by deathofall84)"
 LUAGUI_DESC = "Speeds up text boxes"
 
 local lastProg = 0
-local textSpeedup = false
-local turbo = false
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		require("VersionCheck")
+        require("SettingsCheck")
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
