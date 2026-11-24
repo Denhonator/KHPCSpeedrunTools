@@ -86,6 +86,16 @@ assets:
   game: "kh1"
   source:
     - name: 1FMMods/scripts/io_packages/SteamJP_1_0_0_2.lua
+- name: scripts/io_packages/SettingsCheck.lua
+  method: copy
+  game: "kh1"
+  source:
+    - name: 1FMMods/scripts/io_packages/SettingsCheck.lua
+- name: scripts/io_packages/settings.lua
+  method: copy
+  game: "kh1"
+  source:
+    - name: 1FMMods/scripts/io_packages/settings.lua
 - name: scripts/io_packages/VersionCheck.lua
   method: copy
   game: "kh1"
@@ -99,6 +109,18 @@ assets:
   collectionOptional: true
   source:
     - name: test_lua/test_1fm.lua
+- name: scripts/io_packages/cheat_settings.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/io_packages/cheat_settings.lua
+- name: scripts/io_packages/custom_settings.lua
+  method: copy
+  game: "kh1"
+  collectionOptional: true
+  source:
+    - name: 1FMMods/scripts/io_packages/custom_settings.lua
 - name: scripts/1fm1HP.lua
   method: copy
   game: "kh1"

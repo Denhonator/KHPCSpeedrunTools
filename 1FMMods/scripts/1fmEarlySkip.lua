@@ -21,7 +21,7 @@ function _OnFrame()
         curFade = math.min(ReadInt(fadeBase) + 20, 128)
         if curFade - 30 > 0 and lastFade < curFade then
             WriteInt(white, 0) --white screen off
-            for i=0,3 do
+            for i = 0, 3 do
                 WriteInt(fadeBase + (i * 4), curFade) --canskip
             end
             WriteInt(skipFlag1, 0) --canskip

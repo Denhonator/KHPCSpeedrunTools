@@ -8,11 +8,11 @@ local prevHUD = 0
 local revertCode = false
 local removeWhite = 0
 local lastDeathPointer = 0
-local bossRush = false
 
 function _OnInit()
 	if GAME_ID == 0xAF71841E and ENGINE_TYPE == "BACKEND" then
 		require("VersionCheck")
+        require("SettingsCheck")
 	else
 		ConsolePrint("KH1 not detected, not running script")
 	end
